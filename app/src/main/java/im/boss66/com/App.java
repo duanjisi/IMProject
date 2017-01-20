@@ -41,6 +41,10 @@ public class App extends Application {
         return mApplication;
     }
 
+    public void mainasda(){
+
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -48,11 +52,6 @@ public class App extends Application {
         initFaceMap();
         initData();
     }
-
-    public void newMethod(){
-
-    }
-
 
     private void initData() {
 //        mBaiduPushServer = new BaiduPush(BaiduPush.HTTP_METHOD_POST,
