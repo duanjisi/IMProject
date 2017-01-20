@@ -63,10 +63,6 @@ public class App extends Application {
 //        mNotificationManager = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
     }
 
-    public void dohand() {
-
-    }
-
     public synchronized UserDB getUserDB() {
         if (mUserDB == null)
             mUserDB = new UserDB(this);
