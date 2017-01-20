@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GifView">
+        <attr name="gif" format="reference" />
+        <attr name="paused" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="CustomTheme">
+        <attr name="gifViewStyle" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="TopNavigationBar">
+        <attr name="topbarTitle" format="string" />
+        <attr name="topbarIcon" format="reference" />
+        <attr name="showArrowIm" format="boolean" />
+        <attr name="showSearchBar" format="boolean" />
+        <attr name="isSearchBarEdit" format="boolean" />
+        <attr name="hideLeftImBtn" format="boolean" />
+        <attr name="keyboardHasSearchBtn" format="boolean" />
+        <attr name="isResponseEditor" format="boolean" />
+        <attr name="leftImBtnDrawable" format="reference" />
+        <attr name="rightImBtnDrawable" format="reference" />
+        <attr name="rightImBtnSecondDrawable" format="reference" />
+        <attr name="rightBtnStatus">
+            <enum name="normal" value="0" />
+            <enum name="tv" value="1" />
+            <enum name="imBtn" value="2" />
+            <enum name="both" value="3" />
+        </attr>
+        <attr name="leftBtnStatus">
+            <enum name="normal" value="0" />
+            <enum name="tv" value="1" />
+            <enum name="imBtn" value="2" />
+            <enum name="both" value="3" />
+        </attr>
+        <attr name="rightText" format="string" />
+        <attr name="leftText" format="string" />
+    </declare-styleable>
+    <declare-styleable name="EaseContactList">
+        <attr name="ctsListPrimaryTextColor" format="color" />
+        <attr name="ctsListPrimaryTextSize" format="dimension" />
+        <attr name="ctsListShowSiderBar" format="boolean" />
+        <attr name="ctsListInitialLetterBg" format="reference|color" />
+        <attr name="ctsListInitialLetterColor" format="color" />
+    </declare-styleable>
+</resources>

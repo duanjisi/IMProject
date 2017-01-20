@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_navigation_bar_height"
+        android:background="@color/top_bar_color">
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="11dp"
+            android:drawableLeft="@drawable/hp_back"
+            android:drawablePadding="4dp"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:textSize="16.5sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="添加好友"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_00"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_below="@+id/rl_top_bar"
+        android:layout_marginTop="15dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:padding="8dp"
+            android:src="@drawable/hp_search" />
+
+        <EditText
+            android:id="@+id/et_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/iv_search"
+            android:layout_alignTop="@+id/iv_search"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@+id/iv_search"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:hint="账号/手机号"
+            android:textColorHint="@color/text_color_gray_9"
+            android:textSize="16.5sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_my_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_00"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        android:drawablePadding="11dp"
+        android:drawableRight="@drawable/hp_my_qr_code"
+        android:gravity="center_vertical"
+        android:text="我的账号:XYZ003256"
+        android:textSize="14.5sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_00"
+        android:layout_marginTop="66dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_scanning"
+            android:layout_width="match_parent"
+            android:layout_height="66dp">
+
+            <ImageView
+                android:id="@+id/iv_tag1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16.5dp"
+                android:src="@drawable/hp_scan_qr_code" />
+
+            <TextView
+                android:id="@+id/tv_tag2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/iv_tag1"
+                android:layout_marginLeft="17.6dp"
+                android:layout_toRightOf="@+id/iv_tag1"
+                android:text="扫一扫"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_tag3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/iv_tag1"
+                android:layout_alignLeft="@+id/tv_tag2"
+                android:layout_below="@+id/tv_tag2"
+                android:text="扫描二维码名片"
+                android:textColor="#B4B4B4"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15.4dp"
+                android:src="@drawable/hp_some_go" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1.6px"
+            android:layout_marginLeft="16.5dp"
+            android:background="@color/line_color_gray_d1"></LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_phone_contacts"
+            android:layout_width="match_parent"
+            android:layout_height="66dp">
+
+            <ImageView
+                android:id="@+id/iv_tag5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16.5dp"
+                android:src="@drawable/hp_mobile_contacts" />
+
+            <TextView
+                android:id="@+id/tv_tag6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/iv_tag5"
+                android:layout_marginLeft="17.6dp"
+                android:layout_toRightOf="@+id/iv_tag5"
+                android:text="手机联系人"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_tag7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/iv_tag5"
+                android:layout_alignLeft="@+id/tv_tag6"
+                android:layout_below="@+id/tv_tag6"
+                android:text="添加通讯录中的朋友"
+                android:textColor="#B4B4B4"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15.4dp"
+                android:src="@drawable/hp_some_go" />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

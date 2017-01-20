@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_add_friends"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/hp_add_friends" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/iv"
+            android:text="新的朋友"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:layout_alignLeft="@+id/iv"
+            android:layout_below="@+id/iv"
+            android:layout_marginTop="8dp"
+            android:background="@color/line_color_gray_d1"></LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_phone_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv2"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/hp_group_chats" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/iv2"
+            android:text="群聊"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/iv2"
+            android:layout_marginTop="8dp"
+            android:background="@color/line_color_gray_d1"></LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
