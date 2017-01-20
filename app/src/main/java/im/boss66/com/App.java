@@ -49,6 +49,11 @@ public class App extends Application {
         initData();
     }
 
+    public void newMethod(){
+
+    }
+
+
     private void initData() {
 //        mBaiduPushServer = new BaiduPush(BaiduPush.HTTP_METHOD_POST,
 //                SECRIT_KEY, API_KEY);
