@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/rl_top_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_navigation_bar_height"
-        android:background="@color/top_bar_color">
+        android:background="@color/top_bar_color"
+        android:paddingLeft="11dp"
+        android:paddingRight="11dp">
 
         <TextView
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="11dp"
             android:drawableLeft="@drawable/hp_back"
             android:drawablePadding="4dp"
             android:text="返回"
@@ -23,30 +22,33 @@
             android:textSize="16.5sp" />
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="二维码/条码"
+            android:text="@string/personall_icon"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/tv_photo_album"
+            android:id="@+id/tv_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="11dp"
-            android:visibility="gone"
+            android:layout_centerVertical="true"
             android:textColor="@color/white"
-            android:textSize="16.5sp"
-            android:text="相册"/>
+            android:textSize="30sp"
+            android:text="•••"/>
 
     </RelativeLayout>
 
-    <include
-        layout="@layout/scan_capture"
+    <ImageView
+        android:id="@+id/iv_icon"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/rl_top_bar"></include>
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/person"
+        android:scaleType="fitXY"
+        android:layout_marginTop="90dp"/>
+
 </RelativeLayout>

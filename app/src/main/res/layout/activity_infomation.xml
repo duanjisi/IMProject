@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rl_head_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16.5dp"
+                android:background="@color/white"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_richScan"
+                    android:text="头像"
+                    android:textColor="@color/black"
+                    android:textSize="18.7sp" />
+
+                <ImageView
+                    android:id="@+id/iv_go"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+                <ImageView
+                    android:id="@+id/iv_head"
+                    android:layout_width="70.4dp"
+                    android:layout_height="70.4dp"
+                    android:layout_marginRight="11dp"
+                    android:layout_toLeftOf="@+id/iv_go"
+                    android:src="@drawable/person"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/rl_richScan"
+                android:layout_marginLeft="17dp"
+                android:background="@color/bg_gray" />
+
+            <RelativeLayout
+                android:id="@+id/rl_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_richScan"
+                    android:text="名字"
+                    android:textColor="@color/black"
+                    android:textSize="18.7sp" />
+
+                <ImageView
+                    android:id="@+id/iv_go_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="11dp"
+                    android:layout_toLeftOf="@+id/iv_go_1"
+                    android:text="测试"
+                    android:textColor="@color/text_color_gray_b"
+                    android:textSize="17.6sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/rl_richScan"
+                android:layout_marginLeft="17dp"
+                android:background="@color/bg_gray" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="8.8dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_richScan"
+                    android:text="小6号"
+                    android:textColor="@color/black"
+                    android:textSize="18.7sp" />
+
+                <TextView
+                    android:id="@+id/tv_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="123456"
+                    android:textColor="@color/text_color_gray_b"
+                    android:textSize="17.6sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/rl_richScan"
+                android:layout_marginLeft="17dp"
+                android:background="@color/bg_gray" />
+
+            <RelativeLayout
+                android:id="@+id/rl_qr_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_richScan"
+                    android:text="我的二维码"
+                    android:textColor="@color/black"
+                    android:textSize="18.7sp" />
+
+                <ImageView
+                    android:id="@+id/iv_go_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="11dp"
+                    android:layout_toLeftOf="@+id/iv_go_2"
+                    android:background="@drawable/hp_grey_code" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_sex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:background="@color/white"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_richScan"
+                    android:text="性别"
+                    android:textColor="@color/black"
+                    android:textSize="18.7sp" />
+
+                <ImageView
+                    android:id="@+id/iv_go_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+                <TextView
+                    android:id="@+id/tv_sex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="11dp"
+                    android:layout_toLeftOf="@+id/iv_go_3"
+                    android:text="男"
+                    android:textColor="@color/text_color_gray_b"
+                    android:textSize="17.6sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/rl_richScan"
+                android:layout_marginLeft="17dp"
+                android:background="@color/bg_gray" />
+
+            <RelativeLayout
+                android:id="@+id/rl_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="8.8dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_richScan"
+                    android:text="地区"
+                    android:textColor="@color/black"
+                    android:textSize="18.7sp" />
+
+                <ImageView
+                    android:id="@+id/iv_go_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+                <TextView
+                    android:id="@+id/tv_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="11dp"
+                    android:layout_toLeftOf="@+id/iv_go_4"
+                    android:ellipsize="end"
+                    android:maxEms="9"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color_gray_b"
+                    android:textSize="17.6sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/rl_richScan"
+                android:layout_marginLeft="17dp"
+                android:background="@color/bg_gray" />
+
+            <RelativeLayout
+                android:id="@+id/rl_signature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_richScan"
+                    android:text="个性签名"
+                    android:textColor="@color/black"
+                    android:textSize="18.7sp" />
+
+                <ImageView
+                    android:id="@+id/iv_go_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+                <TextView
+                    android:id="@+id/tv_signature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="11dp"
+                    android:layout_toLeftOf="@+id/iv_go_5"
+                    android:ellipsize="end"
+                    android:maxEms="9"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color_gray_b"
+                    android:textSize="17.6sp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

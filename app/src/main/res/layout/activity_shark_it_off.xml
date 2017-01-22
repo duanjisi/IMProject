@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_navigation_bar_height"
+        android:paddingLeft="11dp"
+        android:paddingRight="11dp"
+        android:background="@color/top_bar_color">
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/hp_back"
+            android:drawablePadding="4dp"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:textSize="16.5sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="摇一摇"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/iv_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/hp_setup"/>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/hp_shake_bigphone"/>
+
+    <TextView
+        android:id="@+id/tv_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/iv_icon"
+        android:layout_centerHorizontal="true"
+        android:textSize="17.6sp"
+        android:text="@string/shark_it_off"/>
+
+    <ProgressBar
+        android:id="@+id/pb_shark"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_below="@+id/iv_icon"
+        android:layout_toLeftOf="@+id/tv_bottom"
+        android:layout_alignTop="@+id/tv_bottom"
+        android:layout_marginRight="6.6dp"
+        android:indeterminateDrawable="@drawable/common_loading3"
+        android:visibility="gone"/>
+
+</RelativeLayout>

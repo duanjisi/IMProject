@@ -1,17 +1,26 @@
 package im.boss66.com.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import im.boss66.com.R;
+import im.boss66.com.activity.CaptureActivity;
+import im.boss66.com.activity.ChatActivity;
+import im.boss66.com.activity.discover.SharkItOffActivity;
 
 /**
- * Created by Johnny on 2017/1/14.
+ * 发现的主界面
  */
-public class DiscoverFragment extends BaseFragment {
+public class DiscoverFragment extends BaseFragment implements View.OnClickListener {
+
+    private RelativeLayout rl_friends,rl_richScan,rl_shark_it_off,rl_people_nearby,rl_shopping,rl_game;
+    private TextView tv_friends_no_read,tv_nearby_no_read;
 
     @Nullable
     @Override
@@ -26,5 +35,43 @@ public class DiscoverFragment extends BaseFragment {
     }
 
     private void initViews(View view) {
+        rl_friends = (RelativeLayout) view.findViewById(R.id.rl_friends);
+        rl_richScan = (RelativeLayout) view.findViewById(R.id.rl_richScan);
+        rl_shark_it_off = (RelativeLayout) view.findViewById(R.id.rl_shark_it_off);
+        rl_people_nearby = (RelativeLayout) view.findViewById(R.id.rl_people_nearby);
+        rl_shopping = (RelativeLayout) view.findViewById(R.id.rl_shopping);
+        rl_game = (RelativeLayout) view.findViewById(R.id.rl_game);
+        tv_friends_no_read = (TextView) view.findViewById(R.id.tv_friends_no_read);
+        tv_nearby_no_read = (TextView) view.findViewById(R.id.tv_nearby_no_read);
+        rl_friends.setOnClickListener(this);
+        rl_richScan.setOnClickListener(this);
+        rl_shark_it_off.setOnClickListener(this);
+        rl_people_nearby.setOnClickListener(this);
+        rl_shopping.setOnClickListener(this);
+        rl_game.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.rl_friends:
+                break;
+            case R.id.rl_richScan:
+                Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                intent.putExtra("classType","DiscoverFragment");
+                startActivity(intent);
+                break;
+            case R.id.rl_shark_it_off:
+                Intent intent1 = new Intent(getActivity(), SharkItOffActivity.class);
+                intent1.putExtra("classType","DiscoverFragment");
+                startActivity(intent1);
+                break;
+            case R.id.rl_people_nearby:
+                break;
+            case R.id.rl_shopping:
+                break;
+            case R.id.rl_game:
+                break;
+        }
     }
 }

@@ -2,11 +2,301 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_top"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:gravity="center"
+        android:background="@color/top_bar_color"
+        android:text="发现"
+        android:textColor="@color/white"
+        android:textSize="17.5sp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="发现" />
+        android:layout_below="@+id/tv_top">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/rl_friends"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginTop="22dp"
+                android:paddingRight="16.5dp"
+                android:paddingLeft="16.5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_friend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="17.6dp"
+                    android:src="@drawable/hp_circle_friends"/>
+
+                <TextView
+                    android:id="@+id/tv_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/iv_friend"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:textSize="17.5sp"
+                    android:textColor="@color/black"
+                    android:text="朋友圈"/>
+
+                <TextView
+                    android:id="@+id/tv_friends_no_read"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:layout_toRightOf="@+id/tv_text"
+                    android:text="88"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/hp_big_chat"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_richScan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_below="@+id/rl_friends"
+                android:layout_marginTop="22dp"
+                android:paddingRight="16.5dp"
+                android:paddingLeft="16.5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_richScan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="17.6dp"
+                    android:src="@drawable/hp_gr_scan"/>
+
+                <TextView
+                    android:id="@+id/tv_richScan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/iv_richScan"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:textSize="17.5sp"
+                    android:textColor="@color/black"
+                    android:text="扫一扫"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go"/>
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/v_1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="17dp"
+                android:layout_below="@+id/rl_richScan"
+                android:background="@color/bg_gray"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_shark_it_off"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_below="@+id/v_1"
+                android:paddingRight="16.5dp"
+                android:paddingLeft="16.5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_shark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="17.6dp"
+                    android:src="@drawable/hp_shake_phone"/>
+
+                <TextView
+                    android:id="@+id/tv_shark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/iv_shark"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:textSize="17.5sp"
+                    android:textColor="@color/black"
+                    android:text="摇一摇"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_people_nearby"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_below="@+id/rl_shark_it_off"
+                android:layout_marginTop="22dp"
+                android:paddingRight="16.5dp"
+                android:paddingLeft="16.5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_people_nearby"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="17.6dp"
+                    android:src="@drawable/hp_personal"/>
+
+                <TextView
+                    android:id="@+id/tv_people_nearby"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/iv_people_nearby"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:textSize="17.5sp"
+                    android:textColor="@color/black"
+                    android:text="附近的人"/>
+
+                <TextView
+                    android:id="@+id/tv_nearby_no_read"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:layout_toRightOf="@+id/tv_people_nearby"
+                    android:text="88"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/hp_big_chat"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_shopping"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_below="@+id/rl_people_nearby"
+                android:layout_marginTop="22dp"
+                android:paddingRight="16.5dp"
+                android:paddingLeft="16.5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_shopping"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="17.6dp"
+                    android:src="@drawable/hp_shopping"/>
+
+                <TextView
+                    android:id="@+id/tv_shopping"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/iv_shopping"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:textSize="17.5sp"
+                    android:textColor="@color/black"
+                    android:text="购物"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go"/>
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/v_2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="17dp"
+                android:layout_below="@+id/rl_shopping"
+                android:background="@color/bg_gray"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_game"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_below="@+id/v_2"
+                android:paddingRight="16.5dp"
+                android:paddingLeft="16.5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_game"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="17.6dp"
+                    android:src="@drawable/hp_games"/>
+
+                <TextView
+                    android:id="@+id/tv_game"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/iv_game"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:textSize="17.5sp"
+                    android:textColor="@color/black"
+                    android:text="游戏"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
 </RelativeLayout>

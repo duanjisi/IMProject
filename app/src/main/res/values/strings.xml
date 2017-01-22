@@ -39,4 +39,14 @@
     <string name="main_contact_book">通讯</string>
     <string name="main_discover">发现</string>
     <string name="main_mine">个人</string>
+
+    <!--  摇一摇  -->
+    <string name="shark_it_off_ing">正在搜寻同一时\n刻摇晃手机的人</string>
+    <string name="shark_it_off">摇晃手机，寻找好友</string>
+    <string name="shark_hola_man">打招呼的人</string>
+    <string name="shark_history">摇到的历史</string>
+    <string name="shark_message">摇一摇消息</string>
+    <string name="shark_set">摇一摇设置</string>
+
+    <string name="personall_icon">个人头像</string>
 </resources>

@@ -46,7 +46,15 @@
         <activity android:name=".activity.RegisterActivity"></activity>
         <activity android:name=".activity.BindPhoneActivity"></activity>
         <activity android:name=".activity.UserDetailsActivity"></activity>
+
         <!--<activity android:name=".activity.LoginActivity"></activity>-->
+
+        <!-- 摇一摇主界面 -->
+        <activity android:name=".activity.discover.SharkItOffActivity"></activity>
+        <!-- 摇一摇设置界面 -->
+        <activity android:name=".activity.discover.SharkItOffSetActivity"></activity>
+        <!-- 个人信息 -->
+        <activity android:name=".activity.personage.PersonalInformationActivity"></activity>
 
         <service android:name=".services.ChatServices"></service><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
