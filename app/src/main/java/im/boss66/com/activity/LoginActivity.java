@@ -12,11 +12,15 @@ import android.widget.TextView;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.LoginRequest;
 
 /**
  * Created by Johnny on 2017/1/16.
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
+    private final static String TAG = LoginActivity.class.getSimpleName();
     private EditText etAccount, etPws;
     private Button btnLogin;
     private TextView tvRegister, tvForget;
@@ -49,6 +53,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     intent.putExtra("uid2", uid2);
                     startActivity(intent);
                 }
+            }
+        });
+    }
+
+    private void requestLogin() {
+        LoginRequest request = new LoginRequest(TAG, "username", "password");
+        showLoadingDialog();
+        request.send(new BaseDataRequest.RequestCallback<AccountEntity>() {
+            @Override
+            public void onSuccess(AccountEntity pojo) {
+                cancelLoadingDialog();
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                cancelLoadingDialog();
+                showToast(msg,true);
             }
         });
     }

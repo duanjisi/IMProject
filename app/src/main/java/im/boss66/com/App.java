@@ -41,10 +41,6 @@ public class App extends Application {
         return mApplication;
     }
 
-    public void mainasda(){
-
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();

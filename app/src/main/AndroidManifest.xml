@@ -46,6 +46,13 @@
         <activity android:name=".activity.RegisterActivity"></activity>
         <activity android:name=".activity.BindPhoneActivity"></activity>
         <activity android:name=".activity.UserDetailsActivity"></activity>
+        <activity android:name=".activity.InformSettingActivity"></activity>
+        <activity android:name=".activity.ComplainActivity"></activity>
+        <activity android:name=".activity.SocialInformActivity"></activity>
+        <activity android:name=".activity.RemarkInformActivity"></activity>
+        <activity android:name=".activity.PersonPhotoAlbumActivity"></activity>
+        <activity android:name=".activity.ChatBackgroundActivity"></activity>
+        <activity android:name=".activity.GroupChatNameActivity"></activity>
 
         <!--<activity android:name=".activity.LoginActivity"></activity>-->
 

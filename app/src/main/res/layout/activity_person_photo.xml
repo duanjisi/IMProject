@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -13,40 +14,32 @@
         <TextView
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="11dp"
             android:drawableLeft="@drawable/hp_back"
             android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="11dp"
             android:text="返回"
             android:textColor="@color/white"
             android:textSize="16.5sp" />
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="二维码/条码"
+            android:text="新年好"
             android:textColor="@color/white"
             android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tv_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="11dp"
-            android:paddingRight="11dp"
-            android:text="相册"
-            android:textColor="@color/white"
-            android:textSize="16.5sp" />
     </RelativeLayout>
 
-    <include
-        layout="@layout/scan_capture"
+    <ListView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/rl_top_bar"></include>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_top_bar"
+        android:scrollbars="none">
+
+    </ListView>
 </RelativeLayout>
