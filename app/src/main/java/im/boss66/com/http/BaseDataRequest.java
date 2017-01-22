@@ -2,10 +2,8 @@
  * Summary: App网络请求数据上传基础模型
  */
 package im.boss66.com.http;
-
 import android.os.Handler;
 import android.os.Looper;
-
 import com.alibaba.fastjson.JSON;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -21,7 +19,6 @@ import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.db.dao.JsonDao;
 import im.boss66.com.entity.JsonEntity;
-
 public abstract class BaseDataRequest<T> {
     private static String TAG = "BaseDataModel";
     private final Class<T> mGenericPojoClazz;

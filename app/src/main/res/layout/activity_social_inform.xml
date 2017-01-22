@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -27,27 +28,47 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="二维码/条码"
+            android:text="社交资料"
             android:textColor="@color/white"
             android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tv_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="11dp"
-            android:paddingRight="11dp"
-            android:text="相册"
-            android:textColor="@color/white"
-            android:textSize="16.5sp" />
     </RelativeLayout>
 
-    <include
-        layout="@layout/scan_capture"
+    <RelativeLayout
+        android:id="@+id/rl_02"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/rl_top_bar"></include>
+        android:layout_height="48.5dp"
+        android:layout_below="@+id/rl_top_bar"
+        android:layout_marginTop="22dp"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/line_color_gray_d2"></LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17.5dp"
+            android:text="来源"
+            android:textColor="#353535"
+            android:textSize="19.5sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15.4dp"
+            android:textColor="@color/bottom_text_color_default"
+            android:text="通过手机通讯录添加"
+            android:textSize="16.5sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/line_color_gray_d2"></LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

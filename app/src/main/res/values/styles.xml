@@ -85,4 +85,13 @@
         <item name="android:singleLine">true</item>
         <item name="android:textColor">@drawable/sel_main_bottom_navigation_text</item>
     </style>
+
+    <declare-styleable name="EaseSwitchButton">
+        <attr name="switchOpenImage" format="reference" />
+        <attr name="switchCloseImage" format="reference" />
+        <attr name="switchStatus">
+            <enum name="open" value="0" />
+            <enum name="close" value="1" />
+        </attr>
+    </declare-styleable>
 </resources>

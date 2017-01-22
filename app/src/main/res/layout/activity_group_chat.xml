@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -27,27 +28,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="二维码/条码"
+            android:text="群聊"
             android:textColor="@color/white"
             android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tv_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="11dp"
-            android:paddingRight="11dp"
-            android:text="相册"
-            android:textColor="@color/white"
-            android:textSize="16.5sp" />
     </RelativeLayout>
 
-    <include
-        layout="@layout/scan_capture"
+    <RelativeLayout
+        android:id="@+id/rl_01"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/rl_top_bar"></include>
+        android:layout_height="40dp"
+        android:layout_below="@+id/rl_top_bar"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/bg_frame_white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableLeft="@drawable/hp_search_gnm"
+            android:drawablePadding="8dp"
+            android:text="搜索"
+            android:textColor="@color/bottom_text_color_default" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_01"
+        android:layout_marginTop="14dp"
+        android:background="@color/white"
+        android:scrollbars="none">
+
+    </ListView>
 </RelativeLayout>
