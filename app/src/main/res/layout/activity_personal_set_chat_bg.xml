@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16.5dp"
+        android:background="@color/line_color_gray_d2"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_select_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/personal_bt_selector"
+            android:paddingBottom="18dp"
+            android:paddingLeft="16.5dp"
+            android:paddingRight="16.5dp"
+            android:paddingTop="18dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16.5dp"
+                android:layout_toRightOf="@+id/iv_photo"
+                android:text="@string/select_background"
+                android:textColor="@color/black"
+                android:textSize="17.5sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/hp_some_go" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/background_color" />
+
+        <RelativeLayout
+            android:id="@+id/rl_photo_album"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/personal_bt_selector"
+            android:paddingBottom="18dp"
+            android:paddingLeft="16.5dp"
+            android:paddingRight="16.5dp"
+            android:paddingTop="18dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16.5dp"
+                android:layout_toRightOf="@+id/iv_photo"
+                android:text="@string/from_the_mobile_phone_photo_album_choice"
+                android:textColor="@color/black"
+                android:textSize="17.5sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/hp_some_go" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="16.5dp"
+            android:layout_height="1dp"
+            android:background="@color/white" />
+
+        <RelativeLayout
+            android:id="@+id/rl_take_a_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/personal_bt_selector"
+            android:paddingBottom="18dp"
+            android:paddingLeft="16.5dp"
+            android:paddingRight="16.5dp"
+            android:paddingTop="18dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16.5dp"
+                android:layout_toRightOf="@+id/iv_photo"
+                android:text="@string/take_a_photo"
+                android:textColor="@color/black"
+                android:textSize="17.5sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/hp_some_go" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/background_color" />
+
+
+        <TextView
+            android:id="@+id/tv_apply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_photo"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/personal_bt_selector"
+            android:gravity="center"
+            android:paddingBottom="18dp"
+            android:paddingTop="18dp"
+            android:text="@string/apply_bg_to_chat_all_scenarios"
+            android:textColor="@color/black"
+            android:textSize="17.5sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -60,4 +60,24 @@
     <color name="actionsheet_blue">#037BFF</color>
     <color name="actionsheet_red">#FD4A2E</color>
     <color name="actionsheet_gray">#8F8F8F</color>
+    <color name="viewfinder_mask">#B2000000</color>
+    <color name="text_light_blue_font">#46B6EF</color>
+    <color name="text_light_gray">#717171</color>
+    <color name="text_app_num_gray">#838383</color>
+    <color name="text_new_alerts_gray">#767676</color>
+    <color name="bt_bg_gray1">#D42136</color>
+    <color name="bt_bg_gray">#DFDFDF</color>
+    <color name="tv_bg_gray">#F2F2F2</color>
+    <color name="bg_rectangle">#CCCCCC</color>
+    <color name="light_black">#2E2E2E</color>
+    <color name="color_8290AF">#8290AF</color>
+    <color name="color_232323">#232323</color>
+    <color name="color_aeaeae">#aeaeae</color>
+    <color name="im_line_color">#dadada</color>
+    <color name="im_font_color_text_hint">#abb1b6</color>
+    <color name="praise_item_default">#333333</color>
+    <color name="praise_item_selector_default">#cccccc</color>
+    <color name="praise_item">#8290AF</color>
+    <color name="default_clickable_color">#cccccc</color>
+    <color name="basic_color_primary">#373b3e</color>
 </resources>

@@ -3,11 +3,13 @@ package im.boss66.com.widget;
 /**
  * Created by GMARUnity on 2017/1/21.
  */
+
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.Display;
 import android.view.Gravity;
@@ -26,7 +28,7 @@ import im.boss66.com.R;
 /**
  * 自定义的actionSheet,有三部分组成（1.title   2.item  3.cancle按钮）
  * 当item 的条目多过8条时，item就能滚动显示
- * */
+ */
 public class ActionSheet {
     private Context context;
     private Dialog dialog;
@@ -218,7 +220,7 @@ public class ActionSheet {
     }
 
     public enum SheetItemColor {
-        Blue("#037BFF"), Red("#FD4A2E");
+        Blue("#037BFF"), Red("#FD4A2E"), Black("#000000");
         private String name;
 
         private SheetItemColor(String name) {
@@ -233,4 +235,5 @@ public class ActionSheet {
             this.name = name;
         }
     }
+
 }

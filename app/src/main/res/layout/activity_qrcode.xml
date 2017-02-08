@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roundiv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/text_color_gray_6">
+
+    <include android:id="@+id/title" layout="@layout/common_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="22dp"
+        android:layout_marginLeft="22dp"
+        android:padding="24.75dp"
+        android:orientation="vertical"
+        android:background="@drawable/bg_round_gary">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <im.boss66.com.widget.RoundImageView
+                android:id="@+id/iv_head"
+                android:layout_height="70.4dp"
+                android:layout_width="70.4dp"
+                roundiv:round_type="1"
+                roundiv:round_borderRadius="6dp"
+                android:src="@drawable/person"/>
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_head"
+                android:layout_marginLeft="11dp"
+                android:textColor="@color/black"
+                android:textSize="19.8sp"
+                android:text="test"/>
+
+            <TextView
+                android:id="@+id/tv_sex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tv_name"
+                android:layout_alignBottom="@+id/tv_name"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="4.4dp"
+                android:textColor="@color/text_light_blue_font"
+                android:textSize="13.2sp"
+                android:text="男"/>
+
+            <TextView
+                android:id="@+id/tv_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_name"
+                android:layout_below="@+id/tv_name"
+                android:layout_marginLeft="4.4dp"
+                android:layout_marginTop="15.4dp"
+                android:textColor="@color/text_light_gray"
+                android:textSize="13.2sp"
+                android:text="广东 广州"/>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_qcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="33dp"
+            android:background="@color/actionsheet_red"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:text="@string/richscan_add_my_to_friend"
+            android:textColor="@color/text_light_gray"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

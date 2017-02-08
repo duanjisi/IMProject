@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import im.boss66.com.R;
 import im.boss66.com.activity.personage.PersonalInformationActivity;
+import im.boss66.com.activity.personage.PersonalSetActivity;
+import im.boss66.com.activity.personage.WalletActivity;
 
 /**
  * 个人中心
@@ -64,10 +66,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             case R.id.rl_collect://收藏
                 break;
             case R.id.rl_wallet://钱包
+                Intent intent0 = new Intent(getActivity(),WalletActivity.class);
+                startActivity(intent0);
                 break;
             case R.id.rl_expression://表情
                 break;
             case R.id.rl_set://设置
+                Intent intent1 = new Intent(getActivity(),PersonalSetActivity.class);
+                startActivity(intent1);
                 break;
         }
     }

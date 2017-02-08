@@ -62,6 +62,46 @@
         <activity android:name=".activity.discover.SharkItOffSetActivity"></activity>
         <!-- 个人信息 -->
         <activity android:name=".activity.personage.PersonalInformationActivity"></activity>
+        <!-- 个人头像 -->
+        <activity android:name=".activity.personage.PersonalIconActivity"></activity>
+        <!-- 图片裁剪 -->
+        <activity android:name=".activity.personage.ClipImageActivity"></activity>
+        <!-- 我的二维码 -->
+        <activity android:name=".activity.personage.QrCodeActivity"></activity>
+        <!-- 修改个人名字，性别，个性签名共用类 -->
+        <activity android:name=".activity.personage.PersonalInfoChangeActivity"></activity>
+        <!-- 设置 -->
+        <activity android:name=".activity.personage.PersonalSetActivity"></activity>
+        <!-- 账号与安全 -->
+        <activity android:name=".activity.personage.PersonalAccountSafeActivity"></activity>
+        <!-- 设置-新消息通知 -->
+        <activity android:name=".activity.personage.PersonalNewAlertsActivity"></activity>
+        <!-- 设置-隐私 -->
+        <activity android:name=".activity.personage.PersonalPrivacyActivity"></activity>
+        <!-- 钱包 -->
+        <activity android:name=".activity.personage.WalletActivity"></activity>
+        <!-- 关于 -->
+        <activity android:name=".activity.personage.AboutAppActivity"></activity>
+        <!-- 设置-通用 -->
+        <activity android:name=".activity.personage.PersonalSetGeneralActivity"></activity>
+        <!-- 设置-聊天背景 -->
+        <activity android:name=".activity.personage.PersonalSetChatBgActivity"></activity>
+        <!-- 设置-照片和视频 -->
+        <activity android:name=".activity.personage.PersonalSetPhotosVideoActivity"></activity>
+        <!-- 设置-功能消息免打扰 -->
+        <activity android:name=".activity.personage.PersonalSetNoDisturbingActivity"></activity>
+        <!-- 设置-添加我的方式 -->
+        <activity android:name=".activity.personage.PersonalSetAddMyWayActivity"></activity>
+        <!-- 附近的人 -->
+        <activity android:name=".activity.discover.PeopleNearbyActivity"></activity>
+        <!-- 朋友圈 -->
+        <activity android:name=".activity.discover.FriendCircleActivity"></activity>
+        <!-- 朋友圈图片查看 -->
+        <activity android:name=".activity.discover.ImagePagerActivity"></activity>
+        <!-- 朋友圈新消息列表 -->
+        <activity android:name=".activity.discover.CircleMessageListActivity"></activity>
+        <!-- 更换相册封面 -->
+        <activity android:name=".activity.discover.ReplaceAlbumCoverActivity"></activity>
 
         <service android:name=".services.ChatServices"></service><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->

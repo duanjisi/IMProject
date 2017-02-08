@@ -38,7 +38,7 @@ public class SharkItOffActivity extends BaseActivity implements SensorEventListe
     }
 
     private void initView(){
-        tv_back = (TextView) findViewById(R.id.tv_bottom);
+        tv_back = (TextView) findViewById(R.id.tv_back);
         tv_bottom = (TextView) findViewById(R.id.tv_bottom);
         iv_set = (ImageView) findViewById(R.id.iv_set);
         pb_shark = (ProgressBar) findViewById(R.id.pb_shark);
@@ -48,7 +48,6 @@ public class SharkItOffActivity extends BaseActivity implements SensorEventListe
 
     @Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
         sensorManager.unregisterListener(this);
     }
@@ -63,7 +62,6 @@ public class SharkItOffActivity extends BaseActivity implements SensorEventListe
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        // TODO Auto-generated method stub
         int sensorType = event.sensor.getType();
         // values[0]:X轴，values[1]：Y轴，values[2]：Z轴
         float[] values = event.values;
@@ -122,7 +120,7 @@ public class SharkItOffActivity extends BaseActivity implements SensorEventListe
                 finish();
                 break;
             case R.id.iv_set:
-
+                openActivity(SharkItOffSetActivity.class);
                 break;
         }
     }
