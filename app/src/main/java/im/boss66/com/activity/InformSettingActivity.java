@@ -1,7 +1,6 @@
 package im.boss66.com.activity;
 
 import android.os.Bundle;
-
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 

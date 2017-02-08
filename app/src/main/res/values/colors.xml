@@ -7,6 +7,7 @@
     <color name="background_color">#f4f8fb</color>
     <color name="top_bar_color">#fd2741</color>
     <color name="color_hei_8">#00000000</color>
+    <color name="bg_pannel">#f0eff4</color>
     <color name="color_hei">#ff000000</color>
     <color name="grey">#58616d</color>
     <color name="transparent">#00000000</color>
@@ -40,6 +41,7 @@
     <color name="line_color_gray_d1">#d1d1d1</color>
     <color name="line_color_gray_d2">#dddddd</color>
     <color name="line_color_gray_c7">#c7c7c7</color>
+    <color name="ios7_white">#ffa8a8a8</color>
     <!-- 线条颜色 end -->
 
     <!-- 字体颜色 start -->

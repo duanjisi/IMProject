@@ -54,8 +54,11 @@
         <activity android:name=".activity.ChatBackgroundActivity"></activity>
         <activity android:name=".activity.GroupChatNameActivity"></activity>
 
+        <activity android:name=".activity.im.TestActivity"></activity>
+        <activity
+            android:name=".activity.im.EmojiEditActivity"
+            android:screenOrientation="portrait"></activity>
         <!--<activity android:name=".activity.LoginActivity"></activity>-->
-
         <!-- 摇一摇主界面 -->
         <activity android:name=".activity.discover.SharkItOffActivity"></activity>
         <!-- 摇一摇设置界面 -->

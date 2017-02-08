@@ -29,6 +29,7 @@ import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PrefKey;
 import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.ChatActivity;
+import im.boss66.com.activity.im.TestActivity;
 import im.boss66.com.adapter.ConversationAdapter;
 import im.boss66.com.db.dao.ConversationHelper;
 import im.boss66.com.entity.BaseConversation;
@@ -161,6 +162,8 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
                 if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 }
+                Intent intent = new Intent(context, TestActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -13,11 +13,23 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Johnny on 2016/7/25.
  */
 public class FileUtils {
+    public static String DCIMCamera_PATH = Environment
+            .getExternalStorageDirectory() + "/DCIM/Camera/";
+
+    public static String getNewFileName() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date curDate = new Date(System.currentTimeMillis());
+
+        return formatter.format(curDate);
+    }
+
     public static Bitmap getBitmapByPath(String filePath) {
         return getBitmapByPath(filePath, null);
     }

@@ -1,5 +1,4 @@
 package im.boss66.com.fragment;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import im.boss66.com.R;
 import im.boss66.com.activity.personage.PersonalInformationActivity;
-
 /**
  * 个人中心
  */

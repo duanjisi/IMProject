@@ -28,47 +28,51 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="群聊名称"
+            android:text="精选表情"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/tv_complete"
+        <ImageView
+            android:id="@+id/iv_more"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:gravity="center_vertical"
             android:paddingLeft="11dp"
             android:paddingRight="13dp"
-            android:text="完成"
+            android:src="@drawable/hp_setup"
             android:textColor="@color/white"
             android:textSize="16.5sp" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rl_top_bar"
-        android:layout_marginLeft="22dp"
-        android:layout_marginTop="26dp"
-        android:text="群聊名称"
-        android:textColor="@color/bottom_text_color_default"
-        android:textSize="18sp" />
-
     <RelativeLayout
+        android:id="@+id/rl_01"
         android:layout_width="match_parent"
-        android:layout_height="48.6dp"
-        android:layout_below="@+id/tv_tag"
-        android:layout_marginTop="4dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/rl_top_bar"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/bg_frame_white">
+
+        <TextView
+            android:id="@+id/tv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableLeft="@drawable/hp_search_gnm"
+            android:drawablePadding="8dp"
+            android:text="搜索"
+            android:textColor="@color/bottom_text_color_default" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_01"
+        android:layout_marginTop="10dp"
         android:background="@color/white">
 
-        <EditText
-            android:id="@+id/et_group_name"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:hint="输入群名称"
-            android:paddingLeft="22dp" />
-    </RelativeLayout>
+    </ListView>
 </RelativeLayout>

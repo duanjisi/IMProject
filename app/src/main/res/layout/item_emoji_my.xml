@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fl"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginLeft="16.5dp"
+        android:layout_marginTop="12dp">
+
+        <ImageView
+            android:id="@+id/iv_emoji"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/person" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="11dp"
+        android:layout_toLeftOf="@+id/tv_delete"
+        android:layout_toRightOf="@+id/fl"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="时代发生的开发建设快乐"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16.5dp"
+        android:background="@drawable/bg_frame_white"
+        android:paddingBottom="6dp"
+        android:paddingLeft="11dp"
+        android:paddingRight="11dp"
+        android:paddingTop="6dp"
+        android:text="移除"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignLeft="@+id/fl"
+        android:layout_below="@+id/fl"
+        android:layout_marginTop="11dp"
+        android:background="@color/line_color_gray_d1"
+        android:orientation="horizontal"></LinearLayout>
+</RelativeLayout>
