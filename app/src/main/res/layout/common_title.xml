@@ -12,10 +12,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:drawableLeft="@drawable/hp_back"
+        android:drawableLeft="@drawable/selector_text_bg_white_gary"
         android:drawablePadding="4dp"
         android:text="返回"
-        android:textColor="@color/white"
+        android:textColor="@drawable/selector_textcolor_white_gary"
         android:textSize="16.5sp" />
 
     <TextView
@@ -34,5 +34,16 @@
         android:layout_centerVertical="true"
         android:visibility="gone"
         android:src="@drawable/hp_setup" />
+
+    <TextView
+        android:id="@+id/tv_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textSize="16.5sp"
+        android:text="保存"/>
 
 </RelativeLayout>

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color">
+
+    <include layout="@layout/common_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16.5dp"
+            android:background="@color/line_color_gray_d2"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginTop="1dp"
+                android:paddingRight="16.5dp"
+                android:paddingLeft="16.5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/iv_photo"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:textSize="17.5sp"
+                    android:textColor="@color/black"
+                    android:text="@string/receive_new_alerts"/>
+
+                <ToggleButton
+                    android:id="@+id/sb_receive_new_alerts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:button="@drawable/selector_switch_bt"
+                    android:checked="true"
+                    android:text=""
+                    android:textOff=""
+                    android:textOn=""
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:background="@color/background_color"/>
+
+            <LinearLayout
+                android:id="@+id/ll_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/personal_bt_selector"
+                    android:layout_marginBottom="1dp"
+                    android:paddingRight="16.5dp"
+                    android:paddingLeft="16.5dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/iv_photo"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16.5dp"
+                        android:textSize="17.5sp"
+                        android:textColor="@color/black"
+                        android:text="@string/notify_the_display_messages"/>
+
+                    <ToggleButton
+                        android:id="@+id/sb_notify_display_msg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:button="@drawable/selector_switch_bt"
+                        android:checked="false"
+                        android:text=""
+                        android:textOff=""
+                        android:textOn=""
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background_color"
+                    android:layout_marginBottom="1dp"
+                    android:paddingRight="16.5dp"
+                    android:paddingLeft="16.5dp"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:textSize="15.6sp"
+                    android:textColor="@color/text_new_alerts_gray"
+                    android:text="@string/notify_the_display_messages_tip"/>
+
+                <RelativeLayout
+                    android:id="@+id/rl_no_disturbing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/personal_bt_selector"
+                    android:layout_marginBottom="1dp"
+                    android:paddingRight="16.5dp"
+                    android:paddingLeft="16.5dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/iv_photo"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16.5dp"
+                        android:textSize="17.5sp"
+                        android:textColor="@color/black"
+                        android:text="@string/not_disturb_function_of_news"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/hp_some_go"/>
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background_color"
+                    android:layout_marginBottom="1dp"
+                    android:paddingRight="16.5dp"
+                    android:paddingLeft="16.5dp"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:textSize="15.6sp"
+                    android:textColor="@color/text_new_alerts_gray"
+                    android:text="@string/not_disturb_function_of_news_tip"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/personal_bt_selector"
+                    android:paddingRight="16.5dp"
+                    android:paddingLeft="16.5dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/iv_photo"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16.5dp"
+                        android:textSize="17.5sp"
+                        android:textColor="@color/black"
+                        android:text="@string/voice"/>
+
+                    <ToggleButton
+                        android:id="@+id/sb_voice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:button="@drawable/selector_switch_bt"
+                        android:checked="false"
+                        android:text=""
+                        android:textOff=""
+                        android:textOn=""
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="16.5dp"
+                    android:layout_height="1dp"
+                    android:background="@color/white"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/personal_bt_selector"
+                    android:layout_marginBottom="1dp"
+                    android:paddingRight="16.5dp"
+                    android:paddingLeft="16.5dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/iv_photo"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16.5dp"
+                        android:textSize="17.5sp"
+                        android:textColor="@color/black"
+                        android:text="@string/vibration"/>
+
+                    <ToggleButton
+                        android:id="@+id/sb_vibration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:button="@drawable/selector_switch_bt"
+                        android:checked="false"
+                        android:text=""
+                        android:textOff=""
+                        android:textOn=""
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background_color"
+                    android:layout_marginBottom="1dp"
+                    android:paddingRight="16.5dp"
+                    android:paddingLeft="16.5dp"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:textSize="15.6sp"
+                    android:textColor="@color/text_new_alerts_gray"
+                    android:text="@string/vibration_tip"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/personal_bt_selector"
+                android:layout_marginBottom="1dp"
+                android:paddingRight="16.5dp"
+                android:paddingLeft="16.5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/iv_photo"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:textSize="17.5sp"
+                    android:textColor="@color/black"
+                    android:text="@string/circle_of_friends_photo_update"/>
+
+                <ToggleButton
+                    android:id="@+id/sb_friends_photo_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:button="@drawable/selector_switch_bt"
+                    android:checked="false"
+                    android:text=""
+                    android:textOff=""
+                    android:textOn=""
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background_color"
+                android:paddingRight="16.5dp"
+                android:paddingLeft="16.5dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:textSize="15.6sp"
+                android:textColor="@color/text_new_alerts_gray"
+                android:text="@string/circle_of_friends_photo_update_tip"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

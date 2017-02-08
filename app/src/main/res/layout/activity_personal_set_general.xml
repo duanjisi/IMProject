@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16.5dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/line_color_gray_d2"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rl_font_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/personal_bt_selector"
+                android:layout_marginTop="1dp"
+                android:paddingBottom="18dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="18dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_photo"
+                    android:text="@string/font_size"
+                    android:textColor="@color/black"
+                    android:textSize="17.5sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="16.5dp"
+                android:layout_height="1dp"
+                android:background="@color/white" />
+
+            <RelativeLayout
+                android:id="@+id/rl_chat_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="18dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="18dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_photo"
+                    android:text="@string/chat_bg"
+                    android:textColor="@color/black"
+                    android:textSize="17.5sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="16.5dp"
+                android:layout_height="1dp"
+                android:background="@color/white" />
+
+            <RelativeLayout
+                android:id="@+id/rl_my_face"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="18dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="18dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_photo"
+                    android:text="@string/my_face"
+                    android:textColor="@color/black"
+                    android:textSize="17.5sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="16.5dp"
+                android:layout_height="1dp"
+                android:background="@color/white" />
+
+            <RelativeLayout
+                android:id="@+id/rl_photos_videos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="18dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="18dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_photo"
+                    android:text="@string/photos_videos"
+                    android:textColor="@color/black"
+                    android:textSize="17.5sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/background_color" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_photo"
+                    android:text="@string/receiver_model"
+                    android:textColor="@color/black"
+                    android:textSize="17.5sp" />
+
+                <ToggleButton
+                    android:id="@+id/sb_receiver_model"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@android:color/transparent"
+                    android:button="@drawable/selector_switch_bt"
+                    android:checked="false"
+                    android:text=""
+                    android:textOff=""
+                    android:textOn="" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/background_color" />
+
+            <RelativeLayout
+                android:id="@+id/rl_function"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="18dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="18dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_photo"
+                    android:text="@string/function"
+                    android:textColor="@color/black"
+                    android:textSize="17.5sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/background_color" />
+
+            <RelativeLayout
+                android:id="@+id/rl_chat_logs_migration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="18dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="18dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_photo"
+                    android:text="@string/chat_logs_migration"
+                    android:textColor="@color/black"
+                    android:textSize="17.5sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="16.5dp"
+                android:layout_height="1dp"
+                android:background="@color/white" />
+
+            <RelativeLayout
+                android:id="@+id/rl_memory_space"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="18dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="18dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_photo"
+                    android:text="@string/memory_space"
+                    android:textColor="@color/black"
+                    android:textSize="17.5sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/background_color" />
+
+
+            <TextView
+                android:id="@+id/tv_clear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_photo"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/personal_bt_selector"
+                android:gravity="center"
+                android:paddingBottom="18dp"
+                android:paddingTop="18dp"
+                android:text="@string/empty_chat_record"
+                android:textColor="@color/black"
+                android:textSize="17.5sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

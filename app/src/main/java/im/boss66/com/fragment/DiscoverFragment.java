@@ -12,6 +12,8 @@ import android.widget.TextView;
 import im.boss66.com.R;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.ChatActivity;
+import im.boss66.com.activity.discover.FriendCircleActivity;
+import im.boss66.com.activity.discover.PeopleNearbyActivity;
 import im.boss66.com.activity.discover.SharkItOffActivity;
 
 /**
@@ -55,18 +57,21 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.rl_friends:
+                //
+                openActivity(FriendCircleActivity.class,null);
                 break;
             case R.id.rl_richScan:
-                Intent intent = new Intent(getActivity(), CaptureActivity.class);
-                intent.putExtra("classType","DiscoverFragment");
-                startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putString("classType","DiscoverFragment");
+                openActivity(CaptureActivity.class,bundle);
                 break;
             case R.id.rl_shark_it_off:
-                Intent intent1 = new Intent(getActivity(), SharkItOffActivity.class);
-                intent1.putExtra("classType","DiscoverFragment");
-                startActivity(intent1);
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("classType","DiscoverFragment");
+                openActivity(CaptureActivity.class,bundle1);
                 break;
             case R.id.rl_people_nearby:
+                openActivity(PeopleNearbyActivity.class,null);
                 break;
             case R.id.rl_shopping:
                 break;
@@ -74,4 +79,13 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
                 break;
         }
     }
+
+    private void openActivity(Class<?> clazz, Bundle bundle) {
+        Intent intent = new Intent(getActivity(), clazz);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        startActivity(intent);
+    }
+
 }

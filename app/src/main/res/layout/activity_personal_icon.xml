@@ -15,10 +15,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/hp_back"
+            android:drawableLeft="@drawable/selector_text_bg_white_gary"
             android:drawablePadding="4dp"
             android:text="返回"
-            android:textColor="@color/white"
+            android:textColor="@drawable/selector_textcolor_white_gary"
             android:textSize="16.5sp" />
 
         <TextView
@@ -42,13 +42,12 @@
 
     </RelativeLayout>
 
-    <ImageView
+    <im.boss66.com.widget.photoview.PhotoView
         android:id="@+id/iv_icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/person"
         android:scaleType="fitXY"
-        android:layout_marginTop="90dp"/>
+        android:src="@drawable/person" />
 
 </RelativeLayout>

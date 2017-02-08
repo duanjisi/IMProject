@@ -79,4 +79,19 @@ public class User implements Serializable {
                 + group + "]";
     }
 
+    private String headUrl;
+    public User(String id, String name, String headUrl){
+        this.UserId = id;
+        this.nick = name;
+        this.headUrl = headUrl;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
 }
