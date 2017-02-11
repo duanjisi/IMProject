@@ -68,7 +68,7 @@ public class BaseActivity extends FragmentActivity {
         startActivityForResult(intent, requestCode);
     }
 
-    public void openActvityForResult(Class<?> clazz, int requestCode,Bundle bundle) {
+    public void openActvityForResult(Class<?> clazz, int requestCode, Bundle bundle) {
         Intent intent = new Intent(this, clazz);
         if (bundle != null) {
             intent.putExtras(bundle);

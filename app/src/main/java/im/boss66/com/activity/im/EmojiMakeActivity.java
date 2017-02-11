@@ -31,7 +31,7 @@ public class EmojiMakeActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_back:
-
+                finish();
                 break;
         }
     }

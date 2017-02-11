@@ -1,5 +1,6 @@
 package im.boss66.com.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -45,7 +46,8 @@ public class AddFriendActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.rl_scanning:
-
+                Intent intent = new Intent(context, CaptureActivity.class);
+                startActivity(intent);
                 break;
             case R.id.rl_phone_contacts:
 

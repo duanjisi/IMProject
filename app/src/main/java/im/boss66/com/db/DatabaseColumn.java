@@ -26,7 +26,10 @@ public abstract class DatabaseColumn implements BaseColumns {
     public static final String AVATAR = "avatar";
 
     public static final String[] SUBCLASSES = new String[]{
-            "im.boss66.com.db.ConversationColumn"
+            "im.boss66.com.db.ConversationColumn",
+            "im.boss66.com.db.EmoCateColumn",
+            "im.boss66.com.db.EmoColumn",
+            "im.boss66.com.db.EmoGroupColumn"
     };
 
     public String getTableCreateor() {

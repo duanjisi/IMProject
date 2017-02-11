@@ -1,22 +1,38 @@
-package im.boss66.com.activity;
+package im.boss66.com.activity.im;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,12 +58,19 @@ import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.SharePreferenceUtil;
 import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.activity.ImageGridActivity;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.MessageAdapter;
 import im.boss66.com.db.MessageDB;
 import im.boss66.com.db.RecentDB;
+import im.boss66.com.db.dao.EmoCateHelper;
+import im.boss66.com.db.dao.EmoGroupHelper;
+import im.boss66.com.entity.EmoCate;
+import im.boss66.com.entity.EmoEntity;
+import im.boss66.com.entity.EmoGroup;
 import im.boss66.com.entity.MessageItem;
 import im.boss66.com.entity.RecentItem;
+import im.boss66.com.fragment.FaceFragment;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.services.ChatServices;
 import im.boss66.com.xlistview.MsgListView;
@@ -56,18 +79,21 @@ import im.boss66.com.xlistview.MsgListView;
  * Created by Johnny on 2017/1/10.
  */
 public class ChatActivity extends BaseActivity implements View.OnClickListener, ChatServices.receiveMessageCallback,
-        View.OnTouchListener, MsgListView.IXListViewListener {
+        View.OnTouchListener, MsgListView.IXListViewListener, FaceFragment.clickCallback {
     private static final String TAG = ChatActivity.class.getSimpleName();
     private static final int MESSAGE_TYPE_EMOTION = 0x011;
     private static final int MESSAGE_TYPE_IMG = 0x012;
     private static final int MESSAGE_TYPE_VIDEO = 0x013;
+    private static final int EMOTION_SETING_UP = 0x014;
+    private static final int EMOTION_STORE = 0x015;
     public final static String CHATPHOTO_PATH = Environment
             .getExternalStorageDirectory()
             + File.separator;
     private String[] codes = {"[拥抱]", "[鄙视]", "[困]"};
     public static final int NEW_MESSAGE = 0x001;// 收到消息
     public static int MSGPAGERNUM;
-    private LinearLayout ll_emotion, ll_picture;
+    private LinearLayout ll_emotion, ll_other;
+    private View viewFace;
     private ImageView iv00, iv01, iv02;
     public static String defaulgUserName = "在飞";
     public static String defaulgIcon = "4";
@@ -76,12 +102,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private WindowManager.LayoutParams mParams;
     //    private LinearLayout mllFace;// 表情显示的布局
     private boolean isFaceShow = false;
+    private boolean isOther = false;
     private InputMethodManager mInputMethodManager;
     //    private EditText mEtMsg;
     private App mApplication;
-    private Button mBtnAffix;
+    //    private Button mBtnAffix;
     private Button mBtnSend;// 发送消息按钮
-    private TextView tvImg, tvVideo, tvPhoto, tvImgs;
+    private ImageButton ibEditPic, ibFace, mBtnAffix;
+    private TextView tvImg, tvVideo, tvPhoto, tvImgs, tvCollect, tvRed, tvCard;
     private static MessageAdapter adapter;// 发送消息展示的adapter
     private MsgListView mMsgListView;// 展示消息的
     private MessageDB mMsgDB;// 保存消息的数据库
@@ -89,7 +117,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private String userid, uid, title;
     private boolean isGroupChat = false;
     private TextView tvBack, tvTitle;
-
+    private Resources resources;
+    private ArrayList<TextView> textViews;
+    private ArrayList<ImageView> imageViews;
+    private LinearLayout linearLayout, llBottom;
+    private ViewPager viewPager;
+    private ArrayList<EmoCate> categorys = new ArrayList<>();
+    private EditText mEtMsg;
+    private ImageView ivSelect, ivMake, ivAddPerson;
     /**
      * 接收到数据，用来更新listView
      */
@@ -177,7 +212,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         MSGPAGERNUM = 0;
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         mSpUtil = App.getInstance().getSpUtil();
-
+        resources = getResources();
 
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvTitle = (TextView) findViewById(R.id.tv_chat_title);
@@ -186,25 +221,47 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         tvTitle.setText(title);
 
         ll_emotion = (LinearLayout) findViewById(R.id.ll_emotion_test);
-        ll_picture = (LinearLayout) findViewById(R.id.ll_chatmain_affix);
+        ll_other = (LinearLayout) findViewById(R.id.ll_chatmain_affix);
+        viewFace = findViewById(R.id.view_face);
+//      tvImg = (TextView) findViewById(R.id.tv_picture);
+        tvVideo = (TextView) findViewById(R.id.tv_chat_video);
 
-        tvImg = (TextView) findViewById(R.id.tv_picture);
-        tvVideo = (TextView) findViewById(R.id.tv_video);
+        tvPhoto = (TextView) findViewById(R.id.tv_chat_photo);
+        tvImgs = (TextView) findViewById(R.id.tv_chat_img);
+        tvCollect = (TextView) findViewById(R.id.tv_chat_collect);
+        tvRed = (TextView) findViewById(R.id.tv_chat_red);
+        tvCard = (TextView) findViewById(R.id.tv_chat_card);
+        ibEditPic = (ImageButton) findViewById(R.id.ib_chat_edit_pic);
+        ibFace = (ImageButton) findViewById(R.id.ib_chat_face);
+        mEtMsg = (EditText) findViewById(R.id.msg_et);
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        linearLayout = (LinearLayout) findViewById(R.id.ll_main);
+        llBottom = (LinearLayout) findViewById(R.id.ll_bottom);
+        ivSelect = (ImageView) findViewById(R.id.iv_add_bq);
+        ivMake = (ImageView) findViewById(R.id.iv_add_pic);
+        ivAddPerson = (ImageView) findViewById(R.id.iv_add_person);
 
-        tvPhoto = (TextView) findViewById(R.id.tv_take_photo);
-        tvImgs = (TextView) findViewById(R.id.tv_take_img);
+        ivSelect.setOnClickListener(this);
+        ivMake.setOnClickListener(this);
+        ivAddPerson.setOnClickListener(this);
 
         tvPhoto.setOnClickListener(this);
         tvImgs.setOnClickListener(this);
-        tvImg.setOnClickListener(this);
+//        tvImg.setOnClickListener(this);
         tvVideo.setOnClickListener(this);
+        tvCollect.setOnClickListener(this);
+        tvRed.setOnClickListener(this);
+        tvCard.setOnClickListener(this);
+        ibEditPic.setOnClickListener(this);
+        ibFace.setOnClickListener(this);
+        mEtMsg.setOnTouchListener(this);
 
 //        mllFace = (LinearLayout) findViewById(R.id.face_ll);
         iv00 = (ImageView) findViewById(R.id.iv_gif_00);
         iv01 = (ImageView) findViewById(R.id.iv_gif_01);
         iv02 = (ImageView) findViewById(R.id.iv_gif_02);
 
-        mBtnAffix = (Button) findViewById(R.id.btn_chat_affix);
+        mBtnAffix = (ImageButton) findViewById(R.id.btn_chat_affix);
         mParams = getWindow().getAttributes();
 
 //        mEtMsg = (EditText) findViewById(R.id.msg_et);
@@ -221,6 +278,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mBtnSend.setClickable(true);
         mBtnSend.setEnabled(true);
         mBtnSend.setOnClickListener(this);
+        mBtnAffix.setOnClickListener(this);
 
         // 消息
         mApplication = App.getInstance();
@@ -235,9 +293,42 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mMsgListView.setAdapter(adapter);
         mMsgListView.setSelection(adapter.getCount() - 1);
 //        mTitleRightBtn.setOnClickListener(this);
-//        mEtMsgOnKeyListener();
+        mAdapter = new MyFragmentPageAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(mAdapter);
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.i("info", "==========onPageSelected()");
+                setBotBarSelector(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        mEtMsgOnKeyListener();
+        initDatas();
+        InItTitle1();
+//        InItBottomBar();
     }
 
+
+    private void initDatas() {
+//        categorys.add("日常");
+//        categorys.add("搞笑");
+//        categorys.add("动漫");
+//        categorys.add("娱乐");
+//        categorys.add("鬼脸");
+//        categorys.add("卖萌");
+//        categorys.add("奇葩");
+        categorys = (ArrayList<EmoCate>) EmoCateHelper.getInstance().query();
+    }
 
     /**
      * 加载消息历史，从数据库中读出
@@ -265,24 +356,25 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     /**
      * 输入框key监听事件
      */
-//    private void mEtMsgOnKeyListener() {
-//        mEtMsg.setOnKeyListener(new OnKeyListener() {
-//            @Override
-//            public boolean onKey(View v, int keyCode, KeyEvent event) {
-//                // TODO Auto-generated method stub
-//                if (keyCode == KeyEvent.KEYCODE_BACK) {
-//                    if (mParams.softInputMode == WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-//                            || isFaceShow) {
-////                        mllFace.setVisibility(View.GONE);
-//                        isFaceShow = false;
-//                        // imm.showSoftInput(msgEt, 0);
-//                        return true;
-//                    }
-//                }
-//                return false;
-//            }
-//        });
-
+    private void mEtMsgOnKeyListener() {
+        mEtMsg.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // TODO Auto-generated method stub
+//                || isFaceShow
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (mParams.softInputMode == WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE || isFaceShow || isOther) {
+                        viewFace.setVisibility(View.GONE);
+                        ll_other.setVisibility(View.GONE);
+                        isFaceShow = false;
+                        isOther = false;
+                        // imm.showSoftInput(msgEt, 0);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 //        mEtMsg.addTextChangedListener(new TextWatcher() {
 //            @Override
 //            public void onTextChanged(CharSequence s, int start, int before,
@@ -308,7 +400,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //                }
 //            }
 //        });
-//    }
+    }
+
     @Override
     public void onRefresh() {
         MSGPAGERNUM++;
@@ -339,19 +432,130 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.iv_gif_02:
                 sendEmotionMessage(codes[2]);
                 break;
-            case R.id.tv_picture:
-                UIUtils.hindView(ll_emotion);
-                UIUtils.showView(ll_picture);
-                break;
-            case R.id.tv_take_img:
+//            case R.id.tv_picture:
+//                UIUtils.hindView(ll_emotion);
+//                UIUtils.showView(ll_other);
+//                break;
+            case R.id.tv_chat_img:
                 takeImg();
                 break;
-            case R.id.tv_take_photo:
+            case R.id.tv_chat_photo:
                 takePhoto();
                 break;
-            case R.id.tv_video:
+            case R.id.tv_chat_collect://收藏
+
+                break;
+            case R.id.tv_chat_red://红包
+
+                break;
+            case R.id.tv_chat_card://名片
+
+                break;
+            case R.id.tv_chat_video:
                 Intent intent = new Intent(context, ImageGridActivity.class);
                 startActivityForResult(intent, 0);
+                break;
+            case R.id.ib_chat_edit_pic://可编辑的图片
+                UIUtils.hindView(ll_other);
+                isOther = false;
+//                if (!isFaceShow) {
+//                    mInputMethodManager.hideSoftInputFromWindow(
+//                            mEtMsg.getWindowToken(), 0);
+//                    try {
+//                        Thread.sleep(80);// 解决此时会黑一下屏幕的问题
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    viewFace.setVisibility(View.VISIBLE);
+//                    viewFace.findViewById(R.id.tv_edit).setVisibility(View.VISIBLE);
+//                    isFaceShow = true;
+//                } else {
+//                    viewFace.setVisibility(View.GONE);
+//                    isFaceShow = false;
+//                }
+                mInputMethodManager.hideSoftInputFromWindow(
+                        mEtMsg.getWindowToken(), 0);
+                try {
+                    Thread.sleep(80);// 解决此时会黑一下屏幕的问题
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                viewFace.setVisibility(View.VISIBLE);
+                viewFace.findViewById(R.id.tv_edit).setVisibility(View.VISIBLE);
+                isFaceShow = true;
+                break;
+            case R.id.ib_chat_face://表情
+                UIUtils.hindView(ll_other);
+                isOther = false;
+//                if (!isFaceShow) {
+//                    mInputMethodManager.hideSoftInputFromWindow(
+//                            mEtMsg.getWindowToken(), 0);
+//                    try {
+//                        Thread.sleep(80);// 解决此时会黑一下屏幕的问题
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    viewFace.setVisibility(View.VISIBLE);
+//                    viewFace.findViewById(R.id.tv_edit).setVisibility(View.GONE);
+//                    isFaceShow = true;
+//                } else {
+//                    viewFace.setVisibility(View.GONE);
+//                    isFaceShow = false;
+//                }
+                mInputMethodManager.hideSoftInputFromWindow(
+                        mEtMsg.getWindowToken(), 0);
+                try {
+                    Thread.sleep(80);// 解决此时会黑一下屏幕的问题
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                viewFace.setVisibility(View.VISIBLE);
+                viewFace.findViewById(R.id.tv_edit).setVisibility(View.GONE);
+                isFaceShow = true;
+                break;
+            case R.id.btn_chat_affix:
+                UIUtils.hindView(viewFace);
+                isFaceShow = false;
+                if (!isOther) {
+                    mInputMethodManager.hideSoftInputFromWindow(
+                            mEtMsg.getWindowToken(), 0);
+                    try {
+                        Thread.sleep(80);// 解决此时会黑一下屏幕的问题
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    UIUtils.showView(ll_other);
+                    isOther = true;
+                } else {
+                    ll_other.setVisibility(View.GONE);
+                    isOther = false;
+                }
+                break;
+
+            case R.id.iv_add_bq://精选表情
+                Intent it = new Intent(context, EmojiSelectWellActivity.class);
+                startActivity(it);
+                break;
+            case R.id.iv_add_pic://制作表情
+                Intent it2 = new Intent(context, EmojiMakeActivity.class);
+                startActivity(it2);
+                break;
+            case R.id.iv_add_person://聊天信息
+                Intent it3 = new Intent(context, ChatInformActivity.class);
+                startActivity(it3);
+                break;
+            default:
+                String tag = (String) view.getTag();
+                int id = view.getId();
+                if (tag.equals("top")) {
+                    setSelector(id);
+                } else {
+                    if (id != EMOTION_SETING_UP) {
+                        setBotBarSelector(id);
+                    } else {
+                        openActivity(EmojiMyActivity.class);
+                    }
+                }
                 break;
         }
     }
@@ -394,16 +598,20 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     public boolean onTouch(View v, MotionEvent motionEvent) {
         switch (v.getId()) {
             case R.id.msg_listView:
-//                mInputMethodManager.hideSoftInputFromWindow(
-//                        mEtMsg.getWindowToken(), 0);
-//                mllFace.setVisibility(View.GONE);
-//                isFaceShow = false;
+                viewFace.setVisibility(View.GONE);
+                ll_other.setVisibility(View.GONE);
+                mInputMethodManager.hideSoftInputFromWindow(
+                        mEtMsg.getWindowToken(), 0);
+                isFaceShow = false;
+                isOther = false;
                 break;
-//            case R.id.msg_et:
+            case R.id.msg_et:
 //                mInputMethodManager.showSoftInput(mEtMsg, 0);
-////                mllFace.setVisibility(View.GONE);
-//                isFaceShow = false;
-//                break;
+                viewFace.setVisibility(View.GONE);
+                ll_other.setVisibility(View.GONE);
+                isFaceShow = false;
+                isOther = false;
+                break;
             default:
                 break;
         }
@@ -484,7 +692,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //            showToast("发送者未登录!", true);
 //            return;
 //        }
-
         ChatServices.sendMessage(getString(MESSAGE_TYPE_IMG, photoPath));
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
@@ -576,7 +783,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             handler.sendMessage(msg);
         }
     }
-
 
 //    @Override
 //    public void onMessageReceive(String msgType, String senderId,
@@ -749,6 +955,259 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
+    private void InItTitle1() {
+        if (categorys != null && categorys.size() != 0) {
+            textViews = new ArrayList<TextView>();
+            int width = getWindowManager().getDefaultDisplay().getWidth() / 5;
+//        int height = 70;
+            int height = UIUtils.dip2px(this, 50);
+            for (int i = 0; i < categorys.size(); i++) {
+                TextView textView = new TextView(this);
+                textView.setText(categorys.get(i).getCate_name());
+                textView.setTextSize(17);
+                textView.setTextColor(resources.getColor(R.color.black));
+                textView.setWidth(width);
+                textView.setHeight(height - 30);
+                textView.setGravity(Gravity.CENTER);
+                textView.setTag("top");
+                textView.setId(i);
+                textView.setOnClickListener(this);
+                textViews.add(textView);
+                // �ָ���
+                View view = new View(this);
+                LinearLayout.LayoutParams layoutParams = new LayoutParams(
+                        LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                layoutParams.width = 1;
+                layoutParams.height = height - 40;
+                layoutParams.gravity = Gravity.CENTER;
+                view.setLayoutParams(layoutParams);
+                view.setBackgroundColor(resources.getColor(R.color.gray));
+                linearLayout.addView(textView);
+                if (i != categorys.size() - 1) {
+                    linearLayout.addView(view);
+                }
+            }
+        }
+    }
+
+    public void setSelector(int id) {
+        for (int i = 0; i < categorys.size(); i++) {
+            if (id == i) {
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+                        R.drawable.grouplist_item_bg_normal);
+                textViews.get(id).setBackgroundDrawable(
+                        new BitmapDrawable(bitmap));
+                textViews.get(id).setTextColor(Color.RED);
+//                viewPager.setCurrentItem(i);
+                EmoCate cate = categorys.get(i);
+                initCatePager(cate.getCate_id());
+            } else {
+                textViews.get(i).setBackgroundDrawable(new BitmapDrawable());
+                textViews.get(i).setTextColor(resources.getColor(R.color.black));
+            }
+        }
+    }
+
+    private ArrayList<Fragment> fragments = new ArrayList<>();
+    //    private ArrayList<Fragment> fragments;
+    private MyFragmentPageAdapter mAdapter;
+
+    private void initCatePager(String cateId) {
+        if (fragments != null && fragments.size() != 0) {
+            fragments.clear();
+        }
+        ArrayList<EmoGroup> groups = (ArrayList<EmoGroup>) EmoGroupHelper.getInstance().queryByCateId(cateId);
+        Log.i("info", "====cateId:" + cateId);
+        Log.i("info", "====groups.size():" + groups.size());
+        if (groups != null && groups.size() != 0) {
+            InItBottomBar(groups);
+//            ArrayList<Fragment> fragments = new ArrayList<>();
+            for (int i = 0; i < groups.size(); i++) {
+                EmoGroup group = groups.get(i);
+                FaceFragment fragment = FaceFragment.newInstance(group.getGroup_id());
+                fragment.setCallback(this);
+                fragments.add(fragment);
+            }
+            mAdapter.setFragments(fragments);
+            setBotBarSelector(0);
+        }
+    }
+
+    @Override
+    public void onItemClick(EmoEntity entity) {//点击表情，发送表情
+        showToast("emoji_id:" + entity.getEmo_id(), true);
+    }
+
+    public void setBotBarSelector(int id) {
+        for (int i = 0; i < fragments.size(); i++) {
+            if (id == i) {
+//                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+//                        R.drawable.grouplist_item_bg_normal);
+//                imageViews.get(id).setBackgroundDrawable(
+//                        new BitmapDrawable(bitmap));
+//                imageViews.get(id).setTextColor(Color.RED);
+                imageViews.get(i).setBackgroundColor(resources.getColor(R.color.chat_bottom));
+                viewPager.setCurrentItem(i);
+            } else {
+//                textViews.get(i).setBackgroundDrawable(new BitmapDrawable());
+                imageViews.get(i).setBackgroundColor(resources.getColor(R.color.white));
+//                textViews.get(i).setTextColor(resources.getColor(R.color.black));
+            }
+        }
+    }
+
+    private void InItBottomBar(ArrayList<EmoGroup> groups) {
+        llBottom.removeAllViews();
+        imageViews = new ArrayList<ImageView>();
+        int width = getWindowManager().getDefaultDisplay().getWidth() / 8;
+        int height = UIUtils.dip2px(this, 50);
+        for (int i = 0; i <= groups.size() + 1; i++) {
+            ImageView textView = new ImageView(this);
+            if (i == groups.size()) {
+                textView.setId(EMOTION_SETING_UP);
+            } else if (i == 0) {
+                textView.setId(EMOTION_STORE);
+            } else {
+                textView.setId(i);
+            }
+            textView.setTag("bottom");
+            textView.setOnClickListener(this);
+            textView.setMinimumWidth(width);
+            if (i == groups.size()) {
+                textView.setImageResource(R.drawable.hp_ch_setup);
+            } else if (i == 0) {
+                textView.setImageResource(R.drawable.love);
+            } else {
+                textView.setImageResource(R.drawable.f008);
+            }
+            imageViews.add(textView);
+            // �ָ���
+            View view = new View(this);
+            LinearLayout.LayoutParams layoutParams = new LayoutParams(
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            layoutParams.width = 1;
+            layoutParams.height = height - 40;
+            layoutParams.gravity = Gravity.CENTER;
+            view.setLayoutParams(layoutParams);
+            view.setBackgroundColor(resources.getColor(R.color.gray));
+            llBottom.addView(textView);
+            if (i != groups.size() - 1) {
+                llBottom.addView(view);
+            }
+        }
+    }
+
+    /**
+     * 自定义fragment适配器
+     *
+     * @author ZHF
+     */
+//    private class MyFragmentPageAdapter extends FragmentPagerAdapter {
+//        ArrayList<Fragment> fragments;
+//
+//        public MyFragmentPageAdapter(FragmentManager fm) {
+//            super(fm);
+//            fragments = new ArrayList<>();
+//        }
+//
+//        public MyFragmentPageAdapter(FragmentManager fm,
+//                                     ArrayList<Fragment> frags) {
+//            super(fm);
+//            fragments = frags;
+//        }
+//
+//        public void initDatas(ArrayList<Fragment> frags) {
+//            fragments.clear();
+//            fragments.addAll(frags);
+//            this.notifyDataSetChanged();
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return fragments.size();
+//        }
+//
+//        @Override
+//        public Fragment getItem(int position) {
+//            return fragments.get(position);
+//        }
+//    }
+
+    public class MyFragmentPageAdapter extends FragmentPagerAdapter {
+        private ArrayList<Fragment> fragments;
+        private FragmentManager fm;
+
+        public MyFragmentPageAdapter(FragmentManager fm) {
+            super(fm);
+            this.fm = fm;
+//            this.fragments = fragments;
+            fragments = new ArrayList<>();
+        }
+
+        public MyFragmentPageAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
+            super(fm);
+            this.fm = fm;
+            this.fragments = fragments;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            if (true) {//根据需求添加更新标示，UI更新完成后改回false，看不懂的回家种田
+                //得到缓存的fragment
+                Fragment fragment = (Fragment) super.instantiateItem(container, position);
+//得到tag，这点很重要
+                String fragmentTag = fragment.getTag(); //这里的tag是系统自己生产的，我们直接取就可以
+//如果这个fragment需要更新
+                FragmentTransaction ft = fm.beginTransaction();
+//移除旧的fragment
+                ft.remove(fragment);
+//换成新的fragment
+                fragment = fragments.get(position);
+//添加新fragment时必须用前面获得的tag，这点很重要
+                ft.add(container.getId(), fragment, fragmentTag);
+                ft.attach(fragment);
+                ft.commit();
+                return fragment;
+            } else {
+                return super.instantiateItem(container, position);
+            }
+        }
+
+        public void setFragments(ArrayList<Fragment> frags) {
+//            if (this.fragments != null) {
+//                FragmentTransaction ft = fm.beginTransaction();
+//                for (Fragment f : this.fragments) {
+//                    ft.remove(f);
+//                }
+//                ft.commit();
+//                ft = null;
+//                fm.executePendingTransactions();
+//            }
+//            this.fragments = fragments;
+//            notifyDataSetChanged();
+            fragments.clear();
+            fragments.addAll(frags);
+            this.notifyDataSetChanged();
+        }
+
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
+        public Fragment getItem(int arg0) {
+            return fragments.get(arg0);
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+
+
+    }
 
     @Override
     protected void onDestroy() {

@@ -33,6 +33,7 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
         ivSeting = (ImageView) findViewById(R.id.iv_more);
         tvSearch = (TextView) findViewById(R.id.tv_search);
         listView = (ListView) findViewById(R.id.listView);
+        tvBack.setOnClickListener(this);
         adapter = new EmojiWellAdapter(context);
         listView.setAdapter(adapter);
     }
@@ -44,7 +45,7 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
                 finish();
                 break;
             case R.id.iv_more://设置
-
+                openActivity(EmojiMyActivity.class);
                 break;
             case R.id.tv_search://收索
 

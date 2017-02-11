@@ -28,8 +28,9 @@ import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PrefKey;
 import im.boss66.com.Utils.PreferenceUtils;
-import im.boss66.com.activity.ChatActivity;
-import im.boss66.com.activity.im.TestActivity;
+import im.boss66.com.activity.AddFriendActivity;
+import im.boss66.com.activity.CaptureActivity;
+import im.boss66.com.activity.im.ChatActivity;
 import im.boss66.com.adapter.ConversationAdapter;
 import im.boss66.com.db.dao.ConversationHelper;
 import im.boss66.com.entity.BaseConversation;
@@ -162,7 +163,9 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
                 if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 }
-                Intent intent = new Intent(context, TestActivity.class);
+//                Intent intent = new Intent(context, TestActivity.class);
+//                startActivity(intent);
+                Intent intent = new Intent(context, AddFriendActivity.class);
                 startActivity(intent);
             }
         });
@@ -173,6 +176,8 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
                 if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 }
+                Intent intent = new Intent(context, CaptureActivity.class);
+                startActivity(intent);
             }
         });
         int[] location = new int[2];

@@ -21,13 +21,14 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
+    <!--android:theme="@android:style/Theme.NoTitleBar.Fullscreen"-->
     <application
         android:name="im.boss66.com.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/app_name"
@@ -54,8 +55,22 @@
         <activity android:name=".activity.PersonPhotoAlbumActivity"></activity>
         <activity android:name=".activity.ChatBackgroundActivity"></activity>
         <activity android:name=".activity.GroupChatNameActivity"></activity>
-
+        <activity android:name=".activity.im.ChatActivity"></activity>
         <activity android:name=".activity.im.TestActivity"></activity>
+        <activity android:name=".activity.im.EmojiMakeActivity"></activity>
+        <activity android:name=".activity.im.EmojiSelectWellActivity"></activity>
+
+        <!--我的表情-->
+        <activity android:name=".activity.im.EmojiMyActivity"></activity>
+        <!--表情管理-->
+        <activity android:name=".activity.im.EmojiManagerActivity"></activity>
+        <!--我添加的表情-->
+        <activity android:name=".activity.im.EmojiAddActivity"></activity>
+        <!--表情购买记录-->
+        <activity android:name=".activity.im.EmojiRecordActivity"></activity>
+
+        <!--聊天信息-->
+        <activity android:name=".activity.im.ChatInformActivity"></activity>
         <activity
             android:name=".activity.im.EmojiEditActivity"
             android:screenOrientation="portrait"></activity>

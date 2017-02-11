@@ -149,7 +149,6 @@ public class OperateView extends View {
     private Point mPreviousPos = new Point(0, 0); // single touch events
     float diff;
     float rot;
-
     /**
      * 多点触控操作
      *

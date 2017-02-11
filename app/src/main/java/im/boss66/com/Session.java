@@ -8,6 +8,7 @@ import java.util.Observable;
 public class Session extends Observable {
     private static Session session = null;
     public static final int ACTION_REFRSH_CONVERSATION_PAGE = 1011;
+    public static final int ACTION_DELETE_CURRENT_EMOJI_GROUP = 1012;
 
     public Session() {
 
@@ -23,6 +24,14 @@ public class Session extends Observable {
     public void refreshConversationPager() {
         SessionInfo sin = new SessionInfo();
         sin.setAction(ACTION_REFRSH_CONVERSATION_PAGE);
+        this.setChanged();
+        this.notifyObservers(sin);
+    }
+
+    public void deleteEmojiGroup(String groupid) {
+        SessionInfo sin = new SessionInfo();
+        sin.setAction(ACTION_DELETE_CURRENT_EMOJI_GROUP);
+        sin.setData(groupid);
         this.setChanged();
         this.notifyObservers(sin);
     }

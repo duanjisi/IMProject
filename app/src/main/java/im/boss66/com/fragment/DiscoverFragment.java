@@ -11,10 +11,8 @@ import android.widget.TextView;
 
 import im.boss66.com.R;
 import im.boss66.com.activity.CaptureActivity;
-import im.boss66.com.activity.ChatActivity;
 import im.boss66.com.activity.discover.FriendCircleActivity;
 import im.boss66.com.activity.discover.PeopleNearbyActivity;
-import im.boss66.com.activity.discover.SharkItOffActivity;
 
 /**
  * 发现的主界面

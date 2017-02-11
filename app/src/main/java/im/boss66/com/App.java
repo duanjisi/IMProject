@@ -19,6 +19,7 @@ public class App extends Application {
     public final static String API_KEY = "fiWrR2Ki8NkR6r5GHdM2lY7j";
     public final static String SECRIT_KEY = "PTtP7I1EfBnRMu0LimV8fRSIso0dZtgA";
     public static final String SP_FILE_NAME = "push_msg_sp";
+    public static final int PAGER_NUM = 4;
     // ======头像===
     public static final int[] heads = {R.drawable.h0};
     public static final int NUM_PAGE = 6;// 总共有多少页
@@ -226,7 +227,7 @@ public class App extends Application {
         mFaceMap.put("[尴尬]", R.drawable.f025);
         mFaceMap.put("[惊恐]", R.drawable.f026);
         mFaceMap.put("[冷汗]", R.drawable.f027);
-        mFaceMap.put("[爱心]", R.drawable.f028);
+        mFaceMap.put("[爱心]", R.drawable.love);
         mFaceMap.put("[示爱]", R.drawable.f029);
         mFaceMap.put("[白眼]", R.drawable.f030);
         mFaceMap.put("[傲慢]", R.drawable.f031);

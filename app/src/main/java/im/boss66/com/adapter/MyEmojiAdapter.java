@@ -4,14 +4,18 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import im.boss66.com.R;
+import im.boss66.com.Session;
 import im.boss66.com.Utils.ImageLoaderUtils;
-import im.boss66.com.entity.MyEmojiEntity;
+import im.boss66.com.entity.EmoGroup;
+
 /**
  * Created by Johnny on 2017/1/23.
  */
-public class MyEmojiAdapter extends ABaseAdapter<MyEmojiEntity> {
+public class MyEmojiAdapter extends ABaseAdapter<EmoGroup> {
 
     private ImageLoader imageLoader;
 
@@ -21,7 +25,7 @@ public class MyEmojiAdapter extends ABaseAdapter<MyEmojiEntity> {
     }
 
     @Override
-    protected View setConvertView(int position, MyEmojiEntity entity, View convertView) {
+    protected View setConvertView(int position, final EmoGroup entity, View convertView) {
         ViewHolder holder = null;
         if (convertView == null) {
             convertView = View.inflate(getContext(), R.layout.item_emoji_my, null);
@@ -32,8 +36,14 @@ public class MyEmojiAdapter extends ABaseAdapter<MyEmojiEntity> {
         }
 
         if (entity != null) {
-            holder.title.setText(entity.getTitle());
-            imageLoader.displayImage(entity.getIcon(), holder.imageView, ImageLoaderUtils.getDisplayImageOptions());
+            holder.title.setText(entity.getGroup_name());
+            imageLoader.displayImage(entity.getGroup_icon(), holder.imageView, ImageLoaderUtils.getDisplayImageOptions());
+            holder.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Session.getInstance().deleteEmojiGroup(entity.getGroup_id());
+                }
+            });
         }
         return convertView;
     }

@@ -11,14 +11,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.github.jdsjlzx.interfaces.OnLoadMoreListener;
 import com.github.jdsjlzx.interfaces.OnRefreshListener;
 import com.github.jdsjlzx.recyclerview.LRecyclerView;
 import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
-
 import java.util.List;
-
 import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
@@ -31,12 +28,10 @@ import im.boss66.com.entity.FriendCircleItem;
 import im.boss66.com.entity.FriendCircleTestData;
 import im.boss66.com.listener.CircleContractListener;
 import im.boss66.com.widget.ActionSheet;
-
 /**
  * 朋友圈
  */
 public class FriendCircleActivity extends BaseActivity implements View.OnClickListener, CircleContractListener.View, ActionSheet.OnSheetItemClickListener {
-
     private TextView tv_back;
     private ImageView iv_set;
     private LRecyclerView rv_friend;
