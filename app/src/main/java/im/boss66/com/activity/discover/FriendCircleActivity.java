@@ -144,7 +144,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void update2DeleteCircle(String circleId) {
-
+        ToastUtil.showShort(this,"删除本item");
     }
 
     @Override

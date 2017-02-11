@@ -88,4 +88,40 @@
         android:background="@color/alertdialog_line"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/tv_signature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/dp_18"
+        android:paddingRight="9dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="@dimen/dp_18"
+        android:visibility="gone"
+        android:gravity="center"
+        android:textColor="@color/grey"
+        android:textSize="18sp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_personal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_10"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="今天"
+            android:textSize="30sp"
+            android:textColor="@color/black"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/hp_addmore_photo"
+            android:layout_marginLeft="@dimen/dp_18"/>
+
+    </LinearLayout>
+
 </LinearLayout>

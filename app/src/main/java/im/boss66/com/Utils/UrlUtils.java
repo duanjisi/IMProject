@@ -59,6 +59,7 @@ public class UrlUtils {
                                 Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+phone));
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 context.startActivity(intent);
+
                             }
                         }, phoneMatcher.start(), phoneMatcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }

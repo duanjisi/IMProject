@@ -51,6 +51,12 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
             list.add("测试:..."+i);
         }
         adapter = new PeopleNearbyAdapter(this,list);
+        adapter.setOnItemClickListener(new PeopleNearbyAdapter.MyItemClickListener() {
+            @Override
+            public void onItemClick(View view, int postion) {
+                openActivity(PersonalNearbyDetailActivity.class);
+            }
+        });
         LRecyclerViewAdapter lRecyclerViewAdapter = new LRecyclerViewAdapter(adapter);
         rv_content.setAdapter(lRecyclerViewAdapter);
         tv_back.setOnClickListener(this);

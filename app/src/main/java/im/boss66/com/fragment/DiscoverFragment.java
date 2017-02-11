@@ -57,7 +57,6 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.rl_friends:
-                //
                 openActivity(FriendCircleActivity.class,null);
                 break;
             case R.id.rl_richScan:
@@ -66,9 +65,7 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
                 openActivity(CaptureActivity.class,bundle);
                 break;
             case R.id.rl_shark_it_off:
-                Bundle bundle1 = new Bundle();
-                bundle1.putString("classType","DiscoverFragment");
-                openActivity(CaptureActivity.class,bundle1);
+                openActivity(SharkItOffActivity.class,null);
                 break;
             case R.id.rl_people_nearby:
                 openActivity(PeopleNearbyActivity.class,null);

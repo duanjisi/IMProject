@@ -17,4 +17,8 @@
     <dimen name="image_thumbnail_size">100dp</dimen>
     <dimen name="image_thumbnail_spacing">1dp</dimen>
     <dimen name="gudieview_heigh">6dp</dimen>
+
+    <dimen name="mis_image_size">120dp</dimen>
+    <dimen name="mis_space_size">2dp</dimen>
+    <dimen name="mis_folder_cover_size">72dp</dimen>
 </resources>

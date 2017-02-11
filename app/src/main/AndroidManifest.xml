@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name="im.boss66.com.App"
@@ -105,6 +106,17 @@
         <activity android:name=".activity.discover.CircleMessageListActivity"></activity>
         <!-- 更换相册封面 -->
         <activity android:name=".activity.discover.ReplaceAlbumCoverActivity"></activity>
+        <!-- 视频播放 -->
+        <activity
+            android:name=".activity.discover.VideoPlayerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"></activity>
+        <!-- webview -->
+        <activity android:name=".activity.discover.WebViewActivity"></activity>
+        <!-- 附近的人详细资料 -->
+        <activity android:name=".activity.discover.PersonalNearbyDetailActivity"></activity>
+        <!-- 设置-通用 -->
+        <activity android:name=".activity.personage.PersonalPhotoAlbumActivity"></activity>
+
 
         <service android:name=".services.ChatServices"></service><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->

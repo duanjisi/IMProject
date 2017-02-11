@@ -64,8 +64,8 @@
         android:layout_below="@+id/iv_icon"
         android:layout_toLeftOf="@+id/tv_bottom"
         android:layout_alignTop="@+id/tv_bottom"
-        android:layout_marginRight="6.6dp"
-        android:indeterminateDrawable="@drawable/common_loading3"
+        android:layout_marginRight="8dp"
+        android:indeterminateDrawable="@drawable/common_loading4"
         android:visibility="gone"/>
 
 </RelativeLayout>
