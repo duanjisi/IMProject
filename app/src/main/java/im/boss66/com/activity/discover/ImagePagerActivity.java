@@ -2,6 +2,7 @@ package im.boss66.com.activity.discover;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -28,14 +29,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtils;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.widget.ActionSheet;
 import im.boss66.com.widget.photoview.PhotoView;
 import im.boss66.com.widget.photoview.PhotoViewAttacher;
 
 /**
  * Created by GMARUnity on 2017/2/3.
  */
-public class ImagePagerActivity extends BaseActivity{
+public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSheetItemClickListener {
 
     public static final String INTENT_IMGURLS = "imgurls";
     public static final String INTENT_POSITION = "position";
@@ -46,15 +50,15 @@ public class ImagePagerActivity extends BaseActivity{
     public ImageSize imageSize;
     private int startPos;
     private ArrayList<String> imgUrls;
+    private Bitmap bitmap;
+    private PhotoView pv_view;
 
-
-    public static void startImagePagerActivity(Context context, List<String> imgUrls, int position, ImageSize imageSize){
+    public static void startImagePagerActivity(Context context, List<String> imgUrls, int position, ImageSize imageSize) {
         Intent intent = new Intent(context, ImagePagerActivity.class);
         intent.putStringArrayListExtra(INTENT_IMGURLS, new ArrayList<String>(imgUrls));
         intent.putExtra(INTENT_POSITION, position);
         intent.putExtra(INTENT_IMAGESIZE, imageSize);
         context.startActivity(intent);
-
     }
 
     @Override
@@ -79,8 +83,8 @@ public class ImagePagerActivity extends BaseActivity{
 
             @Override
             public void onPageSelected(int position) {
-                for(int i=0; i<guideViewList.size(); i++){
-                    guideViewList.get(i).setSelected(i==position ? true : false);
+                for (int i = 0; i < guideViewList.size(); i++) {
+                    guideViewList.get(i).setSelected(i == position ? true : false);
                 }
             }
 
@@ -102,12 +106,12 @@ public class ImagePagerActivity extends BaseActivity{
     }
 
     private void addGuideView(LinearLayout guideGroup, int startPos, ArrayList<String> imgUrls) {
-        if(imgUrls!=null && imgUrls.size()>0){
+        if (imgUrls != null && imgUrls.size() > 0) {
             guideViewList.clear();
-            for (int i=0; i<imgUrls.size(); i++){
+            for (int i = 0; i < imgUrls.size(); i++) {
                 View view = new View(this);
                 view.setBackgroundResource(R.drawable.selector_circle_guide_bg);
-                view.setSelected(i==startPos ? true : false);
+                view.setSelected(i == startPos ? true : false);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.gudieview_heigh),
                         getResources().getDimensionPixelSize(R.dimen.gudieview_heigh));
                 layoutParams.setMargins(10, 0, 0, 0);
@@ -119,9 +123,9 @@ public class ImagePagerActivity extends BaseActivity{
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        try{
+        try {
             return super.dispatchTouchEvent(ev);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -136,21 +140,22 @@ public class ImagePagerActivity extends BaseActivity{
         private ImageView smallImageView = null;
 
         public void setDatas(List<String> datas) {
-            if(datas != null )
+            if (datas != null)
                 this.datas = datas;
         }
-        public void setImageSize(ImageSize imageSize){
+
+        public void setImageSize(ImageSize imageSize) {
             this.imageSize = imageSize;
         }
 
-        public ImageAdapter(Context context){
+        public ImageAdapter(Context context) {
             this.context = context;
             this.inflater = LayoutInflater.from(context);
         }
 
         @Override
         public int getCount() {
-            if(datas == null) return 0;
+            if (datas == null) return 0;
             return datas.size();
         }
 
@@ -158,22 +163,29 @@ public class ImagePagerActivity extends BaseActivity{
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
             View view = inflater.inflate(R.layout.item_pager_image, container, false);
-            if(view != null){
-                final PhotoView imageView = (PhotoView) view.findViewById(R.id.iv_icon);
-                imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            if (view != null) {
+                pv_view = (PhotoView) view.findViewById(R.id.iv_icon);
+                pv_view.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
                     @Override
                     public void onPhotoTap(View view, float x, float y) {
                         finish();
                     }
                 });
-                if(imageSize!=null){
+                pv_view.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        showActionSheet();
+                        return false;
+                    }
+                });
+                if (imageSize != null) {
                     //预览imageView
                     smallImageView = new ImageView(context);
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(imageSize.getWidth(), imageSize.getHeight());
                     layoutParams.gravity = Gravity.CENTER;
                     smallImageView.setLayoutParams(layoutParams);
                     smallImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    ((LinearLayout)view).addView(smallImageView);
+                    ((LinearLayout) view).addView(smallImageView);
                 }
 
                 //loading
@@ -182,7 +194,7 @@ public class ImagePagerActivity extends BaseActivity{
                         ViewGroup.LayoutParams.WRAP_CONTENT);
                 loadingLayoutParams.gravity = Gravity.CENTER;
                 loading.setLayoutParams(loadingLayoutParams);
-                ((LinearLayout)view).addView(loading);
+                ((LinearLayout) view).addView(loading);
 
                 final String imgurl = datas.get(position);
                 Glide.with(context)
@@ -190,7 +202,7 @@ public class ImagePagerActivity extends BaseActivity{
                         .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存多个尺寸
                         .thumbnail(0.1f)//先显示缩略图  缩略图为原图的1/10
                         .error(R.drawable.ic_launcher)
-                        .into(new GlideDrawableImageViewTarget(imageView){
+                        .into(new GlideDrawableImageViewTarget(pv_view) {
                             @Override
                             public void onLoadStarted(Drawable placeholder) {
                                 super.onLoadStarted(placeholder);
@@ -258,7 +270,7 @@ public class ImagePagerActivity extends BaseActivity{
         private int width;
         private int height;
 
-        public ImageSize(int width, int height){
+        public ImageSize(int width, int height) {
             this.width = width;
             this.height = height;
         }
@@ -280,4 +292,26 @@ public class ImagePagerActivity extends BaseActivity{
         }
     }
 
+    private void showActionSheet() {
+        ActionSheet actionSheet = new ActionSheet(ImagePagerActivity.this)
+                .builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true);
+        actionSheet.addSheetItem(getString(R.string.save_photo), ActionSheet.SheetItemColor.Black,
+                ImagePagerActivity.this);
+        actionSheet.show();
+    }
+
+    @Override
+    public void onClick(int which) {
+        if (pv_view != null) {
+            pv_view.setDrawingCacheEnabled(true);
+            Bitmap bitmap = pv_view.getDrawingCache();
+            FileUtils.saveImageToGallery(this,bitmap);
+            pv_view.setDrawingCacheEnabled(false);
+            ToastUtil.showShort(this, getString(R.string.success_save));
+        } else {
+            ToastUtil.showShort(this, getString(R.string.msg_could_not_save_photo));
+        }
+    }
 }

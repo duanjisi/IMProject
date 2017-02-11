@@ -9,7 +9,7 @@ import java.util.Random;
  */
 public class FriendCircleTestData {
 
-    public static final String[] CONTENTS = { "",
+    public static final String[] CONTENTS = {"",
             "哈哈，18123456789,ChinaAr  http://www.ChinaAr.com;一个不错的VR网站。哈哈，ChinaAr  http://www.ChinaAr.com;一个不错的VR网站。哈哈，ChinaAr  http://www.ChinaAr.com;一个不错的VR网站。哈哈，ChinaAr  http://www.ChinaAr.com;一个不错的VR网站。",
             //"今天是个好日子，http://www.ChinaAr.com;一个不错的VR网站,18123456789,",
             //"呵呵，http://www.ChinaAr.com;一个不错的VR网站,18123456789,",
@@ -17,7 +17,7 @@ public class FriendCircleTestData {
             "VR（Virtual Reality，即虚拟现实，简称VR），是由美国VPL公司创建人拉尼尔（Jaron Lanier）在20世纪80年代初提出的。其具体内涵是：综合利用计算机图形系统和各种现实及控制等接口设备，在计算机上生成的、可交互的三维环境中提供沉浸感觉的技术。其中，计算机生成的、可交互的三维环境称为虚拟环境（即Virtual Environment，简称VE）。虚拟现实技术是一种可以创建和体验虚拟世界的计算机仿真系统的技术。它利用计算机生成一种模拟环境，利用多源信息融合的交互式三维动态视景和实体行为的系统仿真使用户沉浸到该环境中。",
             //"哈哈哈哈",
             //"图不错",
-            "我勒个去" };
+            "我勒个去"};
     /*public static final String[] PHOTOS = {
             "http://f.hiphotos.baidu.com/image/pic/item/faf2b2119313b07e97f760d908d7912396dd8c9c.jpg",
             "http://g.hiphotos.baidu.com/image/pic/item/4b90f603738da977c76ab6fab451f8198718e39e.jpg",
@@ -61,6 +61,7 @@ public class FriendCircleTestData {
      */
     private static int commentId = 0;
     public static final User curUser = new User("0", "自己", HEADIMG[0]);
+
     static {
         User user1 = new User("1", "张三", HEADIMG[1]);
         User user2 = new User("2", "李四", HEADIMG[2]);
@@ -153,18 +154,19 @@ public class FriendCircleTestData {
 
             item.setFavorters(createFavortItemList());
             item.setComments(createCommentItemList());
-            int type = getRandomNum(10) % 2;
+            int type = getRandomNum(12) % 4;
             if (type == 0) {
                 item.setType("1");// 链接
                 item.setLinkImg("http://pics.sc.chinaz.com/Files/pic/icons128/2264/%E8%85%BE%E8%AE%AFQQ%E5%9B%BE%E6%A0%87%E4%B8%8B%E8%BD%BD1.png");
                 item.setLinkTitle("百度一下，你就知道");
-            } else if(type == 1){
+                item.setVideoUrl("http://baidu.com");
+            } else if (type == 1) {
                 item.setType("2");// 图片
                 item.setPhotos(createPhotos());
-            }else {
+            } else {
                 item.setType("3");// 视频
-                String videoUrl = "http://yiwcicledemo.s.qupai.me/v/80c81c19-7c02-4dee-baca-c97d9bbd6607.mp4";
-                String videoImgUrl = "http://yiwcicledemo.s.qupai.me/v/80c81c19-7c02-4dee-baca-c97d9bbd6607.jpg";
+                String videoUrl = "http://162.250.97.90/file/PLAY/61180.mp4";
+                String videoImgUrl = "http://img.68mtv.com//upload/music/201702/03/1486105642.jpg";
                 item.setVideoUrl(videoUrl);
                 item.setVideoImgUrl(videoImgUrl);
             }
@@ -172,6 +174,42 @@ public class FriendCircleTestData {
         }
 
         return circleDatas;
+    }
+
+    public static List<PersonalPhotoAlbumItem> createPhotoAlbum() {
+        List<PersonalPhotoAlbumItem> list = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            PersonalPhotoAlbumItem item = new PersonalPhotoAlbumItem();
+            List<PhotoAlbumChildItem> photoAlbumChildList = new ArrayList<>();
+            item.setTime("" + (2017 - i));
+            int type = getRandomNum(12) % 4;
+            for (int j = 0; j < type; j++) {
+                PhotoAlbumChildItem child = new PhotoAlbumChildItem();
+                child.setContent(getContent());
+                child.setCreateTime("" + (8 - i) + "月" + (25 - i) + "日");
+
+                int contentType = getRandomNum(12) % 4;
+                if (type == 0) {
+                    child.setContenType("1");// 链接
+                    child.setLinkImg("http://pics.sc.chinaz.com/Files/pic/icons128/2264/%E8%85%BE%E8%AE%AFQQ%E5%9B%BE%E6%A0%87%E4%B8%8B%E8%BD%BD1.png");
+                    child.setLinkTitle("百度一下，你就知道");
+                    child.setVideoUrl("http://baidu.com");
+                } else if (type == 1) {
+                    child.setContenType("2");// 图片
+                    child.setPhotos(createPhotos());
+                } else {
+                    child.setContenType("3");// 视频
+                    String videoUrl = "http://162.250.97.90/file/PLAY/61180.mp4";
+                    String videoImgUrl = "http://img.68mtv.com//upload/music/201702/03/1486105642.jpg";
+                    child.setVideoUrl(videoUrl);
+                    child.setVideoImgUrl(videoImgUrl);
+                }
+
+                photoAlbumChildList.add(child);
+            }
+            item.setList(photoAlbumChildList);
+        }
+        return list;
     }
 
     public static User getUser() {
@@ -271,9 +309,10 @@ public class FriendCircleTestData {
 
     /**
      * 创建发布评论
+     *
      * @return
      */
-    public static FriendCircleItem createPublicComment(String content){
+    public static FriendCircleItem createPublicComment(String content) {
         FriendCircleItem item = new FriendCircleItem();
         item.setId(String.valueOf(commentId++));
         item.setContent(content);
@@ -283,9 +322,10 @@ public class FriendCircleTestData {
 
     /**
      * 创建回复评论
+     *
      * @return
      */
-    public static FriendCircleItem createReplyComment(User replyUser, String content){
+    public static FriendCircleItem createReplyComment(User replyUser, String content) {
         FriendCircleItem item = new FriendCircleItem();
         item.setId(String.valueOf(commentId++));
         item.setContent(content);
@@ -295,7 +335,7 @@ public class FriendCircleTestData {
     }
 
 
-    public static CircleItem createVideoItem(String videoUrl, String imgUrl){
+    public static CircleItem createVideoItem(String videoUrl, String imgUrl) {
         CircleItem item = new CircleItem();
         item.setId(String.valueOf(circleId++));
         item.setUser(curUser);

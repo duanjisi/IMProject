@@ -1,6 +1,5 @@
 package im.boss66.com.adapter.ViewHolder;
 
-import android.media.MediaPlayer;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewStub;
@@ -9,16 +8,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import im.boss66.com.R;
-import im.boss66.com.listener.VideoLoadListener;
 import im.boss66.com.widget.CommentListView;
+import im.boss66.com.widget.ExpandTextView;
 import im.boss66.com.widget.PraiseListView;
 import im.boss66.com.widget.SnsPopupWindow;
-import im.boss66.com.widget.TextureVideoView;
 
 /**
  * Created by GMARUnity on 2017/2/3.
  */
-public abstract class CircleViewHolder extends RecyclerView.ViewHolder implements VideoLoadListener {
+public abstract class CircleViewHolder extends RecyclerView.ViewHolder {
 
     public final static int TYPE_URL = 1;
     public final static int TYPE_IMAGE = 2;
@@ -30,7 +28,7 @@ public abstract class CircleViewHolder extends RecyclerView.ViewHolder implement
     public TextView nameTv;
     public TextView urlTipTv;
     /** 动态的内容 */
-   // public ExpandTextView contentTv;
+   public ExpandTextView contentTv;
     public TextView timeTv;
     public TextView deleteBtn;
     public ImageView snsBtn;
@@ -57,7 +55,7 @@ public abstract class CircleViewHolder extends RecyclerView.ViewHolder implement
         nameTv = (TextView) itemView.findViewById(R.id.nameTv);
         digLine = itemView.findViewById(R.id.lin_dig);
 
-        //contentTv = (ExpandTextView) itemView.findViewById(R.id.contentTv);
+        contentTv = (ExpandTextView) itemView.findViewById(R.id.contentTv);
         urlTipTv = (TextView) itemView.findViewById(R.id.urlTipTv);
         timeTv = (TextView) itemView.findViewById(R.id.timeTv);
         deleteBtn = (TextView) itemView.findViewById(R.id.deleteBtn);
@@ -72,29 +70,4 @@ public abstract class CircleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     public abstract void initSubView(int viewType, ViewStub viewStub);
-
-    @Override
-    public TextureVideoView getVideoView() {
-        return null;
-    }
-
-    @Override
-    public void videoBeginning() {
-
-    }
-
-    @Override
-    public void videoStopped() {
-
-    }
-
-    @Override
-    public void videoPrepared(MediaPlayer player) {
-
-    }
-
-    @Override
-    public void videoResourceReady(String videoPath) {
-
-    }
 }

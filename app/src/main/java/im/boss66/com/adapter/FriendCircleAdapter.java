@@ -1,6 +1,7 @@
 package im.boss66.com.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,8 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.ToastUtil;
+import im.boss66.com.Utils.UrlUtils;
 import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.activity.discover.ImagePagerActivity;
+import im.boss66.com.activity.discover.VideoPlayerActivity;
+import im.boss66.com.activity.discover.WebViewActivity;
 import im.boss66.com.adapter.ViewHolder.CircleViewHolder;
 import im.boss66.com.adapter.ViewHolder.ImageViewHolder;
 import im.boss66.com.adapter.ViewHolder.URLViewHolder;
@@ -28,8 +33,8 @@ import im.boss66.com.entity.FavortItem;
 import im.boss66.com.entity.FriendCircleItem;
 import im.boss66.com.entity.FriendCircleTestData;
 import im.boss66.com.entity.PhotoInfo;
-import im.boss66.com.widget.CircleVideoView;
 import im.boss66.com.widget.CommentListView;
+import im.boss66.com.widget.ExpandTextView;
 import im.boss66.com.widget.MultiImageView;
 import im.boss66.com.widget.PraiseListView;
 import im.boss66.com.widget.SnsPopupWindow;
@@ -39,36 +44,22 @@ import im.boss66.com.widget.circle.GlideCircleTransform;
 /**
  * Created by GMARUnity on 2017/2/3.
  */
-public class FriendCircleAdapter extends BaseRecycleViewAdapter{
+public class FriendCircleAdapter extends BaseRecycleViewAdapter {
 
-    public final static int TYPE_HEAD = 0;
-
-    private static final int STATE_IDLE = 0;
-    private static final int STATE_ACTIVED = 1;
-    private static final int STATE_DEACTIVED = 2;
-    private int videoState = STATE_IDLE;
     public static final int HEADVIEW_SIZE = 0;
-
-    int curPlayIndex=-1;
-
     private CirclePresenter presenter;
     private Context context;
-    //private int sceenW;
 
-    public void setCirclePresenter(CirclePresenter presenter){
+    public void setCirclePresenter(CirclePresenter presenter) {
         this.presenter = presenter;
     }
 
-    public FriendCircleAdapter(Context context){
+    public FriendCircleAdapter(Context context) {
         this.context = context;
-        //sceenW = UIUtils.getScreenWidth(context)/3*2;
     }
 
     @Override
     public int getItemViewType(int position) {
-//        if(position == 0){
-//            return TYPE_HEAD;
-//        }
 
         int itemType = 0;
         CircleItem item = (CircleItem) datas.get(position);
@@ -76,7 +67,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
             itemType = CircleViewHolder.TYPE_URL;
         } else if (CircleItem.TYPE_IMG.equals(item.getType())) {
             itemType = CircleViewHolder.TYPE_IMAGE;
-        } else if(CircleItem.TYPE_VIDEO.equals(item.getType())){
+        } else if (CircleItem.TYPE_VIDEO.equals(item.getType())) {
             itemType = CircleViewHolder.TYPE_VIDEO;
         }
         return itemType;
@@ -85,20 +76,13 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder = null;
-//        if(viewType == TYPE_HEAD){
-//            View headView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_friend_circle_head, parent, false);
-//            viewHolder = new HeaderViewHolder(headView);
-//        }else{
-//
-//        }
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_friend_circle, parent, false);
 
-        if(viewType == CircleViewHolder.TYPE_URL){
+        if (viewType == CircleViewHolder.TYPE_URL) {
             viewHolder = new URLViewHolder(view);
-        }else if(viewType == CircleViewHolder.TYPE_IMAGE){
+        } else if (viewType == CircleViewHolder.TYPE_IMAGE) {
             viewHolder = new ImageViewHolder(view);
-        }else if(viewType == CircleViewHolder.TYPE_VIDEO){
+        } else if (viewType == CircleViewHolder.TYPE_VIDEO) {
             viewHolder = new VideoViewHolder(view);
         }
         return viewHolder;
@@ -106,12 +90,6 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
-
-//        if(getItemViewType(position)==TYPE_HEAD){
-//            //HeaderViewHolder holder = (HeaderViewHolder) viewHolder;
-//        }else{
-//
-//        }
 
         final int circlePosition = position - HEADVIEW_SIZE;
         final CircleViewHolder holder = (CircleViewHolder) viewHolder;
@@ -131,22 +109,34 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
         holder.nameTv.setText(name);
         holder.timeTv.setText(createTime);
 
-        if(FriendCircleTestData.curUser.getUserId().equals(circleItem.getUser().getUserId())){
+        if (!TextUtils.isEmpty(content)) {
+            holder.contentTv.setExpand(circleItem.isExpand());
+            holder.contentTv.setExpandStatusListener(new ExpandTextView.ExpandStatusListener() {
+                @Override
+                public void statusChange(boolean isExpand) {
+                    circleItem.setExpand(isExpand);
+                }
+            });
+            holder.contentTv.setText(UrlUtils.formatUrlString(content));
+        }
+        holder.contentTv.setVisibility(TextUtils.isEmpty(content) ? View.GONE : View.VISIBLE);
+
+        if (FriendCircleTestData.curUser.getUserId().equals(circleItem.getUser().getUserId())) {
             holder.deleteBtn.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.deleteBtn.setVisibility(View.GONE);
         }
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //删除
-                if(presenter!=null){
+                if (presenter != null) {
                     presenter.deleteCircle(circleId);
                 }
             }
         });
-        if(hasFavort || hasComment){
-            if(hasFavort){//处理点赞列表
+        if (hasFavort || hasComment) {
+            if (hasFavort) {//处理点赞列表
                 holder.praiseListView.setOnItemClickListener(new PraiseListView.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {
@@ -157,21 +147,21 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
                 });
                 holder.praiseListView.setDatas(favortDatas);
                 holder.praiseListView.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 holder.praiseListView.setVisibility(View.GONE);
             }
 
-            if(hasComment){//处理评论列表
+            if (hasComment) {//处理评论列表
                 holder.commentList.setOnItemClickListener(new CommentListView.OnItemClickListener() {
                     @Override
                     public void onItemClick(int commentPosition) {
                         FriendCircleItem commentItem = commentsDatas.get(commentPosition);
-                        if(FriendCircleTestData.curUser.getUserId().equals(commentItem.getUser().getUserId())){//复制或者删除自己的评论
+                        if (FriendCircleTestData.curUser.getUserId().equals(commentItem.getUser().getUserId())) {//复制或者删除自己的评论
 
                             CommentDialog dialog = new CommentDialog(context, presenter, commentItem, circlePosition);
                             dialog.show();
-                        }else{//回复别人的评论
-                            if(presenter != null){
+                        } else {//回复别人的评论
+                            if (presenter != null) {
                                 CommentConfig config = new CommentConfig();
                                 config.circlePosition = circlePosition;
                                 config.commentPosition = commentPosition;
@@ -194,11 +184,11 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
                 holder.commentList.setDatas(commentsDatas);
                 holder.commentList.setVisibility(View.VISIBLE);
 
-            }else {
+            } else {
                 holder.commentList.setVisibility(View.GONE);
             }
             holder.digCommentBody.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.digCommentBody.setVisibility(View.GONE);
         }
 
@@ -207,14 +197,14 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
         final SnsPopupWindow snsPopupWindow = holder.snsPopupWindow;
         //判断是否已点赞
         String curUserFavortId = circleItem.getCurUserFavortId(FriendCircleTestData.curUser.getUserId());
-        if(!TextUtils.isEmpty(curUserFavortId)){
+        if (!TextUtils.isEmpty(curUserFavortId)) {
             snsPopupWindow.getmActionItems().get(0).mTitle = "取消";
-        }else{
+        } else {
             snsPopupWindow.getmActionItems().get(0).mTitle = "点赞";
         }
         snsPopupWindow.update();
         snsPopupWindow.setmItemClickListener(new PopupItemClickListener(circlePosition, circleItem, curUserFavortId));
-        holder.snsBtn.setOnClickListener(new View.OnClickListener(){
+        holder.snsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //弹出popupwindow
@@ -225,30 +215,38 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
         holder.urlTipTv.setVisibility(View.GONE);
         switch (holder.viewType) {
             case CircleViewHolder.TYPE_URL:// 处理链接动态的链接内容和和图片
-                if(holder instanceof URLViewHolder){
+                if (holder instanceof URLViewHolder) {
                     String linkImg = circleItem.getLinkImg();
                     String linkTitle = circleItem.getLinkTitle();
-                    Glide.with(context).load(linkImg).into(((URLViewHolder)holder).urlImageIv);
-                    ((URLViewHolder)holder).urlContentTv.setText(linkTitle);
-                    ((URLViewHolder)holder).urlBody.setVisibility(View.VISIBLE);
-                    ((URLViewHolder)holder).urlTipTv.setVisibility(View.VISIBLE);
+                    Glide.with(context).load(linkImg).into(((URLViewHolder) holder).urlImageIv);
+                    ((URLViewHolder) holder).urlContentTv.setText(linkTitle);
+                    ((URLViewHolder) holder).urlBody.setVisibility(View.VISIBLE);
+                    ((URLViewHolder) holder).urlTipTv.setVisibility(View.VISIBLE);
+                    ((URLViewHolder) holder).urlBody.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, WebViewActivity.class);
+                            intent.putExtra("url", circleItem.getVideoUrl());
+                            context.startActivity(intent);
+                        }
+                    });
                 }
 
                 break;
             case CircleViewHolder.TYPE_IMAGE:// 处理图片
-                if(holder instanceof ImageViewHolder){
+                if (holder instanceof ImageViewHolder) {
                     final List<PhotoInfo> photos = circleItem.getPhotos();
                     if (photos != null && photos.size() > 0) {
-                        ((ImageViewHolder)holder).multiImageView.setVisibility(View.VISIBLE);
-                        ((ImageViewHolder)holder).multiImageView.setList(photos);
-                        ((ImageViewHolder)holder).multiImageView.setOnItemClickListener(new MultiImageView.OnItemClickListener() {
+                        ((ImageViewHolder) holder).multiImageView.setVisibility(View.VISIBLE);
+                        ((ImageViewHolder) holder).multiImageView.setList(photos);
+                        ((ImageViewHolder) holder).multiImageView.setOnItemClickListener(new MultiImageView.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
                                 //imagesize是作为loading时的图片size
                                 ImagePagerActivity.ImageSize imageSize = new ImagePagerActivity.ImageSize(view.getMeasuredWidth(), view.getMeasuredHeight());
 
                                 List<String> photoUrls = new ArrayList<String>();
-                                for(PhotoInfo photoInfo : photos){
+                                for (PhotoInfo photoInfo : photos) {
                                     photoUrls.add(photoInfo.url);
                                 }
                                 ImagePagerActivity.startImagePagerActivity(context, photoUrls, position, imageSize);
@@ -257,20 +255,21 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
                             }
                         });
                     } else {
-                        ((ImageViewHolder)holder).multiImageView.setVisibility(View.GONE);
+                        ((ImageViewHolder) holder).multiImageView.setVisibility(View.GONE);
                     }
                 }
 
                 break;
             case CircleViewHolder.TYPE_VIDEO:
-                if(holder instanceof VideoViewHolder){
-                    ((VideoViewHolder)holder).videoView.setVideoUrl(circleItem.getVideoUrl());
-                    ((VideoViewHolder)holder).videoView.setVideoImgUrl(circleItem.getVideoImgUrl());//视频封面图片
-                    ((VideoViewHolder)holder).videoView.setPostion(position);
-                    ((VideoViewHolder)holder).videoView.setOnPlayClickListener(new CircleVideoView.OnPlayClickListener() {
+                if (holder instanceof VideoViewHolder) {
+                    Glide.with(context).load(circleItem.getVideoImgUrl()).into(((VideoViewHolder) holder).iv_video_bg);
+                    ((VideoViewHolder) holder).iv_video_play.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onPlayClick(int pos) {
-                            curPlayIndex = pos;
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, VideoPlayerActivity.class);
+                            intent.putExtra("url", circleItem.getVideoUrl());
+                            intent.putExtra("imgurl", circleItem.getVideoImgUrl());
+                            context.startActivity(intent);
                         }
                     });
                 }
@@ -283,7 +282,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
 
     @Override
     public int getItemCount() {
-        return datas.size()+1;//有head需要加1
+        return datas.size();//有head需要加1
     }
 
     @Override
@@ -291,25 +290,14 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
         super.onViewAttachedToWindow(holder);
     }
 
-//    public class HeaderViewHolder extends RecyclerView.ViewHolder{
-//
-//        public HeaderViewHolder(View itemView) {
-//            super(itemView);
-//            ImageView iv_bg = (ImageView) itemView.findViewById(R.id.iv_bg);
-//            FrameLayout.LayoutParams linearParams =(FrameLayout.LayoutParams) iv_bg.getLayoutParams(); //取控件textView当前的布局参数
-//            linearParams.height = sceenW;
-//            iv_bg.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
-//        }
-//    }
-
-    private class PopupItemClickListener implements SnsPopupWindow.OnItemClickListener{
+    private class PopupItemClickListener implements SnsPopupWindow.OnItemClickListener {
         private String mFavorId;
         //动态在列表中的位置
         private int mCirclePosition;
         private long mLasttime = 0;
         private CircleItem mCircleItem;
 
-        public PopupItemClickListener(int circlePosition, CircleItem circleItem, String favorId){
+        public PopupItemClickListener(int circlePosition, CircleItem circleItem, String favorId) {
             this.mFavorId = favorId;
             this.mCirclePosition = circlePosition;
             this.mCircleItem = circleItem;
@@ -319,10 +307,10 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
         public void onItemClick(ActionItem actionitem, int position) {
             switch (position) {
                 case 0://点赞、取消点赞
-                    if(System.currentTimeMillis()-mLasttime<700)//防止快速点击操作
+                    if (System.currentTimeMillis() - mLasttime < 700)//防止快速点击操作
                         return;
                     mLasttime = System.currentTimeMillis();
-                    if(presenter != null){
+                    if (presenter != null) {
                         if ("点赞".equals(actionitem.mTitle.toString())) {
                             presenter.addFavort(mCirclePosition);
                         } else {//取消点赞
@@ -331,7 +319,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter{
                     }
                     break;
                 case 1://发布评论
-                    if(presenter != null){
+                    if (presenter != null) {
                         CommentConfig config = new CommentConfig();
                         config.circlePosition = mCirclePosition;
                         config.commentType = CommentConfig.Type.PUBLIC;

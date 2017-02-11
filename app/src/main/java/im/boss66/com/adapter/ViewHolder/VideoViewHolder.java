@@ -2,17 +2,17 @@ package im.boss66.com.adapter.ViewHolder;
 
 import android.view.View;
 import android.view.ViewStub;
+import android.widget.ImageView;
 
 import im.boss66.com.R;
-import im.boss66.com.widget.CircleVideoView;
 
 /**
  * Created by suneee on 2016/8/16.
  */
 public class VideoViewHolder extends CircleViewHolder {
 
-    public CircleVideoView videoView;
-
+    public ImageView iv_video_play;
+    public ImageView iv_video_bg;
     public VideoViewHolder(View itemView){
         super(itemView, TYPE_VIDEO);
     }
@@ -26,9 +26,13 @@ public class VideoViewHolder extends CircleViewHolder {
         viewStub.setLayoutResource(R.layout.viewstub_videobody_circle);
         View subView = viewStub.inflate();
 
-        CircleVideoView videoBody = (CircleVideoView) subView.findViewById(R.id.videoView);
+        ImageView videoBody = (ImageView) subView.findViewById(R.id.iv_video_play);
+        ImageView iv_video_bg = (ImageView) subView.findViewById(R.id.iv_video_bg);
         if(videoBody!=null){
-            this.videoView = videoBody;
+            this.iv_video_play = videoBody;
+        }
+        if (iv_video_bg != null){
+            this.iv_video_bg = iv_video_bg;
         }
     }
 }

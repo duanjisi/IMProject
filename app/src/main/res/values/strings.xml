@@ -141,4 +141,29 @@
     <string name="can_add_me_through_the_following_way">可通过以下方式添加我：</string>
     <string name="group_chat">群聊</string>
     <string name="business_card">名片</string>
+    <string name="save_photo">保存图片</string>
+    <string name="set_up_notes_and_labels">设置备注和标签</string>
+    <string name="people_from_nearby">来自附近的人</string>
+    <string name="greet">打招呼</string>
+    <string name="details">详细资料</string>
+    <string name="area">地区</string>
+    <string name="personalized_signature">个性签名</string>
+    <string name="source">来源</string>
+
+    <!-- 相册多选 -->
+    <string name="mis_folder_all">所有图片</string>
+    <string name="mis_preview">预览</string>
+    <string name="mis_msg_no_camera">没有找到系统的相机</string>
+    <string name="mis_msg_amount_limit">所选图片超过了数量限制</string>
+    <string name="mis_action_done">完成</string>
+    <string name="mis_action_button_string">%1$s(%2$d/%3$d)</string>
+    <string name="mis_photo_unit">Shot</string>
+    <string name="mis_tip_take_photo">拍照</string>
+    <string name="mis_error_image_not_exist">Image error</string>
+    <string name="mis_error_no_permission">没有权限</string>
+    <string name="mis_permission_dialog_title">权限被拒绝</string>
+    <string name="mis_permission_dialog_ok">OK</string>
+    <string name="mis_permission_dialog_cancel">取消</string>
+    <string name="mis_permission_rationale">存储器读权限需要选择文件.</string>
+    <string name="mis_permission_rationale_write_storage">存储写入权限需要保存图像.</string>
 </resources>

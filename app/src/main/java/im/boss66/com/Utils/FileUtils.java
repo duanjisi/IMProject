@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,10 +15,16 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static com.nostra13.universalimageloader.utils.StorageUtils.getCacheDirectory;
+
 /**
  * Created by Johnny on 2016/7/25.
  */
 public class FileUtils {
+
+    private static final String JPEG_FILE_PREFIX = "IMG_";
+    private static final String JPEG_FILE_SUFFIX = ".jpg";
+
     public static Bitmap getBitmapByPath(String filePath) {
         return getBitmapByPath(filePath, null);
     }
@@ -96,7 +103,7 @@ public class FileUtils {
 
     public static void saveImageToGallery(Context context, Bitmap bmp) {
         // 首先保存图片
-        File appDir = new File(Environment.getExternalStorageDirectory(), "Boohee");
+        File appDir = new File(Environment.getExternalStorageDirectory(), "boss66Im");
         if (!appDir.exists()) {
             appDir.mkdir();
         }
@@ -122,5 +129,21 @@ public class FileUtils {
         String path = file.getAbsolutePath();
         // 最后通知图库更新
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+    }
+
+    public static File createTmpFile(Context context) throws IOException {
+        File dir = null;
+        if(TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+            dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+            if (!dir.exists()) {
+                dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/Camera");
+                if (!dir.exists()) {
+                    dir = getCacheDirectory(context, true);
+                }
+            }
+        }else{
+            dir = getCacheDirectory(context, true);
+        }
+        return File.createTempFile(JPEG_FILE_PREFIX, JPEG_FILE_SUFFIX, dir);
     }
 }

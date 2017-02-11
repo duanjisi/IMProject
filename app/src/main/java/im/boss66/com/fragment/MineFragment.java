@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import im.boss66.com.R;
 import im.boss66.com.activity.personage.PersonalInformationActivity;
+import im.boss66.com.activity.personage.PersonalPhotoAlbumActivity;
 import im.boss66.com.activity.personage.PersonalSetActivity;
 import im.boss66.com.activity.personage.WalletActivity;
 
@@ -58,10 +59,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.rl_information://个人信息
-                Intent intent = new Intent(getActivity(),PersonalInformationActivity.class);
-                startActivity(intent);
+                openActivity(PersonalInformationActivity.class,null);
                 break;
             case R.id.rl_photo://相册
+                openActivity(PersonalPhotoAlbumActivity.class,null);
                 break;
             case R.id.rl_collect://收藏
                 break;
@@ -72,9 +73,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             case R.id.rl_expression://表情
                 break;
             case R.id.rl_set://设置
-                Intent intent1 = new Intent(getActivity(),PersonalSetActivity.class);
-                startActivity(intent1);
+                openActivity(PersonalSetActivity.class,null);
                 break;
         }
+    }
+
+    private void openActivity(Class<?> clazz, Bundle bundle) {
+        Intent intent = new Intent(getActivity(), clazz);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        startActivity(intent);
     }
 }
