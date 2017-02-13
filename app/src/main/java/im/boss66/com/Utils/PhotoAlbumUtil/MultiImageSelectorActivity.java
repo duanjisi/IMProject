@@ -17,11 +17,12 @@ import java.io.File;
 import java.util.ArrayList;
 
 import im.boss66.com.R;
+import im.boss66.com.activity.base.BaseActivity;
 
 /**
  * 相册多选
  */
-public class MultiImageSelectorActivity extends AppCompatActivity
+public class MultiImageSelectorActivity extends BaseActivity
         implements MultiImageSelectorFragment.Callback {
 
     // Single choice
@@ -61,19 +62,19 @@ public class MultiImageSelectorActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mis_activity_default);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(Color.BLACK);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            getWindow().setStatusBarColor(Color.BLACK);
+//        }
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        if (toolbar != null) {
 //            setSupportActionBar(toolbar);
 //        }
 
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+//        final ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
 
         final Intent intent = getIntent();
         mDefaultCount = intent.getIntExtra(EXTRA_SELECT_COUNT, DEFAULT_IMAGE_SIZE);
