@@ -44,4 +44,16 @@
             android:textColor="@color/white"
             android:textSize="16.5sp" />
     </RelativeLayout>
+
+    <im.boss66.com.widget.MyGridView
+        android:id="@+id/gridView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_top_bar"
+        android:horizontalSpacing="16.5dp"
+        android:numColumns="4"
+        android:scrollbars="none"
+        android:verticalSpacing="16.5dp">
+
+    </im.boss66.com.widget.MyGridView>
 </RelativeLayout>

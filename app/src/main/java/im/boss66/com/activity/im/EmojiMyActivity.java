@@ -132,6 +132,7 @@ public class EmojiMyActivity extends BaseActivity implements View.OnClickListene
         ArrayList<EmoGroup> groups = (ArrayList<EmoGroup>) adapter.getData();
         for (EmoGroup group : groups) {
             if (group.getGroup_id().equals(groupid)) {
+                EmoGroupHelper.getInstance().delete(groupid);
                 adapter.remove(group);
                 break;
             }

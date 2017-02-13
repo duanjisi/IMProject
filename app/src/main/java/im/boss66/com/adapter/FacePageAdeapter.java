@@ -21,7 +21,6 @@ public class FacePageAdeapter extends PagerAdapter {
 
     // 界面列表
     private List<View> views;
-//  private JazzyViewPager viewPager;
     public FacePageAdeapter(List<View> lv) {
         super();
         this.views = lv;
