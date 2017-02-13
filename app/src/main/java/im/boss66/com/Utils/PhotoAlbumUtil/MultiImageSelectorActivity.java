@@ -65,10 +65,10 @@ public class MultiImageSelectorActivity extends AppCompatActivity
             getWindow().setStatusBarColor(Color.BLACK);
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-        }
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        if (toolbar != null) {
+//            setSupportActionBar(toolbar);
+//        }
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

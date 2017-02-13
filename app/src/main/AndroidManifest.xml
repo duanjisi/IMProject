@@ -70,7 +70,9 @@
         <activity android:name=".activity.im.EmojiRecordActivity"></activity>
 
         <!--相册Activity-->
-        <activity android:name=".Utils.PhotoAlbumUtil.MultiImageSelectorActivity"></activity>
+        <activity
+            android:name=".Utils.PhotoAlbumUtil.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize"></activity>
 
         <!--聊天信息-->
         <activity android:name=".activity.im.ChatInformActivity"></activity>

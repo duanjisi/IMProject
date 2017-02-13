@@ -17,6 +17,7 @@ import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
 import java.util.List;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.discover.CircleMessageListActivity;
@@ -86,7 +87,12 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                 finish();
                 break;
             case R.id.iv_set:
-                showActionSheet();
+                //showActionSheet();
+                MultiImageSelector.create()
+                        .showCamera(false) // 是否显示相机. 默认为显示
+                        .count(1) // 最大选择图片数量, 默认为9. 只有在选择模式为多选时有效
+                        .multi() // 多选模式, 默认模式;
+                        .start(this, 101);
                 break;
         }
     }
