@@ -1,6 +1,7 @@
 package im.boss66.com.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -25,15 +26,24 @@ public class PictureAdapter extends BaseAdapter {
     private Context context;
     private float mImageHeight;
     private ArrayList<String> images;
+    private boolean isAddPager = false;
+
+    public void setAddPager(boolean addPager) {
+        isAddPager = addPager;
+        if (isAddPager) {
+            images.add("lastItem");
+        } else {
+            images.add("firstItem");
+        }
+    }
 
     public PictureAdapter(Context context) {
         this.context = context;
-        mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 3;
+        mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 4;
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         if (images == null) {
             images = new ArrayList<>();
         }
-        images.add("lastItem");
     }
 
     public void addDatas(ArrayList<String> items) {
@@ -48,6 +58,13 @@ public class PictureAdapter extends BaseAdapter {
         } else {
             Toast.makeText(context, "最多只能添加6张图片", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void initData(ArrayList<String> list) {
+        images.clear();
+//        images.add("lastItem");
+        images.addAll(list);
+        notifyDataSetChanged();
     }
 
     private ArrayList<String> getBefore(ArrayList<String> items, int count) {
@@ -92,17 +109,27 @@ public class PictureAdapter extends BaseAdapter {
         }
     }
 
+    //    public void addItem2(String entity) {
+//        int totals = images.size() - 1;
+//        int count = 9 - totals;
+//        if (count > 0) {
+//            addItem(entity, totals);
+//            if (images.size() - 1 == 9) {
+//                images.remove(images.lastIndexOf("lastItem"));
+//            }
+//            notifyDataSetChanged();
+//        } else {
+//            Toast.makeText(context, "最多只能添加9张图片", Toast.LENGTH_LONG).show();
+//        }
+//    }
+
     public void addItem2(String entity) {
         int totals = images.size() - 1;
-        int count = 9 - totals;
-        if (count > 0) {
+        if (!images.contains(entity)) {
             addItem(entity, totals);
-            if (images.size() - 1 == 9) {
-                images.remove(images.lastIndexOf("lastItem"));
-            }
             notifyDataSetChanged();
         } else {
-            Toast.makeText(context, "最多只能添加9张图片", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "已添加", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -161,16 +188,26 @@ public class PictureAdapter extends BaseAdapter {
         final String imageUrl = images.get(position);
         if (imageUrl != null && !imageUrl.equals("")) {
             if (!imageUrl.equals("lastItem")) {
-                imageLoader.displayImage("file:/" + imageUrl, holder.ivPic, ImageLoaderUtils.getDisplayImageOptions());
-//                UIUtils.showView(holder.ivClose);
-//                holder.ivClose.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        removeItem(imageUrl);
-//                    }
-//                });
+                Log.i("info", "============aaaaaaaa");
+                if (imageUrl.equals("firstItem")) {
+                    Log.i("info", "============11111111");
+                    UIUtils.hindView(holder.ivClose);
+                    holder.ivPic.setImageResource(R.drawable.compose_pic_add);
+                } else {
+                    imageLoader.displayImage("file:/" + imageUrl, holder.ivPic, ImageLoaderUtils.getDisplayImageOptions());
+                    if (isAddPager) {
+                        UIUtils.showView(holder.ivClose);
+                        holder.ivClose.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                removeItem(imageUrl);
+                            }
+                        });
+                    }
+                }
             } else {
-//                UIUtils.hindView(holder.ivClose);
+                UIUtils.hindView(holder.ivClose);
+                Log.i("info", "============2222222222");
                 holder.ivPic.setImageResource(R.drawable.compose_pic_add);
             }
         }
@@ -185,18 +222,21 @@ public class PictureAdapter extends BaseAdapter {
                 stringIterator.remove();
             }
         }
-        if (images.size() - 1 != 9 && !images.contains("lastItem")) {
+//        if (images.size() - 1 != 9 && !images.contains("lastItem")) {
+//            images.add("lastItem");
+//        }
+        if (!images.contains("lastItem")) {
             images.add("lastItem");
         }
         notifyDataSetChanged();
     }
 
     private class ViewHolder {
-        //        ImageView ivClose;
+        ImageView ivClose;
         ImageView ivPic;
 
         public ViewHolder(View view) {
-//            this.ivClose = (ImageView) view.findViewById(R.id.iv_close);
+            this.ivClose = (ImageView) view.findViewById(R.id.iv_close);
             this.ivPic = (ImageView) view.findViewById(R.id.iv_pic);
         }
     }

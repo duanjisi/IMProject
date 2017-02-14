@@ -20,6 +20,7 @@ import im.boss66.com.entity.EmoCate;
 import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmoGroup;
 import im.boss66.com.fragment.ContactBooksFragment;
+import im.boss66.com.fragment.ContactsFragment;
 import im.boss66.com.fragment.DiscoverFragment;
 import im.boss66.com.fragment.HomePagerFragment;
 import im.boss66.com.fragment.MineFragment;
@@ -33,11 +34,12 @@ public class MainActivity extends BaseActivity {
     private static final int VIEW_PAGER_PAGE_2 = 1;
     private static final int VIEW_PAGER_PAGE_3 = 2;
     private static final int VIEW_PAGER_PAGE_4 = 3;
-    private static final int PAGE_COUNT = 4;
+    private static final int VIEW_PAGER_PAGE_5 = 4;
+    private static final int PAGE_COUNT = 5;
     private RadioGroup mRadioGroup;
     private ArrayList<Fragment> mFragments = new ArrayList<Fragment>();
     private ViewPager mViewPager;
-    private RadioButton rbHomePager, rbBooks, rbDiscover, rbMine;
+    private RadioButton rbHomePager, rbBooks, rbContacts, rbDiscover, rbMine;
     //    private ImageView ivSearch, ivAdd;
 //    private RelativeLayout rl_top_bar;
     private String userid, uid;
@@ -60,6 +62,7 @@ public class MainActivity extends BaseActivity {
         rbBooks = (RadioButton) findViewById(R.id.rb_contact_book);
         rbDiscover = (RadioButton) findViewById(R.id.rb_discover);
         rbMine = (RadioButton) findViewById(R.id.rb_mine);
+        rbContacts = (RadioButton) findViewById(R.id.rb_contact);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mRadioGroup.setOnCheckedChangeListener(new CheckListener());
         addData();
@@ -272,6 +275,7 @@ public class MainActivity extends BaseActivity {
         fragment.setArguments(bundle);
         mFragments.add(fragment);
         mFragments.add(new ContactBooksFragment());
+        mFragments.add(new ContactsFragment());
         mFragments.add(new DiscoverFragment());
         mFragments.add(new MineFragment());
     }
@@ -327,9 +331,12 @@ public class MainActivity extends BaseActivity {
                     rbBooks.setChecked(true);
                     break;
                 case VIEW_PAGER_PAGE_3:
-                    rbDiscover.setChecked(true);
+                    rbContacts.setChecked(true);
                     break;
                 case VIEW_PAGER_PAGE_4:
+                    rbDiscover.setChecked(true);
+                    break;
+                case VIEW_PAGER_PAGE_5:
                     rbMine.setChecked(true);
                     break;
                 default:
@@ -349,11 +356,14 @@ public class MainActivity extends BaseActivity {
                 case R.id.rb_contact_book:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_2);
                     break;
-                case R.id.rb_discover:
+                case R.id.rb_contact:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_3);
                     break;
-                case R.id.rb_mine:
+                case R.id.rb_discover:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_4);
+                    break;
+                case R.id.rb_mine:
+                    mViewPager.setCurrentItem(VIEW_PAGER_PAGE_5);
                     break;
                 default:
                     break;

@@ -71,6 +71,7 @@ import im.boss66.com.entity.EmoGroup;
 import im.boss66.com.entity.MessageItem;
 import im.boss66.com.entity.RecentItem;
 import im.boss66.com.fragment.FaceFragment;
+import im.boss66.com.fragment.FaceLoveFragment;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.services.ChatServices;
 import im.boss66.com.xlistview.MsgListView;
@@ -79,13 +80,13 @@ import im.boss66.com.xlistview.MsgListView;
  * Created by Johnny on 2017/1/10.
  */
 public class ChatActivity extends BaseActivity implements View.OnClickListener, ChatServices.receiveMessageCallback,
-        View.OnTouchListener, MsgListView.IXListViewListener, FaceFragment.clickCallback {
+        View.OnTouchListener, MsgListView.IXListViewListener, FaceFragment.clickCallback, FaceLoveFragment.LoveCallback {
     private static final String TAG = ChatActivity.class.getSimpleName();
     private static final int MESSAGE_TYPE_EMOTION = 0x011;
     private static final int MESSAGE_TYPE_IMG = 0x012;
     private static final int MESSAGE_TYPE_VIDEO = 0x013;
     private static final int EMOTION_SETING_UP = 0x014;
-    private static final int EMOTION_STORE = 0x015;
+    //    private static final int EMOTION_STORE = 0x015;
     public final static String CHATPHOTO_PATH = Environment
             .getExternalStorageDirectory()
             + File.separator;
@@ -124,7 +125,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private ViewPager viewPager;
     private ArrayList<EmoCate> categorys = new ArrayList<>();
     private EditText mEtMsg;
-    private ImageView ivSelect, ivMake, ivAddPerson;
+    private ImageView ivSelect, ivMake, ivAddPerson, ivEditPic;
     /**
      * 接收到数据，用来更新listView
      */
@@ -231,19 +232,22 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         tvCollect = (TextView) findViewById(R.id.tv_chat_collect);
         tvRed = (TextView) findViewById(R.id.tv_chat_red);
         tvCard = (TextView) findViewById(R.id.tv_chat_card);
-        ibEditPic = (ImageButton) findViewById(R.id.ib_chat_edit_pic);
+        ibEditPic = (ImageButton) findViewById(R.id.ib_chat_voice);
         ibFace = (ImageButton) findViewById(R.id.ib_chat_face);
         mEtMsg = (EditText) findViewById(R.id.msg_et);
         viewPager = (ViewPager) findViewById(R.id.pager);
         linearLayout = (LinearLayout) findViewById(R.id.ll_main);
         llBottom = (LinearLayout) findViewById(R.id.ll_bottom);
         ivSelect = (ImageView) findViewById(R.id.iv_add_bq);
+
         ivMake = (ImageView) findViewById(R.id.iv_add_pic);
         ivAddPerson = (ImageView) findViewById(R.id.iv_add_person);
+        ivEditPic = (ImageView) findViewById(R.id.iv_edit_pic);
 
         ivSelect.setOnClickListener(this);
         ivMake.setOnClickListener(this);
         ivAddPerson.setOnClickListener(this);
+        ivEditPic.setOnClickListener(this);
 
         tvPhoto.setOnClickListener(this);
         tvImgs.setOnClickListener(this);
@@ -304,6 +308,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void onPageSelected(int position) {
                 Log.i("info", "==========onPageSelected()");
+//                if (position != EMOTION_SETING_UP && position != EMOTION_STORE) {
+//                    setBotBarSelector(position);
+//                }
                 setBotBarSelector(position);
             }
 
@@ -315,6 +322,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mEtMsgOnKeyListener();
         initDatas();
         InItTitle1();
+        setSelector(0);
 //        InItBottomBar();
     }
 
@@ -455,34 +463,34 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 Intent intent = new Intent(context, ImageGridActivity.class);
                 startActivityForResult(intent, 0);
                 break;
-            case R.id.ib_chat_edit_pic://可编辑的图片
-                UIUtils.hindView(ll_other);
-                isOther = false;
-//                if (!isFaceShow) {
-//                    mInputMethodManager.hideSoftInputFromWindow(
-//                            mEtMsg.getWindowToken(), 0);
-//                    try {
-//                        Thread.sleep(80);// 解决此时会黑一下屏幕的问题
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                    viewFace.setVisibility(View.VISIBLE);
-//                    viewFace.findViewById(R.id.tv_edit).setVisibility(View.VISIBLE);
-//                    isFaceShow = true;
-//                } else {
-//                    viewFace.setVisibility(View.GONE);
-//                    isFaceShow = false;
+            case R.id.ib_chat_voice://声音
+//                UIUtils.hindView(ll_other);
+//                isOther = false;
+////                if (!isFaceShow) {
+////                    mInputMethodManager.hideSoftInputFromWindow(
+////                            mEtMsg.getWindowToken(), 0);
+////                    try {
+////                        Thread.sleep(80);// 解决此时会黑一下屏幕的问题
+////                    } catch (InterruptedException e) {
+////                        e.printStackTrace();
+////                    }
+////                    viewFace.setVisibility(View.VISIBLE);
+////                    viewFace.findViewById(R.id.tv_edit).setVisibility(View.VISIBLE);
+////                    isFaceShow = true;
+////                } else {
+////                    viewFace.setVisibility(View.GONE);
+////                    isFaceShow = false;
+////                }
+//                mInputMethodManager.hideSoftInputFromWindow(
+//                        mEtMsg.getWindowToken(), 0);
+//                try {
+//                    Thread.sleep(80);// 解决此时会黑一下屏幕的问题
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
 //                }
-                mInputMethodManager.hideSoftInputFromWindow(
-                        mEtMsg.getWindowToken(), 0);
-                try {
-                    Thread.sleep(80);// 解决此时会黑一下屏幕的问题
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                viewFace.setVisibility(View.VISIBLE);
-                viewFace.findViewById(R.id.tv_edit).setVisibility(View.VISIBLE);
-                isFaceShow = true;
+//                viewFace.setVisibility(View.VISIBLE);
+//                viewFace.findViewById(R.id.tv_edit).setVisibility(View.VISIBLE);
+//                isFaceShow = true;
                 break;
             case R.id.ib_chat_face://表情
                 UIUtils.hindView(ll_other);
@@ -539,6 +547,16 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.iv_add_pic://制作表情
                 Intent it2 = new Intent(context, EmojiMakeActivity.class);
                 startActivity(it2);
+                break;
+            case R.id.iv_edit_pic://编辑表情
+                viewFace.findViewById(R.id.tv_edit).setVisibility(View.VISIBLE);
+                viewFace.findViewById(R.id.tv_edit).setOnClickListener(this);
+                break;
+            case R.id.tv_edit://编辑
+//                showToast("编辑表情", true);
+                Intent it0 = new Intent(context, EmojiEditActivity.class);
+//                it0.putExtra("camera_path", imagePath);
+                startActivityForResult(it0, 100);
                 break;
             case R.id.iv_add_person://聊天信息
                 Intent it3 = new Intent(context, ChatInformActivity.class);
@@ -1022,6 +1040,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         if (groups != null && groups.size() != 0) {
             InItBottomBar(groups);
 //            ArrayList<Fragment> fragments = new ArrayList<>();
+            FaceLoveFragment frag = FaceLoveFragment.newInstance();
+            frag.setLoveCallback(this);
+            fragments.add(frag);
             for (int i = 0; i < groups.size(); i++) {
                 EmoGroup group = groups.get(i);
                 FaceFragment fragment = FaceFragment.newInstance(group.getGroup_id());
@@ -1029,13 +1050,18 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 fragments.add(fragment);
             }
             mAdapter.setFragments(fragments);
-            setBotBarSelector(0);
+            setBotBarSelector(1);
         }
     }
 
     @Override
     public void onItemClick(EmoEntity entity) {//点击表情，发送表情
         showToast("emoji_id:" + entity.getEmo_id(), true);
+    }
+
+    @Override
+    public void onItemLoveClick(String image) {
+        showToast("image:" + image, true);
     }
 
     public void setBotBarSelector(int id) {
@@ -1063,17 +1089,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         int height = UIUtils.dip2px(this, 50);
         for (int i = 0; i <= groups.size() + 1; i++) {
             ImageView textView = new ImageView(this);
-            if (i == groups.size()) {
+            if (i == groups.size() + 1) {
                 textView.setId(EMOTION_SETING_UP);
-            } else if (i == 0) {
-                textView.setId(EMOTION_STORE);
             } else {
                 textView.setId(i);
             }
             textView.setTag("bottom");
             textView.setOnClickListener(this);
             textView.setMinimumWidth(width);
-            if (i == groups.size()) {
+            if (i == groups.size() + 1) {
                 textView.setImageResource(R.drawable.hp_ch_setup);
             } else if (i == 0) {
                 textView.setImageResource(R.drawable.love);

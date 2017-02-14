@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import im.boss66.com.R;
 import im.boss66.com.activity.AddFriendActivity;
+import im.boss66.com.activity.book.BookSearchActivity;
 import im.boss66.com.widget.EaseContactList;
 import im.boss66.com.widget.TopNavigationBar;
 
@@ -20,6 +21,7 @@ public class ContactBooksFragment extends BaseFragment {
     private TopNavigationBar topNavigationBar;
     private EaseContactList easeContactList;
     private ImageView iv_add;
+    private View viewSearch;
 
     @Nullable
     @Override
@@ -36,11 +38,19 @@ public class ContactBooksFragment extends BaseFragment {
     private void initViews(View view) {
 //        topNavigationBar = (TopNavigationBar) view.findViewById(R.id.top_navigation_bar);
 //        topNavigationBar.setRightBtnOnClickedListener(this);
+        viewSearch = view.findViewById(R.id.search_bar_view);
         iv_add = (ImageView) view.findViewById(R.id.iv_add);
         iv_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AddFriendActivity.class);
+                startActivity(intent);
+            }
+        });
+        viewSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), BookSearchActivity.class);
                 startActivity(intent);
             }
         });

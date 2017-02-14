@@ -2,6 +2,7 @@ package im.boss66.com.activity.im;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -33,25 +34,26 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
 
     private void initViews() {
         tvBack = (TextView) findViewById(R.id.tv_back);
-        tvDo = (TextView) findViewById(R.id.tv_ok);
+//        tvDo = (TextView) findViewById(R.id.tv_ok);
         gridView = (MyGridView) findViewById(R.id.gridView);
         adapter = new PictureAdapter(context);
+        adapter.setAddPager(true);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new ItemClickListener());
         tvBack.setOnClickListener(this);
-        tvDo.setOnClickListener(this);
+//        tvDo.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_back:
+                setResult(RESULT_OK);
                 finish();
                 break;
-
-            case R.id.tv_ok:
-
-                break;
+//            case R.id.tv_ok:
+//
+//                break;
         }
     }
 
@@ -71,10 +73,13 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100) {
-            ArrayList<String> selectPicList = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-            if (selectPicList != null && selectPicList.size() != 0) {
-                adapter.addItem2(selectPicList.get(0));
+        if (data != null) {
+            if (requestCode == 100) {
+                ArrayList<String> selectPicList = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                if (selectPicList != null && selectPicList.size() != 0) {
+                    Log.i("info", "==========00000000000");
+                    adapter.addItem2(selectPicList.get(0));
+                }
             }
         }
     }

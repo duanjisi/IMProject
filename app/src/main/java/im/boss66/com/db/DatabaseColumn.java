@@ -29,7 +29,8 @@ public abstract class DatabaseColumn implements BaseColumns {
             "im.boss66.com.db.ConversationColumn",
             "im.boss66.com.db.EmoCateColumn",
             "im.boss66.com.db.EmoColumn",
-            "im.boss66.com.db.EmoGroupColumn"
+            "im.boss66.com.db.EmoGroupColumn",
+            "im.boss66.com.db.EmoLoveColumn"
     };
 
     public String getTableCreateor() {
