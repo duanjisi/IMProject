@@ -72,11 +72,18 @@
         android:layout_below="@+id/rl_00"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="11dp"
-        android:drawablePadding="11dp"
-        android:drawableRight="@drawable/hp_my_qr_code"
         android:gravity="center_vertical"
         android:text="我的账号:XYZ003256"
         android:textSize="14.5sp" />
+
+    <ImageView
+        android:id="@+id/iv_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tv_my_account"
+        android:layout_marginLeft="11dp"
+        android:layout_toRightOf="@+id/tv_my_account"
+        android:src="@drawable/hp_my_qr_code" />
 
     <LinearLayout
         android:layout_width="match_parent"

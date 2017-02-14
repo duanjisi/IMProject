@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
@@ -24,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:weightSum="4">
+                android:weightSum="5">
 
                 <RadioButton
                     android:id="@+id/rb_home_pager"
@@ -38,6 +39,12 @@
                     style="@style/MainRadioBtn"
                     android:drawableTop="@drawable/sel_main_contact"
                     android:text="@string/main_contact_book" />
+
+                <RadioButton
+                    android:id="@+id/rb_contact"
+                    style="@style/MainRadioBtn"
+                    android:drawableTop="@drawable/sel_main_contact_circle"
+                    android:text="@string/main_contact" />
 
                 <RadioButton
                     android:id="@+id/rb_discover"

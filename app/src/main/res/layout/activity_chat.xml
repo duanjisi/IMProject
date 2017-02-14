@@ -84,12 +84,12 @@
         android:gravity="center_vertical">
 
         <ImageButton
-            android:id="@+id/ib_chat_edit_pic"
+            android:id="@+id/ib_chat_voice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="11dp"
-            android:background="@drawable/hp_chat_picture" />
+            android:background="@drawable/hp_chat_speech" />
 
         <!--<TextView-->
         <!--android:id="@+id/tv_picture"-->
@@ -379,7 +379,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"></include>
-
     <!--<LinearLayout-->
     <!--android:id="@+id/ll_chat_video"-->
     <!--android:layout_width="fill_parent"-->

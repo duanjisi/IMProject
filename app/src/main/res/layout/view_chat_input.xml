@@ -34,29 +34,65 @@
         android:layout_height="41dp"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/iv_add_bq"
+        <LinearLayout
+            android:id="@+id/ll_left"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingLeft="11dp"
-            android:paddingRight="11dp"
-            android:src="@drawable/hp_add_bq" />
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/iv_add_pic"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/iv_add_bq"
-            android:paddingLeft="11dp"
-            android:paddingRight="11dp"
-            android:src="@drawable/hp_add_pics" />
+            <ImageView
+                android:id="@+id/iv_add_bq"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="11dp"
+                android:paddingRight="11dp"
+                android:src="@drawable/hp_add_bq" />
+
+            <TextView
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/gray" />
+
+            <ImageView
+                android:id="@+id/iv_add_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="11dp"
+                android:paddingRight="11dp"
+                android:src="@drawable/hp_add_pics" />
+
+            <TextView
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/gray" />
+
+            <ImageView
+                android:id="@+id/iv_edit_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="11dp"
+                android:paddingRight="11dp"
+                android:src="@drawable/hp_sm_picture" />
+
+            <TextView
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/gray" />
+        </LinearLayout>
+
 
         <HorizontalScrollView
             android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@+id/ll_right"
-            android:layout_toRightOf="@+id/iv_add_pic"
+            android:layout_toRightOf="@+id/ll_left"
             android:background="@color/white"
             android:scrollbars="none">
 
