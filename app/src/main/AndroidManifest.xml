@@ -40,7 +40,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.MainActivity"></activity>
-        <activity android:name=".activity.ChatActivity"></activity>
+        <activity android:name=".activity.im.ChatActivity"></activity>
         <activity android:name=".activity.ImageGridActivity"></activity>
         <activity android:name=".activity.AddFriendActivity"></activity>
         <activity android:name=".activity.CaptureActivity"></activity>
@@ -53,13 +53,21 @@
         <activity android:name=".activity.SocialInformActivity"></activity>
         <activity android:name=".activity.RemarkInformActivity"></activity>
         <activity android:name=".activity.PersonPhotoAlbumActivity"></activity>
-        <activity android:name=".activity.ChatBackgroundActivity"></activity>
         <activity android:name=".activity.GroupChatNameActivity"></activity>
-        <activity android:name=".activity.im.ChatActivity"></activity>
         <activity android:name=".activity.im.TestActivity"></activity>
         <activity android:name=".activity.im.EmojiMakeActivity"></activity>
         <activity android:name=".activity.im.EmojiSelectWellActivity"></activity>
-
+        <!--忘记密码-->
+        <activity android:name=".activity.ForgetPwsActivity"></activity>
+        <!--聊天文件-->
+        <activity android:name=".activity.im.ChatFileActivity"></activity>
+        <!--群二维码-->
+        <activity android:name=".activity.im.ChatGroupCodeActivity"></activity>
+        <!--群名称-->
+        <!--聊天记录-->
+        <activity android:name=".activity.im.ChatRecordsActivity"></activity>
+        <!--聊天背景-->
+        <activity android:name=".activity.im.ChatBackgroundActivity"></activity>
         <!--我的表情-->
         <activity android:name=".activity.im.EmojiMyActivity"></activity>
         <!--表情管理-->
@@ -75,7 +83,7 @@
             android:configChanges="orientation|screenSize"></activity>
 
         <!--聊天信息-->
-        <activity android:name=".activity.im.ChatInformActivity"></activity>
+        <activity android:name=".activity.im.ChatGroupInformActivity"></activity>
         <activity
             android:name=".activity.im.EmojiEditActivity"
             android:screenOrientation="portrait"></activity>
