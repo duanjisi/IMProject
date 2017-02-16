@@ -53,8 +53,7 @@
                 android:layout_marginTop="11dp"
                 android:horizontalSpacing="10dp"
                 android:numColumns="5"
-                android:verticalSpacing="10dp"
-                >
+                android:verticalSpacing="10dp">
 
             </im.boss66.com.widget.MyGridView>
 
@@ -64,8 +63,7 @@
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/gridView"
                 android:layout_marginTop="11dp"
-                android:background="@drawable/bg_long_item"
-               >
+                android:background="@drawable/bg_long_item">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -108,8 +106,12 @@
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/rl_members"
                 android:layout_marginTop="32dp"
-                android:background="@drawable/bg_long_item"
-             >
+                android:background="@drawable/bg_long_item">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/line_color_gray_d2"></LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_groups_name"
@@ -145,8 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/rl_name"
-                android:background="@drawable/bg_long_item"
-               >
+                android:background="@drawable/bg_long_item">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -190,8 +191,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/rl_qr_code"
-                android:background="@drawable/bg_long_item"
-              >
+                android:background="@drawable/bg_long_item">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -226,6 +226,14 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15.4dp"
                     android:src="@drawable/hp_some_go" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/line_color_gray_d1">
+
+                </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
@@ -234,8 +242,12 @@
                 android:layout_height="48.5dip"
                 android:layout_below="@+id/rl_group_info"
                 android:layout_marginTop="32dp"
-                android:background="@color/white"
-              >
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/line_color_gray_d2"></LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -261,14 +273,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/rl_msg_disturb"
-                android:background="@drawable/bg_long_item"
-            >
+                android:background="@drawable/bg_long_item">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignLeft="@+id/tv_set_top"
                     android:background="@color/line_color_gray_d2"></LinearLayout>
+
+                <im.boss66.com.widget.EaseSwitchButton
+                    android:id="@+id/switch_btn_top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15.4dp"
+                    app:switchStatus="close" />
 
                 <TextView
                     android:id="@+id/tv_set_top"
@@ -286,8 +306,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48.5dip"
                 android:layout_below="@+id/rl_set_top"
-                android:background="@color/white"
-               >
+                android:background="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -334,7 +353,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_alignLeft="@+id/tv_group_nick"
                     android:background="@color/line_color_gray_d2"></LinearLayout>
 
                 <TextView
@@ -418,7 +436,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_alignLeft="@+id/tv_chat"
                     android:background="@color/line_color_gray_d2"></LinearLayout>
 
                 <TextView
@@ -538,6 +555,12 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15.4dp"
                     android:src="@drawable/hp_some_go" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/line_color_gray_d1"></LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
@@ -551,7 +574,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_alignLeft="@+id/tv_chat_clear"
                     android:background="@color/line_color_gray_d2"></LinearLayout>
 
                 <TextView
@@ -564,6 +586,11 @@
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/line_color_gray_d1"></LinearLayout>
             </RelativeLayout>
 
             <Button
@@ -579,6 +606,13 @@
                 android:text="删除并退出"
                 android:textColor="@color/white"
                 android:textSize="17.5sp" />
+
+            <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:layout_below="@+id/btn_exit"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal"></LinearLayout>
         </RelativeLayout>
     </ScrollView>
 

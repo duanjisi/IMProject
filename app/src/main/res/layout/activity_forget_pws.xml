@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="注册"
+            android:text="忘记密码"
             android:textColor="@color/white"
             android:textSize="18sp" />
     </RelativeLayout>
@@ -192,49 +192,41 @@
             android:background="@color/line_color_gray_d2"></LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/rl_00"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="22dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="未收到验证码?" />
+
+        <TextView
+            android:id="@+id/tv_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="重新发送"
+            android:textColor="#FD2741" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/btn_register"
         android:layout_width="match_parent"
         android:layout_height="51.7dp"
-        android:layout_below="@+id/rl_00"
+        android:layout_below="@+id/ll_tips"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
         android:layout_marginTop="33dp"
         android:background="@drawable/bg_login"
         android:gravity="center"
-        android:text="注册"
+        android:text="找回密码"
         android:textColor="@color/white"
         android:textSize="17.5sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_register"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25.3dp"
-        android:text="接受短信大约需要45秒"
-        android:textColor="@color/hint_text_color"
-        android:textSize="14.3sp" />
-
-    <TextView
-        android:id="@+id/tv_tips"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/tv_bottom"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="4.4dp"
-        android:text="轻触上面的“注册”按钮，即表示你同意"
-        android:textColor="@color/hint_text_color"
-        android:textSize="13.2sp" />
-
-    <TextView
-        android:id="@+id/tv_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="18dp"
-        android:text="《软件许可及服务协议》"
-        android:textColor="#576B95"
-        android:textSize="13.2sp" />
 </RelativeLayout>
