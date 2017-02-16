@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
@@ -30,6 +31,25 @@ import java.util.regex.Pattern;
  * @date: 2014-12-6 下午2:44:11
  */
 public final class UIUtils {
+    /**
+     * 验证手机格式
+     */
+    public static boolean isMobile(String number) {
+    /*
+    移动：134、135、136、137、138、139、150、151、157(TD)、158、159、187、188
+    联通：130、131、132、152、155、156、185、186
+    电信：133、153、180、189、（1349卫通）
+    总结起来就是第一位必定为1，第二位必定为3或5或8，其他位置的可以为0-9
+    */
+        String num = "[1][358]\\d{9}";//"[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
+        if (TextUtils.isEmpty(number)) {
+            return false;
+        } else {
+            //matches():字符串是否在给定的正则表达式匹配
+            return number.matches(num);
+        }
+    }
+
     public static String getText(TextView tv) {
         return tv.getText().toString().trim();
     }
@@ -591,14 +611,13 @@ public final class UIUtils {
 //        };
 //        new MyThread(handler, times).start();
 //    }
-
-    public static Point getScreenSize(Context context){
+    public static Point getScreenSize(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point out = new Point();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             display.getSize(out);
-        }else{
+        } else {
             int width = display.getWidth();
             int height = display.getHeight();
             out.set(width, height);

@@ -14,6 +14,8 @@ import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.PictureAdapter;
+import im.boss66.com.db.dao.EmoLoveHelper;
+import im.boss66.com.entity.EmoLove;
 import im.boss66.com.widget.MyGridView;
 
 /**
@@ -35,12 +37,13 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
     private void initViews() {
         tvBack = (TextView) findViewById(R.id.tv_back);
 //        tvDo = (TextView) findViewById(R.id.tv_ok);
+        tvBack.setOnClickListener(this);
         gridView = (MyGridView) findViewById(R.id.gridView);
         adapter = new PictureAdapter(context);
         adapter.setAddPager(true);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new ItemClickListener());
-        tvBack.setOnClickListener(this);
+        adapter.initData(EmoLoveHelper.getInstance().qureList());
 //        tvDo.setOnClickListener(this);
     }
 
@@ -52,7 +55,6 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
 //            case R.id.tv_ok:
-//
 //                break;
         }
     }
@@ -62,6 +64,7 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String string = (String) parent.getItemAtPosition(position);
             if (string.equals("lastItem")) {
+                Log.i("info", "=====lastItem");
                 MultiImageSelector.create(context).
                         showCamera(true).
                         count(1)
@@ -77,8 +80,13 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
             if (requestCode == 100) {
                 ArrayList<String> selectPicList = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 if (selectPicList != null && selectPicList.size() != 0) {
-                    Log.i("info", "==========00000000000");
-                    adapter.addItem2(selectPicList.get(0));
+                    String image = selectPicList.get(0);
+                    if (image != null && !image.equals("")) {
+                        EmoLove love = new EmoLove();
+                        love.setIcon(image);
+                        EmoLoveHelper.getInstance().save(love);
+                        adapter.addItem2(image);
+                    }
                 }
             }
         }

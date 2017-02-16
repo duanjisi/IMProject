@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,16 +16,16 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.http.BaseDataRequest;
-import im.boss66.com.http.request.RegistRequest;
+import im.boss66.com.http.request.FindPwsRequest;
 import im.boss66.com.http.request.SMSCodeRequest;
 
 /**
- * Created by Johnny on 2017/1/17.
+ * Created by Johnny on 2017/2/15.
  */
-public class RegisterActivity extends BaseActivity implements View.OnClickListener {
-    private final static String TAG = RegisterActivity.class.getSimpleName();
+public class ForgetPwsActivity extends BaseActivity implements View.OnClickListener {
+    private final static String TAG = ForgetPwsActivity.class.getSimpleName();
     private static final int DELAY_MILlIS = 1000;
-    private TextView tvBack, tvCode;
+    private TextView tvBack, tvCode, tvSend;
     private EditText etPhoneNum, etPws, etConfirmPws, etCode;
     private Button btnRegister;
     private int interval = 0;
@@ -53,13 +52,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_forget_pws);
         initViews();
     }
 
     private void initViews() {
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvCode = (TextView) findViewById(R.id.tv_code);
+        tvSend = (TextView) findViewById(R.id.tv_send);
         etPhoneNum = (EditText) findViewById(R.id.et_phone_num);
         etCode = (EditText) findViewById(R.id.et_code);
         etPws = (EditText) findViewById(R.id.et_pws);
@@ -67,6 +67,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         btnRegister = (Button) findViewById(R.id.btn_register);
 
         tvCode.setOnClickListener(this);
+        tvSend.setOnClickListener(this);
         tvBack.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
     }
@@ -80,13 +81,51 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             case R.id.tv_code:
                 sendCode();
                 break;
+            case R.id.tv_send:
+                sendCode();
+                break;
             case R.id.btn_register:
-                register();
+                findPws();
                 break;
         }
     }
 
-    private void register() {
+    private void sendCode() {
+        String phone = etPhoneNum.getText().toString().trim();
+        if (TextUtils.isEmpty(phone)) {
+            showToast("手机号不能为空!", true);
+            return;
+        }
+        showLoadingDialog();
+        SMSCodeRequest request = new SMSCodeRequest(TAG, phone, "2");
+        request.send(new BaseDataRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String pojo) {
+                cancelLoadingDialog();
+                bindData(pojo);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                cancelLoadingDialog();
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void bindData(String string) {
+        try {
+            JSONObject obj = new JSONObject(string);
+//            JSONObject obj = object.getJSONObject("result");
+            interval = obj.getInt("interval");
+            tvCode.setEnabled(false);
+            handler.sendEmptyMessageDelayed(0, DELAY_MILlIS);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void findPws() {
         String phone = getText(etPhoneNum);
         String pass1 = getText(etPws);
         String pass2 = getText(etConfirmPws);
@@ -122,13 +161,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
         showLoadingDialog();
         tvCode.setEnabled(false);
-        RegistRequest request = new RegistRequest(TAG, phone, pass1, VerifyCode);
+        FindPwsRequest request = new FindPwsRequest(TAG, phone, VerifyCode, pass1);
         request.send(new BaseDataRequest.RequestCallback() {
             @Override
             public void onSuccess(Object pojo) {
                 cancelLoadingDialog();
                 tvCode.setEnabled(true);
-                showToast("注册成功!", true);
+                showToast("找回密码成功!", true);
                 finish();
             }
 
@@ -136,49 +175,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             public void onFailure(String msg) {
                 cancelLoadingDialog();
                 tvCode.setEnabled(true);
-                showToast(msg, true);
+//                showToast(msg, true);
+                showToast("找回密码失败!", true);
             }
         });
     }
 
-    private void sendCode() {
-        String phone = etPhoneNum.getText().toString().trim();
-        if (TextUtils.isEmpty(phone)) {
-            showToast("手机号不能为空!", true);
-            return;
-        }
-        showLoadingDialog();
-        SMSCodeRequest request = new SMSCodeRequest(TAG, phone, "1");
-        request.send(new BaseDataRequest.RequestCallback<String>() {
-            @Override
-            public void onSuccess(String pojo) {
-                cancelLoadingDialog();
-                bindData(pojo);
-            }
 
-            @Override
-            public void onFailure(String msg) {
-                cancelLoadingDialog();
-                showToast(msg, true);
-            }
-        });
-    }
-
-    private void bindData(String string) {
-        try {
-            Log.i("info", "=====json:" + string);
-            JSONObject obj = new JSONObject(string);
-            interval = obj.getInt("interval");
-            Log.i("info", "=====interval:" + interval);
-            tvCode.setEnabled(false);
-            handler.sendEmptyMessageDelayed(0, DELAY_MILlIS);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }

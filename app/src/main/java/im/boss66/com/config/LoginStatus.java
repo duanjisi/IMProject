@@ -14,6 +14,8 @@ public class LoginStatus {
     private static final String UID = "uid";
     private static final String TOKEN = "token";
     private static final String NAME = "name";
+    private static final String LAST_TIME = "last_time";
+    private static final String MOBILE_PHONE = "mobile_phone";
     private static final String HUAN_XIN_ID = "huanxin_id";
     private static final String HUAN_XIN_PSW = "huanxin_psw";
     private static final String AVATAR = "avatar";
@@ -51,9 +53,11 @@ public class LoginStatus {
 
     public void login(AccountEntity account, boolean isThirdParty) {
         SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(UID, account.getUserid());
-//        editor.putString(TOKEN, account.getToken());
-        editor.putString(NAME, account.getNickname());
+        editor.putString(UID, account.getUser_id());
+        editor.putString(TOKEN, account.getAccess_token());
+        editor.putString(NAME, account.getUser_name());
+        editor.putString(LAST_TIME, account.getLastlogin_time());
+        editor.putString(MOBILE_PHONE, account.getMobile_phone());
         editor.apply();
     }
 
@@ -133,6 +137,26 @@ public class LoginStatus {
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(LOGIN_SUPPLIER_LOGO, name);
         editor.apply();
+    }
+
+    public void setLastTime(String name) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(LAST_TIME, name);
+        editor.apply();
+    }
+
+    public void setMobilePhone(String name) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(MOBILE_PHONE, name);
+        editor.apply();
+    }
+
+    public String getLastTime() {
+        return mPreferences.getString(LAST_TIME, "");
+    }
+
+    public String getMobilePhone() {
+        return mPreferences.getString(MOBILE_PHONE, "");
     }
 
     public String getXingzuo() {

@@ -137,8 +137,8 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
 
     @Override
     public void delete(String str) {//删除某一组
-//        DBHelper.getInstance(mContext).delete(EmoLoveColumn.TABLE_NAME, EmoLoveColumn.GROUP_ID + " = ?",
-//                new String[]{str});
+        DBHelper.getInstance(mContext).delete(EmoLoveColumn.TABLE_NAME, EmoLoveColumn.EMO_LOVE_ICON + " = ?",
+                new String[]{str});
     }
 
     /**

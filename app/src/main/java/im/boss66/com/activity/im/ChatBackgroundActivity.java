@@ -1,4 +1,4 @@
-package im.boss66.com.activity;
+package im.boss66.com.activity.im;
 
 import android.os.Bundle;
 import android.view.View;

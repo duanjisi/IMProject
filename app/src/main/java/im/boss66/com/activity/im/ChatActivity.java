@@ -559,7 +559,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 startActivityForResult(it0, 100);
                 break;
             case R.id.iv_add_person://聊天信息
-                Intent it3 = new Intent(context, ChatInformActivity.class);
+                Intent it3 = new Intent(context, ChatGroupInformActivity.class);
                 startActivity(it3);
                 break;
             default:

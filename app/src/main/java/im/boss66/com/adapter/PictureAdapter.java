@@ -17,6 +17,7 @@ import java.util.Iterator;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.db.dao.EmoLoveHelper;
 
 /**
  * Created by Johnny on 2016/7/19.
@@ -27,14 +28,14 @@ public class PictureAdapter extends BaseAdapter {
     private float mImageHeight;
     private ArrayList<String> images;
     private boolean isAddPager = false;
+//    private boolean isFirst = false;
+//
+//    public void setFirst(boolean first) {
+//        isFirst = first;
+//    }
 
     public void setAddPager(boolean addPager) {
         isAddPager = addPager;
-        if (isAddPager) {
-            images.add("lastItem");
-        } else {
-            images.add("firstItem");
-        }
     }
 
     public PictureAdapter(Context context) {
@@ -62,7 +63,16 @@ public class PictureAdapter extends BaseAdapter {
 
     public void initData(ArrayList<String> list) {
         images.clear();
-//        images.add("lastItem");
+        images.addAll(list);
+        images.add("lastItem");
+        notifyDataSetChanged();
+    }
+
+    public void initFaceData(ArrayList<String> list) {
+        images.clear();
+//        if (isFirst) {
+//            images.add("firstItem");
+//        }
         images.addAll(list);
         notifyDataSetChanged();
     }
@@ -219,6 +229,7 @@ public class PictureAdapter extends BaseAdapter {
         while (stringIterator.hasNext()) {
             String s = stringIterator.next();
             if (s.equals(url)) {
+                EmoLoveHelper.getInstance().delete(url);
                 stringIterator.remove();
             }
         }

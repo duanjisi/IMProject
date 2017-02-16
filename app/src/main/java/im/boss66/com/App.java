@@ -176,8 +176,11 @@ public class App extends Application {
         }
         LoginStatus loginStatus = LoginStatus.getInstance();
         sAccount = new AccountEntity();
-        sAccount.setNickname(loginStatus.getUser_name());
-        sAccount.setUserid(loginStatus.getUser_id());
+        sAccount.setUser_name(loginStatus.getUser_name());
+        sAccount.setUser_id(loginStatus.getUser_id());
+        sAccount.setAccess_token(loginStatus.getToken());
+        sAccount.setLastlogin_time(loginStatus.getLastTime());
+        sAccount.setMobile_phone(loginStatus.getMobilePhone());
         return sAccount;
     }
 

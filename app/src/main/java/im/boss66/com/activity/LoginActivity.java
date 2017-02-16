@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.http.BaseDataRequest;
@@ -45,35 +46,56 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String uid1 = etAccount.getText().toString().trim();
-                String uid2 = etPws.getText().toString().trim();
-                if (!TextUtils.isEmpty(uid1) && !TextUtils.isEmpty(uid2)) {
-                    Intent intent = new Intent(context, MainActivity.class);
-                    intent.putExtra("uid1", uid1);
-                    intent.putExtra("uid2", uid2);
-                    startActivity(intent);
-                }
+                String account = etAccount.getText().toString().trim();
+                String pass = etPws.getText().toString().trim();
+//                if (!TextUtils.isEmpty(uid1) && !TextUtils.isEmpty(uid2)) {
+//                    Intent intent = new Intent(context, MainActivity.class);
+//                    intent.putExtra("uid1", uid1);
+//                    intent.putExtra("uid2", uid2);
+//                    startActivity(intent);
+//                }
+                login(account, pass);
             }
         });
     }
 
-    private void requestLogin() {
-        LoginRequest request = new LoginRequest(TAG, "username", "password");
+    private void login(String number, String pass) {
+        if (TextUtils.isEmpty(number)) {
+            showToast("登录帐号不能为空!", true);
+            return;
+        }
+        if (!UIUtils.isMobile(number)) {
+            showToast("手机号格式不正确!", true);
+            return;
+        }
+
+        if (TextUtils.isEmpty(pass)) {
+            showToast("登录密码不能为空", true);
+            return;
+        }
         showLoadingDialog();
+        LoginRequest request = new LoginRequest(TAG, number, pass);
         request.send(new BaseDataRequest.RequestCallback<AccountEntity>() {
             @Override
-            public void onSuccess(AccountEntity pojo) {
+            public void onSuccess(AccountEntity entity) {
                 cancelLoadingDialog();
+                loginSuccessed(entity);
             }
 
             @Override
             public void onFailure(String msg) {
                 cancelLoadingDialog();
-                showToast(msg,true);
+                showToast(msg, true);
             }
         });
     }
 
+    private void loginSuccessed(AccountEntity entity) {
+        App.getInstance().initUser(entity);
+        showToast("登录成功!", true);
+        Intent intent = new Intent(context, MainActivity.class);
+        startActivity(intent);
+    }
 
 
     @Override
@@ -83,7 +105,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 openActivity(RegisterActivity.class);
                 break;
             case R.id.tv_forget_pws:
-
+                openActivity(ForgetPwsActivity.class);
                 break;
             case R.id.iv_weixin:
 

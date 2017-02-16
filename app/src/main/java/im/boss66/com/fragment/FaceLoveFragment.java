@@ -37,7 +37,7 @@ public class FaceLoveFragment extends BaseFragment {
     private String title;
     private View view;
     private ImageView[] imageViews;
-    private ArrayList<String> emos;
+    private ArrayList<String> emos = new ArrayList<>();
     private ViewPager viewPager;
     private LinearLayout linearLayout;
     private int pagers = 1;
@@ -55,15 +55,6 @@ public class FaceLoveFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         title = getArguments() != null ? getArguments().getString("groupId") : "";
-        emos = (ArrayList<String>) EmoLoveHelper.getInstance().qureList();
-        size = emos.size();
-        if (size > App.PAGER_NUM) {
-            if (size % App.PAGER_NUM != 0) {
-                pagers = size / App.PAGER_NUM + 1;
-            } else {
-                pagers = size / App.PAGER_NUM;
-            }
-        }
     }
 
     @Nullable
@@ -79,26 +70,46 @@ public class FaceLoveFragment extends BaseFragment {
     private void initViews(View view) {
         viewPager = (ViewPager) view.findViewById(R.id.view_pager);
         linearLayout = (LinearLayout) view.findViewById(R.id.indicator);
+        initData();
+    }
+
+    private void initData() {
+        emos.clear();
+        linearLayout.removeAllViews();
+        ArrayList<String> list = (ArrayList<String>) EmoLoveHelper.getInstance().qureList();
+        emos.add("firstItem");
+        emos.addAll(list);
+        Log.i("info", "====size:" + emos.size());
+        size = emos.size();
+        if (size > App.PAGER_NUM) {
+            if (size % App.PAGER_NUM != 0) {
+                pagers = size / App.PAGER_NUM + 1;
+            } else {
+                pagers = size / App.PAGER_NUM;
+            }
+        } else {
+            pagers = 1;
+        }
+        Log.i("info", "====pagers:" + pagers);
         initDotViews(pagers);
         List<View> lv = new ArrayList<View>();
         for (int i = 0; i < pagers; i++) {
             GridView gridView = getGridView();
-//            FaceAdapter adapter = new FaceAdapter(getActivity());
             PictureAdapter adapter = new PictureAdapter(getActivity());
             adapter.setAddPager(false);
             gridView.setOnItemClickListener(new ItemClickListener());
             gridView.setAdapter(adapter);
             if (size > App.PAGER_NUM) {
                 int startIndex = i * App.PAGER_NUM;
-                int endIndex = (i + 1) * App.PAGER_NUM - 1;
+                int endIndex = (i + 1) * App.PAGER_NUM;
                 Log.i("info", "====startIndex:" + startIndex + "\n" + "endIndex:" + endIndex);
                 if (endIndex <= size) {
-                    adapter.initData(getList(startIndex, endIndex));
+                    adapter.initFaceData(getList(startIndex, endIndex));
                 } else {
-                    adapter.initData(getList(startIndex, size - 1));
+                    adapter.initFaceData(getList(startIndex, size));
                 }
             } else {
-                adapter.initData(emos);
+                adapter.initFaceData(emos);
             }
             lv.add(gridView);
         }
@@ -125,11 +136,9 @@ public class FaceLoveFragment extends BaseFragment {
     private class ItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//            EmoEntity entity = (EmoEntity) adapterView.getItemAtPosition(i);
             String string = (String) adapterView.getItemAtPosition(i);
             if (string.equals("firstItem")) {
                 Intent intent = new Intent(getActivity(), EmojiAddActivity.class);
-//                startActivity(intent);
                 startActivityForResult(intent, 101);
             } else {
                 if (callback != null) {
@@ -145,9 +154,7 @@ public class FaceLoveFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i("info", "onActivityResult()");
         if (requestCode == 101) {
-            if (data != null) {
-
-            }
+            initData();
         }
     }
 
@@ -163,7 +170,7 @@ public class FaceLoveFragment extends BaseFragment {
 
     private ArrayList<String> getList(int start, int end) {
         ArrayList<String> list = new ArrayList<>();
-        for (int i = start; i <= end; i++) {
+        for (int i = start; i < end; i++) {
             list.add(emos.get(i));
         }
         return list;

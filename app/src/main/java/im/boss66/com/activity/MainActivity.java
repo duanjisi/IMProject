@@ -11,11 +11,13 @@ import android.widget.RadioGroup;
 
 import java.util.ArrayList;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
 import im.boss66.com.db.dao.EmoHelper;
+import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.EmoCate;
 import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmoGroup;
@@ -36,13 +38,14 @@ public class MainActivity extends BaseActivity {
     private static final int VIEW_PAGER_PAGE_4 = 3;
     private static final int VIEW_PAGER_PAGE_5 = 4;
     private static final int PAGE_COUNT = 5;
+    private AccountEntity account;
     private RadioGroup mRadioGroup;
     private ArrayList<Fragment> mFragments = new ArrayList<Fragment>();
     private ViewPager mViewPager;
     private RadioButton rbHomePager, rbBooks, rbContacts, rbDiscover, rbMine;
     //    private ImageView ivSearch, ivAdd;
 //    private RelativeLayout rl_top_bar;
-    private String userid, uid;
+//    private String userid, uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +55,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initViews() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            userid = bundle.getString("uid1", "");
-            uid = bundle.getString("uid2", "");
-        }
+        account = App.getInstance().getAccount();
+//        Bundle bundle = getIntent().getExtras();
+//        if (bundle != null) {
+//            userid = bundle.getString("uid1", "");
+//            uid = bundle.getString("uid2", "");
+//        }
         mRadioGroup = (RadioGroup) findViewById(R.id.bottom_navigation_rg);
         rbHomePager = (RadioButton) findViewById(R.id.rb_home_pager);
         rbBooks = (RadioButton) findViewById(R.id.rb_contact_book);
@@ -75,7 +79,7 @@ public class MainActivity extends BaseActivity {
         mViewPager.setCurrentItem(VIEW_PAGER_PAGE_1);
 
         Intent intent = new Intent(context, ChatServices.class);
-        intent.putExtra("userid", userid);
+        intent.putExtra("userid", account.getUser_id());
         startService(intent);
         insertDatas();
     }
@@ -271,7 +275,7 @@ public class MainActivity extends BaseActivity {
     private void addData() {
         Fragment fragment = new HomePagerFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("userid", userid);
+        bundle.putString("userid", account.getUser_id());
         fragment.setArguments(bundle);
         mFragments.add(fragment);
         mFragments.add(new ContactBooksFragment());

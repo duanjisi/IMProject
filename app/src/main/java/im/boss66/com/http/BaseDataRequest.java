@@ -64,7 +64,6 @@ public abstract class BaseDataRequest<T> {
                             callback.onFailure(app.getString(R.string.error_generic_error));
                         }
                     });
-
                 } else {
                     mHandler.post(new Runnable() {
                         @Override
@@ -82,8 +81,8 @@ public abstract class BaseDataRequest<T> {
                 PreRspPojo preRspPojo = null;
                 try {
                     preRspPojo = JSON.parseObject(rspContent, PreRspPojo.class);
-                    MycsLog.d("返回的code为" + preRspPojo.state);
-                    switch (preRspPojo.state) {
+                    MycsLog.d("返回的code为" + preRspPojo.code);
+                    switch (preRspPojo.code) {
                         case 1://正常
                             final T retT;
 //                            jsonDao.save(switchJsonEntity(rspContent));
