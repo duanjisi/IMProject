@@ -26,6 +26,12 @@ public class LoginStatus {
     private static final String DISTRICT_NAME = "district_name";
     private static final String BIRTHDAY_STR = "birthday_str";
     private static final String SEX = "sex";
+    private static final String SIGNATURE = "signature";
+    private static final String PROVINCE = "province";
+    private static final String CITY = "city";
+    private static final String DISTRICT = "district";
+    private static final String DISTRICT_STR = "district_str";
+
     private static final String BG_IMG = "bgimg";
     private static final String SEX_STR = "sex_str";
     private static final String LOGIN_SUPPLIER_ID = "login_supplier_id";
@@ -58,6 +64,14 @@ public class LoginStatus {
         editor.putString(NAME, account.getUser_name());
         editor.putString(LAST_TIME, account.getLastlogin_time());
         editor.putString(MOBILE_PHONE, account.getMobile_phone());
+        editor.putString(AVATAR, account.getAvatar());
+        editor.putString(SEX, account.getSex());
+        editor.putBoolean(LOGIN_STATE, true);
+        editor.putString(SIGNATURE, account.getSignature());
+        editor.putString(PROVINCE, account.getProvince());
+        editor.putString(CITY, account.getCity());
+        editor.putString(DISTRICT, account.getDistrict());
+        editor.putString(DISTRICT_STR, account.getDistrict_str());
         editor.apply();
     }
 
@@ -84,6 +98,7 @@ public class LoginStatus {
         editor.putString(AVATAR, avatar);
         editor.apply();
     }
+
 
     public void setSex_str(String sex) {
         SharedPreferences.Editor editor = mPreferences.edit();
@@ -149,6 +164,56 @@ public class LoginStatus {
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(MOBILE_PHONE, name);
         editor.apply();
+    }
+
+    public void setSignature(String name) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(SIGNATURE, name);
+        editor.apply();
+    }
+
+    public void setProvince(String name) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(PROVINCE, name);
+        editor.apply();
+    }
+
+    public void setCity(String name) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(CITY, name);
+        editor.apply();
+    }
+
+    public void setDistrict(String name) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(DISTRICT, name);
+        editor.apply();
+    }
+
+    public void setDistrict_str(String name) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(DISTRICT_STR, name);
+        editor.apply();
+    }
+
+    public String getSignature() {
+        return mPreferences.getString(SIGNATURE, "");
+    }
+
+    public String getProvince() {
+        return mPreferences.getString(PROVINCE, "");
+    }
+
+    public String getCity() {
+        return mPreferences.getString(CITY, "");
+    }
+
+    public String getDistrict() {
+        return mPreferences.getString(DISTRICT, "");
+    }
+
+    public String getDistrict_str() {
+        return mPreferences.getString(DISTRICT_STR, "");
     }
 
     public String getLastTime() {

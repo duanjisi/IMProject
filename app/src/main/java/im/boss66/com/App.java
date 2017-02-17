@@ -181,6 +181,13 @@ public class App extends Application {
         sAccount.setAccess_token(loginStatus.getToken());
         sAccount.setLastlogin_time(loginStatus.getLastTime());
         sAccount.setMobile_phone(loginStatus.getMobilePhone());
+        sAccount.setAvatar(loginStatus.getAvatar());
+        sAccount.setSex(loginStatus.getSex());
+        sAccount.setSignature(loginStatus.getSex());
+        sAccount.setProvince(loginStatus.getProvince());
+        sAccount.setCity(loginStatus.getCity());
+        sAccount.setDistrict(loginStatus.getDistrict());
+        sAccount.setDistrict_str(loginStatus.getDistrict_str());
         return sAccount;
     }
 

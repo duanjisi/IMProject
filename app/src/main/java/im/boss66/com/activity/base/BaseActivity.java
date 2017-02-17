@@ -11,6 +11,12 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.sso.UMQQSsoHandler;
+import com.umeng.socialize.weixin.controller.UMWXHandler;
+
 import im.boss66.com.R;
 import im.boss66.com.widget.DialogFactory;
 
@@ -20,6 +26,9 @@ public class BaseActivity extends FragmentActivity {
     private ProgressDialog mProgressDialog;
     private LocalBroadcastReceiver mLocalBroadcastReceiver;
     public Context context;
+    // 首先在您的Activity中添加如下成员变量
+    final public UMSocialService mController = UMServiceFactory
+            .getUMSocialService("com.umeng.share");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +39,48 @@ public class BaseActivity extends FragmentActivity {
         context = this;
     }
 
+    protected void addQQQZonePlatform() {
+        String appId = getString(R.string.qq_app_id);
+        String appKey = getString(R.string.qq_app_key);
+        // 添加QQ支持, 并且设置QQ分享内容的target url
+        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this,
+                appId, appKey);
+        qqSsoHandler.setTargetUrl("http://www.umeng.com");
+        qqSsoHandler.addToSocialSDK();
+//        // 添加QZone平台
+//        QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(
+//                LoginActivity.this, appId, appKey);
+//        qZoneSsoHandler.addToSocialSDK();
+    }
+
+    protected void addWXPlatform() {
+        // 注意：在微信授权的时候，必须传递appSecret
+        // wx967daebe835fbeac是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
+        String appId = getString(R.string.weixin_app_id);
+        String appSecret = getString(R.string.weixin_app_secret);
+
+        // 添加微信平台
+        UMWXHandler wxHandler = new UMWXHandler(this, appId,
+                appSecret);
+        wxHandler.addToSocialSDK();
+
+        // 支持微信朋友圈
+        UMWXHandler wxCircleHandler = new UMWXHandler(this,
+                appId, appSecret);
+        wxCircleHandler.setToCircle(true);
+        wxCircleHandler.addToSocialSDK();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     protected void onReceiveAction(Context context, Intent intent) {

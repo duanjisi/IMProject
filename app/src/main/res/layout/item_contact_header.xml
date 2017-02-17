@@ -38,7 +38,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rl_phone_contact"
+        android:id="@+id/rl_chat_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

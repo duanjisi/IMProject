@@ -5,7 +5,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Session;
+import im.boss66.com.activity.LoginActivity;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.widget.ActionSheet;
 
@@ -14,9 +17,9 @@ import im.boss66.com.widget.ActionSheet;
  */
 public class PersonalSetActivity extends BaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener {
 
-    private TextView tv_back,tv_title,tv_exit_login;
-    private RelativeLayout rl_safe,rl_new_alerts,rl_privacy,rl_general
-            ,rl_help_feedback,rl_about;
+    private TextView tv_back, tv_title, tv_exit_login;
+    private RelativeLayout rl_safe, rl_new_alerts, rl_privacy, rl_general, rl_help_feedback, rl_about;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +50,7 @@ public class PersonalSetActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_back:
                 finish();
                 break;
@@ -87,6 +90,9 @@ public class PersonalSetActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onClick(int which) {//退出登录
-
+        App.getInstance().logout();
+        Session.getInstance().exitActivitys();
+        openActivity(LoginActivity.class);
+        finish();
     }
 }

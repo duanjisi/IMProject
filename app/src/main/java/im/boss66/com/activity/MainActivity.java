@@ -10,9 +10,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Session;
+import im.boss66.com.SessionInfo;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
@@ -31,7 +35,7 @@ import im.boss66.com.services.ChatServices;
 /**
  * Created by Johnny on 2017/1/14.
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements Observer {
     private static final int VIEW_PAGER_PAGE_1 = 0;
     private static final int VIEW_PAGER_PAGE_2 = 1;
     private static final int VIEW_PAGER_PAGE_3 = 2;
@@ -50,6 +54,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Session.getInstance().addObserver(this);
         setContentView(R.layout.activity_main);
         initViews();
     }
@@ -375,6 +380,13 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void update(Observable observable, Object data) {
+        SessionInfo sin = (SessionInfo) data;
+        if (sin.getAction() == Session.ACTION_APPLICATION_EXIT) {
+            finish();
+        }
+    }
 
     @Override
     protected void onDestroy() {
