@@ -23,7 +23,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/line_color_gray_d2"
+            android:background="@color/line_color_gray_d1"
             android:layout_marginTop="22dp"
             android:orientation="vertical">
 
@@ -32,8 +32,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/personal_bt_selector"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1px"
+                android:layout_marginBottom="1px"
                 android:paddingRight="16.5dp"
                 android:paddingLeft="16.5dp"
                 android:paddingTop="10dp"
@@ -87,7 +87,7 @@
                 android:id="@+id/rl_richScan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="1px"
                 android:background="@drawable/personal_bt_selector"
                 android:paddingRight="16.5dp"
                 android:paddingLeft="16.5dp"
@@ -123,7 +123,7 @@
 
             <View
                 android:layout_width="17dp"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:background="@color/white"/>
 
             <RelativeLayout
@@ -131,7 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/personal_bt_selector"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="1px"
                 android:paddingRight="16.5dp"
                 android:paddingLeft="16.5dp"
                 android:paddingTop="10dp"
@@ -173,8 +173,8 @@
                 android:id="@+id/rl_people_nearby"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1px"
+                android:layout_marginBottom="1px"
                 android:background="@drawable/personal_bt_selector"
                 android:paddingRight="16.5dp"
                 android:paddingLeft="16.5dp"
@@ -230,7 +230,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/personal_bt_selector"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="1px"
                 android:paddingRight="16.5dp"
                 android:paddingLeft="16.5dp"
                 android:paddingTop="10dp"
@@ -265,7 +265,7 @@
 
             <View
                 android:layout_width="17dp"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:background="@color/white"/>
 
             <RelativeLayout
@@ -273,7 +273,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/personal_bt_selector"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="1px"
                 android:paddingRight="16.5dp"
                 android:paddingLeft="16.5dp"
                 android:paddingTop="10dp"

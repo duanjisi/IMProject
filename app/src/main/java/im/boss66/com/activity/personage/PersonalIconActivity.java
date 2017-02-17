@@ -15,11 +15,13 @@ import android.widget.TextView;
 
 import java.io.File;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.config.LoginStatus;
 import im.boss66.com.util.Utils;
 import im.boss66.com.widget.ActionSheet;
 import im.boss66.com.widget.photoview.PhotoView;

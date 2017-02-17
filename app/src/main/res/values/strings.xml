@@ -175,4 +175,6 @@
 
     <string name="qq_app_id">1105914390</string>
     <string name="qq_app_key">SbGk2WdT16aUKe4Z</string>
+    <string name="giving_orientation_privileges">请给予定位权限，否则获取不了附近的人.</string>
+    <string name="giving_orientation_privileges_fail">抱歉，定位失败TAT</string>
 </resources>

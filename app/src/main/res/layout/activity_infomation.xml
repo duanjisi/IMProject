@@ -16,11 +16,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="16.5dp"
+                android:background="@color/line_color_gray_d1" />
+
             <RelativeLayout
                 android:id="@+id/rl_head_icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16.5dp"
                 android:background="@color/white"
                 android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
@@ -57,10 +62,10 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:layout_below="@+id/rl_richScan"
                 android:layout_marginLeft="17dp"
-                android:background="@color/bg_gray" />
+                android:background="@color/line_color_gray_d1" />
 
             <RelativeLayout
                 android:id="@+id/rl_name"
@@ -104,10 +109,10 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:layout_below="@+id/rl_richScan"
                 android:layout_marginLeft="17dp"
-                android:background="@color/bg_gray" />
+                android:background="@color/line_color_gray_d1" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -141,10 +146,10 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:layout_below="@+id/rl_richScan"
                 android:layout_marginLeft="17dp"
-                android:background="@color/bg_gray" />
+                android:background="@color/line_color_gray_d1" />
 
             <RelativeLayout
                 android:id="@+id/rl_qr_code"
@@ -184,11 +189,21 @@
 
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/line_color_gray_d1" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="22dp"
+                android:background="@color/line_color_gray_d1" />
+
             <RelativeLayout
                 android:id="@+id/rl_sex"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
                 android:background="@drawable/personal_bt_selector"
                 android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
@@ -227,10 +242,10 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:layout_below="@+id/rl_richScan"
                 android:layout_marginLeft="17dp"
-                android:background="@color/bg_gray" />
+                android:background="@color/line_color_gray_d1" />
 
             <RelativeLayout
                 android:id="@+id/rl_area"
@@ -276,10 +291,10 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:layout_below="@+id/rl_richScan"
                 android:layout_marginLeft="17dp"
-                android:background="@color/bg_gray" />
+                android:background="@color/line_color_gray_d1" />
 
             <RelativeLayout
                 android:id="@+id/rl_signature"
@@ -322,6 +337,11 @@
                     android:textSize="17.6sp" />
 
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/line_color_gray_d1" />
 
         </LinearLayout>
 

@@ -17,7 +17,6 @@
             android:layout_height="70.4dp"
             android:layout_marginLeft="7.7dp"
             android:layout_marginRight="13.2dp"
-            android:src="@drawable/person"
             roundiv:round_borderRadius="6dp"
             roundiv:round_type="1" />
 
@@ -28,8 +27,7 @@
             android:layout_toRightOf="@+id/iv_head"
             android:layout_marginTop="8.8dp"
             android:textColor="@color/black"
-            android:textSize="17.6sp"
-            android:text="少时诵诗书"/>
+            android:textSize="17.6sp"/>
 
         <TextView
             android:id="@+id/tv_distance"
@@ -40,8 +38,7 @@
             android:layout_marginLeft="4.4dp"
             android:layout_marginTop="15.4dp"
             android:textColor="@color/text_light_gray"
-            android:textSize="13.2sp"
-            android:text="50米以内"/>
+            android:textSize="13.2sp"/>
 
         <TextView
             android:id="@+id/tv_des"
@@ -54,8 +51,8 @@
             android:background="@drawable/tv_bg_gary"
             android:maxEms="7"
             android:maxLines="2"
-            android:ellipsize="end"
-            android:text="少时诵诗书所所所少时诵诗书少时诵诗书"/>
+            android:visibility="gone"
+            android:ellipsize="end"/>
 
     </RelativeLayout>
 

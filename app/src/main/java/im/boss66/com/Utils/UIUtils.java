@@ -577,13 +577,13 @@ public final class UIUtils {
     }
 
 
-    /**
-     * 刷新发送验证码按钮的视图
-     *
-     * @param context
-     * @param btnShow 要刷新的控件
-     * @param times   倒计时
-     */
+//    /**
+//     * 刷新发送验证码按钮的视图
+//     *
+//     * @param context
+//     * @param btnShow 要刷新的控件
+//     * @param times   倒计时
+//     */
 //    public static void frushCheckCodeView(Context context, final TextView btnShow, int times) {
 //
 //        final String str1 = "发送验证码";

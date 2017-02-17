@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.activity.personage.PersonalInformationActivity;
 import im.boss66.com.activity.personage.PersonalPhotoAlbumActivity;
@@ -35,6 +36,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
+        initData();
+    }
+
+    private void initData() {
+        //App.getInstance().getAccount().
     }
 
     private void initViews(View view) {

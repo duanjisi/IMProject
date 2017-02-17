@@ -105,6 +105,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/ll_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="1dp"
@@ -113,7 +114,8 @@
                     android:paddingBottom="10dp"
                     android:paddingLeft="16.5dp"
                     android:paddingRight="16.5dp"
-                    android:paddingTop="10dp">
+                    android:paddingTop="10dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -147,7 +149,8 @@
                     android:paddingBottom="10dp"
                     android:paddingLeft="16.5dp"
                     android:paddingRight="16.5dp"
-                    android:paddingTop="10dp">
+                    android:paddingTop="10dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -184,6 +187,7 @@
                     android:paddingBottom="10dp"
                     android:paddingLeft="16.5dp"
                     android:paddingRight="16.5dp"
+                    android:visibility="gone"
                     android:paddingTop="10dp">
 
                     <TextView
