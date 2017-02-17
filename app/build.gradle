@@ -6,18 +6,47 @@ android {
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
 
+    signingConfigs {
+        release {
+            keyAlias 'gmkey'
+            keyPassword 'gm10086'
+            storeFile file('../appSignFile.jks')
+            storePassword 'gm10086'
+        }
+    }
+
     defaultConfig {
-        applicationId "im.boss66.com.imdemo"
+        applicationId "im.boss66.com"
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
     }
     buildTypes {
         release {
             minifyEnabled false
+            zipAlignEnabled true
+            debuggable false
+            // 移除无用的resource文件
+            shrinkResources true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    if (output.outputFile != null && output.outputFile.name.endsWith('.apk')
+                            && 'release'.equals(variant.buildType.name)) {
+                        def apkFile = new File(
+                                output.outputFile.getParent(),
+                                "HaiMeng_v${variant.versionName}.apk")
+                        output.outputFile = apkFile
+                    }
+                }
+            }
         }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 
@@ -29,6 +58,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.alibaba:fastjson:1.2.9'
     compile 'net.jodah:typetools:0.4.0'
+    compile 'com.umeng.analytics:analytics:latest.integration'
     compile files('libs/autobahn.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile files('libs/xUtils-2.6.14.jar')
@@ -43,4 +73,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
+    compile files('libs/SocialSDK_QQZone_1.jar')
+    compile files('libs/umeng_social_sdk.jar')
 }
