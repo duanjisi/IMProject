@@ -10,10 +10,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.List;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.entity.NearByChildEntity;
+import im.boss66.com.entity.PeopleNearbyEntity;
 import im.boss66.com.widget.RoundImageView;
 
 /**
@@ -23,10 +28,13 @@ public class PeopleNearbyAdapter extends RecyclerView.Adapter<PeopleNearbyAdapte
 
     private static int mscrenW;
     private MyItemClickListener mItemClickListener;
-    private List<String> list;
-    public PeopleNearbyAdapter(Context context, List<String> list){
+    private List<NearByChildEntity> list;
+    private ImageLoader imageLoader;
+
+    public PeopleNearbyAdapter(Context context, List<NearByChildEntity> list){
         this.list = list;
         mscrenW = UIUtils.getScreenWidth(context)/8;
+        imageLoader = ImageLoaderUtils.createImageLoader(context);
     }
 
     @Override
@@ -37,10 +45,13 @@ public class PeopleNearbyAdapter extends RecyclerView.Adapter<PeopleNearbyAdapte
 
     @Override
     public void onBindViewHolder(PeopleNearbyView holder, int position) {
-        String item = list.get(position);
-        if (!TextUtils.isEmpty(item)){
-            holder.tv_name.setText(""+item);
-            holder.tv_des.setText(""+item +":"+position);
+        NearByChildEntity item = list.get(position);
+        if (item != null){
+            holder.tv_name.setText(""+item.getUser_name());
+            int dis = item.getDistance();
+            holder.tv_distance.setText(""+dis + "米以内");
+            imageLoader.displayImage(item.getAvatar(), holder.iv_head,
+                    ImageLoaderUtils.getDisplayImageOptions());
         }
     }
 
@@ -49,7 +60,7 @@ public class PeopleNearbyAdapter extends RecyclerView.Adapter<PeopleNearbyAdapte
         return (list != null) ? list.size() : 0;
     }
 
-    public void onDataChange(List<String> list) {
+    public void onDataChange(List<NearByChildEntity> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -69,6 +80,7 @@ public class PeopleNearbyAdapter extends RecyclerView.Adapter<PeopleNearbyAdapte
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv_head.getLayoutParams();
             params.width = mscrenW;
             params.height = mscrenW;
+            iv_head.setLayoutParams(params);
             this.mListener = mListener;
             itemView.setOnClickListener(this);
         }

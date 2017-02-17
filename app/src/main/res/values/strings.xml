@@ -167,4 +167,6 @@
     <string name="mis_permission_dialog_cancel">取消</string>
     <string name="mis_permission_rationale">存储器读权限需要选择文件.</string>
     <string name="mis_permission_rationale_write_storage">存储写入权限需要保存图像.</string>
+    <string name="giving_orientation_privileges">请给予定位权限，否则获取不了附近的人.</string>
+    <string name="giving_orientation_privileges_fail">抱歉，定位失败TAT</string>
 </resources>

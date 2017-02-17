@@ -15,7 +15,7 @@ import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.http.BaseDataRequest;
-import im.boss66.com.http.LoginRequest;
+import im.boss66.com.http.request.LoginRequest;
 
 /**
  * Created by Johnny on 2017/1/16.

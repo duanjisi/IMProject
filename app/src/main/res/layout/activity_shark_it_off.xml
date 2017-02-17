@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_top_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_navigation_bar_height"
+        android:background="@color/top_bar_color"
         android:paddingLeft="11dp"
-        android:paddingRight="11dp"
-        android:background="@color/top_bar_color">
+        android:paddingRight="11dp">
 
         <TextView
             android:id="@+id/tv_back"
@@ -34,9 +35,9 @@
             android:id="@+id/iv_set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/hp_setup"/>
+            android:layout_centerVertical="true"
+            android:src="@drawable/hp_setup" />
 
     </RelativeLayout>
 
@@ -45,27 +46,97 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/hp_shake_bigphone"/>
+        android:src="@drawable/hp_shake_bigphone" />
 
     <TextView
         android:id="@+id/tv_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:layout_below="@+id/iv_icon"
         android:layout_centerHorizontal="true"
-        android:textSize="17.6sp"
-        android:text="@string/shark_it_off"/>
+        android:layout_marginTop="12dp"
+        android:text="@string/shark_it_off"
+        android:textSize="17.6sp" />
 
     <ProgressBar
         android:id="@+id/pb_shark"
         android:layout_width="22dp"
         android:layout_height="22dp"
-        android:layout_below="@+id/iv_icon"
-        android:layout_toLeftOf="@+id/tv_bottom"
         android:layout_alignTop="@+id/tv_bottom"
+        android:layout_below="@+id/iv_icon"
         android:layout_marginRight="8dp"
+        android:layout_toLeftOf="@+id/tv_bottom"
         android:indeterminateDrawable="@drawable/common_loading4"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_people"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_icon"
+        android:layout_centerHorizontal="true"
+        android:padding="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_14"
+        android:background="@drawable/bg_round_darkgray"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_head"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/person"/>
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@+id/iv_head"
+                android:maxLines="1"
+                android:maxEms="6"
+                android:ellipsize="end"
+                android:text="tes水水水水搜索搜索搜索t"
+                android:textColor="@color/bg_gray"
+                android:textSize="19.8sp" />
+
+            <TextView
+                android:id="@+id/tv_sex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_name"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="4.4dp"
+                android:layout_toRightOf="@+id/tv_name"
+                android:text="男"
+                android:textColor="@color/text_light_blue_font"
+                android:textSize="13.2sp" />
+
+            <TextView
+                android:id="@+id/tv_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_head"
+                android:layout_below="@+id/tv_name"
+                android:layout_marginLeft="6dp"
+                android:text="ssss"
+                android:textColor="@color/bg_gray"
+                android:textSize="15sp"/>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:src="@drawable/arrow_normal"/>
+
+    </LinearLayout>
 
 </RelativeLayout>
