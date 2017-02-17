@@ -2,14 +2,32 @@ package im.boss66.com.activity.personage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.io.File;
+
+import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtils;
+import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.http.HttpUrl;
 import im.boss66.com.widget.CircleImageView;
 
 /**
@@ -25,15 +43,51 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
     private int ICON_CHANGE_REQUEST = 101;
     private int NAME_SEX_SIGNATURE_REQUEST = 102;
     private boolean isSignatureNull = true;
+    private ImageLoader imageLoader;
+
+    private String headUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_infomation);
         initView();
+        initData();
+    }
+
+    private void initData() {
+        AccountEntity sAccount = App.getInstance().getAccount();
+        if (sAccount != null){
+            headUrl = sAccount.getAvatar();
+            if (!TextUtils.isEmpty(headUrl)){
+                imageLoader.displayImage(headUrl, iv_head,
+                        ImageLoaderUtils.getDisplayImageOptions());
+            }
+            String userid = sAccount.getUser_id();
+            if (!TextUtils.isEmpty(userid)){
+                tv_number.setText(userid);
+            }
+            String username = sAccount.getUser_name();
+            if (!TextUtils.isEmpty(username)){
+                tv_name.setText(username);
+            }
+            String sex = sAccount.getSex();
+            if (!TextUtils.isEmpty(sex)){
+                tv_sex.setText(sex);
+            }
+            String signature = sAccount.getSignature();
+            if (!TextUtils.isEmpty(signature)){
+                tv_signature.setText(signature);
+            }
+            String area = sAccount.getDistrict_str();
+            if (!TextUtils.isEmpty(area)){
+                tv_area.setText(area);
+            }
+        }
     }
 
     private void initView() {
+        imageLoader = ImageLoaderUtils.createImageLoader(this);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_back = (TextView) findViewById(R.id.tv_back);
         rl_head_icon = (RelativeLayout) findViewById(R.id.rl_head_icon);
@@ -65,7 +119,9 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                 finish();
                 break;
             case R.id.rl_head_icon://头像
-                openActvityForResult(PersonalIconActivity.class, ICON_CHANGE_REQUEST);
+                Bundle bundle0 = new Bundle();
+                bundle0.putString("head",headUrl);
+                openActvityForResult(PersonalIconActivity.class, ICON_CHANGE_REQUEST,bundle0);
                 break;
             case R.id.rl_name://名字
                 Bundle bundle = new Bundle();
@@ -126,4 +182,5 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
             }
         }
     }
+
 }

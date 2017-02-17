@@ -43,5 +43,6 @@ public class HttpUrl {
     public static final String UPDATE_LOCATION = MAIN_URL + "ucenter/nearuser/update";
     //摇一摇
     public static final String SHAKE_IT_OFF = MAIN_URL + "ucenter/shakeuser/index";
-
+    //修改用户头像
+    public static final String CHANGE_AVAYAR = MAIN_URL + "ucenter/userinfo/changeavatar";
 }

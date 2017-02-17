@@ -175,35 +175,38 @@ public class ClipImageActivity extends BaseActivity implements View.OnClickListe
     private void clipImage() {
         if (mOutput != null) {
             mDialog.show();
-            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    FileOutputStream fos = null;
-                    try {
-                        fos = new FileOutputStream(mOutput);
-                        Bitmap bitmap = createClippedBitmap();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                        if (!bitmap.isRecycled()) {
-                            bitmap.recycle();
-                        }
-                        setResult(Activity.RESULT_OK, getIntent());
-                    } catch (Exception e) {
-                        Looper.prepare();
-                        Toast.makeText(ClipImageActivity.this, R.string.msg_could_not_save_photo, Toast.LENGTH_SHORT).show();
-                        Looper.loop();
-                    } finally {
-                        FileUtil.close(fos);
-                    }
-                    return null;
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(mOutput);
+                Bitmap bitmap = createClippedBitmap();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                if (!bitmap.isRecycled()) {
+                    bitmap.recycle();
                 }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    mDialog.dismiss();
-                    finish();
-                }
-            };
-            task.execute();
+                mDialog.dismiss();
+                setResult(Activity.RESULT_OK, getIntent());
+                finish();
+            } catch (Exception e) {
+                Looper.prepare();
+                Toast.makeText(ClipImageActivity.this, R.string.msg_could_not_save_photo, Toast.LENGTH_SHORT).show();
+                Looper.loop();
+            } finally {
+                FileUtil.close(fos);
+            }
+//            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+//                @Override
+//                protected Void doInBackground(Void... params) {
+//
+//                    return null;
+//                }
+//
+//                @Override
+//                protected void onPostExecute(Void aVoid) {
+//                    mDialog.dismiss();
+//                    finish();
+//                }
+//            };
+            //task.execute();
         } else {
             finish();
         }
