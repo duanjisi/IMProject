@@ -12,7 +12,7 @@ public class K {
         public static final String LIVEID = "liveid";
         public static final String TITLE = "title";
         public static final String CONTENT = "content";
-        public static final String TOKEN = "token";
+        public static final String TOKEN = "access_token";
         public static final String START_TIME = "startime";
         public static final String SHOP = "shop";
         public static final String LOGIN_USER = "login_users";

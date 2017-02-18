@@ -10,7 +10,6 @@ import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,9 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dtr.zbar.build.ZBarDecoder;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
 import com.google.zxing.DecodeHintType;
@@ -52,6 +48,8 @@ import java.util.Hashtable;
 import im.boss66.com.R;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.request.AddFriendRequest;
 import im.boss66.com.util.RGBLuminanceSource;
 import im.boss66.com.util.Utils;
 import im.boss66.com.widget.scan.CameraManager;
@@ -79,7 +77,7 @@ public class CaptureActivity extends BaseActivity {
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
+//    private GoogleApiClient client;
     private TextView tvBack, tvPhoto;
     private Bitmap scanBitmap;
 
@@ -91,12 +89,12 @@ public class CaptureActivity extends BaseActivity {
         initViews();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+//        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void findViewById() {
         tvBack = (TextView) findViewById(R.id.tv_back);
-        tvPhoto = (TextView) findViewById(R.id.tv_back);
+        tvPhoto = (TextView) findViewById(R.id.tv_photo);
         tvCancel = (TextView) findViewById(R.id.tv_cancel);
         mScanPreview = (FrameLayout) findViewById(R.id.capture_preview);
         mScanContainer = (RelativeLayout) findViewById(R.id.capture_container);
@@ -111,7 +109,7 @@ public class CaptureActivity extends BaseActivity {
         tvPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                photo();
             }
         });
         tvCancel.setOnClickListener(new View.OnClickListener() {
@@ -150,13 +148,15 @@ public class CaptureActivity extends BaseActivity {
 
     public void onPause() {
         super.onPause();
-        releaseCamera();
+//        releaseCamera();
     }
+
 
     private void releaseCamera() {
         if (mCamera != null) {
             previewing = false;
             mCamera.setPreviewCallback(null);
+            mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
         }
@@ -210,6 +210,10 @@ public class CaptureActivity extends BaseActivity {
      */
     private void decodeResult(String result) {
         MycsLog.i("result:" + result);
+        if (result.contains("add_friend:")) {
+            String userid = result.substring(result.indexOf(":") + 1, result.length());
+            addFriendRequest(userid);
+        }
 //        if (result.contains("http://www.66boss.com/app/")) {
 //            joinGroup(result);
 //        } else if (result.contains("friend:")) {
@@ -227,6 +231,24 @@ public class CaptureActivity extends BaseActivity {
 //        }
     }
 
+
+    private void addFriendRequest(String userid) {
+        showLoadingDialog();
+        AddFriendRequest request = new AddFriendRequest(TAG, userid);
+        request.send(new BaseDataRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String pojo) {
+                cancelLoadingDialog();
+                showToast("已发送好友请求!", true);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, true);
+                cancelLoadingDialog();
+            }
+        });
+    }
 
     // Mimic continuous auto-focusing
     AutoFocusCallback autoFocusCB = new AutoFocusCallback() {
@@ -289,38 +311,38 @@ public class CaptureActivity extends BaseActivity {
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Capture Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://im.boss66.com.activity/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
+//        client.connect();
+//        Action viewAction = Action.newAction(
+//                Action.TYPE_VIEW, // TODO: choose an action type.
+//                "Capture Page", // TODO: Define a title for the content shown.
+//                // TODO: If you have web page content that matches this app activity's content,
+//                // make sure this auto-generated web page URL is correct.
+//                // Otherwise, set the URL to null.
+//                Uri.parse("http://host/path"),
+//                // TODO: Make sure this auto-generated app URL is correct.
+//                Uri.parse("android-app://im.boss66.com.activity/http/host/path")
+//        );
+//        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Capture Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://im.boss66.com.activity/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
+//        Action viewAction = Action.newAction(
+//                Action.TYPE_VIEW, // TODO: choose an action type.
+//                "Capture Page", // TODO: Define a title for the content shown.
+//                // TODO: If you have web page content that matches this app activity's content,
+//                // make sure this auto-generated web page URL is correct.
+//                // Otherwise, set the URL to null.
+//                Uri.parse("http://host/path"),
+//                // TODO: Make sure this auto-generated app URL is correct.
+//                Uri.parse("android-app://im.boss66.com.activity/http/host/path")
+//        );
+//        AppIndex.AppIndexApi.end(client, viewAction);
+//        client.disconnect();
+        releaseCamera();
     }
 
     private void photo() {
@@ -348,7 +370,6 @@ public class CaptureActivity extends BaseActivity {
                     Cursor cursor = getContentResolver().query(data.getData(),
                             proj, null, null, null);
                     if (cursor.moveToFirst()) {
-
                         int column_index = cursor
                                 .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                         photo_path = cursor.getString(column_index);

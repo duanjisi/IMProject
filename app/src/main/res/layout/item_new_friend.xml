@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="68dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fl"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginLeft="16.5dp"
+        android:layout_marginTop="12dp">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/person" />
+
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/fl"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="3dp"
+        android:layout_toRightOf="@+id/fl"
+        android:text="test_1"
+        android:textColor="@color/black"
+        android:textSize="16.5sp" />
+
+    <TextView
+        android:id="@+id/tv_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/fl"
+        android:layout_alignLeft="@+id/tv_name"
+        android:layout_below="@+id/tv_name"
+        android:layout_toLeftOf="@+id/rl_right"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:text="口浪尖四大皆空拉夫桑"
+        android:textColor="@color/text_color_gray_6"
+        android:textSize="15sp" />
+
+
+    <RelativeLayout
+        android:id="@+id/rl_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="21dp">
+
+        <TextView
+            android:id="@+id/tv_receiver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_frame_red"
+            android:paddingBottom="6dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="6dp"
+            android:text="接受"
+            android:textColor="@color/white"
+            android:textSize="15.4sp" />
+
+        <TextView
+            android:id="@+id/tv_added"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已添加"
+            android:textSize="15.4sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignLeft="@+id/fl"
+        android:layout_alignParentBottom="true"
+        android:background="@color/line_color_gray_d1"
+        android:orientation="horizontal"></LinearLayout>
+</RelativeLayout>
