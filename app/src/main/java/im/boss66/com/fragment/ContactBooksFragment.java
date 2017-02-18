@@ -26,11 +26,15 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.AddFriendActivity;
 import im.boss66.com.activity.book.BookSearchActivity;
+import im.boss66.com.activity.book.NewFriendsActivity;
+import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.activity.im.ChatActivity;
 import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.BaseContact;
+import im.boss66.com.entity.FriendState;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.ContactsRequest;
+import im.boss66.com.http.request.NewFriendNumRequest;
 import im.boss66.com.widget.EaseContactList;
 import im.boss66.com.widget.TopNavigationBar;
 
@@ -52,6 +56,7 @@ public class ContactBooksFragment extends BaseFragment {
     private View viewSearch;
     private View header;
     private RelativeLayout rl_new_friend, rl_chat_group;
+    private TextView tv_new_nums;
 
     @Nullable
     @Override
@@ -97,11 +102,13 @@ public class ContactBooksFragment extends BaseFragment {
         listView = contactListLayout.getListView();
         rl_new_friend = (RelativeLayout) header.findViewById(R.id.rl_add_friends);
         rl_chat_group = (RelativeLayout) header.findViewById(R.id.rl_chat_group);
+        tv_new_nums = (TextView) header.findViewById(R.id.tv_notify);
 
         rl_new_friend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getActivity(), NewFriendsActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -198,12 +205,42 @@ public class ContactBooksFragment extends BaseFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final EaseUser user = (EaseUser) listView.getItemAtPosition(position);
-
+                Intent intent = new Intent(getActivity(), PersonalNearbyDetailActivity.class);
+                intent.putExtra("ease_user", user);
+                startActivity(intent);
                 return true;
             }
         });
     }
 
+    private void requestNewNums() {
+        NewFriendNumRequest request = new NewFriendNumRequest(TAG);
+        request.send(new BaseDataRequest.RequestCallback<FriendState>() {
+            @Override
+            public void onSuccess(FriendState pojo) {
+                cancelLoadingDialog();
+                bindData(pojo);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                cancelLoadingDialog();
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void bindData(FriendState state) {
+        if (state != null) {
+            String num = state.getCount();
+            if (num != null && !num.equals("0")) {
+                UIUtils.hindView(tv_new_nums);
+                tv_new_nums.setText(num);
+            } else {
+                UIUtils.hindView(tv_new_nums);
+            }
+        }
+    }
 
     protected void hideSoftKeyboard() {
         if (getActivity().getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {

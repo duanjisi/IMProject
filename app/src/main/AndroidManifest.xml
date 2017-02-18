@@ -77,6 +77,8 @@
         <activity android:name=".activity.im.EmojiMakeActivity"></activity>
         <activity android:name=".activity.im.EmojiSelectWellActivity"></activity>
 
+        <!--新的朋友-->
+        <activity android:name=".activity.book.NewFriendsActivity"></activity>
         <!--忘记密码-->
         <activity android:name=".activity.ForgetPwsActivity"></activity>
         <!--聊天文件-->

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import im.boss66.com.App;
 import im.boss66.com.Utils.MycsLog;
 
 /**
@@ -21,6 +22,7 @@ public class HttpUtil {
     private static final String DEVEICE_ID = "deveiceId";
     private static final String ENCRYPTION_VALUE = "51atgc.com";
     private static final String APP_PLATFORM = "platform";
+
     /**
      * 获取Post方式加密参数
      *
@@ -38,10 +40,10 @@ public class HttpUtil {
          * 参数名称loginToken，和(登录用户的id)参数名称userId
          令牌规则，微秒时间戳+用户id，两次32位md5加密
          */
-//        if (App.getInstance().isLogin()) {
-//            params.put(K.Request.TOKEN, App.getInstance().getLoginToken());
+        if (App.getInstance().isLogin()) {
+            params.put(K.Request.TOKEN, App.getInstance().getAccount().getAccess_token());
 //            params.put("login_user_id", App.getInstance().getAccount().getUser_id());
-//        }
+        }
 
         MycsLog.v("排序前的数据" + params.toString());
         Iterator<String> iterator = params.keySet().iterator();

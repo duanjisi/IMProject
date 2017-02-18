@@ -37,6 +37,9 @@ public class HttpUrl {
     public static final String FRIENDSHIP_URL = MAIN_URL + "ucenter/friends/isfriends";
     //通讯录请求
     public static final String CONTACTS_URL = MAIN_URL + "ucenter/friends/index";
+    //新朋友列表请求
+    public static final String NEW_FRIENDS_URL = MAIN_URL + "ucenter/friendslog/index";
+
     //附近的人
     public static final String PEOPLE_NEARBY = MAIN_URL + "ucenter/nearuser/index";
     //更新位置

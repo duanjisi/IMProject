@@ -27,8 +27,6 @@
     <!--android:textColor="@color/black"-->
     <!--android:textSize="16sp" />-->
     <!--</RelativeLayout>-->
-
-
     <RelativeLayout
         android:id="@+id/rl_tag"
         android:layout_width="match_parent"
