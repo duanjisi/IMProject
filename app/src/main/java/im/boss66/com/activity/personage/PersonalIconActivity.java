@@ -2,6 +2,7 @@ package im.boss66.com.activity.personage;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -58,12 +59,13 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
     private String mOutputPath;
     private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
     private ImageLoader imageLoader;
-    private final String CHATPHOTO_PATH = Environment
-            .getExternalStorageDirectory()
-            + File.separator;
+    //    private final String savePath = Environment
+//            .getExternalStorageDirectory()
+//            + File.separator;
     private Uri imageUri;
     private String imageName;
     private String access_token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,7 +151,7 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
 
                     imageName = getNowTime() + ".png";
                     // 指定调用相机拍照后照片的储存路径
-                    File dir = new File(CHATPHOTO_PATH);
+                    File dir = new File(savePath);
                     if (!dir.exists()) {
                         dir.mkdirs();
                     }
@@ -173,7 +175,7 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
 
                 imageName = getNowTime() + ".png";
                 imageUri = Uri
-                        .fromFile(new File(CHATPHOTO_PATH, imageName));
+                        .fromFile(new File(savePath, imageName));
                 Intent intent = new Intent(Intent.ACTION_PICK, null);
                 intent.setDataAndType(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -204,8 +206,8 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
 //                        iv_icon.setImageBitmap(bitmap);
 //                    }
 //                }
-                if (imageUri != null){
-                    String path = Utils.getPath(this,imageUri);
+                if (imageUri != null) {
+                    String path = Utils.getPath(this, imageUri);
                     if (!TextUtils.isEmpty(path)) {
                         ClipImageActivity.prepare()
                                 .aspectX(2).aspectY(2)//裁剪框横向及纵向上的比例
@@ -219,9 +221,13 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
                 return;
             } else {
                 Uri originalUri = data.getData();  //获得图片的uri
+
                 if (originalUri != null) {
+//                    String path = getPhoneImage(originalUri.toString());
+//                    uploadImageFile(path);
                     String path = Utils.getPath(this, originalUri);
                     if (!TextUtils.isEmpty(path)) {
+                        //uploadImageFile(path);
                         ClipImageActivity.prepare()
                                 .aspectX(2).aspectY(2)//裁剪框横向及纵向上的比例
                                 .inputPath(path).outputPath(mOutputPath)//要裁剪的图片地址及裁剪后保存的地址
@@ -230,43 +236,56 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
                 }
             }
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CLIP_IMAGE) {
-            uploadImageFile();
-//            String path = ClipImageActivity.ClipOptions.createFromBundle(data).getOutputPath();
-//            if (path != null) {
+            String path = ClipImageActivity.ClipOptions.createFromBundle(data).getOutputPath();
+            if (path != null) {
+                uploadImageFile(path);
 //                bitmap = BitmapFactory.decodeFile(path);
 //                if (bitmap != null) {
 //                    iv_icon.setImageBitmap(bitmap);
 //                }
-//            }
-//            return;
+            }
+            return;
         }
     }
 
-    private void uploadImageFile() {
+    private void uploadImageFile(String path) {
         String main = HttpUrl.CHANGE_AVAYAR;
-        final HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
-        final com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-        try {
-            File file = new File(CHATPHOTO_PATH, imageName);
-            params.addBodyParameter("access_token",access_token);
-            params.addBodyParameter("file", file);
-            httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
-                @Override
-                public void onSuccess(ResponseInfo<String> responseInfo) {
-                    Log.i("info", "responseInfo:" + responseInfo.result);
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        File file = new File(path);
+        params.addBodyParameter("access_token", access_token);
+        params.addBodyParameter("avatar", file);
+        httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                Log.i("info", "responseInfo:" + responseInfo.result);
 //                    cancelLoadingDialog();
-                    //sendImageMessage(parsePath(responseInfo.result));
-                }
+                //sendImageMessage(parsePath(responseInfo.result));
+            }
 
-                @Override
-                public void onFailure(HttpException e, String s) {
-                    Toast.makeText(context, "上传失败!", Toast.LENGTH_LONG).show();
-                    cancelLoadingDialog();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onFailure(HttpException e, String s) {
+                Toast.makeText(context, "上传失败!", Toast.LENGTH_LONG).show();
+                cancelLoadingDialog();
+            }
+        });
+    }
+
+    /**
+     * 获取系统图库图片的SD卡路径
+     *
+     * @param uriString
+     * @return
+     */
+    private String getPhoneImage(String uriString) {
+        Uri selectedImage = Uri.parse(uriString);
+        String[] filePathColumns = {MediaStore.Images.Media.DATA};
+        Cursor cursor = this.getContentResolver().query(selectedImage, filePathColumns, null, null, null);
+        cursor.moveToFirst();
+        int columnIndex = cursor.getColumnIndex(filePathColumns[0]);
+        String fileName = cursor.getString(columnIndex);
+        cursor.close();
+        return fileName;
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -274,28 +293,6 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMddHHmmssSS");
         return dateFormat.format(date);
-    }
-
-    @SuppressLint("SdCardPath")
-    private void startPhotoZoom(Uri uri1, int size) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri1, "image/*");
-        // crop为true是设置在开启的intent中设置显示的view可以剪裁
-        intent.putExtra("crop", "true");
-
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-
-        // outputX,outputY 是剪裁图片的宽高
-        intent.putExtra("outputX", size);
-        intent.putExtra("outputY", size);
-        intent.putExtra("return-data", false);
-
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
-        intent.putExtra("noFaceDetection", true); // no face detection
-        startActivityForResult(intent, REQUEST_CLIP_IMAGE);
     }
 
 }

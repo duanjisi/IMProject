@@ -446,8 +446,12 @@ public class ClipImageView extends ImageView implements
         }
 
         return Bitmap.createBitmap(originalBitmap,
-                (int) cropX, (int) cropY, (int) cropWidth, (int) cropHeight,
+                (int) cropX, (int) cropY, 640, 640,
                 outputMatrix, false);
+
+//        return Bitmap.createBitmap(originalBitmap,
+//                (int) cropX, (int) cropY, (int) cropWidth, (int) cropHeight,
+//                outputMatrix, false);
     }
 
     /**

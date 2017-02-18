@@ -179,7 +179,7 @@ public class ClipImageActivity extends BaseActivity implements View.OnClickListe
             try {
                 fos = new FileOutputStream(mOutput);
                 Bitmap bitmap = createClippedBitmap();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
                 if (!bitmap.isRecycled()) {
                     bitmap.recycle();
                 }
@@ -187,9 +187,9 @@ public class ClipImageActivity extends BaseActivity implements View.OnClickListe
                 setResult(Activity.RESULT_OK, getIntent());
                 finish();
             } catch (Exception e) {
-                Looper.prepare();
+                //Looper.prepare();
                 Toast.makeText(ClipImageActivity.this, R.string.msg_could_not_save_photo, Toast.LENGTH_SHORT).show();
-                Looper.loop();
+                //Looper.loop();
             } finally {
                 FileUtil.close(fos);
             }
