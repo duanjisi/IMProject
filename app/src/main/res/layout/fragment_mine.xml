@@ -44,7 +44,7 @@
                     android:id="@+id/iv_head"
                     android:layout_width="70.4dp"
                     android:layout_height="70.4dp"
-                    android:src="@drawable/person" />
+                    android:src="@drawable/zf_default_message_image" />
 
                 <TextView
                     android:id="@+id/tv_name"
@@ -65,7 +65,7 @@
                     android:layout_below="@+id/tv_name"
                     android:layout_marginTop="11dp"
                     android:layout_marginLeft="13.2dp"
-                    android:text="小6号：666666"
+                    android:visibility="gone"
                     android:textColor="@color/black"
                     android:textSize="15.4sp"/>
 

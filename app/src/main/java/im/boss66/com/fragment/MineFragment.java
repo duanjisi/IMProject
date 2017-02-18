@@ -3,6 +3,7 @@ package im.boss66.com.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.activity.personage.PersonalInformationActivity;
 import im.boss66.com.activity.personage.PersonalPhotoAlbumActivity;
 import im.boss66.com.activity.personage.PersonalSetActivity;
 import im.boss66.com.activity.personage.WalletActivity;
+import im.boss66.com.entity.AccountEntity;
 
 /**
  * 个人中心
@@ -25,6 +30,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private RelativeLayout rl_information,rl_photo,rl_collect,rl_wallet,rl_expression,rl_set;
     private ImageView iv_head;
     private TextView tv_name,tv_number;
+    private ImageLoader imageLoader;
 
     @Nullable
     @Override
@@ -40,7 +46,22 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     }
 
     private void initData() {
-        //App.getInstance().getAccount().
+        imageLoader = ImageLoaderUtils.createImageLoader(getActivity());
+        AccountEntity sAccount = App.getInstance().getAccount();
+        if (sAccount != null){
+            String head = sAccount.getAvatar();
+            if (!TextUtils.isEmpty(head)){
+                imageLoader.displayImage(head, iv_head,
+                        ImageLoaderUtils.getDisplayImageOptions());
+            }
+            String userid = sAccount.getUser_id();
+            String username = sAccount.getUser_name();
+            if (!TextUtils.isEmpty(username)){
+                tv_name.setText(username);
+            }else {
+                tv_name.setText(""+userid);
+            }
+        }
     }
 
     private void initViews(View view) {
