@@ -76,9 +76,9 @@ public class MultiImageSelector {
 
     public void start(Activity activity, int requestCode){
         final Context context = activity;
-        if(hasPermission(context)) {
-            activity.startActivityForResult(createIntent(context), requestCode);
-        }else{
+            if(hasPermission(context)) {
+                activity.startActivityForResult(createIntent(context), requestCode);
+            }else{
             Toast.makeText(context, R.string.mis_error_no_permission, Toast.LENGTH_SHORT).show();
         }
     }

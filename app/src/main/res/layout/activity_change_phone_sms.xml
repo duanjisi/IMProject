@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_title"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:paddingTop="10dp"
+        android:text="@string/change_phone_sms_tip"
+        android:textColor="@color/text_color_gray_6"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_phone_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp_10"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textColor="@color/text_color_gray_6"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp_14"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"
+            android:text="国家/地区"/>
+
+        <TextView
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp_6"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"
+            android:text="国家/地区"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="@dimen/dp_14"
+        android:background="@color/bt_bg_gray"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp_14"
+            android:paddingTop="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_10"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"
+            android:text="+86"/>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/bt_bg_gray"/>
+
+        <EditText
+            android:id="@+id/et_phone_num"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:paddingLeft="@dimen/dp_6"
+            android:hint="@string/write_phone"
+            android:textColorHint="@color/ios7_white"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"/>
+
+    </LinearLayout>
+
+</LinearLayout>

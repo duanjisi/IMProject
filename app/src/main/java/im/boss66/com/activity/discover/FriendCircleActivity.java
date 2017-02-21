@@ -61,6 +61,13 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         //设置布局管理器
         rv_friend.setLayoutManager(layoutManager);
         iv_set.setOnClickListener(this);
+        iv_set.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+
+                return false;
+            }
+        });
         tv_back.setOnClickListener(this);
         presenter = new CirclePresenter(this);
         List<CircleItem> list = FriendCircleTestData.createCircleDatas();

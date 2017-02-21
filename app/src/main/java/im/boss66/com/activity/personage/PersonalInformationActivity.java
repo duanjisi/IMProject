@@ -46,6 +46,8 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
     private ImageLoader imageLoader;
 
     private String headUrl;
+    private boolean isFirst = false;
+    private App mApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,8 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
     }
 
     private void initData() {
-        AccountEntity sAccount = App.getInstance().getAccount();
+        mApplication = App.getInstance();
+        AccountEntity sAccount = mApplication.getAccount();
         if (sAccount != null){
             headUrl = sAccount.getAvatar();
             if (!TextUtils.isEmpty(headUrl)){
@@ -141,6 +144,8 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                 openActvityForResult(PersonalInfoChangeActivity.class, NAME_SEX_SIGNATURE_REQUEST, bundle1);
                 break;
             case R.id.rl_area://地区
+                isFirst = true;
+                openActivity(PersonalAreaProvinceActivity.class);
                 break;
             case R.id.rl_signature://个性签名
                 Bundle bundle2 = new Bundle();
@@ -156,26 +161,35 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ICON_CHANGE_REQUEST && resultCode == 101 && data != null) {
-
+        if (requestCode == ICON_CHANGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            headUrl = data.getStringExtra("headicon");
+            if (!TextUtils.isEmpty(headUrl)){
+                imageLoader.displayImage(headUrl, iv_head,
+                        ImageLoaderUtils.getDisplayImageOptions());
+            }
         } else if (requestCode == NAME_SEX_SIGNATURE_REQUEST && resultCode == RESULT_OK && data != null) {
             String changeType = data.getStringExtra("changeType");
             if (!TextUtils.isEmpty(changeType)) {
+                AccountEntity sAccount = mApplication.getAccount();
                 String value = data.getStringExtra("back_value");
                 switch (changeType) {
                     case "name":
                         tv_name.setText("" + value);
+                        sAccount.setUser_name(value);
                         break;
                     case "sex":
                         tv_sex.setText("" + value);
+                        sAccount.setSex(value);
                         break;
                     case "signature":
                         if (!TextUtils.isEmpty(value)) {
                             tv_signature.setText("" + value);
                             isSignatureNull = false;
+                            sAccount.setSignature(value);
                         } else {
                             isSignatureNull = true;
                             tv_signature.setText(getString(R.string.not_filled));
+                            sAccount.setSignature(getString(R.string.not_filled));
                         }
                         break;
                 }
@@ -183,4 +197,15 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isFirst && mApplication != null){
+            AccountEntity sAccount = mApplication.getAccount();
+            String area = sAccount.getDistrict_str();
+            if (!TextUtils.isEmpty(area)){
+                tv_area.setText(area);
+            }
+        }
+    }
 }

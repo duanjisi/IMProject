@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="16.5dp"
-                android:background="@color/line_color_gray_d1"/>
+                android:background="@color/bg_gray"/>
 
             <RelativeLayout
                 android:id="@+id/rl_information"
@@ -90,13 +90,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/line_color_gray_d1"/>
+                android:background="@color/bg_gray"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="22dp"
-                android:background="@color/line_color_gray_d1"/>
+                android:background="@color/bg_gray"/>
 
             <RelativeLayout
                 android:id="@+id/rl_photo"
@@ -138,7 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginLeft="17dp"
-                android:background="@color/line_color_gray_d1"/>
+                android:background="@color/bg_gray"/>
 
             <RelativeLayout
                 android:id="@+id/rl_collect"
@@ -180,7 +180,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginLeft="17dp"
-                android:background="@color/line_color_gray_d1"/>
+                android:background="@color/bg_gray"/>
 
             <RelativeLayout
                 android:id="@+id/rl_wallet"
@@ -221,13 +221,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/line_color_gray_d1"/>
+                android:background="@color/bg_gray"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="22dp"
-                android:background="@color/line_color_gray_d1"/>
+                android:background="@color/bg_gray"/>
 
             <RelativeLayout
                 android:id="@+id/rl_expression"
@@ -268,13 +268,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/line_color_gray_d1"/>
+                android:background="@color/bg_gray"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="22dp"
-                android:background="@color/line_color_gray_d1"/>
+                android:background="@color/bg_gray"/>
 
             <RelativeLayout
                 android:id="@+id/rl_set"
@@ -315,7 +315,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/line_color_gray_d1"/>
+                android:background="@color/bg_gray"/>
 
         </LinearLayout>
 

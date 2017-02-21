@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_title" />
+
+    <TextView
+        android:id="@+id/tv_phone_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_16" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:paddingTop="10dp"
+        android:text="@string/change_phone_num_tip"
+        android:textColor="@color/text_color_gray_6"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/bt_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginTop="16.5dp"
+        android:background="@drawable/selector_nearby_bt_greet"
+        android:paddingBottom="@dimen/dp_14"
+        android:paddingTop="@dimen/dp_14"
+        android:text="@string/check_mobile_phone_address_book"
+        android:textColor="@drawable/selector_textcolor_white_gary"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/bt_change_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/selector_nearby_bt_complaint"
+        android:paddingBottom="@dimen/dp_14"
+        android:paddingTop="@dimen/dp_14"
+        android:text="@string/change_phone"
+        android:textSize="20sp" />
+
+</LinearLayout>

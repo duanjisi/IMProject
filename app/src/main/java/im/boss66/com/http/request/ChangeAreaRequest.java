@@ -3,17 +3,14 @@ package im.boss66.com.http.request;
 import java.util.HashMap;
 import java.util.Map;
 
-import im.boss66.com.entity.CodeEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
 
 /**
- * Created by Johnny on 2017/2/15.
- * 通用验证手机短信验证码
+ * 修改地区
  */
-public class VerifyCodeReques extends BaseDataRequest<String> {
-
-    public VerifyCodeReques(String tag, Object... params) {
+public class ChangeAreaRequest extends BaseDataRequest<String>{
+    public ChangeAreaRequest(String tag, Object... params) {
         super(tag, params);
     }
 
@@ -24,16 +21,18 @@ public class VerifyCodeReques extends BaseDataRequest<String> {
 
     @Override
     protected Map<String, String> getParams() {
-        String mobile_phone = (String) mParams[0];
-        String mobile_verifycode = (String) mParams[1];
+        String province = (String) mParams[0];
+        String city = (String) mParams[1];
+        String district = (String) mParams[2];
         Map<String, String> map = new HashMap<String, String>();
-        map.put("mobile_phone", mobile_phone);
-        map.put("mobile_verifycode", mobile_verifycode);
+        map.put("province", province);
+        map.put("city", city);
+        map.put("district", district);
         return map;
     }
 
     @Override
     protected String getApiPath() {
-        return HttpUrl.SMS_URL;
+        return HttpUrl.CHANE_NAME_SEX_AREA;
     }
 }

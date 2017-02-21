@@ -48,4 +48,14 @@ public class HttpUrl {
     public static final String SHAKE_IT_OFF = MAIN_URL + "ucenter/shakeuser/index";
     //修改用户头像
     public static final String CHANGE_AVAYAR = MAIN_URL + "ucenter/userinfo/changeavatar";
+    //获取用户信息
+    public static final String GET_UER_INFO = MAIN_URL + "ucenter/userinfo/index";
+    //修改用户名/性别/地区
+    public static final String CHANE_NAME_SEX_AREA = MAIN_URL + "ucenter/userinfo/update";
+    //修改个性签名
+    public static final String CHANE_SIGNATURE = MAIN_URL + "ucenter/userinfo/updatesignature";
+    //更换相册封面
+    public static final String CHANE_ALBUM_COVER = MAIN_URL + "ucenter/userinfo/uploadcoverpic";
+    //更换手机号码
+    public static final String CHANE_PHONE_NUM = MAIN_URL + "ucenter/userinfo/bindmobile";
 }

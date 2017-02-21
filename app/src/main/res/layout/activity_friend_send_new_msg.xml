@@ -10,51 +10,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16.5dp"
-        android:background="@color/line_color_gray_d2"
+        android:background="@color/white"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/rl_app_num"
+
+        <EditText
+            android:id="@+id/et_tx"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:background="@color/white"
-            android:paddingBottom="10dp"
-            android:paddingLeft="16.5dp"
-            android:paddingRight="16.5dp"
-            android:paddingTop="10dp">
+            android:background="@color/transparent"
+            android:hint="@string/the_idea_of_the_moment"
+            android:padding="@dimen/dp_10"
+            android:textColor="@color/black"
+            android:textColorHint="@color/hint_text_color" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16.5dp"
-                android:layout_toRightOf="@+id/iv_photo"
-                android:text="@string/app_num"
-                android:textColor="@color/black"
-                android:textSize="17.5sp" />
-
-            <TextView
-                android:id="@+id/tv_app_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="666666"
-                android:textColor="@color/text_app_num_gray"
-                android:textSize="15.4sp" />
-
-        </RelativeLayout>
+        <im.boss66.com.widget.MultiImageView
+            android:id="@+id/multiImagView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"/>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="22dp"
-            android:layout_marginBottom="1dp"
-            android:layout_marginTop="1dp"
-            android:background="@color/background_color" />
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/dp_14"
+            android:background="@color/alertdialog_line" />
 
         <RelativeLayout
-            android:id="@+id/rl_qq_num"
+            android:id="@+id/rl_current_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="1dp"
@@ -65,12 +48,13 @@
             android:paddingTop="10dp">
 
             <TextView
+                android:id="@+id/tv_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
                 android:layout_toRightOf="@+id/iv_photo"
-                android:text="@string/qq_num"
+                android:text="@string/current_location"
                 android:textColor="@color/black"
                 android:textSize="17.5sp" />
 
@@ -83,8 +67,23 @@
 
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/alertdialog_line" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_18"
+            android:background="@color/background_color" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/alertdialog_line" />
+
         <RelativeLayout
-            android:id="@+id/rl_phone_num"
+            android:id="@+id/rl_who_can_see"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="1dp"
@@ -100,7 +99,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
                 android:layout_toRightOf="@+id/iv_photo"
-                android:text="@string/phone_num"
+                android:text="@string/who_can_see"
                 android:textColor="@color/black"
                 android:textSize="17.5sp" />
 
@@ -113,20 +112,29 @@
                 android:background="@drawable/hp_some_go" />
 
             <TextView
-                android:id="@+id/tv_phone_num"
+                android:id="@+id/tv_people"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/iv_phone"
                 android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/iv_phone"
+                android:maxEms="10"
+                android:singleLine="true"
                 android:textColor="@color/text_app_num_gray"
                 android:textSize="15.4sp" />
 
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/dp_14"
+            android:background="@color/alertdialog_line" />
+
         <RelativeLayout
-            android:id="@+id/rl_email_address"
+            android:id="@+id/rl_remind_who_see"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
             android:background="@drawable/personal_bt_selector"
             android:paddingBottom="10dp"
             android:paddingLeft="16.5dp"
@@ -139,11 +147,12 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
                 android:layout_toRightOf="@+id/iv_photo"
-                android:text="@string/email_address"
+                android:text="@string/remind_who_see"
                 android:textColor="@color/black"
                 android:textSize="17.5sp" />
 
             <ImageView
+                android:id="@+id/iv_remind_who_see"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -154,70 +163,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="22dp"
-            android:layout_marginBottom="1dp"
-            android:layout_marginTop="1dp"
-            android:background="@color/background_color" />
-
-        <RelativeLayout
-            android:id="@+id/rl_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:background="@drawable/personal_bt_selector"
-            android:paddingBottom="10dp"
-            android:paddingLeft="16.5dp"
-            android:paddingRight="16.5dp"
-            android:paddingTop="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16.5dp"
-                android:layout_toRightOf="@+id/iv_photo"
-                android:text="@string/password"
-                android:textColor="@color/black"
-                android:textSize="17.5sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/hp_some_go" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rl_account_protect"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:background="@drawable/personal_bt_selector"
-            android:paddingBottom="10dp"
-            android:paddingLeft="16.5dp"
-            android:paddingRight="16.5dp"
-            android:paddingTop="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16.5dp"
-                android:layout_toRightOf="@+id/iv_photo"
-                android:text="@string/account_protect"
-                android:textColor="@color/black"
-                android:textSize="17.5sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/hp_some_go" />
-
-        </RelativeLayout>
+            android:layout_height="1px"
+            android:background="@color/alertdialog_line" />
 
     </LinearLayout>
 

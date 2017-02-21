@@ -1,9 +1,10 @@
 package im.boss66.com.entity;
 
 /**
- * 修改头像
+ * 相册封面
  */
-public class ChangeAvatarEntity {
+public class AlbumCoverEntity {
+
     public String name;
     public String message;
     public int code;
@@ -22,13 +23,14 @@ public class ChangeAvatarEntity {
 
     public class Result{
         public String getAvatar() {
-            return avatar;
+            return cover_pic;
         }
 
         public void setAvatar(String avatar) {
-            this.avatar = avatar;
+            this.cover_pic = avatar;
         }
 
-        String avatar;
+        public String cover_pic;
     }
+
 }
