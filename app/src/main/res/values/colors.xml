@@ -47,6 +47,7 @@
     <color name="line_color_gray_d2">#dddddd</color>
     <color name="line_color_gray_c7">#c7c7c7</color>
     <color name="ios7_white">#ffa8a8a8</color>
+    <color name="line_school">#d9d9d9</color>
     <!-- 线条颜色 end -->
 
     <!-- 字体颜色 start -->
@@ -55,6 +56,7 @@
     <color name="text_color_gray_9">#999999</color>
     <color name="text_color_gray_a">#aaaaaa</color>
     <color name="text_color_gray_b">#8D8D8D</color>
+    <color name="text_color_gray_c">#BCBCBC</color>
     <!-- 字体颜色 end -->
 
     <color name="grid_state_pressed">#1Affffff</color>
@@ -87,6 +89,8 @@
     <color name="praise_item">#8290AF</color>
     <color name="default_clickable_color">#cccccc</color>
     <color name="basic_color_primary">#373b3e</color>
+    <color name="pop_bg_red">#F53532</color>
+    <color name="pop_line_red">#D42136</color>
 
     <!-- 友盟相关 -->
     <color name="umeng_socialize_comments_bg">#F4F4F4</color>
@@ -110,4 +114,13 @@
     <color name="mis_actionbar_color">#21282C</color>
     <color name="exchange_return_background">#F0F1F3</color>
     <color name="gray">#DBDBDB</color>
+
+    <color name="college_background">#F0EFF5</color>
+    <!--dialog相关-->
+    <color name="dialog_view">#9b9e9e</color>
+    <color name="dialog_cancle">#157EFB</color>
+    <color name="dialog_confirm">#FD2741</color>
+
+
+
 </resources>

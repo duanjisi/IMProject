@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="IndicatorTitle">
+        <attr name="indicator_titlePadding" format="dimension" />
+        <!-- Left/right padding of not active view titles. -->
+        <attr name="indicator_clipPadding" format="dimension" />
+        <attr name="indicator_textColor" format="color|reference" />
+        <attr name="indicator_textSizeNormal" format="dimension" />
+        <attr name="indicator_textSizeSelected" format="dimension" />
+        <attr name="indicator_footerLineHeight" format="dimension" />
+        <attr name="indicator_footerColor" format="color" />
+        <attr name="indicator_footerTriangleHeight" format="dimension" />
+    </declare-styleable>
+    <!--ViewPager的指示器属性-->
+    <attr format="integer" name="visiable_tab_count"/> <declare-styleable name="ViewpagerIndicatorOver"> <attr name="visiable_tab_count"/> </declare-styleable>
+
+</resources>

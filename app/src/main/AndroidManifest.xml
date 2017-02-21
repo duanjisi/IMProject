@@ -165,6 +165,14 @@
         <activity android:name=".activity.discover.PersonalNearbyDetailActivity"></activity>
         <!-- 设置-通用 -->
         <activity android:name=".activity.personage.PersonalPhotoAlbumActivity"></activity>
+        <!-- 个人资料 -->
+        <activity android:name=".activity.connection.PersonalDataActivity"></activity>
+        <!-- 个人资料2 -->
+        <activity android:name=".activity.connection.PersonalData2Activity"></activity>
+        <!-- 添加人脉 -->
+        <activity android:name=".activity.connection.AddPeopleActivity"></activity>
+        <!-- 人脉中心 -->
+        <activity android:name=".activity.connection.PeopleCenterActivity"></activity>
         <!-- 设置-地区-省 -->
         <activity android:name=".activity.personage.PersonalAreaProvinceActivity"></activity>
         <!-- 设置-地区-市 -->

@@ -31,6 +31,7 @@ import im.boss66.com.fragment.DiscoverFragment;
 import im.boss66.com.fragment.HomePagerFragment;
 import im.boss66.com.fragment.MineFragment;
 import im.boss66.com.services.ChatServices;
+import im.boss66.com.widget.dialog.PeopleDataDialog;
 
 /**
  * Created by Johnny on 2017/1/14.
@@ -367,6 +368,7 @@ public class MainActivity extends BaseActivity implements Observer {
                     break;
                 case R.id.rb_contact:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_3);
+                    new PeopleDataDialog(context).show();
                     break;
                 case R.id.rb_discover:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_4);
