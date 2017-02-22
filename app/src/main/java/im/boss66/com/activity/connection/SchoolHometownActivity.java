@@ -107,10 +107,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
 
         // 回调接口和adapter设置
         presenter = new CirclePresenter(this);
-        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
+//        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
         adapter = new FriendCircleAdapter(this);
         adapter.setCirclePresenter(presenter);
-        adapter.setDatas(list);
+//        adapter.setDatas(list);
         mLRecyclerViewAdapter = new LRecyclerViewAdapter(adapter);
 
 
@@ -207,19 +207,20 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         myNewsPop.showAsDropDown(parent);
     }
 
+
     @Override
-    public void update2DeleteCircle(String circleId) {
-        ToastUtil.showShort(this, "删除本item");
+    public void update2DeleteCircle(int circleId) {
+
     }
 
     @Override
-    public void update2AddFavorite(int circlePosition, FavortItem addItem) {
-        ToastUtil.showShort(this, "点赞");
+    public void update2AddFavorite(int circlePosition, int favortId) {
+
     }
 
     @Override
-    public void update2DeleteFavort(int circlePosition, String favortId) {
-        ToastUtil.showShort(this, "取消点赞");
+    public void update2DeleteFavort(int circlePosition, int favortId) {
+
     }
 
     @Override
