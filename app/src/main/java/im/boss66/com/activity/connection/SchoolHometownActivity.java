@@ -74,6 +74,8 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             tv_headcenter_view.setText("广州 天河区");
         }
 
+        tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
+        tv_headlift_view.setOnClickListener(this);
         iv_headright_view = (ImageView) findViewById(R.id.iv_headright_view);
 
         iv_headright_view.setVisibility(View.VISIBLE);
@@ -192,6 +194,9 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 break;
             case R.id.tv_news: // 动态
 
+                break;
+            case R.id.tv_headlift_view:
+                finish();
                 break;
 
 

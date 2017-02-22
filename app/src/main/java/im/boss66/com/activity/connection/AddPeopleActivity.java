@@ -55,9 +55,9 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
         vp_indicator.setLineBold(5);
 
         fragments = new ArrayList<>();
+        fragments.add(new SchoolmateFragment());
         fragments.add(new CountrymanFragment());
         fragments.add(new CustomAddFragment());
-        fragments.add(new SchoolmateFragment());
         vp_indicator.setViewPager(vp_add_people,0);
         vp_indicator.setViewPagerAdapter(getSupportFragmentManager(),fragments);
 
