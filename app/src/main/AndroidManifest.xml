@@ -24,6 +24,7 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera.flash" />
     <!--android:theme="@android:style/Theme.NoTitleBar.Fullscreen"-->
     <uses-feature
         android:name="android.hardware.camera.front"
@@ -77,6 +78,12 @@
         <activity android:name=".activity.im.EmojiMakeActivity"></activity>
         <activity android:name=".activity.im.EmojiSelectWellActivity"></activity>
 
+        <!--验证申请-->
+        <activity android:name=".activity.im.VerifyApplyActivity"></activity>
+        <!--表情包商店搜索-->
+        <activity android:name=".activity.im.EmojiStoreSearchActivity"></activity>
+        <!--表情组详情-->
+        <activity android:name=".activity.im.EmojiGroupDetailsActivity"></activity>
         <!--新的朋友-->
         <activity android:name=".activity.book.NewFriendsActivity"></activity>
         <!--忘记密码-->
@@ -173,6 +180,21 @@
         <activity android:name=".activity.connection.AddPeopleActivity"></activity>
         <!-- 人脉中心 -->
         <activity android:name=".activity.connection.PeopleCenterActivity"></activity>
+        <!-- 设置-地区-省 -->
+        <activity android:name=".activity.personage.PersonalAreaProvinceActivity"></activity>
+        <!-- 设置-地区-市 -->
+        <activity android:name=".activity.personage.PersonalAreaCityActivity"></activity>
+        <!-- 设置-地区-区 -->
+        <activity android:name=".activity.personage.PersonalAreaDistrictActivity"></activity>
+        <!-- 设置-更换手机号 -->
+        <activity android:name=".activity.personage.ChanePhoneNumActivity"></activity>
+        <activity android:name=".activity.personage.ChangePhoneSmsActivity"></activity>
+        <!-- 设置-更换手机号-填写验证码 -->
+        <activity android:name=".activity.personage.PersonalInputSmsActivity"></activity>
+        <!-- 设置-更换手机号-验证原手机 -->
+        <activity android:name=".activity.personage.VerifyOldPhoneActivity"></activity>
+        <!-- 朋友圈发消息 -->
+        <activity android:name=".activity.discover.FriendSendNewMsgActivity"></activity>
         <!-- 我的关注 -->
         <activity android:name=".activity.connection.MyFollowActivity"></activity>
         <!-- 我的消息 -->

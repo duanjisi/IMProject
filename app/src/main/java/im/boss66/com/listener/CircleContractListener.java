@@ -13,9 +13,9 @@ import im.boss66.com.entity.FriendCircleItem;
 public interface CircleContractListener {
 
     interface View{
-        void update2DeleteCircle(String circleId);
-        void update2AddFavorite(int circlePosition, FavortItem addItem);
-        void update2DeleteFavort(int circlePosition, String favortId);
+        void update2DeleteCircle(int circleId);
+        void update2AddFavorite(int circlePosition, int favortId);
+        void update2DeleteFavort(int circlePosition, int favortId);
         void update2AddComment(int circlePosition, FriendCircleItem addItem);
         void update2DeleteComment(int circlePosition, String commentId);
         void updateEditTextBodyVisible(int visibility, CommentConfig commentConfig);
@@ -24,9 +24,9 @@ public interface CircleContractListener {
 
     interface Presenter{
         void loadData(int loadType);
-        void deleteCircle(final String circleId);
-        void addFavort(final int circlePosition);
-        void deleteFavort(final int circlePosition, final String favortId);
+        void deleteCircle(final int circleId);
+        void addFavort(final int circlePosition,final int favortId);
+        void deleteFavort(final int circlePosition, final int favortId);
         void deleteComment(final int circlePosition, final String commentId);
 
     }

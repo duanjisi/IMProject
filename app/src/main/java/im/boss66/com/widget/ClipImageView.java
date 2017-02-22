@@ -15,6 +15,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -432,26 +433,29 @@ public class ClipImageView extends ImageView implements
         final float scale = matrixValues[Matrix.MSCALE_X] * drawable.getIntrinsicWidth() / originalBitmap.getWidth();
         final float transX = matrixValues[Matrix.MTRANS_X];
         final float transY = matrixValues[Matrix.MTRANS_Y];
-
         final float cropX = (-transX + mClipBorder.left) / scale;
         final float cropY = (-transY + mClipBorder.top) / scale;
         final float cropWidth = mClipBorder.width() / scale;
         final float cropHeight = mClipBorder.height() / scale;
 
         Matrix outputMatrix = null;
-        if (mMaxOutputWidth > 0 && cropWidth > mMaxOutputWidth) {
-            final float outputScale = mMaxOutputWidth / cropWidth;
+        if (cropWidth != 640 || cropHeight != 640){
             outputMatrix = new Matrix();
-            outputMatrix.setScale(outputScale, outputScale);
+            outputMatrix.setScale(640/cropWidth,640/cropHeight);
         }
-
-        return Bitmap.createBitmap(originalBitmap,
-                (int) cropX, (int) cropY, 640, 640,
-                outputMatrix, false);
+//        if (mMaxOutputWidth > 0 && cropWidth > mMaxOutputWidth) {
+//            final float outputScale = mMaxOutputWidth / cropWidth;
+//            outputMatrix = new Matrix();
+//            outputMatrix.setScale(outputScale, outputScale);
+//        }
 
 //        return Bitmap.createBitmap(originalBitmap,
-//                (int) cropX, (int) cropY, (int) cropWidth, (int) cropHeight,
+//                (int) cropX, (int) cropY, 640, 640,
 //                outputMatrix, false);
+
+        return Bitmap.createBitmap(originalBitmap,
+                (int) cropX, (int) cropY, (int) cropWidth, (int) cropHeight,
+                outputMatrix, true);
     }
 
     /**

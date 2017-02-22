@@ -50,7 +50,7 @@ public class PersonalPhotoAlbumAdapter extends BaseRecycleViewAdapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindItemHolder(RecyclerView.ViewHolder holder, int position) {
         final PhotoAlbumHolder holder1 = (PhotoAlbumHolder) holder;
         PersonalPhotoAlbumItem item = (PersonalPhotoAlbumItem) getDatas().get(position);
         if (item.getType() == PARENT_TYPE){

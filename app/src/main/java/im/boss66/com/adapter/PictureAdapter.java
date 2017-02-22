@@ -204,7 +204,8 @@ public class PictureAdapter extends BaseAdapter {
                     UIUtils.hindView(holder.ivClose);
                     holder.ivPic.setImageResource(R.drawable.compose_pic_add);
                 } else {
-                    imageLoader.displayImage("file:/" + imageUrl, holder.ivPic, ImageLoaderUtils.getDisplayImageOptions());
+//                    imageLoader.displayImage("file:/" + imageUrl, holder.ivPic, ImageLoaderUtils.getDisplayImageOptions());
+                    imageLoader.displayImage(imageUrl, holder.ivPic, ImageLoaderUtils.getDisplayImageOptions());
                     if (isAddPager) {
                         UIUtils.showView(holder.ivClose);
                         holder.ivClose.setOnClickListener(new View.OnClickListener() {

@@ -18,7 +18,7 @@ public class NewFriendsRequest extends BaseDataRequest<BaseFriends> {
 
     @Override
     protected boolean isParse() {
-        return true;
+        return false;
     }
 
     @Override

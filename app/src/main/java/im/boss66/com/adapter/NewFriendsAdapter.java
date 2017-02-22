@@ -4,16 +4,13 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.entity.NewFriend;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.HandleFriendRequest;
-
 /**
  * Created by Johnny on 2017/2/17.
  */
@@ -27,7 +24,7 @@ public class NewFriendsAdapter extends ABaseAdapter<NewFriend> {
     }
 
     @Override
-    protected View setConvertView(int position, NewFriend entity, View convertView) {
+    protected View setConvertView(int position, final NewFriend entity, View convertView) {
         ViewHolder holder = null;
         if (convertView == null) {
             convertView = View.inflate(getContext(), R.layout.item_new_friend, null);
@@ -54,24 +51,25 @@ public class NewFriendsAdapter extends ABaseAdapter<NewFriend> {
                 UIUtils.showView(holder.tv_added);
                 holder.tv_added.setText("已添加");
             }
-
             holder.tv_receiver.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    requestAddFriend(entity);
                 }
             });
         }
         return convertView;
     }
 
-    private void requestAddFriend(NewFriend friend) {
+    private void requestAddFriend(final NewFriend friend) {
         showLoadingDialog();
         HandleFriendRequest request = new HandleFriendRequest(TAG, friend.getId(), "2");
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String pojo) {
                 cancelLoadingDialog();
+                friend.setFeedback_mark("2");
+                notifyDataSetChanged();
                 showToast("接受好友成功!", true);
             }
 

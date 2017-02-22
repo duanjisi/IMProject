@@ -71,7 +71,7 @@
     <string name="exit_login">退出登录</string>
     <string name="set">设置</string>
     <string name="exit_login_tip">退出后不会删除任务历史数据，下次登录依然可以使用本账号。</string>
-    <string name="app_num">小6号</string>
+    <string name="app_num">嗨萌号</string>
     <string name="qq_num">QQ号</string>
     <string name="phone_num">手机号</string>
     <string name="email_address">邮箱地址</string>
@@ -175,6 +175,35 @@
 
     <string name="qq_app_id">1105914390</string>
     <string name="qq_app_key">SbGk2WdT16aUKe4Z</string>
+
     <string name="giving_orientation_privileges">请给予定位权限，否则获取不了附近的人.</string>
     <string name="giving_orientation_privileges_fail">抱歉，定位失败TAT</string>
+    <string name="change_phone_num_tip">已启用手机通讯录匹配。如果你的通讯录中有朋友注册了嗨萌，系统会通知你</string>
+    <string name="check_mobile_phone_address_book">查看手机通讯录</string>
+    <string name="change_phone">更换手机号</string>
+    <string name="binding_phone">绑定手机号</string>
+    <string name="change_phone_sms_tip">更换手机后，下次登录可使用新手机号登录。当前手机号：</string>
+    <string name="next_step">下一步</string>
+    <string name="write_phone">请填写新手机号码</string>
+    <string name="phone_number_the_same_as_current_binding_phone">该手机号与当前绑定的手机号相同</string>
+    <string name="confirm_phone_number">确认手机号码</string>
+    <string name="send_verification_code_sms">我们将发送验证码短信到这个号码：</string>
+    <string name="ok">好</string>
+    <string name="phone_num_no_empty">手机号码不能为空</string>
+    <string name="message_authentication_code_has_sent">短信验证码已发送，请填写验证码</string>
+    <string name="sms_code">验证码</string>
+    <string name="input_sms_code">请输入验证码</string>
+    <string name="submit">提交</string>
+    <string name="not_get_verification_code">收不到验证码？</string>
+    <string name="input_verification_code">填写验证码</string>
+    <string name="repeat_get_verification_code">重新获取验证码</string>
+    <string name="back_repeat_get_verification_code">验证码短信可能略有延迟，确定返回并重新开始？</string>
+    <string name="verify_old_phone">更换手机前，需要先验证当前绑定的手机号,当前手机号：</string>
+    <string name="verify_this_phone">验证当前绑定手机</string>
+    <string name="the_idea_of_the_moment">这一刻的想法...</string>
+    <string name="current_location">所在位置</string>
+    <string name="who_can_see">谁可以看</string>
+    <string name="remind_who_see">提醒谁看</string>
+    <string name="send_text">发送文字</string>
+    <string name="send">发送</string>
 </resources>

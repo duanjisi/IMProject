@@ -12,12 +12,15 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -38,6 +41,7 @@ import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.config.LoginStatus;
+import im.boss66.com.entity.ChangeAvatarEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.util.Utils;
 import im.boss66.com.widget.ActionSheet;
@@ -65,6 +69,8 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
     private Uri imageUri;
     private String imageName;
     private String access_token;
+    private boolean isHeadChange = false;
+    private String headurl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,13 +115,32 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_back:
-                finish();
+                goBack();
                 break;
             case R.id.tv_right:
                 isLongClick = false;
                 showActionSheet();
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            goBack();
+            return false;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    private void goBack() {
+        if (isHeadChange) {
+            Intent intent = new Intent();
+            intent.putExtra("headicon", headurl);
+            setResult(RESULT_OK, intent);
+        }
+        finish();
     }
 
     private void showActionSheet() {
@@ -164,24 +189,13 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
                 }
                 break;
             case 2://从手机相册选择
-//                boolean isKitKatO = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-//                Intent getAlbum;
-//                if (isKitKatO) {
-//                    getAlbum = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-//                } else {
-//                    getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
-//                }
-//                getAlbum.setType("image/*");
-
                 imageName = getNowTime() + ".png";
                 imageUri = Uri
                         .fromFile(new File(savePath, imageName));
                 Intent intent = new Intent(Intent.ACTION_PICK, null);
                 intent.setDataAndType(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-
                 startActivityForResult(intent, OPEN_ALBUM);
-
                 break;
             case 3://保存图片
                 if (bitmap != null) {
@@ -199,13 +213,6 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
             if (data == null) {
                 return;
             } else {
-//                Bundle extras = data.getExtras();
-//                if (extras != null) {
-//                    bitmap = extras.getParcelable("data");
-//                    if (bitmap != null) {
-//                        iv_icon.setImageBitmap(bitmap);
-//                    }
-//                }
                 if (imageUri != null) {
                     String path = Utils.getPath(this, imageUri);
                     if (!TextUtils.isEmpty(path)) {
@@ -221,13 +228,9 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
                 return;
             } else {
                 Uri originalUri = data.getData();  //获得图片的uri
-
                 if (originalUri != null) {
-//                    String path = getPhoneImage(originalUri.toString());
-//                    uploadImageFile(path);
                     String path = Utils.getPath(this, originalUri);
                     if (!TextUtils.isEmpty(path)) {
-                        //uploadImageFile(path);
                         ClipImageActivity.prepare()
                                 .aspectX(2).aspectY(2)//裁剪框横向及纵向上的比例
                                 .inputPath(path).outputPath(mOutputPath)//要裁剪的图片地址及裁剪后保存的地址
@@ -239,16 +242,13 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
             String path = ClipImageActivity.ClipOptions.createFromBundle(data).getOutputPath();
             if (path != null) {
                 uploadImageFile(path);
-//                bitmap = BitmapFactory.decodeFile(path);
-//                if (bitmap != null) {
-//                    iv_icon.setImageBitmap(bitmap);
-//                }
             }
             return;
         }
     }
 
     private void uploadImageFile(String path) {
+        showLoadingDialog();
         String main = HttpUrl.CHANGE_AVAYAR;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
@@ -258,9 +258,26 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
         httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                Log.i("info", "responseInfo:" + responseInfo.result);
-//                    cancelLoadingDialog();
-                //sendImageMessage(parsePath(responseInfo.result));
+                try {
+                    cancelLoadingDialog();
+                    ChangeAvatarEntity entity = JSON.parseObject(responseInfo.result, ChangeAvatarEntity.class);
+                    if (entity != null) {
+                        ChangeAvatarEntity.Result result = entity.getResult();
+                        if (result != null) {
+                            ToastUtil.showShort(context, "更改成功");
+                            headurl = result.getAvatar();
+                            imageLoader.displayImage(headurl, iv_icon,
+                                    ImageLoaderUtils.getDisplayImageOptions());
+                            LoginStatus loginStatus = LoginStatus.getInstance();
+                            String avatar = result.getAvatar();
+                            if (!TextUtils.isEmpty(avatar)) {
+                                loginStatus.setAvatar(avatar);
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    ToastUtil.showShort(context, "上传失败");
+                }
             }
 
             @Override
@@ -269,23 +286,6 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
                 cancelLoadingDialog();
             }
         });
-    }
-
-    /**
-     * 获取系统图库图片的SD卡路径
-     *
-     * @param uriString
-     * @return
-     */
-    private String getPhoneImage(String uriString) {
-        Uri selectedImage = Uri.parse(uriString);
-        String[] filePathColumns = {MediaStore.Images.Media.DATA};
-        Cursor cursor = this.getContentResolver().query(selectedImage, filePathColumns, null, null, null);
-        cursor.moveToFirst();
-        int columnIndex = cursor.getColumnIndex(filePathColumns[0]);
-        String fileName = cursor.getString(columnIndex);
-        cursor.close();
-        return fileName;
     }
 
     @SuppressLint("SimpleDateFormat")

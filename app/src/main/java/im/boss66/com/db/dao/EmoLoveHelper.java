@@ -39,14 +39,26 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
     @Override
     protected ContentValues getValues(EmoLove bean) {
         ContentValues values = new ContentValues();
-        values.put(EmoLoveColumn.EMO_LOVE_ICON, bean.getIcon());
+//        values.put(EmoLoveColumn.EMO_LOVE_ICON, bean.getIcon());
+        values.put(EmoLoveColumn.EMO_LOVE_COLL_ID, bean.getCollect_id());
+        values.put(EmoLoveColumn.EMO_LOVE_DESC, bean.getEmo_desc());
+        values.put(EmoLoveColumn.EMO_LOVE_ID, bean.getEmo_id());
+        values.put(EmoLoveColumn.EMO_LOVE_NAME, bean.getEmo_name());
+        values.put(EmoLoveColumn.EMO_LOVE_URL, bean.getEmo_url());
+        values.put(EmoLoveColumn.EMO_LOVE_USER_ID, bean.getUser_id());
         return values;
     }
 
     @Override
     protected EmoLove getBean(Cursor c) {
         EmoLove cate = new EmoLove();
-        cate.setIcon(getString(c, EmoLoveColumn.EMO_LOVE_ICON));
+//        cate.setIcon(getString(c, EmoLoveColumn.EMO_LOVE_ICON));
+        cate.setCollect_id(getString(c, EmoLoveColumn.EMO_LOVE_COLL_ID));
+        cate.setEmo_desc(getString(c, EmoLoveColumn.EMO_LOVE_DESC));
+        cate.setEmo_id(getString(c, EmoLoveColumn.EMO_LOVE_ID));
+        cate.setEmo_name(getString(c, EmoLoveColumn.EMO_LOVE_NAME));
+        cate.setEmo_url(getString(c, EmoLoveColumn.EMO_LOVE_URL));
+        cate.setUser_id(getString(c, EmoLoveColumn.EMO_LOVE_USER_ID));
         return cate;
     }
 
@@ -63,9 +75,9 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
 
     @Override
     public void save(EmoLove entity) {
-        String[] args = new String[]{entity.getIcon()};
+        String[] args = new String[]{entity.getEmo_url()};
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                getSelectSql(EmoLoveColumn.TABLE_NAME, new String[]{EmoLoveColumn.EMO_LOVE_ICON}), args);
+                getSelectSql(EmoLoveColumn.TABLE_NAME, new String[]{EmoLoveColumn.EMO_LOVE_URL}), args);
         if (exist(c)) {
 //            c.moveToFirst();
 //            this.delete(entity.getUser_name());
@@ -103,7 +115,7 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
         if (exist(c)) {
             c.moveToLast();
             do {
-                bos.add(getBean(c).getIcon());
+                bos.add(getBean(c).getEmo_url());
             } while (c.moveToPrevious());
         }
         c.close();
@@ -137,7 +149,7 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
 
     @Override
     public void delete(String str) {//删除某一组
-        DBHelper.getInstance(mContext).delete(EmoLoveColumn.TABLE_NAME, EmoLoveColumn.EMO_LOVE_ICON + " = ?",
+        DBHelper.getInstance(mContext).delete(EmoLoveColumn.TABLE_NAME, EmoLoveColumn.EMO_LOVE_URL + " = ?",
                 new String[]{str});
     }
 

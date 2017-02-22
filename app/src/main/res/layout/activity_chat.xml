@@ -264,113 +264,125 @@
     <LinearLayout
         android:id="@+id/ll_chatmain_affix"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:background="#f5f5f6"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
-        <LinearLayout
+        <GridView
+            android:id="@+id/gridMore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
-            android:layout_marginTop="18dp"
-            android:orientation="horizontal">
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:horizontalSpacing="18dp"
+            android:numColumns="4"
+            android:scrollbars="none"
+            android:verticalSpacing="18dp">
 
-            <TextView
-                android:id="@+id/tv_chat_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="29dp"
-                android:layout_marginTop="5dp"
-                android:drawablePadding="2dp"
-                android:drawableTop="@drawable/hp_ch_photos"
-                android:gravity="center_horizontal"
-                android:text="照片"
-                android:textColor="#888888"
-                android:textSize="13.5sp" />
+        </GridView>
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="32dp"-->
+        <!--android:layout_marginRight="32dp"-->
+        <!--android:layout_marginTop="18dp"-->
+        <!--android:orientation="horizontal">-->
 
-            <TextView
-                android:id="@+id/tv_chat_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="29dp"
-                android:layout_marginTop="5dp"
-                android:drawablePadding="2dp"
-                android:drawableTop="@drawable/hp_ch_camera"
-                android:gravity="center_horizontal"
-                android:text="拍摄"
-                android:textColor="#888888"
-                android:textSize="13.5sp" />
+        <!--<TextView-->
+        <!--android:id="@+id/tv_chat_img"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginRight="29dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:drawablePadding="2dp"-->
+        <!--android:drawableTop="@drawable/hp_ch_photos"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="照片"-->
+        <!--android:textColor="#888888"-->
+        <!--android:textSize="13.5sp" />-->
 
-            <TextView
-                android:id="@+id/tv_chat_video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="29dp"
-                android:layout_marginTop="5dp"
-                android:drawablePadding="2dp"
-                android:drawableTop="@drawable/hp_ch_video"
-                android:gravity="center_horizontal"
-                android:text="小视频"
-                android:textColor="#888888"
-                android:textSize="13.5sp" />
+        <!--<TextView-->
+        <!--android:id="@+id/tv_chat_photo"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginRight="29dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:drawablePadding="2dp"-->
+        <!--android:drawableTop="@drawable/hp_ch_camera"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="拍摄"-->
+        <!--android:textColor="#888888"-->
+        <!--android:textSize="13.5sp" />-->
 
-            <TextView
-                android:id="@+id/tv_chat_collect"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:drawablePadding="2dp"
-                android:drawableTop="@drawable/hp_ch_collect"
-                android:gravity="center_horizontal"
-                android:text="收藏"
-                android:textColor="#888888"
-                android:textSize="13.5sp" />
-        </LinearLayout>
+        <!--<TextView-->
+        <!--android:id="@+id/tv_chat_video"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginRight="29dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:drawablePadding="2dp"-->
+        <!--android:drawableTop="@drawable/hp_ch_video"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="小视频"-->
+        <!--android:textColor="#888888"-->
+        <!--android:textSize="13.5sp" />-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
-            android:layout_marginTop="18dp"
-            android:orientation="horizontal">
+        <!--<TextView-->
+        <!--android:id="@+id/tv_chat_collect"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:drawablePadding="2dp"-->
+        <!--android:drawableTop="@drawable/hp_ch_collect"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="收藏"-->
+        <!--android:textColor="#888888"-->
+        <!--android:textSize="13.5sp" />-->
+        <!--</LinearLayout>-->
 
-            <TextView
-                android:id="@+id/tv_chat_red"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="29dp"
-                android:layout_marginTop="5dp"
-                android:drawablePadding="2dp"
-                android:drawableTop="@drawable/hp_ch_red"
-                android:gravity="center_horizontal"
-                android:text="红包"
-                android:textColor="#888888"
-                android:textSize="13.5sp" />
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="left"-->
+        <!--android:layout_marginLeft="32dp"-->
+        <!--android:layout_marginRight="32dp"-->
+        <!--android:layout_marginTop="18dp"-->
+        <!--android:orientation="horizontal">-->
 
-            <TextView
-                android:id="@+id/tv_chat_card"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="29dp"
-                android:layout_marginTop="5dp"
-                android:drawablePadding="2dp"
-                android:drawableTop="@drawable/hp_ch_card"
-                android:gravity="center_horizontal"
-                android:text="个人名片"
-                android:textColor="#888888"
-                android:textSize="13.5sp" />
-        </LinearLayout>
+        <!--<TextView-->
+        <!--android:id="@+id/tv_chat_red"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginRight="29dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:drawablePadding="2dp"-->
+        <!--android:drawableTop="@drawable/hp_ch_red"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="红包"-->
+        <!--android:textColor="#888888"-->
+        <!--android:textSize="13.5sp" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_chat_card"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginRight="29dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:drawablePadding="2dp"-->
+        <!--android:drawableTop="@drawable/hp_ch_card"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="个人名片"-->
+        <!--android:textColor="#888888"-->
+        <!--android:textSize="13.5sp" />-->
+        <!--</LinearLayout>-->
     </LinearLayout>
 
     <include

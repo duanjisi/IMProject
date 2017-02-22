@@ -1,13 +1,17 @@
 package im.boss66.com.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import im.boss66.com.R;
+import java.io.File;
+
+import im.boss66.com.Constants;
+import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.entity.EmoEntity;
@@ -36,10 +40,21 @@ public class FaceAdapter extends ABaseAdapter<EmoEntity> {
         imageView.getLayoutParams().height = (int) mImageHeight;
 //        String imageUrl = entity.getEmo_code();
 //        if (imageUrl != null && !imageUrl.equals("")) {
-//
 //        }
-        imageView.setImageResource(R.drawable.f018);
+//        imageView.setImageResource(R.drawable.f018);
+        Bitmap bitmap = getBitmap(entity);
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
+        }
         return imageView;
     }
 
+    private Bitmap getBitmap(EmoEntity entity) {
+        String path = Constants.EMO_DIR_PATH + File.separator +
+                entity.getEmo_cate_id() + File.separator +
+                entity.getEmo_group_id() + File.separator +
+                entity.getEmo_code() + "." +
+                entity.getEmo_format();
+        return FileUtils.getBitmapByPath(path);
+    }
 }

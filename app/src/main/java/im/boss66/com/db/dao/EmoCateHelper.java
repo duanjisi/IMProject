@@ -3,8 +3,10 @@ package im.boss66.com.db.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import im.boss66.com.App;
@@ -12,6 +14,7 @@ import im.boss66.com.db.DBHelper;
 import im.boss66.com.db.EmoCateColumn;
 import im.boss66.com.db.helper.ColumnHelper;
 import im.boss66.com.entity.EmoCate;
+import im.boss66.com.entity.EmoGroup;
 
 /**
  * Created by Johnny on 2017/2/9.
@@ -55,7 +58,24 @@ public class EmoCateHelper extends ColumnHelper<EmoCate> {
 
     @Override
     public void save(List<EmoCate> list) {
+        deleteAllDatas();
+        Collections.reverse(list);
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                EmoCate cate = list.get(i);
+                Log.i("info", "=====cateName:" + cate.getCate_name());
+                this.save(cate);
+                saveGroup(cate);
+            }
+        }
+    }
 
+
+    private void saveGroup(EmoCate cate) {
+        ArrayList<EmoGroup> groups = cate.getGroup();
+        if (groups.size() != 0) {
+            EmoGroupHelper.getInstance().save(groups);
+        }
     }
 
     @Override
@@ -91,6 +111,13 @@ public class EmoCateHelper extends ColumnHelper<EmoCate> {
         }
         c.close();
         return bos;
+    }
+
+    /**
+     * 删除表内所有数据
+     */
+    public void deleteAllDatas() {
+        DBHelper.getInstance(mContext).delete(EmoCateColumn.TABLE_NAME, null, null);
     }
 
     @Override

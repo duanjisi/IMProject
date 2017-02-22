@@ -39,6 +39,23 @@ public class HttpUrl {
     public static final String CONTACTS_URL = MAIN_URL + "ucenter/friends/index";
     //新朋友列表请求
     public static final String NEW_FRIENDS_URL = MAIN_URL + "ucenter/friendslog/index";
+    //精选表情首页数据请求
+    public static final String EMO_WELL_URL = MAIN_URL + "api/v1/store";
+    //表情包详细信息请求
+    public static final String EMO_INFORM_DETAILS_URL = MAIN_URL + "api/v1/store/viewpack";
+    //搜索热门词
+    public static final String HOT_WORDS_URL = MAIN_URL + "api/v1/store/searchhot";
+    //表情商店搜索
+    public static final String EMO_STORE_SEARCH_URL = MAIN_URL + "api/v1/store/search";
+
+    //获取表情收藏
+    public static final String EMO_COLLECTIONS_URL = MAIN_URL + "api/v1/collect";
+    //添加收藏表情
+    public static final String EMO_COLLECTION_ADD_URL = MAIN_URL + "api/v1/collect/add";
+    //删除收藏表情
+    public static final String EMO_COLLECTIONS_DELETE_URL = MAIN_URL + "api/v1/collect/delete";
+    //获取用户信息接口
+    public static final String PERSON_INFORM_URL = MAIN_URL + "ucenter/userinfo/index";
 
     //附近的人
     public static final String PEOPLE_NEARBY = MAIN_URL + "ucenter/nearuser/index";
@@ -48,4 +65,20 @@ public class HttpUrl {
     public static final String SHAKE_IT_OFF = MAIN_URL + "ucenter/shakeuser/index";
     //修改用户头像
     public static final String CHANGE_AVAYAR = MAIN_URL + "ucenter/userinfo/changeavatar";
+    //获取用户信息
+    public static final String GET_UER_INFO = MAIN_URL + "ucenter/userinfo/index";
+    //修改用户名/性别/地区
+    public static final String CHANE_NAME_SEX_AREA = MAIN_URL + "ucenter/userinfo/update";
+    //修改个性签名
+    public static final String CHANE_SIGNATURE = MAIN_URL + "ucenter/userinfo/updatesignature";
+    //更换相册封面
+    public static final String CHANE_ALBUM_COVER = MAIN_URL + "ucenter/userinfo/uploadcoverpic";
+    //更换手机号码
+    public static final String CHANE_PHONE_NUM = MAIN_URL + "ucenter/userinfo/bindmobile";
+    //发布图文朋友圈
+    public static final String CREATE_CIRCLE_PHOTO_TX = MAIN_URL + "api/v1/cofriends/create";
+    //发布视频朋友圈
+    public static final String CREATE_CIRCLE_VIDEO_TX = MAIN_URL + "api/v1/cofriends/createvideo";
+    //朋友圈列表
+    public static final String FRIEND_CIRCLE_LIST = MAIN_URL + "api/v1/cofriends";
 }

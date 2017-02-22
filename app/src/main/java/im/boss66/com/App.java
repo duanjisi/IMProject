@@ -1,11 +1,14 @@
 package im.boss66.com;
 
+import android.app.Activity;
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.media.MediaPlayer;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import im.boss66.com.Utils.SharePreferenceUtil;
@@ -14,6 +17,7 @@ import im.boss66.com.db.MessageDB;
 import im.boss66.com.db.RecentDB;
 import im.boss66.com.db.UserDB;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.LocalAddressEntity;
 
 public class App extends Application {
     public final static String API_KEY = "fiWrR2Ki8NkR6r5GHdM2lY7j";
@@ -37,6 +41,8 @@ public class App extends Application {
     private Notification mNotification;
     //    private Gson mGson;
     private AccountEntity sAccount;
+    private List<Activity> tempActivityList;
+    private LocalAddressEntity.SecondChild localAddress;
 
     public synchronized static App getInstance() {
         return mApplication;
@@ -324,6 +330,25 @@ public class App extends Application {
         mFaceMap.put("[表情一]", R.drawable.f107);
         mFaceMap.put("[表情二]", R.drawable.f108);
         mFaceMap.put("[表情三]", R.drawable.f109);
+    }
+
+    public void addTempActivity(Activity activity){
+        if (tempActivityList == null){
+            tempActivityList = new ArrayList<>();
+        }
+        tempActivityList.add(activity);
+    }
+
+    public List<Activity> getTempActivityList(){
+        return tempActivityList;
+    }
+
+    public LocalAddressEntity.SecondChild getLocalAddress() {
+        return localAddress;
+    }
+
+    public void setLocalAddress(LocalAddressEntity.SecondChild localAddress) {
+        this.localAddress = localAddress;
     }
 
 }

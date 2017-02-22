@@ -22,17 +22,18 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.CircleMovementMethod;
 import im.boss66.com.Utils.SpannableClickable;
 import im.boss66.com.Utils.UrlUtils;
+import im.boss66.com.entity.FriendCircleCommentEntity;
 import im.boss66.com.entity.FriendCircleItem;
 
 /**
- * Created by GMARUnity on 2017/2/3.
+ * 处理朋友圈评论列表
  */
 public class CommentListView extends LinearLayout {
     private int itemColor;
     private int itemSelectorColor;
     private OnItemClickListener onItemClickListener;
     private OnItemLongClickListener onItemLongClickListener;
-    private List<FriendCircleItem> mDatas;
+    private List<FriendCircleCommentEntity> mDatas;
     private LayoutInflater layoutInflater ;
 
     public OnItemClickListener getOnItemClickListener() {
@@ -51,15 +52,15 @@ public class CommentListView extends LinearLayout {
         this.onItemLongClickListener = onItemLongClickListener;
     }
 
-    public void setDatas(List<FriendCircleItem> datas){
+    public void setDatas(List<FriendCircleCommentEntity> datas){
         if(datas == null ){
-            datas = new ArrayList<FriendCircleItem>();
+            datas = new ArrayList<>();
         }
         mDatas = datas;
         notifyDataSetChanged();
     }
 
-    public List<FriendCircleItem> getDatas(){
+    public List<FriendCircleCommentEntity> getDatas(){
         return mDatas;
     }
 
@@ -117,21 +118,18 @@ public class CommentListView extends LinearLayout {
         TextView commentTv = (TextView) convertView.findViewById(R.id.commentTv);
         final CircleMovementMethod circleMovementMethod = new CircleMovementMethod(itemSelectorColor, itemSelectorColor);
 
-        final FriendCircleItem bean = mDatas.get(position);
-        String name = bean.getUser().getNick();
-        String id = bean.getId();
-        String toReplyName = "";
-        if (bean.getToReplyUser() != null) {
-            toReplyName = bean.getToReplyUser().getNick();
-        }
+        final FriendCircleCommentEntity bean = mDatas.get(position);
+        String name = bean.getUid_from_name();
+        String id = bean.getComm_id();
+        String toReplyName = bean.getUid_to_name();
 
         SpannableStringBuilder builder = new SpannableStringBuilder();
-        builder.append(setClickableSpan(name, bean.getUser().getUserId()));
+        builder.append(setClickableSpan(name, bean.getUid_from()));
 
         if (!TextUtils.isEmpty(toReplyName)) {
 
             builder.append(" 回复 ");
-            builder.append(setClickableSpan(toReplyName, bean.getToReplyUser().getUserId()));
+            builder.append(setClickableSpan(toReplyName, bean.getUid_to()));
         }
         builder.append(": ");
         //转换表情字符

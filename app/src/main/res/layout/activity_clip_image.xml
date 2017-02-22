@@ -35,7 +35,8 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@android:string/cancel"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/dp_22"/>
 
         <TextView
             android:id="@+id/clip"
@@ -44,6 +45,7 @@
             android:layout_alignParentRight="true"
             android:padding="16dp"
             android:text="@android:string/ok"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/dp_22"/>
     </RelativeLayout>
 </RelativeLayout>

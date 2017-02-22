@@ -104,11 +104,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void loginSuccessed(AccountEntity entity) {
-        Log.i("info", "===name:" + entity.getUser_name() + "\n" + "id:" + entity.getUser_id());
         App.getInstance().initUser(entity);
         showToast("登录成功!", true);
         Intent intent = new Intent(context, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void ThirdLogin(SHARE_MEDIA platform, final String type) {

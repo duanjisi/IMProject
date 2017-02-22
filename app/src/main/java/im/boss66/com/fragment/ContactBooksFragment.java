@@ -31,6 +31,7 @@ import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.activity.im.ChatActivity;
 import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.BaseContact;
+import im.boss66.com.entity.ContactEntity;
 import im.boss66.com.entity.FriendState;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.ContactsRequest;
@@ -151,8 +152,9 @@ public class ContactBooksFragment extends BaseFragment {
                 hideSoftKeyboard();
             }
         });
-//        request();
-        initData(null);
+        contactListLayout.init(contactList, header);
+        request();
+//        initData(null);
     }
 
     private void request() {
@@ -174,33 +176,35 @@ public class ContactBooksFragment extends BaseFragment {
     }
 
     private void initData(BaseContact baseContact) {
-//        ArrayList<ContactEntity> list = baseContact.getResult();
-//        if (list != null && list.size() != 0) {
-//            for (int i = 0; i < list.size(); i++) {
-//                ContactEntity entity = list.get(i);
-//                EaseUser easeUser = new EaseUser();
-//                easeUser.setAvatar(entity.getAvatar());
-//                easeUser.setInitialLetter(entity.getFirst_letter());
-//                easeUser.setNick(entity.getUser_name());
-//                easeUser.setUserName(entity.getUser_name());
-//                easeUser.setUserid(entity.getFriend_id());
-//                easeUser.setFid(entity.getFid());
-////                easeUser.setFriend_id(entity.getFriend_id());
-//                contactList.add(easeUser);
-//            }
-//        }
-        testDatas();
-        contactListLayout.init(contactList, header);
+        ArrayList<ContactEntity> list = baseContact.getResult();
+        if (list != null && list.size() != 0) {
+            for (int i = 0; i < list.size(); i++) {
+                ContactEntity entity = list.get(i);
+                EaseUser easeUser = new EaseUser();
+                easeUser.setAvatar(entity.getAvatar());
+                easeUser.setInitialLetter(entity.getFirst_letter());
+                easeUser.setNick(entity.getUser_name());
+                easeUser.setUserName(entity.getUser_name());
+                easeUser.setUserid(entity.getFriend_id());
+                easeUser.setFid(entity.getFid());
+//                easeUser.setFriend_id(entity.getFriend_id());
+                contactList.add(easeUser);
+            }
+        }
+//        contactListLayout.init(contactList, header);
+        contactListLayout.init(contactList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EaseUser user = (EaseUser) listView.getItemAtPosition(position);
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra("user", user);
+                intent.putExtra("title", user.getUsername());
+                intent.putExtra("toUid", user.getUserid());
                 startActivity(intent);
             }
         });
+
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

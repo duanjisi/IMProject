@@ -18,16 +18,17 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.CircleMovementMethod;
 import im.boss66.com.Utils.SpannableClickable;
 import im.boss66.com.entity.FavortItem;
+import im.boss66.com.entity.FriendCirclePraiseEntity;
 
 /**
- * Created by GMARUnity on 2017/2/3.
+ * 处理朋友圈点赞列表
  */
 public class PraiseListView extends TextView{
 
 
     private int itemColor;
     private int itemSelectorColor;
-    private List<FavortItem> datas;
+    private List<FriendCirclePraiseEntity> datas;
     private OnItemClickListener onItemClickListener;
 
     public OnItemClickListener getOnItemClickListener() {
@@ -64,10 +65,10 @@ public class PraiseListView extends TextView{
         }
     }
 
-    public List<FavortItem> getDatas() {
+    public List<FriendCirclePraiseEntity> getDatas() {
         return datas;
     }
-    public void setDatas(List<FavortItem> datas) {
+    public void setDatas(List<FriendCirclePraiseEntity> datas) {
         this.datas = datas;
         notifyDataSetChanged();
     }
@@ -78,11 +79,11 @@ public class PraiseListView extends TextView{
         if(datas != null && datas.size() > 0){
             //添加点赞图标
             builder.append(setImageSpan());
-            FavortItem item = null;
+            FriendCirclePraiseEntity item = null;
             for (int i=0; i<datas.size(); i++){
                 item = datas.get(i);
                 if(item != null){
-                    builder.append(setClickableSpan(item.getUser().getNick(), i));
+                    builder.append(setClickableSpan(item.getUser_name(), i));
                     if(i != datas.size()-1){
                         builder.append(", ");
                     }

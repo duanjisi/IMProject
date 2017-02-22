@@ -17,17 +17,18 @@ public class CommentConfig {
     public int circlePosition;
     public int commentPosition;
     public Type commentType;
-    public User replyUser;
+    public String uid_to_name;
+    //public User replyUser;
 
     @Override
     public String toString() {
         String replyUserStr = "";
-        if(replyUser != null){
-            replyUserStr = replyUser.toString();
-        }
+//        if(replyUser != null){
+//            replyUserStr = replyUser.toString();
+//        }
         return "circlePosition = " + circlePosition
                 + "; commentPosition = " + commentPosition
                 + "; commentType ＝ " + commentType
-                + "; replyUser = " + replyUserStr;
+                + "; replyUser = " + uid_to_name;
     }
 }
