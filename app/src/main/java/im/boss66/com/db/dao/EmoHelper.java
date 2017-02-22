@@ -3,8 +3,10 @@ package im.boss66.com.db.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import im.boss66.com.App;
@@ -63,7 +65,22 @@ public class EmoHelper extends ColumnHelper<EmoEntity> {
 
     @Override
     public void save(List<EmoEntity> list) {
+        deleteAllDatas();
+        Collections.reverse(list);
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                EmoEntity entity = list.get(i);
+                Log.i("info", "=====EmoName:" + entity.getEmo_name());
+                this.save(entity);
+            }
+        }
+    }
 
+    /**
+     * 删除表内所有数据
+     */
+    public void deleteAllDatas() {
+        DBHelper.getInstance(mContext).delete(EmoColumn.TABLE_NAME, null, null);
     }
 
     @Override

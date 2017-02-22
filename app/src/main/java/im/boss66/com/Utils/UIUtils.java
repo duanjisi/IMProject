@@ -399,6 +399,21 @@ public final class UIUtils {
 //        return style;
 //    }
 
+
+//    public static SpannableStringBuilder createBuilder(Context context, int count) {
+//        int color = context.getResources().getColor(
+//                R.color.main_color_blue);
+//        SpannableStringBuilder style;
+//        String str1 = "全部 ";
+//        String msg = str1 + count + "人";
+//
+//        style = new SpannableStringBuilder(msg);
+//        style.setSpan(
+//                new ForegroundColorSpan(color), 0, str1.length(),
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        return style;
+//    }
+
 //    public static SpannableStringBuilder createBuilder(Context context, CommentEntity comment) {
 //        int color = context.getResources().getColor(
 //                R.color.main_color_orange3);
@@ -577,7 +592,7 @@ public final class UIUtils {
     }
 
 
-//    /**
+    //    /**
 //     * 刷新发送验证码按钮的视图
 //     *
 //     * @param context

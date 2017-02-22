@@ -86,7 +86,7 @@ public class MainActivity extends BaseActivity implements Observer {
         Intent intent = new Intent(context, ChatServices.class);
         intent.putExtra("userid", account.getUser_id());
         startService(intent);
-        insertDatas();
+//        insertDatas();
     }
 
     private String groupIcon = "http://pics.sc.chinaz.com/Files/pic/icons128/5858/261.png";

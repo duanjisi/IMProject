@@ -39,6 +39,23 @@ public class HttpUrl {
     public static final String CONTACTS_URL = MAIN_URL + "ucenter/friends/index";
     //新朋友列表请求
     public static final String NEW_FRIENDS_URL = MAIN_URL + "ucenter/friendslog/index";
+    //精选表情首页数据请求
+    public static final String EMO_WELL_URL = MAIN_URL + "api/v1/store";
+    //表情包详细信息请求
+    public static final String EMO_INFORM_DETAILS_URL = MAIN_URL + "api/v1/store/viewpack";
+    //搜索热门词
+    public static final String HOT_WORDS_URL = MAIN_URL + "api/v1/store/searchhot";
+    //表情商店搜索
+    public static final String EMO_STORE_SEARCH_URL = MAIN_URL + "api/v1/store/search";
+
+    //获取表情收藏
+    public static final String EMO_COLLECTIONS_URL = MAIN_URL + "api/v1/collect";
+    //添加收藏表情
+    public static final String EMO_COLLECTION_ADD_URL = MAIN_URL + "api/v1/collect/add";
+    //删除收藏表情
+    public static final String EMO_COLLECTIONS_DELETE_URL = MAIN_URL + "api/v1/collect/delete";
+    //获取用户信息接口
+    public static final String PERSON_INFORM_URL = MAIN_URL + "ucenter/userinfo/index";
 
     //附近的人
     public static final String PEOPLE_NEARBY = MAIN_URL + "ucenter/nearuser/index";

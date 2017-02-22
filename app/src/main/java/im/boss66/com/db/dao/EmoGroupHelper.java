@@ -3,6 +3,7 @@ package im.boss66.com.db.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +13,7 @@ import im.boss66.com.App;
 import im.boss66.com.db.DBHelper;
 import im.boss66.com.db.EmoGroupColumn;
 import im.boss66.com.db.helper.ColumnHelper;
+import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmoGroup;
 
 /**
@@ -70,8 +72,18 @@ public class EmoGroupHelper extends ColumnHelper<EmoGroup> {
         Collections.reverse(list);
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
-                this.save(list.get(i));
+                EmoGroup group = list.get(i);
+                Log.i("info", "=====groupName:" + group.getGroup_name());
+                this.save(group);
+                saveEmo(group);
             }
+        }
+    }
+
+    private void saveEmo(EmoGroup group) {
+        ArrayList<EmoEntity> emos = group.getEmo();
+        if (emos.size() != 0) {
+            EmoHelper.getInstance().save(emos);
         }
     }
 

@@ -18,7 +18,7 @@ public class ContactsRequest extends BaseDataRequest<BaseContact> {
 
     @Override
     protected boolean isParse() {
-        return true;
+        return false;
     }
 
     @Override

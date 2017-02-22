@@ -24,8 +24,9 @@ public class AddFriendRequest extends BaseDataRequest<String> {
     @Override
     protected Map<String, String> getParams() {
         String uid_to = (String) mParams[0];
+        String friend_note = (String) mParams[1];
         Map<String, String> map = new HashMap<String, String>();
-        map.put("uid_to", uid_to);
+        map.put("friend_note", friend_note);
         return map;
     }
 
