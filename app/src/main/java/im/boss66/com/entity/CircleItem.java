@@ -18,6 +18,8 @@ public class CircleItem {
      */
     private static final long serialVersionUID = 1L;
 
+    private int did;
+
     private String id;
     private String content;
     private String createTime;

@@ -7,6 +7,6 @@ import android.view.View;
  */
 public interface RecycleViewItemListener {
 
-    void onItemClick(View view, int postion);
+    void onItemClick(int postion);
     boolean onItemLongClick(int position);
 }

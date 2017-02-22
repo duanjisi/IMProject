@@ -186,6 +186,8 @@
         <activity android:name=".activity.personage.PersonalInputSmsActivity"></activity>
         <!-- 设置-更换手机号-验证原手机 -->
         <activity android:name=".activity.personage.VerifyOldPhoneActivity"></activity>
+        <!-- 朋友圈发消息 -->
+        <activity android:name=".activity.discover.FriendSendNewMsgActivity"></activity>
 
         <!-- 微信入口 -->
         <activity

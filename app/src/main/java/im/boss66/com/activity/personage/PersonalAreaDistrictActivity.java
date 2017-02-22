@@ -18,7 +18,6 @@ import im.boss66.com.adapter.LocalAddressAdapter;
 import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.ChangeAreaRequest;
-import im.boss66.com.listener.RecycleViewItemListener;
 
 /**
  *地区-区

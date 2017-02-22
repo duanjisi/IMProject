@@ -13,22 +13,23 @@ import android.widget.TextView;
 
 import im.boss66.com.R;
 import im.boss66.com.activity.discover.CirclePresenter;
+import im.boss66.com.entity.FriendCircleCommentEntity;
 import im.boss66.com.entity.FriendCircleItem;
 import im.boss66.com.entity.FriendCircleTestData;
 
 /**
- * Created by GMARUnity on 2017/2/3.
+ * 朋友圈评论dialog
  */
 public class CommentDialog extends Dialog implements
         android.view.View.OnClickListener {
 
     private Context mContext;
     private CirclePresenter mPresenter;
-    private FriendCircleItem mCommentItem;
+    private FriendCircleCommentEntity mCommentItem;
     private int mCirclePosition;
 
     public CommentDialog(Context context, CirclePresenter presenter,
-                         FriendCircleItem commentItem, int circlePosition) {
+                         FriendCircleCommentEntity commentItem, int circlePosition) {
         super(context, R.style.comment_dialog);
         mContext = context;
         this.mPresenter = presenter;
@@ -63,7 +64,7 @@ public class CommentDialog extends Dialog implements
         TextView deleteTv = (TextView) findViewById(R.id.deleteTv);
         if (mCommentItem != null
                 && FriendCircleTestData.curUser.getUserId().equals(
-                mCommentItem.getUser().getUserId())) {
+                mCommentItem.getUid_from())) {
             deleteTv.setVisibility(View.VISIBLE);
         } else {
             deleteTv.setVisibility(View.GONE);
@@ -83,7 +84,7 @@ public class CommentDialog extends Dialog implements
                 break;
             case R.id.deleteTv:
                 if (mPresenter != null && mCommentItem != null) {
-                    mPresenter.deleteComment(mCirclePosition, mCommentItem.getId());
+                    mPresenter.deleteComment(mCirclePosition, mCommentItem.getComm_id());
                 }
                 dismiss();
                 break;

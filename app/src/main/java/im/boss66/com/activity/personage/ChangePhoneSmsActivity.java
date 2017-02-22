@@ -52,7 +52,6 @@ public class ChangePhoneSmsActivity extends BaseActivity implements View.OnClick
         tv_back.setOnClickListener(this);
         tv_right.setVisibility(View.VISIBLE);
         tv_right.setText(getString(R.string.next_step));
-        tv_right.setTextColor(getResources().getColor(R.color.btn_green_light));
         tv_right.setOnClickListener(this);
         Intent intent = getIntent();
         if (intent != null) {

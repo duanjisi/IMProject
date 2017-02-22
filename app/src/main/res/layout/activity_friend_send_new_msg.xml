@@ -13,12 +13,12 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-
         <EditText
             android:id="@+id/et_tx"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
+            android:gravity="top|left"
             android:hint="@string/the_idea_of_the_moment"
             android:padding="@dimen/dp_10"
             android:textColor="@color/black"
@@ -28,49 +28,7 @@
             android:id="@+id/multiImagView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginLeft="@dimen/dp_14"
-            android:background="@color/alertdialog_line" />
-
-        <RelativeLayout
-            android:id="@+id/rl_current_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:background="@drawable/personal_bt_selector"
-            android:paddingBottom="10dp"
-            android:paddingLeft="16.5dp"
-            android:paddingRight="16.5dp"
-            android:paddingTop="10dp">
-
-            <TextView
-                android:id="@+id/tv_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16.5dp"
-                android:layout_toRightOf="@+id/iv_photo"
-                android:text="@string/current_location"
-                android:textColor="@color/black"
-                android:textSize="17.5sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/hp_some_go" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/alertdialog_line" />
+            android:layout_marginTop="5dp" />
 
         <View
             android:layout_width="match_parent"
@@ -119,6 +77,7 @@
                 android:layout_toLeftOf="@+id/iv_phone"
                 android:maxEms="10"
                 android:singleLine="true"
+                android:text="公开"
                 android:textColor="@color/text_app_num_gray"
                 android:textSize="15.4sp" />
 

@@ -58,4 +58,10 @@ public class HttpUrl {
     public static final String CHANE_ALBUM_COVER = MAIN_URL + "ucenter/userinfo/uploadcoverpic";
     //更换手机号码
     public static final String CHANE_PHONE_NUM = MAIN_URL + "ucenter/userinfo/bindmobile";
+    //发布图文朋友圈
+    public static final String CREATE_CIRCLE_PHOTO_TX = MAIN_URL + "api/v1/cofriends/create";
+    //发布视频朋友圈
+    public static final String CREATE_CIRCLE_VIDEO_TX = MAIN_URL + "api/v1/cofriends/createvideo";
+    //朋友圈列表
+    public static final String FRIEND_CIRCLE_LIST = MAIN_URL + "api/v1/cofriends";
 }
