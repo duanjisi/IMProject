@@ -2,20 +2,35 @@ package im.boss66.com.activity.im;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtils;
+import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.PictureAdapter;
 import im.boss66.com.db.dao.EmoLoveHelper;
 import im.boss66.com.entity.EmoLove;
+import im.boss66.com.http.HttpUrl;
 import im.boss66.com.widget.MyGridView;
 
 /**
@@ -23,6 +38,9 @@ import im.boss66.com.widget.MyGridView;
  * Created by Johnny on 2017/2/11.
  */
 public class EmojiAddActivity extends BaseActivity implements View.OnClickListener {
+    public final static String CHATPHOTO_PATH = Environment
+            .getExternalStorageDirectory()
+            + File.separator;
     private TextView tvBack, tvDo;
     private MyGridView gridView;
     private PictureAdapter adapter;
@@ -82,13 +100,59 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
                 if (selectPicList != null && selectPicList.size() != 0) {
                     String image = selectPicList.get(0);
                     if (image != null && !image.equals("")) {
-                        EmoLove love = new EmoLove();
-                        love.setIcon(image);
-                        EmoLoveHelper.getInstance().save(love);
-                        adapter.addItem2(image);
+                        uploadImageFile(image);
                     }
                 }
             }
+        }
+    }
+
+    private void uploadImageFile(final String path) {
+        String main = HttpUrl.UPLOAD_IMAGE_URL;
+//        showLoadingDialog();
+        final HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        final com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        try {
+            String fileName = FileUtils.getFileNameFromPath(path);
+            String compressPath = FileUtils.compressImage(path, CHATPHOTO_PATH + fileName, 30);
+            File file = new File(compressPath);
+            if (file.exists() && file.length() > 0) {
+                params.addBodyParameter("file", file);
+            }
+            MycsLog.i("info", "AbsolutePath:" + file.getAbsolutePath());
+            httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
+                @Override
+                public void onSuccess(ResponseInfo<String> responseInfo) {
+                    Log.i("info", "responseInfo:" + responseInfo.result);
+                    EmoLove love = new EmoLove();
+                    love.setEmo_url(parsePath(responseInfo.result));
+                    EmoLoveHelper.getInstance().save(love);
+                    adapter.addItem2(parsePath(responseInfo.result));
+                }
+
+                @Override
+                public void onFailure(HttpException e, String s) {
+                    Toast.makeText(context, "上传失败!", Toast.LENGTH_LONG).show();
+                    cancelLoadingDialog();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String parsePath(String json) {
+        try {
+            JSONObject object = new JSONObject(json);
+            int code = object.getInt("code");
+            if (code == 0) {
+                return object.getString("data");
+            } else {
+                return null;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

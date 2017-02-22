@@ -14,7 +14,7 @@ public class EmoGroup {
     private String group_cover = "";//组下封面图
     private String group_icon = "";//组图标
     private String group_format = "";//组图标格式
-    private ArrayList<EmoEntity> emos = new ArrayList<>();
+    private ArrayList<EmoEntity> emo = new ArrayList<>();
 
     public String getGroup_id() {
         return group_id;
@@ -80,11 +80,11 @@ public class EmoGroup {
         this.group_format = group_format;
     }
 
-    public ArrayList<EmoEntity> getEmos() {
-        return emos;
+    public ArrayList<EmoEntity> getEmo() {
+        return emo;
     }
 
-    public void setEmos(ArrayList<EmoEntity> emos) {
-        this.emos = emos;
+    public void setEmo(ArrayList<EmoEntity> emo) {
+        this.emo = emo;
     }
 }

@@ -48,6 +48,7 @@ import java.util.Hashtable;
 import im.boss66.com.R;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.AddFriendRequest;
 import im.boss66.com.util.RGBLuminanceSource;
@@ -135,7 +136,6 @@ public class CaptureActivity extends BaseActivity {
         mCamera = mCameraManager.getCamera();
         mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
         mScanPreview.addView(mPreview);
-
         ImageView scanLine = (ImageView) findViewById(R.id.capture_scan_line);
         TranslateAnimation animation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0f, TranslateAnimation.ABSOLUTE, 0f,
                 TranslateAnimation.RELATIVE_TO_PARENT, 0f, TranslateAnimation.RELATIVE_TO_PARENT, 0.9f);
@@ -144,6 +144,12 @@ public class CaptureActivity extends BaseActivity {
         animation.setRepeatMode(Animation.REVERSE);
         animation.setInterpolator(new LinearInterpolator());
         scanLine.startAnimation(animation);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("info", "================onResume()");
     }
 
     public void onPause() {
@@ -156,10 +162,24 @@ public class CaptureActivity extends BaseActivity {
         if (mCamera != null) {
             previewing = false;
             mCamera.setPreviewCallback(null);
+//            mCamera.setPreviewCallbackWithBuffer(null);
             mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
         }
+
+//        if (mCamera != null) {
+//            try {
+//                previewing = false;
+//                mCamera.setPreviewCallback(null);
+//                mCamera.setPreviewCallbackWithBuffer(null);
+//                mCamera.stopPreview();
+//                mCamera.release();
+////                mCamera = null;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     private Runnable doAutoFocus = new Runnable() {
@@ -212,23 +232,13 @@ public class CaptureActivity extends BaseActivity {
         MycsLog.i("result:" + result);
         if (result.contains("add_friend:")) {
             String userid = result.substring(result.indexOf(":") + 1, result.length());
-            addFriendRequest(userid);
+//            addFriendRequest(userid);
+            Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
+            intent.putExtra("classType", "CaptureActivity");
+            intent.putExtra("userid", userid);
+            startActivity(intent);
+            finish();
         }
-//        if (result.contains("http://www.66boss.com/app/")) {
-//            joinGroup(result);
-//        } else if (result.contains("friend:")) {
-//            String friendId = result.substring(result.indexOf(":") + 1, result.length());
-//            Intent intent = new Intent(context, PersonPagerActivity.class);
-//            intent.putExtra("user_id", friendId);
-//            startActivity(intent);
-//            finish();
-//        } else if (result.contains("groupId:")) {
-//            String groupId = result.substring(result.indexOf(":") + 1, result.length());
-//            JoinGroup(groupId);
-//        } else {
-//            showToast(getString(R.string.notice_not_swwy_qr_code), false);
-//            finish();
-//        }
     }
 
 
@@ -239,6 +249,7 @@ public class CaptureActivity extends BaseActivity {
             @Override
             public void onSuccess(String pojo) {
                 cancelLoadingDialog();
+                finish();
                 showToast("已发送好友请求!", true);
             }
 
@@ -342,6 +353,12 @@ public class CaptureActivity extends BaseActivity {
 //        );
 //        AppIndex.AppIndexApi.end(client, viewAction);
 //        client.disconnect();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         releaseCamera();
     }
 

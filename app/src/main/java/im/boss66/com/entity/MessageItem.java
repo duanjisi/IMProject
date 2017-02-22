@@ -9,14 +9,19 @@ package im.boss66.com.entity;
  * @email:pzfpang451@163.com
  */
 public class MessageItem extends BaseData {
-    // Text
+
+    // emotion
     public static final int MESSAGE_TYPE_EMOTION = 1;
     // image
     public static final int MESSAGE_TYPE_IMG = 2;
-    // file
-    public static final int MESSAGE_TYPE_FILE = 3;
+    // Txt
+    public static final int MESSAGE_TYPE_TXT = 3;
     // Record
     public static final int MESSAGE_TYPE_VIDEO = 4;
+    // audio
+    public static final int MESSAGE_TYPE_AUDIO = 5;
+    // file
+    public static final int MESSAGE_TYPE_FILE = 6;
 
     private int msgType;// 消息类型
     private String name;// 消息来自

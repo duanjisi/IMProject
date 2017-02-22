@@ -9,7 +9,7 @@ public class EmoCate {
     private String cate_id = "";//分类id
     private String cate_name = "";//分类名称
     private String cate_desc = "";//分类描述
-    private ArrayList<EmoGroup> groups = new ArrayList<>();
+    private ArrayList<EmoGroup> group = new ArrayList<>();
 
     public String getCate_id() {
         return cate_id;
@@ -35,11 +35,11 @@ public class EmoCate {
         this.cate_desc = cate_desc;
     }
 
-    public ArrayList<EmoGroup> getGroups() {
-        return groups;
+    public ArrayList<EmoGroup> getGroup() {
+        return group;
     }
 
-    public void setGroups(ArrayList<EmoGroup> groups) {
-        this.groups = groups;
+    public void setGroup(ArrayList<EmoGroup> group) {
+        this.group = group;
     }
 }

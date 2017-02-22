@@ -46,13 +46,19 @@ import im.boss66.com.xlistview.GifTextView;
 public class MessageAdapter extends BaseAdapter {
     public static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
     public static final int MESSAGE_TYPE_INVALID = -1;
+
     public static final int MESSAGE_TYPE_MINE_EMOTION = 0x00;
     public static final int MESSAGE_TYPE_MINE_IMAGE = 0x01;
     public static final int MESSAGE_TYPE_MINE_VIDEO = 0x02;
+    public static final int MESSAGE_TYPE_MINE_TXT = 0x06;
+    public static final int MESSAGE_TYPE_MINE_AUDIO = 0x08;
 
     public static final int MESSAGE_TYPE_OTHER_EMOTION = 0x03;
     public static final int MESSAGE_TYPE_OTHER_IMAGE = 0x04;
     public static final int MESSAGE_TYPE_OTHER_VIDEO = 0x05;
+    public static final int MESSAGE_TYPE_OTHER_TXT = 0x07;
+    public static final int MESSAGE_TYPE_OTHER_AUDIO = 0x09;
+
     public static final int MESSAGE_TYPE_TIME_TITLE = 0x07;
     public static final int MESSAGE_TYPE_HISTORY_DIVIDER = 0x08;
     private static final int VIEW_TYPE_COUNT = 9;
@@ -127,10 +133,10 @@ public class MessageAdapter extends BaseAdapter {
             switch (type) {
                 case MESSAGE_TYPE_MINE_EMOTION: {
                     convertView = mInflater.inflate(
-                            R.layout.zf_chat_mine_text_message_item, parent, false);
-                    holder = new TextMessageHolder();
+                            R.layout.zf_chat_mine_emotion_message_item, parent, false);
+                    holder = new EmotionMessageHolder();
                     convertView.setTag(holder);
-                    fillTextMessageHolder((TextMessageHolder) holder,
+                    fillEmotionMessageHolder((EmotionMessageHolder) holder,
                             convertView);
                     break;
                 }
@@ -153,12 +159,21 @@ public class MessageAdapter extends BaseAdapter {
                             convertView);
                     break;
                 }
-                case MESSAGE_TYPE_OTHER_EMOTION: {
+                case MESSAGE_TYPE_MINE_TXT: {
                     convertView = mInflater.inflate(
-                            R.layout.zf_chat_other_text_message_item, parent, false);
+                            R.layout.zf_chat_mine_text_message_item, parent, false);
                     holder = new TextMessageHolder();
                     convertView.setTag(holder);
                     fillTextMessageHolder((TextMessageHolder) holder,
+                            convertView);
+                    break;
+                }
+                case MESSAGE_TYPE_OTHER_EMOTION: {
+                    convertView = mInflater.inflate(
+                            R.layout.zf_chat_other_emotion_message_item, parent, false);
+                    holder = new EmotionMessageHolder();
+                    convertView.setTag(holder);
+                    fillEmotionMessageHolder((EmotionMessageHolder) holder,
                             convertView);
                     break;
                 }
@@ -182,6 +197,15 @@ public class MessageAdapter extends BaseAdapter {
                             convertView);
                     break;
                 }
+                case MESSAGE_TYPE_OTHER_TXT: {
+                    convertView = mInflater.inflate(
+                            R.layout.zf_chat_other_text_message_item, parent, false);
+                    holder = new TextMessageHolder();
+                    convertView.setTag(holder);
+                    fillTextMessageHolder((TextMessageHolder) holder,
+                            convertView);
+                    break;
+                }
                 default:
                     break;
             }
@@ -192,11 +216,13 @@ public class MessageAdapter extends BaseAdapter {
         if (mItem != null) {
             int msgType = mItem.getMsgType();
             if (msgType == MessageItem.MESSAGE_TYPE_EMOTION) {
-                handleTextMessage((TextMessageHolder) holder, mItem, parent);
+                handleEmotionMessage((EmotionMessageHolder) holder, mItem, parent);
             } else if (msgType == MessageItem.MESSAGE_TYPE_IMG) {
                 handleImageMessage((ImageMessageHolder) holder, mItem, parent);
             } else if (msgType == MessageItem.MESSAGE_TYPE_VIDEO) {
                 handleAudioMessage((AudioMessageHolder) holder, mItem, parent);
+            } else if (msgType == MessageItem.MESSAGE_TYPE_TXT) {
+                handleTextMessage((TextMessageHolder) holder, mItem, parent);
             }
         }
         return convertView;
@@ -204,6 +230,12 @@ public class MessageAdapter extends BaseAdapter {
 
     private void handleTextMessage(final TextMessageHolder holder,
                                    final MessageItem mItem, final View parent) {
+        handleBaseMessage(holder, mItem);
+        holder.tvMsg.setText(mItem.getMessage());
+    }
+
+    private void handleEmotionMessage(final EmotionMessageHolder holder,
+                                      final MessageItem mItem, final View parent) {
         handleBaseMessage(holder, mItem);
         Map<String, Integer> map = App.getInstance().getFaceMap();
         if (map.containsKey(mItem.getMessage())) {
@@ -323,10 +355,10 @@ public class MessageAdapter extends BaseAdapter {
 //        holder.time.setText(TimeUtil.getChatTime(mItem.getDate()));
         holder.time.setText(TimeUtil.getChatTime(Long.parseLong(mItem.getTemp())));
         holder.time.setVisibility(View.VISIBLE);
-        holder.head.setBackgroundResource(R.drawable.ic_launcher);
+//        holder.head.setBackgroundResource(R.drawable.ic_launcher);
         holder.progressBar.setVisibility(View.GONE);
         holder.progressBar.setProgress(50);
-        holder.time.setVisibility(View.VISIBLE);
+//        holder.time.setVisibility(View.VISIBLE);
         imageLoader.displayImage(mItem.getAvatar(), holder.head, ImageLoaderUtils.getDisplayImageOptions());
         // holder.head.setBackgroundResource(PushApplication.heads[mItem
         // .getHeadImg()]);
@@ -351,6 +383,12 @@ public class MessageAdapter extends BaseAdapter {
 
     private void fillTextMessageHolder(TextMessageHolder holder,
                                        View convertView) {
+        fillBaseMessageholder(holder, convertView);
+        holder.tvMsg = (TextView) convertView.findViewById(R.id.textView2);
+    }
+
+    private void fillEmotionMessageHolder(EmotionMessageHolder holder,
+                                          View convertView) {
         fillBaseMessageholder(holder, convertView);
         holder.gifView = (GifView) convertView.findViewById(R.id.textView2);
     }
@@ -385,11 +423,17 @@ public class MessageAdapter extends BaseAdapter {
         /**
          * 文字消息体
          */
+        TextView tvMsg;
+    }
+
+    private static class EmotionMessageHolder extends MessageHolderBase {
+        /**
+         * 表情消息体
+         */
         GifView gifView;
     }
 
     private static class ImageMessageHolder extends MessageHolderBase {
-
         /**
          * 图片消息体
          */
@@ -503,7 +547,12 @@ public class MessageAdapter extends BaseAdapter {
                         case MessageItem.MESSAGE_TYPE_VIDEO: {
                             return MESSAGE_TYPE_OTHER_VIDEO;
                         }
-
+                        case MessageItem.MESSAGE_TYPE_TXT: {
+                            return MESSAGE_TYPE_OTHER_TXT;
+                        }
+                        case MessageItem.MESSAGE_TYPE_AUDIO: {
+                            return MESSAGE_TYPE_OTHER_AUDIO;
+                        }
                         default:
                             break;
                     }
@@ -514,14 +563,18 @@ public class MessageAdapter extends BaseAdapter {
                             return MESSAGE_TYPE_MINE_EMOTION;
 
                         }
-
                         case MessageItem.MESSAGE_TYPE_IMG: {
                             return MESSAGE_TYPE_MINE_IMAGE;
 
                         }
-
                         case MessageItem.MESSAGE_TYPE_VIDEO: {
                             return MESSAGE_TYPE_MINE_VIDEO;
+                        }
+                        case MessageItem.MESSAGE_TYPE_TXT: {
+                            return MESSAGE_TYPE_MINE_TXT;
+                        }
+                        case MessageItem.MESSAGE_TYPE_AUDIO: {
+                            return MESSAGE_TYPE_MINE_AUDIO;
                         }
                         default:
                             break;

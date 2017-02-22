@@ -18,7 +18,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -27,8 +29,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +45,7 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,20 +56,25 @@ import java.util.List;
 
 import im.boss66.com.App;
 import im.boss66.com.Code;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.Utils.Base64Utils;
 import im.boss66.com.Utils.FileUtils;
+import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.SharePreferenceUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.ImageGridActivity;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.adapter.CellAdapter;
 import im.boss66.com.adapter.MessageAdapter;
 import im.boss66.com.db.MessageDB;
 import im.boss66.com.db.RecentDB;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
+import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.CellEntity;
 import im.boss66.com.entity.EmoCate;
 import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmoGroup;
@@ -85,6 +95,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private static final int MESSAGE_TYPE_EMOTION = 0x011;
     private static final int MESSAGE_TYPE_IMG = 0x012;
     private static final int MESSAGE_TYPE_VIDEO = 0x013;
+    private static final int MESSAGE_TYPE_TXT = 0x015;
+    private static final int MESSAGE_TYPE_AUDIO = 0x016;
+
     private static final int EMOTION_SETING_UP = 0x014;
     //    private static final int EMOTION_STORE = 0x015;
     public final static String CHATPHOTO_PATH = Environment
@@ -110,12 +123,17 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     //    private Button mBtnAffix;
     private Button mBtnSend;// 发送消息按钮
     private ImageButton ibEditPic, ibFace, mBtnAffix;
-    private TextView tvImg, tvVideo, tvPhoto, tvImgs, tvCollect, tvRed, tvCard;
+    //    private TextView tvImg, tvVideo, tvPhoto, tvImgs, tvCollect, tvRed, tvCard;
+    private ArrayList<CellEntity> cells;
+    private GridView gridMore;
+    private CellAdapter cellAdapter;
+
     private static MessageAdapter adapter;// 发送消息展示的adapter
     private MsgListView mMsgListView;// 展示消息的
     private MessageDB mMsgDB;// 保存消息的数据库
     private RecentDB mRecentDB;
-    private String userid, uid, title;
+    private String userid, toUid, title;
+    private AccountEntity account;
     private boolean isGroupChat = false;
     private TextView tvBack, tvTitle;
     private Resources resources;
@@ -126,6 +144,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private ArrayList<EmoCate> categorys = new ArrayList<>();
     private EditText mEtMsg;
     private ImageView ivSelect, ivMake, ivAddPerson, ivEditPic;
+    private ImageLoader imageLoader;
     /**
      * 接收到数据，用来更新listView
      */
@@ -203,10 +222,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initViews() {
+        imageLoader = ImageLoaderUtils.createImageLoader(context);
+        account = App.getInstance().getAccount();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            userid = bundle.getString("uid1", "");
-            uid = bundle.getString("uid2", "");
+//            userid = bundle.getString("uid1", "");
+            userid = account.getUser_id();
+            toUid = bundle.getString("toUid", "");
             title = bundle.getString("title", "");
             isGroupChat = bundle.getBoolean("isgroup", false);
         }
@@ -220,18 +242,21 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
         tvBack.setOnClickListener(this);
         tvTitle.setText(title);
-
         ll_emotion = (LinearLayout) findViewById(R.id.ll_emotion_test);
         ll_other = (LinearLayout) findViewById(R.id.ll_chatmain_affix);
         viewFace = findViewById(R.id.view_face);
 //      tvImg = (TextView) findViewById(R.id.tv_picture);
-        tvVideo = (TextView) findViewById(R.id.tv_chat_video);
+//        tvVideo = (TextView) findViewById(R.id.tv_chat_video);
+//        tvPhoto = (TextView) findViewById(R.id.tv_chat_photo);
+//        tvImgs = (TextView) findViewById(R.id.tv_chat_img);
+//        tvCollect = (TextView) findViewById(R.id.tv_chat_collect);
+//        tvRed = (TextView) findViewById(R.id.tv_chat_red);
+//        tvCard = (TextView) findViewById(R.id.tv_chat_card);
+        gridMore = (GridView) findViewById(R.id.gridMore);
+        cellAdapter = new CellAdapter(context);
+        gridMore.setAdapter(cellAdapter);
+        gridMore.setOnItemClickListener(new itemCellClickListener());
 
-        tvPhoto = (TextView) findViewById(R.id.tv_chat_photo);
-        tvImgs = (TextView) findViewById(R.id.tv_chat_img);
-        tvCollect = (TextView) findViewById(R.id.tv_chat_collect);
-        tvRed = (TextView) findViewById(R.id.tv_chat_red);
-        tvCard = (TextView) findViewById(R.id.tv_chat_card);
         ibEditPic = (ImageButton) findViewById(R.id.ib_chat_voice);
         ibFace = (ImageButton) findViewById(R.id.ib_chat_face);
         mEtMsg = (EditText) findViewById(R.id.msg_et);
@@ -249,13 +274,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         ivAddPerson.setOnClickListener(this);
         ivEditPic.setOnClickListener(this);
 
-        tvPhoto.setOnClickListener(this);
-        tvImgs.setOnClickListener(this);
-//        tvImg.setOnClickListener(this);
-        tvVideo.setOnClickListener(this);
-        tvCollect.setOnClickListener(this);
-        tvRed.setOnClickListener(this);
-        tvCard.setOnClickListener(this);
+//        tvPhoto.setOnClickListener(this);
+//        tvImgs.setOnClickListener(this);
+////        tvImg.setOnClickListener(this);
+//        tvVideo.setOnClickListener(this);
+//        tvCollect.setOnClickListener(this);
+//        tvRed.setOnClickListener(this);
+//        tvCard.setOnClickListener(this);
+
         ibEditPic.setOnClickListener(this);
         ibFace.setOnClickListener(this);
         mEtMsg.setOnTouchListener(this);
@@ -326,6 +352,25 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        InItBottomBar();
     }
 
+    private void initCells() {
+        cells = new ArrayList<>();
+        CellEntity cell1 = new CellEntity(R.drawable.hp_ch_photos, "图片");
+        CellEntity cell2 = new CellEntity(R.drawable.hp_ch_camera, "拍摄");
+        CellEntity cell3 = new CellEntity(R.drawable.hp_ch_video, "小视频");
+        CellEntity cell4 = new CellEntity(R.drawable.hp_ch_collect, "收藏");
+        CellEntity cell5 = new CellEntity(R.drawable.hp_ch_red, "红包");
+        CellEntity cell6 = new CellEntity(R.drawable.hp_ch_card, "个人名片");
+
+        cells.add(cell1);
+        cells.add(cell2);
+        cells.add(cell3);
+        cells.add(cell4);
+        cells.add(cell5);
+        cells.add(cell6);
+
+        cellAdapter.initData(cells);
+    }
+
 
     private void initDatas() {
 //        categorys.add("日常");
@@ -336,6 +381,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        categorys.add("卖萌");
 //        categorys.add("奇葩");
         categorys = (ArrayList<EmoCate>) EmoCateHelper.getInstance().query();
+        initCells();
     }
 
     /**
@@ -383,31 +429,31 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 return false;
             }
         });
-//        mEtMsg.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before,
-//                                      int count) {
-//            }
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count,
-//                                          int after) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                if (s.length() > 0) {
-//                    mBtnSend.setEnabled(true);
-//                    mBtnAffix.setVisibility(View.GONE);
-//                    mBtnSend.setVisibility(View.VISIBLE);
-//                } else {
-//                    mBtnSend.setEnabled(false);
-//                    mBtnAffix.setVisibility(View.VISIBLE);
-//                    mBtnSend.setVisibility(View.GONE);
-//                }
-//            }
-//        });
+        mEtMsg.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    mBtnSend.setEnabled(true);
+                    mBtnAffix.setVisibility(View.GONE);
+                    mBtnSend.setVisibility(View.VISIBLE);
+                } else {
+                    mBtnSend.setEnabled(false);
+                    mBtnAffix.setVisibility(View.VISIBLE);
+                    mBtnSend.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override
@@ -434,6 +480,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.iv_gif_00:
                 sendEmotionMessage(codes[0]);
                 break;
+            case R.id.send_btn:
+                String msg = getText(mEtMsg);
+                sendTxtMessage(msg);
+                mEtMsg.setText("");
+                break;
             case R.id.iv_gif_01:
                 sendEmotionMessage(codes[1]);
                 break;
@@ -444,25 +495,28 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //                UIUtils.hindView(ll_emotion);
 //                UIUtils.showView(ll_other);
 //                break;
-            case R.id.tv_chat_img:
-                takeImg();
-                break;
-            case R.id.tv_chat_photo:
-                takePhoto();
-                break;
-            case R.id.tv_chat_collect://收藏
 
-                break;
-            case R.id.tv_chat_red://红包
+//            case R.id.tv_chat_img:
+//                takeImg();
+//                break;
+//            case R.id.tv_chat_photo:
+//                takePhoto();
+//                break;
+//            case R.id.tv_chat_collect://收藏
+//
+//                break;
+//            case R.id.tv_chat_red://红包
+//
+//                break;
+//            case R.id.tv_chat_card://名片
+//
+//                break;
+//            case R.id.tv_chat_video:
+//                Intent intent = new Intent(context, ImageGridActivity.class);
+//                startActivityForResult(intent, 0);
+//                break;
 
-                break;
-            case R.id.tv_chat_card://名片
 
-                break;
-            case R.id.tv_chat_video:
-                Intent intent = new Intent(context, ImageGridActivity.class);
-                startActivityForResult(intent, 0);
-                break;
             case R.id.ib_chat_voice://声音
 //                UIUtils.hindView(ll_other);
 //                isOther = false;
@@ -642,7 +696,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         MessageItem item = new MessageItem(
                 MessageItem.MESSAGE_TYPE_EMOTION, mSpUtil.getNick(),
                 System.currentTimeMillis(), faceCode, mSpUtil.getHeadIcon(),
-                false, 0, 0, "" + System.currentTimeMillis());
+                false, 0, 0, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
         adapter.upDateMsg(item);
         mMsgListView.setSelection(adapter.getCount() - 1);
         mMsgDB.saveMsg(userid, item);// 消息保存数据库
@@ -670,13 +724,19 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         String str = "";
         switch (msgType) {
             case MESSAGE_TYPE_EMOTION:
-                str = "emotion_" + uid + "_" + code + "_" + tag + "_" + getExtension();
+                str = "emotion_" + toUid + "_" + code + "_" + tag + "_" + getExtension();
                 break;
             case MESSAGE_TYPE_IMG:
-                str = "picture_" + uid + "_" + code + "_" + tag + "_" + getExtension();
+                str = "picture_" + toUid + "_" + code + "_" + tag + "_" + getExtension();
                 break;
             case MESSAGE_TYPE_VIDEO:
-                str = "video_" + uid + "_" + code + "_" + tag + "_" + getExtension();
+                str = "video_" + toUid + "_" + code + "_" + tag + "_" + getExtension();
+                break;
+            case MESSAGE_TYPE_TXT:
+                str = "text_" + toUid + "_" + code + "_" + tag + "_" + getExtension();
+                break;
+            case MESSAGE_TYPE_AUDIO:
+                str = "audio_" + toUid + "_" + code + "_" + tag + "_" + getExtension();
                 break;
         }
         return str;
@@ -686,9 +746,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         JSONObject object = new JSONObject();
         try {
             object.put("sender", userid);
-            object.put("senderAvartar", "http://img17.3lian.com/d/file/201701/14/2106887296f7dd4d5b583f0af822967e.jpg");
+            object.put("senderAvartar", account.getAvatar());
             object.put("conversation", userid);
-            object.put("conversationAvartar", "http://img17.3lian.com/d/file/201701/14/2106887296f7dd4d5b583f0af822967e.jpg");
+            object.put("conversationAvartar", account.getAvatar());
             return Base64Utils.encodeBase64(object.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -701,7 +761,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         MessageItem item = new MessageItem(
                 MessageItem.MESSAGE_TYPE_IMG, mSpUtil.getNick(),
                 System.currentTimeMillis(), photoPath, mSpUtil.getHeadIcon(),
-                false, 0, 0, "" + System.currentTimeMillis());
+                false, 0, 0, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
         adapter.upDateMsg(item);
         mMsgListView.setSelection(adapter.getCount() - 1);
         mMsgDB.saveMsg(userid, item);// 消息保存数据库
@@ -719,12 +779,60 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mRecentDB.saveRecent(recentItem);
     }
 
+    private void sendTxtMessage(String msg) {//发文字
+        // 发送消息
+        MessageItem item = new MessageItem(
+                MessageItem.MESSAGE_TYPE_TXT, mSpUtil.getNick(),
+                System.currentTimeMillis(), msg, mSpUtil.getHeadIcon(),
+                false, 0, 0, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
+        adapter.upDateMsg(item);
+        mMsgListView.setSelection(adapter.getCount() - 1);
+        mMsgDB.saveMsg(userid, item);// 消息保存数据库
+//        mEtMsg.setText("");
+//        if ("".equals(mSpUtil.getUserId())) {
+//            showToast("发送者未登录!", true);
+//            return;
+//        }
+        ChatServices.sendMessage(getString(MESSAGE_TYPE_TXT, msg));
+        // ===保存近期的消息
+        RecentItem recentItem = new RecentItem(
+                MessageItem.MESSAGE_TYPE_TXT, mSpUtil.getUserId(),
+                defaultCount, defaulgUserName, msg, 0,
+                System.currentTimeMillis(), 0, "" + System.currentTimeMillis());
+        mRecentDB.saveRecent(recentItem);
+    }
+
+    private void sendAudioMessage(String photoPath) {//发声音
+        // 发送消息
+        MessageItem item = new MessageItem(
+                MessageItem.MESSAGE_TYPE_AUDIO, mSpUtil.getNick(),
+                System.currentTimeMillis(), photoPath, mSpUtil.getHeadIcon(),
+                false, 0, 0, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
+        adapter.upDateMsg(item);
+        mMsgListView.setSelection(adapter.getCount() - 1);
+        mMsgDB.saveMsg(userid, item);// 消息保存数据库
+//        mEtMsg.setText("");
+//        if ("".equals(mSpUtil.getUserId())) {
+//            showToast("发送者未登录!", true);
+//            return;
+//        }
+        ChatServices.sendMessage(getString(MESSAGE_TYPE_AUDIO, photoPath));
+        // ===保存近期的消息
+        RecentItem recentItem = new RecentItem(
+                MessageItem.MESSAGE_TYPE_AUDIO, mSpUtil.getUserId(),
+                defaultCount, defaulgUserName, photoPath, 0,
+                System.currentTimeMillis(), 0, "" + System.currentTimeMillis());
+        mRecentDB.saveRecent(recentItem);
+    }
+
     private void sendVideoMessage(String faceCode) {
         // 发送消息
         MessageItem item = new MessageItem(
                 MessageItem.MESSAGE_TYPE_VIDEO, mSpUtil.getNick(),
                 System.currentTimeMillis(), faceCode, mSpUtil.getHeadIcon(),
-                false, 0, 0, "" + System.currentTimeMillis());
+                false, 0, 0, "" + System.currentTimeMillis(),
+                account.getUser_name(), account.getUser_id(),
+                account.getAvatar());
         adapter.upDateMsg(item);
         mMsgListView.setSelection(adapter.getCount() - 1);
         mMsgDB.saveMsg(mSpUtil.getUserId(), item);// 消息保存数据库
@@ -1102,7 +1210,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             } else if (i == 0) {
                 textView.setImageResource(R.drawable.love);
             } else {
-                textView.setImageResource(R.drawable.f008);
+                EmoGroup group = groups.get(i - 1);
+                Bitmap bitmap = getBitmap(group);
+                if (bitmap != null) {
+                    textView.setImageBitmap(bitmap);
+                }
+//                textView.setImageResource(R.drawable.f008);
             }
             imageViews.add(textView);
             // �ָ���
@@ -1119,6 +1232,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 llBottom.addView(view);
             }
         }
+    }
+
+    private Bitmap getBitmap(EmoGroup entity) {
+        String path = Constants.EMO_DIR_PATH + File.separator +
+                entity.getCate_id() + File.separator +
+                entity.getGroup_id() + File.separator +
+                entity.getGroup_icon() + "." +
+                entity.getGroup_format();
+        return FileUtils.getBitmapByPath(path);
     }
 
     /**
@@ -1231,6 +1353,34 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
 
 
+    }
+
+    private class itemCellClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            CellEntity cell = (CellEntity) adapterView.getItemAtPosition(i);
+            switch (cell.getResId()) {
+                case R.drawable.hp_ch_photos:
+                    takeImg();
+                    break;
+                case R.drawable.hp_ch_camera:
+                    takePhoto();
+                    break;
+                case R.drawable.hp_ch_video:
+                    Intent intent = new Intent(context, ImageGridActivity.class);
+                    startActivityForResult(intent, 0);
+                    break;
+                case R.drawable.hp_ch_collect:
+
+                    break;
+                case R.drawable.hp_ch_red:
+
+                    break;
+                case R.drawable.hp_ch_card:
+
+                    break;
+            }
+        }
     }
 
     @Override

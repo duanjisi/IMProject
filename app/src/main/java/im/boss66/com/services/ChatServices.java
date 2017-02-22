@@ -197,6 +197,20 @@ public class ChatServices extends Service {
                     0, time,
                     sender, datas[1],
                     senderAvartar);
+        } else if (type.equals("text")) {
+            item = new MessageItem(MessageItem.MESSAGE_TYPE_TXT,
+                    sender, 0,
+                    datas[2], 0, true, 0,
+                    0, time,
+                    sender, datas[1],
+                    senderAvartar);
+        } else if (type.equals("audio")) {
+            item = new MessageItem(MessageItem.MESSAGE_TYPE_AUDIO,
+                    sender, 0,
+                    datas[2], 0, true, 0,
+                    0, time,
+                    sender, datas[1],
+                    senderAvartar);
         }
         MycsLog.i("info", "=====userid:" + userid);
         mMsgDB.saveMsg(userid, item);// 保存数据库
@@ -219,5 +233,6 @@ public class ChatServices extends Service {
             logout();
             mConnection.disconnect();
         }
+        Log.i("info", "========ChatServices中onDestroy()");
     }
 }

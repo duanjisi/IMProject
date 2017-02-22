@@ -14,7 +14,7 @@ import im.boss66.com.http.HttpUtil;
 public class EmoClasses {
     private String createtime = "";
     private String version = "";
-    private ArrayList<EmoCate> categorys = new ArrayList<>();
+    private ArrayList<EmoCate> category = new ArrayList<>();
 
     public static EmoClasses parseEntity(JSONObject jsonObject) throws JSONException {
         EmoClasses emoClasses = null;
@@ -59,15 +59,15 @@ public class EmoClasses {
                                 entity.setEmo_name(HttpUtil.getString(object2, "emo_name"));
                                 emos.add(entity);
                             }
-                            group.setEmos(emos);
+                            group.setEmo(emos);
                         }
                         groups.add(group);
                     }
-                    cate.setGroups(groups);
+                    cate.setGroup(groups);
                 }
                 cates.add(cate);
             }
-            emoClasses.setCategorys(cates);
+            emoClasses.setCategory(cates);
         }
         return emoClasses;
     }
@@ -88,11 +88,11 @@ public class EmoClasses {
         this.version = version;
     }
 
-    public ArrayList<EmoCate> getCategorys() {
-        return categorys;
+    public ArrayList<EmoCate> getCategory() {
+        return category;
     }
 
-    public void setCategorys(ArrayList<EmoCate> categorys) {
-        this.categorys = categorys;
+    public void setCategory(ArrayList<EmoCate> category) {
+        this.category = category;
     }
 }

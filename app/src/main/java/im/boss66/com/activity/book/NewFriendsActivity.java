@@ -51,7 +51,7 @@ public class NewFriendsActivity extends BaseActivity implements View.OnClickList
         tvMore.setOnClickListener(this);
         tvAddFriend.setOnClickListener(this);
         rl_search.setOnClickListener(this);
-//        requestFriends();
+        requestFriends();
     }
 
     private void requestFriends() {

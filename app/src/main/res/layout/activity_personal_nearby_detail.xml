@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="16.5dp"
-                android:background="@color/line_color_gray_d2"/>
+                android:background="@color/line_color_gray_d2" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -73,13 +73,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/line_color_gray_d2"/>
+                android:background="@color/line_color_gray_d2" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="25dp"
-                android:background="@color/line_color_gray_d2"/>
+                android:background="@color/line_color_gray_d2" />
 
             <TextView
                 android:id="@+id/tv_set_notes_labels"
@@ -95,7 +95,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/line_color_gray_d2"/>
+                android:background="@color/line_color_gray_d2" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -155,7 +155,6 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_centerVertical="true"
-                        android:gravity="center"
                         android:layout_marginRight="16.5dp"
                         android:layout_weight="1"
                         android:text="@string/personalized_signature"
@@ -169,8 +168,8 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="16.5dp"
                         android:layout_weight="3"
-                        android:maxLines="2"
                         android:ellipsize="end"
+                        android:maxLines="2"
                         android:text="少时诵诗书所所多多多多多多"
                         android:textColor="@color/black"
                         android:textSize="17.5sp" />
@@ -205,7 +204,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="16.5dp"
                         android:layout_weight="3"
-                        android:text="@string/area"
+                        android:text="来源于~"
                         android:textColor="@color/black"
                         android:textSize="17.5sp" />
 
@@ -216,14 +215,14 @@
                 android:id="@+id/bt_greet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16.5dp"
-                android:paddingTop="@dimen/dp_14"
-                android:paddingBottom="@dimen/dp_14"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
+                android:layout_marginTop="16.5dp"
                 android:background="@drawable/selector_nearby_bt_greet"
-                android:textColor="@drawable/selector_textcolor_white_gary"
+                android:paddingBottom="@dimen/dp_14"
+                android:paddingTop="@dimen/dp_14"
                 android:text="@string/greet"
+                android:textColor="@drawable/selector_textcolor_white_gary"
                 android:textSize="20sp" />
 
             <Button
@@ -233,9 +232,9 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
                 android:layout_marginTop="15dp"
-                android:paddingTop="@dimen/dp_14"
-                android:paddingBottom="@dimen/dp_14"
                 android:background="@drawable/selector_nearby_bt_complaint"
+                android:paddingBottom="@dimen/dp_14"
+                android:paddingTop="@dimen/dp_14"
                 android:text="@string/complaint"
                 android:textSize="20sp" />
         </LinearLayout>

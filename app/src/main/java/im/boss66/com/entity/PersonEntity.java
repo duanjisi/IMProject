@@ -1,0 +1,80 @@
+package im.boss66.com.entity;
+
+/**
+ * Created by Johnny on 2017/2/21.
+ * 个人用户信息
+ */
+public class PersonEntity {
+    private String user_id = "";
+    private String user_name = "";
+    private String avatar = "";
+    private String mobile_phone = "";
+    private String sex = "";
+    private String signature = "";
+    private String cover_pic = "";
+    private String district = "";
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getMobile_phone() {
+        return mobile_phone;
+    }
+
+    public void setMobile_phone(String mobile_phone) {
+        this.mobile_phone = mobile_phone;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    public String getCover_pic() {
+        return cover_pic;
+    }
+
+    public void setCover_pic(String cover_pic) {
+        this.cover_pic = cover_pic;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+}
