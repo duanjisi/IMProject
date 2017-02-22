@@ -173,6 +173,22 @@
         <activity android:name=".activity.connection.AddPeopleActivity"></activity>
         <!-- 人脉中心 -->
         <activity android:name=".activity.connection.PeopleCenterActivity"></activity>
+        <!-- 我的关注 -->
+        <activity android:name=".activity.connection.MyFollowActivity"></activity>
+        <!-- 我的消息 -->
+        <activity android:name=".activity.connection.MyInformationActivity"></activity>
+        <!-- 学校 家乡 -->
+        <activity android:name=".activity.connection.SchoolHometownActivity"></activity>
+        <!-- 发布消息-->
+        <activity android:name=".activity.connection.SendInformationActivity"></activity>
+        <!-- 简介 -->
+        <activity android:name=".activity.connection.IntroduceActivity"></activity>
+        <!-- 名人 -->
+        <activity android:name=".activity.connection.FamousPersonActivity"></activity>
+        <!-- 社团 -->
+        <activity android:name=".activity.connection.SchoolClubActivity"></activity>
+        <!-- 商会 -->
+        <activity android:name=".activity.connection.BusinessClubActivity"></activity>
 
         <!-- 微信入口 -->
         <activity
