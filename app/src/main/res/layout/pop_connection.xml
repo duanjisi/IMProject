@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/pop_layout"
+        android:layout_width="150dp"
+        android:layout_height="115.5dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5.5dp"
+        android:background="@drawable/hp_red_frame"
+        android:orientation="vertical">
+        <TextView
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="17.6sp"
+            android:id="@+id/tv_add_people"
+            android:clickable="true"
+            android:layout_gravity="center"
+            android:text="添加人脉"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp" />
+        <View
+            android:layout_marginRight="15.4dp"
+            android:layout_marginLeft="15.4dp"
+            android:background="@color/pop_line_red"
+            android:layout_width="match_parent"
+            android:layout_height="0.55dp"/>
+        <TextView
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="17.6sp"
+            android:id="@+id/tv_personal_center"
+            android:clickable="true"
+            android:layout_gravity="center"
+            android:text="人脉中心"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="0dp" />
+        </LinearLayout>
+
+
+
+</RelativeLayout>
