@@ -1,5 +1,6 @@
 package im.boss66.com.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
+import im.boss66.com.activity.connection.SchoolHometownActivity;
 import im.boss66.com.adapter.MyHometownAdapter;
 import im.boss66.com.adapter.MySchoolAdapter;
 import im.boss66.com.entity.MySchool;
@@ -79,7 +81,9 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         mySchoolAdapter.setItemListener(new RecycleViewItemListener() {
             @Override
             public void onItemClick(int position) {
-                ToastUtil.show(getActivity(),position+"", Toast.LENGTH_SHORT);
+                Intent intent = new Intent(getActivity(), SchoolHometownActivity.class);
+                intent.putExtra("isSchool",true);
+                startActivity(intent);
             }
 
             @Override
@@ -96,7 +100,10 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         myHometownAdapter.setItemListener(new RecycleViewItemListener() {
             @Override
             public void onItemClick(int position) {
-                ToastUtil.show(getActivity(),position+"", Toast.LENGTH_SHORT);
+                Intent intent = new Intent(getActivity(), SchoolHometownActivity.class);
+                intent.putExtra("isSchool",false);
+                startActivity(intent);
+
             }
 
             @Override

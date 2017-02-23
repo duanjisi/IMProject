@@ -52,6 +52,8 @@ public class MainActivity extends BaseActivity implements Observer {
 //    private RelativeLayout rl_top_bar;
 //    private String userid, uid;
 
+    private PeopleDataDialog peopleDataDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +89,7 @@ public class MainActivity extends BaseActivity implements Observer {
         Intent intent = new Intent(context, ChatServices.class);
         intent.putExtra("userid", account.getUser_id());
         startService(intent);
+
 //        insertDatas();
     }
 
@@ -368,7 +371,15 @@ public class MainActivity extends BaseActivity implements Observer {
                     break;
                 case R.id.rb_contact:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_3);
-                    new PeopleDataDialog(context).show();
+                   if(peopleDataDialog==null){
+                       peopleDataDialog = new PeopleDataDialog(MainActivity.this);
+                       peopleDataDialog.show();
+                   }else{
+                       if(!peopleDataDialog.isShowing()){
+                           peopleDataDialog.show();
+
+                       }
+                   }
                     break;
                 case R.id.rb_discover:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_4);

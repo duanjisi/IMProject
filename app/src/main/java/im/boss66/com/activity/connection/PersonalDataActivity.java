@@ -12,6 +12,7 @@ import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 
 /**
+ * 完善资料
  * Created by admin on 2017/2/20.
  */
 public class PersonalDataActivity extends ABaseActivity implements View.OnClickListener {

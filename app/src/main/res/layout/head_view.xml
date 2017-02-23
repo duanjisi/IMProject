@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rl_head_view"
+    android:id="@+id/rl_top_bar"
     android:layout_width="match_parent"
     android:layout_height="50dip"
     android:background="@color/top_bar_color">
@@ -34,6 +34,6 @@
         android:layout_centerVertical="true"
         android:paddingLeft="16dp"
         android:paddingRight="11dp"
-        android:src="@drawable/sp_add" />
+        android:src="@drawable/hp_chat_more" />
 </RelativeLayout>
 

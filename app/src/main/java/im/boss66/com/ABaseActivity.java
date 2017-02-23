@@ -23,9 +23,7 @@ public class ABaseActivity extends BaseActivity {
     }
 
 
-    protected void goBack(){
-        finish();
-    }
+
 
 
 }

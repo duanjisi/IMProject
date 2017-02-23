@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -28,45 +29,36 @@
             android:paddingRight="11dp"
             android:src="@drawable/hp_chat_more" />
     </RelativeLayout>
-    <LinearLayout
-        android:orientation="vertical"
-        android:background="@color/college_background"
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="29dp">
-        <TextView
-            android:layout_marginTop="5.5dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/hint_text_color"
-            android:text="我的学校"
-            android:textSize="15.4sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingTop="5.5dp"
+        android:text="我的学校"
+        android:textColor="@color/hint_text_color"
+        android:textSize="15.4sp" />
 
 
-    </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcv_mySchool"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     </android.support.v7.widget.RecyclerView>
-    <LinearLayout
-        android:orientation="vertical"
-        android:background="@color/college_background"
-        android:layout_width="match_parent"
-        android:layout_height="29dp">
-        <TextView
-            android:layout_marginTop="5.5dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/hint_text_color"
-            android:text="我的家乡"
-            android:textSize="15.4sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
-    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/college_background"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingTop="5.5dp"
+        android:text="我的家乡"
+        android:textColor="@color/hint_text_color"
+        android:textSize="15.4sp" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcv_myhome"
         android:layout_width="match_parent"
