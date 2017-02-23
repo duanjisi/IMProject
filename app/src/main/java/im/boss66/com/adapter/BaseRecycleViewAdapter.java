@@ -51,4 +51,13 @@ public abstract class BaseRecycleViewAdapter<T,VH extends RecyclerView.ViewHolde
 
     }
 
+    public void remove(int position) {
+        this.datas.remove(position);
+        notifyItemRemoved(position);
+
+        if(position != (datas.size())){ // 如果移除的是最后一个，忽略
+            notifyItemRangeChanged(position,this.datas.size()-position);
+        }
+    }
+
 }

@@ -136,7 +136,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
             public void onClick(View v) {
                 //删除
                 if (presenter != null) {
-                    presenter.deleteCircle(feed_id);
+                    presenter.deleteCircle(feed_id,position);
                 }
             }
         });

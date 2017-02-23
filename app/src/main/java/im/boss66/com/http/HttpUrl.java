@@ -81,4 +81,10 @@ public class HttpUrl {
     public static final String CREATE_CIRCLE_VIDEO_TX = MAIN_URL + "api/v1/cofriends/createvideo";
     //朋友圈列表
     public static final String FRIEND_CIRCLE_LIST = MAIN_URL + "api/v1/cofriends";
+    //点赞or取消点赞
+    public static final String FRIEND_CIRCLE_PRAISE = MAIN_URL + "api/v1/praise/create";
+    //删除朋友圈
+    public static final String FRIEND_CIRCLE_DELETE = MAIN_URL + "api/v1/cofriends/delete";
+    //获取某条朋友圈的赞列表
+    public static final String FRIEND_CIRCLE_GET_PRAISE_LIST = MAIN_URL + "api/v1/praise";
 }
