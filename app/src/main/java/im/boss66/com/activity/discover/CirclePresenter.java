@@ -41,9 +41,9 @@ public class CirclePresenter implements CircleContractListener.Presenter{
      * @return void    返回类型
      * @throws
      */
-    public void deleteCircle(final int circleId){
+    public void deleteCircle(final int circleId,int postion){
         if(view!=null){
-            view.update2DeleteCircle(circleId);
+            view.update2DeleteCircle(circleId,postion);
         }
     }
     /**

@@ -109,6 +109,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
                 String result = responseInfo.result;
                 if (!TextUtils.isEmpty(result)){
                     try {
@@ -127,13 +128,12 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                 }
-                Log.i("sendPhotoText:","" + responseInfo);
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
                 showToast(s,false);
             }
         });

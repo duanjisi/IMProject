@@ -13,7 +13,7 @@ import im.boss66.com.entity.FriendCircleItem;
 public interface CircleContractListener {
 
     interface View{
-        void update2DeleteCircle(int circleId);
+        void update2DeleteCircle(int circleId,int postion);
         void update2AddFavorite(int circlePosition, int favortId);
         void update2DeleteFavort(int circlePosition, int favortId);
         void update2AddComment(int circlePosition, FriendCircleItem addItem);
@@ -24,7 +24,7 @@ public interface CircleContractListener {
 
     interface Presenter{
         void loadData(int loadType);
-        void deleteCircle(final int circleId);
+        void deleteCircle(final int circleId,int postion);
         void addFavort(final int circlePosition,final int favortId);
         void deleteFavort(final int circlePosition, final int favortId);
         void deleteComment(final int circlePosition, final String commentId);
