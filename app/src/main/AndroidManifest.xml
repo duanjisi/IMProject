@@ -198,7 +198,7 @@
         <!-- 我的关注 -->
         <activity android:name=".activity.connection.MyFollowActivity"></activity>
         <!-- 我的消息 -->
-        <activity android:name=".activity.connection.MyInformationActivity"></activity>
+        <activity android:name=".activity.connection.MyMessageActivity"></activity>
         <!-- 学校 家乡 -->
         <activity android:name=".activity.connection.SchoolHometownActivity"></activity>
         <!-- 发布消息-->

@@ -9,13 +9,14 @@ import android.view.ViewGroup;
 import im.boss66.com.R;
 
 /**
+ * 我关注的同乡
  * Created by liw on 2017/2/22.
  */
 public class MyCountrymanFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_my_countryman,container,false);
+        return inflater.inflate(R.layout.fragment_my_follow,container,false);
     }
 
     @Override

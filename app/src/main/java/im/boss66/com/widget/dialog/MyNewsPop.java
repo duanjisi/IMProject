@@ -5,13 +5,9 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import im.boss66.com.R;
-import im.boss66.com.Utils.ToastUtil;
-import im.boss66.com.activity.connection.AddPeopleActivity;
-import im.boss66.com.activity.connection.MyInformationActivity;
-import im.boss66.com.activity.connection.PeopleCenterActivity;
+import im.boss66.com.activity.connection.MyMessageActivity;
 import im.boss66.com.activity.connection.SendInformationActivity;
 
 /**
@@ -52,7 +48,7 @@ public class MyNewsPop extends BasePopuWindow implements View.OnClickListener {
 
                 break;
             case R.id.tv_personal_center:
-                intent = new Intent(context, MyInformationActivity.class);
+                intent = new Intent(context, MyMessageActivity.class);
                 dismiss();
                 break;
 

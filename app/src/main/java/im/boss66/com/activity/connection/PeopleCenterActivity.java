@@ -66,7 +66,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 startActivity(intent);
                 break;
             case R.id.tv_my_information:
-                intent = new Intent(this, MyInformationActivity.class);
+                intent = new Intent(this, MyMessageActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_change_info:
