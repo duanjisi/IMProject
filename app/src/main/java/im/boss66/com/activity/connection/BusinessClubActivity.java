@@ -21,6 +21,7 @@ import im.boss66.com.fragment.TradeClubFragment;
 import im.boss66.com.widget.ViewpagerIndicatorOver;
 
 /**
+ * 商会
  * Created by liw on 2017/2/22.
  */
 public class BusinessClubActivity extends ABaseActivity implements View.OnClickListener {

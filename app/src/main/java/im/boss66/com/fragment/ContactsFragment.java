@@ -58,9 +58,9 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         MySchool mySchool1 = new MySchool();
         MySchool mySchool2 = new MySchool();
         mySchool1.setSchoolinfo("11111111");
-        mySchool1.setSchoolname("中南林业科技大学");
+        mySchool1.setSchoolname("北京大学");
         mySchool1.setImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1487667055622&di=12bb18bc7c3c34d7b8f189f09857a5a7&imgtype=0&src=http%3A%2F%2Fwww.hhxx.com.cn%2Fuploads%2Fallimg%2F1609%2F276-160Z5150T4410.jpg");
-        mySchool2.setSchoolname("中南林业科技大学");
+        mySchool2.setSchoolname("清华大学");
         mySchool2.setSchoolinfo("22222222");
         mySchool2.setImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1487667055622&di=12bb18bc7c3c34d7b8f189f09857a5a7&imgtype=0&src=http%3A%2F%2Fwww.hhxx.com.cn%2Fuploads%2Fallimg%2F1609%2F276-160Z5150T4410.jpg");
         list.add(mySchool1);

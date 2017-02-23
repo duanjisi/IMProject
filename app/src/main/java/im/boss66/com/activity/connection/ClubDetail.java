@@ -8,21 +8,21 @@ import im.boss66.com.ABaseActivity;
 import im.boss66.com.R;
 
 /**
- * 名人
- * Created by liw on 2017/2/22.
+ * Created by liw on 2017/2/23.
  */
-public class FamousPersonActivity extends ABaseActivity implements View.OnClickListener {
+public class ClubDetail extends ABaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_famous_person);
+        setContentView(R.layout.activity_club_detail);
         initViews();
     }
+
     private void initViews() {
-        tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
-        tv_headcenter_view.setText("名人");
+        tv_headcenter_view.setText("club");
+        tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headlift_view.setOnClickListener(this);
     }
 

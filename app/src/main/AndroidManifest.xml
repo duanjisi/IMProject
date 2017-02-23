@@ -211,6 +211,8 @@
         <activity android:name=".activity.connection.SchoolClubActivity"></activity>
         <!-- 商会 -->
         <activity android:name=".activity.connection.BusinessClubActivity"></activity>
+        <!-- 商会详情 -->
+        <activity android:name=".activity.connection.ClubDetail"></activity>
 
         <!-- 微信入口 -->
         <activity

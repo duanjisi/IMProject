@@ -95,9 +95,11 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         TextView tv_introduce = (TextView) header.findViewById(R.id.tv_introduce);
         TextView tv_famous_person = (TextView) header.findViewById(R.id.tv_famous_person);
         TextView tv_club = (TextView) header.findViewById(R.id.tv_club);
+        TextView tv_follow = (TextView) header.findViewById(R.id.tv_follow);
+        TextView tv_follow_count = (TextView) header.findViewById(R.id.tv_follow_count); //关注人数
+        tv_follow.setOnClickListener(this);
         if(!isSchool){
             tv_club.setText("商会");
-
         }
         TextView tv_news = (TextView) header.findViewById(R.id.tv_news);
         tv_introduce.setOnClickListener(this);
@@ -121,41 +123,43 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         RelativeLayout.LayoutParams linearParams =(RelativeLayout.LayoutParams) iv_bg.getLayoutParams(); //取控件textView当前的布局参数
         linearParams.height = UIUtils.getScreenWidth(context)/3*2;;
         iv_bg.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
+
+
         mLRecyclerViewAdapter.addHeaderView(header);
 
         //rcv设置adapter以及刷新
         rcv_news.setAdapter(mLRecyclerViewAdapter);
         rcv_news.setLoadMoreEnabled(true);
-        rcv_news.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        rcv_news.refreshComplete(15);
-                        ToastUtil.showShort(SchoolHometownActivity.this, "刷新完成");
-                        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
-                        adapter.setDatas(list);
-                        adapter.notifyDataSetChanged();
-                    }
-                }, 1000);
-            }
-        });
-        rcv_news.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        rcv_news.setNoMore(true);
-                        ToastUtil.showShort(SchoolHometownActivity.this, "加载更多");
-                        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
-                        adapter.getDatas().addAll(list);
-                        adapter.notifyDataSetChanged();
-                    }
-                }, 1000);
-            }
-        });
+//        rcv_news.setOnRefreshListener(new OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        rcv_news.refreshComplete(15);
+//                        ToastUtil.showShort(SchoolHometownActivity.this, "刷新完成");
+//                        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
+//                        adapter.setDatas(list);
+//                        adapter.notifyDataSetChanged();
+//                    }
+//                }, 1000);
+//            }
+//        });
+//        rcv_news.setOnLoadMoreListener(new OnLoadMoreListener() {
+//            @Override
+//            public void onLoadMore() {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        rcv_news.setNoMore(true);
+//                        ToastUtil.showShort(SchoolHometownActivity.this, "加载更多");
+//                        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
+//                        adapter.getDatas().addAll(list);
+//                        adapter.notifyDataSetChanged();
+//                    }
+//                }, 1000);
+//            }
+//        });
 
 
     }
@@ -197,6 +201,9 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 break;
             case R.id.tv_headlift_view:
                 finish();
+                break;
+            case R.id.tv_follow:// 关注
+                showToast("关注",false);
                 break;
 
 

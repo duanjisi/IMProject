@@ -22,6 +22,7 @@ import im.boss66.com.fragment.SchoolmateFragment;
 import im.boss66.com.widget.ViewpagerIndicatorOver;
 
 /**
+ * 我的关注
  * Created by liw on 2017/2/22.
  */
 public class MyFollowActivity extends ABaseActivity implements View.OnClickListener {
