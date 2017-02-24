@@ -1,8 +1,11 @@
 package im.boss66.com.activity.connection;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,12 +15,15 @@ import java.util.List;
 
 import im.boss66.com.ABaseActivity;
 import im.boss66.com.R;
+import im.boss66.com.adapter.MySchoolAdapter;
+import im.boss66.com.entity.MySchool;
 import im.boss66.com.fragment.CountrymanFragment;
 import im.boss66.com.fragment.CustomAddFragment;
 import im.boss66.com.fragment.FieldClubFragment;
 import im.boss66.com.fragment.LocalClubFragment;
 import im.boss66.com.fragment.SchoolmateFragment;
 import im.boss66.com.fragment.TradeClubFragment;
+import im.boss66.com.listener.RecycleViewItemListener;
 import im.boss66.com.widget.ViewpagerIndicatorOver;
 
 /**
@@ -25,18 +31,32 @@ import im.boss66.com.widget.ViewpagerIndicatorOver;
  * Created by liw on 2017/2/22.
  */
 public class BusinessClubActivity extends ABaseActivity implements View.OnClickListener {
+    protected RecyclerView rcv_club;
+    protected MySchoolAdapter adapter;
+    protected List<MySchool> list;
 
-    private ViewpagerIndicatorOver vp_indicator; //指示器
-    private ViewPager vp_business;
-    private List<String> titles;
-    private List<Fragment> fragments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business_club);
+        initlist();
         initViews();
 
-        initIndicator();
+
+    }
+    protected void initlist() {
+
+        list = new ArrayList<>();
+        MySchool mySchool1 = new MySchool();
+        MySchool mySchool2 = new MySchool();
+        mySchool1.setSchoolinfo("11111111");
+        mySchool1.setSchoolname("北京大学");
+        mySchool1.setImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1487667055622&di=12bb18bc7c3c34d7b8f189f09857a5a7&imgtype=0&src=http%3A%2F%2Fwww.hhxx.com.cn%2Fuploads%2Fallimg%2F1609%2F276-160Z5150T4410.jpg");
+        mySchool2.setSchoolname("清华大学");
+        mySchool2.setSchoolinfo("22222222");
+        mySchool2.setImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1487667055622&di=12bb18bc7c3c34d7b8f189f09857a5a7&imgtype=0&src=http%3A%2F%2Fwww.hhxx.com.cn%2Fuploads%2Fallimg%2F1609%2F276-160Z5150T4410.jpg");
+        list.add(mySchool1);
+        list.add(mySchool2);
     }
 
 
@@ -46,29 +66,28 @@ public class BusinessClubActivity extends ABaseActivity implements View.OnClickL
         tv_headcenter_view.setText("商会");
         tv_headlift_view.setOnClickListener(this);
 
-        vp_indicator = (ViewpagerIndicatorOver) findViewById(R.id.vp_indicator);
-        vp_business = (ViewPager) findViewById(R.id.vp_business);
+        rcv_club = (RecyclerView) findViewById(R.id.rcv_club);
+
+        adapter = new MySchoolAdapter(this);
+        adapter.setDatas(list); //后期在子类添加数据，刷新页面
+        adapter.setItemListener(new RecycleViewItemListener() {
+            @Override
+            public void onItemClick(int postion) {
+                Intent intent = new Intent(BusinessClubActivity.this, ClubDetailActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public boolean onItemLongClick(int position) {
+                return false;
+            }
+        });
+        rcv_club.setAdapter(adapter);
+        rcv_club.setLayoutManager(new LinearLayoutManager(this));
+
 
     }
 
-    private void initIndicator() {
-        //Viewpager指示器的相关设置
-        titles = Arrays.asList("本地商会","异地商会","行业商会");
-        vp_indicator.setTabItemTitle(titles);
-        vp_indicator.setVisiableTabCount(3);
-        vp_indicator.setColorTabNormal(0xFF000000);
-        vp_indicator.setColorTabSelected(0xFFFD2741);
-        vp_indicator.setWidthIndicatorLine(0.5f);
-        vp_indicator.setLineBold(5);
-
-        fragments = new ArrayList<>();
-        fragments.add(new LocalClubFragment());
-        fragments.add(new FieldClubFragment());
-        fragments.add(new TradeClubFragment());
-        vp_indicator.setViewPager(vp_business,0);
-        vp_indicator.setViewPagerAdapter(getSupportFragmentManager(),fragments);
-
-    }
 
     @Override
     public void onClick(View view) {

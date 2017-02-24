@@ -93,9 +93,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         TextView tv_introduce = (TextView) header.findViewById(R.id.tv_introduce);
         TextView tv_famous_person = (TextView) header.findViewById(R.id.tv_famous_person);
         TextView tv_club = (TextView) header.findViewById(R.id.tv_club);
-        TextView tv_follow = (TextView) header.findViewById(R.id.tv_follow);
-        TextView tv_follow_count = (TextView) header.findViewById(R.id.tv_follow_count); //关注人数
-        tv_follow.setOnClickListener(this);
+
         if(!isSchool){
             tv_club.setText("商会");
         }
@@ -200,9 +198,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             case R.id.tv_headlift_view:
                 finish();
                 break;
-            case R.id.tv_follow:// 关注
-                showToast("关注",false);
-                break;
+
 
 
 

@@ -26,6 +26,7 @@ public class MySchoolmateFragment extends BaseFragment {
     private LRecyclerViewAdapter mLRecyclerViewAdapter;
     private List<MyFollow> datas;
     private MyFollowAdapter adapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
