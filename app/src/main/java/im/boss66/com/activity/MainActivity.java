@@ -1,6 +1,5 @@
 package im.boss66.com.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -84,10 +83,10 @@ public class MainActivity extends BaseActivity implements Observer {
         mViewPager.addOnPageChangeListener(new MyPageChangeListener());
         mViewPager.setCurrentItem(VIEW_PAGER_PAGE_1);
 
-        Intent intent = new Intent(context, ChatServices.class);
-        intent.putExtra("userid", account.getUser_id());
-        startService(intent);
-//        insertDatas();
+//        Intent intent = new Intent(context, ChatServices.class);
+//        intent.putExtra("userid", account.getUser_id());
+//        startService(intent);
+        ChatServices.startChatService(context);
     }
 
     private String groupIcon = "http://pics.sc.chinaz.com/Files/pic/icons128/5858/261.png";

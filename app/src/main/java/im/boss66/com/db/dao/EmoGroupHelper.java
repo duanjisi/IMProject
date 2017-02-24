@@ -95,8 +95,10 @@ public class EmoGroupHelper extends ColumnHelper<EmoGroup> {
         if (exist(c)) {
 //            c.moveToFirst();
 //            this.delete(entity.getUser_name());
+            Log.i("info", "====exist:");
             this.update(entity);
         } else {
+            Log.i("info", "========插入:" + entity.getGroup_name());
             DBHelper.getInstance(mContext).insert(EmoGroupColumn.TABLE_NAME, getValues(entity));
         }
         c.close();
@@ -128,6 +130,7 @@ public class EmoGroupHelper extends ColumnHelper<EmoGroup> {
                         + " = ? ", new String[]{cateId});
         List<EmoGroup> bos = new ArrayList<EmoGroup>();
         if (exist(c, mContext)) {
+            Log.i("info", "====count:" + c.getCount());
             c.moveToFirst();
             do {
                 bos.add(getBean(c));

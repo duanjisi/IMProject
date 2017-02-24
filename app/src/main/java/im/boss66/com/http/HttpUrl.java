@@ -48,6 +48,8 @@ public class HttpUrl {
     //表情商店搜索
     public static final String EMO_STORE_SEARCH_URL = MAIN_URL + "api/v1/store/search";
 
+    //表情编码解析
+    public static final String EMO_PARSE_URL = MAIN_URL + "api/v1/pack/topath";
     //获取表情收藏
     public static final String EMO_COLLECTIONS_URL = MAIN_URL + "api/v1/collect";
     //添加收藏表情

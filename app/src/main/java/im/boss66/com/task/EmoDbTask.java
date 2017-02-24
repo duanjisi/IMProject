@@ -61,6 +61,7 @@ public class EmoDbTask extends AsyncTask<Void, Integer, Long> {
             if (classes != null) {
                 ArrayList<EmoCate> cates = classes.getCategory();
                 if (cates.size() != 0) {
+                    Log.i("info", "=====开始保存:" + classes.getCreatetime());
                     EmoCateHelper.getInstance().save(cates);
                 }
             }

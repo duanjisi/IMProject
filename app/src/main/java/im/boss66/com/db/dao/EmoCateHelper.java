@@ -83,11 +83,14 @@ public class EmoCateHelper extends ColumnHelper<EmoCate> {
         String[] args = new String[]{entity.getCate_id()};
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
                 getSelectSql(EmoCateColumn.TABLE_NAME, new String[]{EmoCateColumn.EMO_CATE_ID}), args);
-        if (exist(c)) {
-//            c.moveToFirst();
-//            this.delete(entity.getUser_name());
-            this.update(entity);
-        } else {
+//        if (exist(c)) {
+////            c.moveToFirst();
+////            this.delete(entity.getUser_name());
+//            this.update(entity);
+//        } else {
+//            DBHelper.getInstance(mContext).insert(EmoCateColumn.TABLE_NAME, getValues(entity));
+//        }
+        if (!exist(c)){
             DBHelper.getInstance(mContext).insert(EmoCateColumn.TABLE_NAME, getValues(entity));
         }
         c.close();

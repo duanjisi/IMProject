@@ -10,6 +10,7 @@ import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.activity.LoginActivity;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.services.ChatServices;
 import im.boss66.com.widget.ActionSheet;
 
 /**
@@ -91,6 +92,7 @@ public class PersonalSetActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(int which) {//退出登录
         App.getInstance().logout();
+        ChatServices.startChatService(context);
         Session.getInstance().exitActivitys();
         openActivity(LoginActivity.class);
         finish();

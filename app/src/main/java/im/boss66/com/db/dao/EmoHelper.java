@@ -133,6 +133,21 @@ public class EmoHelper extends ColumnHelper<EmoEntity> {
         return bos;
     }
 
+    public EmoEntity queryByCode(String code) {//根据分类id查询组
+        Cursor c = DBHelper.getInstance(mContext).rawQuery(
+                "SELECT * FROM " + EmoColumn.TABLE_NAME + " WHERE " + EmoColumn.EMO_CODE
+                        + " = ? ", new String[]{code});
+        EmoEntity entity = null;
+        if (exist(c, mContext)) {
+            c.moveToFirst();
+            if (c.getCount() == 1) {
+                entity = getBean(c);
+            }
+        }
+        c.close();
+        return entity;
+    }
+
     public void deleteByCateId(String cateId) {//根据分类id删除表情
         DBHelper.getInstance(mContext).delete(EmoColumn.TABLE_NAME, EmoColumn.EMO_CATE_ID + " = ?",
                 new String[]{cateId});
