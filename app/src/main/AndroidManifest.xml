@@ -212,7 +212,7 @@
         <!-- 商会 -->
         <activity android:name=".activity.connection.BusinessClubActivity"></activity>
         <!-- 商会详情 -->
-        <activity android:name=".activity.connection.ClubDetail"></activity>
+        <activity android:name=".activity.connection.ClubDetailActivity"></activity>
 
         <!-- 微信入口 -->
         <activity

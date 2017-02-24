@@ -54,7 +54,6 @@ public class MyMessageActivity extends ABaseActivity implements View.OnClickList
             myMessage.setTv3("2017.2.23");
             datas.add(myMessage);
         }
-        Log.i("liw", datas.toString());
 
 
     }

@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import im.boss66.com.R;
-import im.boss66.com.activity.connection.ClubDetail;
+import im.boss66.com.activity.connection.ClubDetailActivity;
 import im.boss66.com.entity.MySchool;
 
 /**
@@ -48,7 +47,7 @@ public class LocalClubFragment extends ClubBaseFragment {
 
     @Override
     protected void click() {
-        Intent intent = new Intent(getActivity(), ClubDetail.class);
+        Intent intent = new Intent(getActivity(), ClubDetailActivity.class);
         startActivity(intent);
     }
 }

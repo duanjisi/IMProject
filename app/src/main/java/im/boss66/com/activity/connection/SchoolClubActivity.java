@@ -62,7 +62,7 @@ public class SchoolClubActivity extends ABaseActivity implements View.OnClickLis
         adapter.setItemListener(new RecycleViewItemListener() {
             @Override
             public void onItemClick(int postion) {
-                Intent intent = new Intent(SchoolClubActivity.this, ClubDetail.class);
+                Intent intent = new Intent(SchoolClubActivity.this, ClubDetailActivity.class);
                 startActivity(intent);
             }
 

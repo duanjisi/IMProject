@@ -10,7 +10,7 @@ import im.boss66.com.R;
 /**
  * Created by liw on 2017/2/23.
  */
-public class ClubDetail extends ABaseActivity implements View.OnClickListener {
+public class ClubDetailActivity extends ABaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

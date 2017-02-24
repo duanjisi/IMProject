@@ -28,9 +28,7 @@ import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.adapter.FriendCircleAdapter;
 import im.boss66.com.entity.CircleItem;
 import im.boss66.com.entity.CommentConfig;
-import im.boss66.com.entity.FavortItem;
 import im.boss66.com.entity.FriendCircleItem;
-import im.boss66.com.entity.FriendCircleTestData;
 import im.boss66.com.listener.CircleContractListener;
 import im.boss66.com.widget.dialog.MyNewsPop;
 
@@ -38,7 +36,7 @@ import im.boss66.com.widget.dialog.MyNewsPop;
  * 学校和家乡类
  * Created by liw on 2017/2/22.
  */
-public class SchoolHometownActivity extends ABaseActivity implements View.OnClickListener, CircleContractListener.View {
+public class SchoolHometownActivity extends ABaseActivity implements View.OnClickListener {
     private MyNewsPop myNewsPop;
     private RelativeLayout rl_top_bar;
     private boolean isSchool; // 是否是学校
@@ -110,10 +108,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
 
 
         // 回调接口和adapter设置
-        presenter = new CirclePresenter(this);
+//        presenter = new CirclePresenter(this);
 //        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
         adapter = new FriendCircleAdapter(this);
-        adapter.setCirclePresenter(presenter);
+//        adapter.setCirclePresenter(presenter);
 //        adapter.setDatas(list);
         mLRecyclerViewAdapter = new LRecyclerViewAdapter(adapter);
 
@@ -220,38 +218,4 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     }
 
 
-    @Override
-    public void update2DeleteCircle(int circleId, int postion) {
-
-    }
-
-    @Override
-    public void update2AddFavorite(int circlePosition, int favortId) {
-
-    }
-
-    @Override
-    public void update2DeleteFavort(int circlePosition, int favortId) {
-
-    }
-
-    @Override
-    public void update2AddComment(int circlePosition, FriendCircleItem addItem) {
-        ToastUtil.showShort(this, "评论");
-    }
-
-    @Override
-    public void update2DeleteComment(int circlePosition, String commentId) {
-        ToastUtil.showShort(this, "删除评论");
-    }
-
-    @Override
-    public void updateEditTextBodyVisible(int visibility, CommentConfig commentConfig) {
-        ToastUtil.showShort(this, "评论--键盘--" + visibility + ":" + commentConfig.toString());
-    }
-
-    @Override
-    public void update2loadData(int loadType, List<CircleItem> datas) {
-
-    }
 }
