@@ -185,6 +185,39 @@
         <activity android:name=".activity.connection.AddPeopleActivity"></activity>
         <!-- 人脉中心 -->
         <activity android:name=".activity.connection.PeopleCenterActivity"></activity>
+        <!-- 设置-地区-省 -->
+        <activity android:name=".activity.personage.PersonalAreaProvinceActivity"></activity>
+        <!-- 设置-地区-市 -->
+        <activity android:name=".activity.personage.PersonalAreaCityActivity"></activity>
+        <!-- 设置-地区-区 -->
+        <activity android:name=".activity.personage.PersonalAreaDistrictActivity"></activity>
+        <!-- 设置-更换手机号 -->
+        <activity android:name=".activity.personage.ChanePhoneNumActivity"></activity>
+        <activity android:name=".activity.personage.ChangePhoneSmsActivity"></activity>
+        <!-- 设置-更换手机号-填写验证码 -->
+        <activity android:name=".activity.personage.PersonalInputSmsActivity"></activity>
+        <!-- 设置-更换手机号-验证原手机 -->
+        <activity android:name=".activity.personage.VerifyOldPhoneActivity"></activity>
+        <!-- 朋友圈发消息 -->
+        <activity android:name=".activity.discover.FriendSendNewMsgActivity"></activity>
+        <!-- 我的关注 -->
+        <activity android:name=".activity.connection.MyFollowActivity"></activity>
+        <!-- 我的消息 -->
+        <activity android:name=".activity.connection.MyMessageActivity"></activity>
+        <!-- 学校 家乡 -->
+        <activity android:name=".activity.connection.SchoolHometownActivity"></activity>
+        <!-- 发布消息-->
+        <activity android:name=".activity.connection.SendInformationActivity"></activity>
+        <!-- 简介 -->
+        <activity android:name=".activity.connection.IntroduceActivity"></activity>
+        <!-- 名人 -->
+        <activity android:name=".activity.connection.FamousPersonActivity"></activity>
+        <!-- 社团 -->
+        <activity android:name=".activity.connection.SchoolClubActivity"></activity>
+        <!-- 商会 -->
+        <activity android:name=".activity.connection.BusinessClubActivity"></activity>
+        <!-- 商会详情 -->
+        <activity android:name=".activity.connection.ClubDetailActivity"></activity>
 
         <!-- 微信入口 -->
         <activity

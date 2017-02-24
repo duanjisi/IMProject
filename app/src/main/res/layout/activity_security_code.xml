@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_title"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_14"
+        android:gravity="center"
+        android:textColor="@color/semi_transparent"
+        android:text="@string/message_authentication_code_has_sent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp_14"
+            android:textColor="@color/semi_transparent"
+            android:textSize="@dimen/sp_16"
+            android:text="@string/phone_num"/>
+
+        <TextView
+            android:id="@+id/tv_phone_num"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp_6"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="@dimen/dp_14"
+        android:background="@color/bt_bg_gray"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp_14"
+            android:paddingTop="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_10"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"
+            android:text="@string/sms_code"/>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/bt_bg_gray"/>
+
+        <EditText
+            android:id="@+id/et_phone_num"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:paddingLeft="@dimen/dp_6"
+            android:hint="@string/input_sms_code"
+            android:textColorHint="@color/ios7_white"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_greet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_22"
+        android:paddingTop="@dimen/dp_14"
+        android:paddingBottom="@dimen/dp_14"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:background="@drawable/selector_nearby_bt_greet"
+        android:textColor="@drawable/selector_textcolor_white_gary"
+        android:text="@string/submit"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_repeat_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_18"
+        android:padding="@dimen/dp_6"
+        android:gravity="center"
+        android:text="@string/not_get_verification_code"
+        android:textColor="@color/text_light_gray"/>
+
+</LinearLayout>

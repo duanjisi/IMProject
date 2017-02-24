@@ -129,7 +129,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
                     android:layout_toRightOf="@+id/iv_richScan"
-                    android:text="小6号"
+                    android:text="@string/app_num"
                     android:textColor="@color/black"
                     android:textSize="18.7sp" />
 

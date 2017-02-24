@@ -81,52 +81,52 @@ public class FriendCircleTestData {
         users.add(user7);
 
         PhotoInfo p1 = new PhotoInfo();
-        p1.url = "http://f.hiphotos.baidu.com/image/pic/item/faf2b2119313b07e97f760d908d7912396dd8c9c.jpg";
+        p1.file_url = "http://f.hiphotos.baidu.com/image/pic/item/faf2b2119313b07e97f760d908d7912396dd8c9c.jpg";
         p1.w = 640;
         p1.h = 792;
 
         PhotoInfo p2 = new PhotoInfo();
-        p2.url = "http://g.hiphotos.baidu.com/image/pic/item/4b90f603738da977c76ab6fab451f8198718e39e.jpg";
+        p2.file_url = "http://g.hiphotos.baidu.com/image/pic/item/4b90f603738da977c76ab6fab451f8198718e39e.jpg";
         p2.w = 640;
         p2.h = 792;
 
         PhotoInfo p3 = new PhotoInfo();
-        p3.url = "http://e.hiphotos.baidu.com/image/pic/item/902397dda144ad343de8b756d4a20cf430ad858f.jpg";
+        p3.file_url = "http://e.hiphotos.baidu.com/image/pic/item/902397dda144ad343de8b756d4a20cf430ad858f.jpg";
         p3.w = 950;
         p3.h = 597;
 
         PhotoInfo p4 = new PhotoInfo();
-        p4.url = "http://a.hiphotos.baidu.com/image/pic/item/a6efce1b9d16fdfa0fbc1ebfb68f8c5495ee7b8b.jpg";
+        p4.file_url = "http://a.hiphotos.baidu.com/image/pic/item/a6efce1b9d16fdfa0fbc1ebfb68f8c5495ee7b8b.jpg";
         p4.w = 533;
         p4.h = 800;
 
         PhotoInfo p5 = new PhotoInfo();
-        p5.url = "http://b.hiphotos.baidu.com/image/pic/item/a71ea8d3fd1f4134e61e0f90211f95cad1c85e36.jpg";
+        p5.file_url = "http://b.hiphotos.baidu.com/image/pic/item/a71ea8d3fd1f4134e61e0f90211f95cad1c85e36.jpg";
         p5.w = 700;
         p5.h = 467;
 
         PhotoInfo p6 = new PhotoInfo();
-        p6.url = "http://c.hiphotos.baidu.com/image/pic/item/7dd98d1001e939011b9c86d07fec54e737d19645.jpg";
+        p6.file_url = "http://c.hiphotos.baidu.com/image/pic/item/7dd98d1001e939011b9c86d07fec54e737d19645.jpg";
         p6.w = 700;
         p6.h = 467;
 
         PhotoInfo p7 = new PhotoInfo();
-        p7.url = "http://pica.nipic.com/2007-10-17/20071017111345564_2.jpg";
+        p7.file_url = "http://pica.nipic.com/2007-10-17/20071017111345564_2.jpg";
         p7.w = 1024;
         p7.h = 640;
 
         PhotoInfo p8 = new PhotoInfo();
-        p8.url = "http://pic4.nipic.com/20091101/3672704_160309066949_2.jpg";
+        p8.file_url = "http://pic4.nipic.com/20091101/3672704_160309066949_2.jpg";
         p8.w = 1024;
         p8.h = 768;
 
         PhotoInfo p9 = new PhotoInfo();
-        p9.url = "http://pic4.nipic.com/20091203/1295091_123813163959_2.jpg";
+        p9.file_url = "http://pic4.nipic.com/20091203/1295091_123813163959_2.jpg";
         p9.w = 1024;
         p9.h = 640;
 
         PhotoInfo p10 = new PhotoInfo();
-        p10.url = "http://pic31.nipic.com/20130624/8821914_104949466000_2.jpg";
+        p10.file_url = "http://pic31.nipic.com/20130624/8821914_104949466000_2.jpg";
         p10.w = 1024;
         p10.h = 768;
 

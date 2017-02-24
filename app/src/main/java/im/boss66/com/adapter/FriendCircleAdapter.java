@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.R;
-import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UrlUtils;
 import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.activity.discover.ImagePagerActivity;
@@ -27,10 +26,10 @@ import im.boss66.com.adapter.ViewHolder.ImageViewHolder;
 import im.boss66.com.adapter.ViewHolder.URLViewHolder;
 import im.boss66.com.adapter.ViewHolder.VideoViewHolder;
 import im.boss66.com.entity.ActionItem;
-import im.boss66.com.entity.CircleItem;
 import im.boss66.com.entity.CommentConfig;
-import im.boss66.com.entity.FavortItem;
-import im.boss66.com.entity.FriendCircleItem;
+import im.boss66.com.entity.FriendCircleCommentEntity;
+import im.boss66.com.entity.FriendCircleEntity;
+import im.boss66.com.entity.FriendCirclePraiseEntity;
 import im.boss66.com.entity.FriendCircleTestData;
 import im.boss66.com.entity.PhotoInfo;
 import im.boss66.com.widget.CommentListView;
@@ -42,13 +41,17 @@ import im.boss66.com.widget.circle.CommentDialog;
 import im.boss66.com.widget.circle.GlideCircleTransform;
 
 /**
- * Created by GMARUnity on 2017/2/3.
+ * 朋友圈
  */
 public class FriendCircleAdapter extends BaseRecycleViewAdapter {
 
     public static final int HEADVIEW_SIZE = 0;
     private CirclePresenter presenter;
     private Context context;
+    public final int TYPE_URL = 3;
+    public final int TYPE_IMG = 1;
+    public final int TYPE_VIDEO = 2;
+    private String curUserid;
 
     public void setCirclePresenter(CirclePresenter presenter) {
         this.presenter = presenter;
@@ -60,15 +63,14 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
 
     @Override
     public int getItemViewType(int position) {
-
         int itemType = 0;
-        CircleItem item = (CircleItem) datas.get(position);
-        if (CircleItem.TYPE_URL.equals(item.getType())) {
-            itemType = CircleViewHolder.TYPE_URL;
-        } else if (CircleItem.TYPE_IMG.equals(item.getType())) {
+        FriendCircleEntity.FriendCircle entity = (FriendCircleEntity.FriendCircle) datas.get(position);
+        if (entity.getFeed_type() == TYPE_IMG) {
             itemType = CircleViewHolder.TYPE_IMAGE;
-        } else if (CircleItem.TYPE_VIDEO.equals(item.getType())) {
+        } else if (entity.getFeed_type() == TYPE_VIDEO) {
             itemType = CircleViewHolder.TYPE_VIDEO;
+        } else if (entity.getFeed_type() == TYPE_URL) {
+            itemType = CircleViewHolder.TYPE_URL;
         }
         return itemType;
     }
@@ -88,40 +90,43 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
         return viewHolder;
     }
 
+
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
+    public void onBindItemHolder(RecyclerView.ViewHolder viewHolder, final int position) {
+
+        final FriendCircleEntity.FriendCircle entity = (FriendCircleEntity.FriendCircle) datas.get(position);
+        final List<FriendCirclePraiseEntity> praise_list = entity.getPraise_list();//点赞列表
+        final List<FriendCircleCommentEntity> comment_list = entity.getComment_list();//评论列表
+        final int feed_id = entity.getFeed_id();
+        String name = entity.getFeed_username();
+        String headImg = entity.getFeed_avatar();
+        String content = entity.getContent();
+        String createTime = entity.getAdd_time();
+        boolean hasFavort = entity.hasFavort();
+        boolean hasComment = entity.hasComment();
 
         final int circlePosition = position - HEADVIEW_SIZE;
         final CircleViewHolder holder = (CircleViewHolder) viewHolder;
-        final CircleItem circleItem = (CircleItem) datas.get(circlePosition);
-        final String circleId = circleItem.getId();
-        String name = circleItem.getUser().getNick();
-        String headImg = circleItem.getUser().getHeadUrl();
-        final String content = circleItem.getContent();
-        String createTime = circleItem.getCreateTime();
-        final List<FavortItem> favortDatas = circleItem.getFavorters();
-        final List<FriendCircleItem> commentsDatas = circleItem.getComments();
-        boolean hasFavort = circleItem.hasFavort();
-        boolean hasComment = circleItem.hasComment();
 
-        Glide.with(context).load(headImg).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.color.bg_gray).transform(new GlideCircleTransform(context)).into(holder.headIv);
+        Glide.with(context).load(headImg).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.color.bg_gray).
+                transform(new GlideCircleTransform(context)).into(holder.headIv);
 
         holder.nameTv.setText(name);
         holder.timeTv.setText(createTime);
 
         if (!TextUtils.isEmpty(content)) {
-            holder.contentTv.setExpand(circleItem.isExpand());
+            holder.contentTv.setExpand(entity.isExpand());
             holder.contentTv.setExpandStatusListener(new ExpandTextView.ExpandStatusListener() {
                 @Override
                 public void statusChange(boolean isExpand) {
-                    circleItem.setExpand(isExpand);
+                    entity.setExpand(isExpand);
                 }
             });
             holder.contentTv.setText(UrlUtils.formatUrlString(content));
         }
         holder.contentTv.setVisibility(TextUtils.isEmpty(content) ? View.GONE : View.VISIBLE);
 
-        if (FriendCircleTestData.curUser.getUserId().equals(circleItem.getUser().getUserId())) {
+        if (curUserid.equals(entity.getUser_id())) {
             holder.deleteBtn.setVisibility(View.VISIBLE);
         } else {
             holder.deleteBtn.setVisibility(View.GONE);
@@ -131,7 +136,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
             public void onClick(View v) {
                 //删除
                 if (presenter != null) {
-                    presenter.deleteCircle(circleId);
+                    presenter.deleteCircle(feed_id,position);
                 }
             }
         });
@@ -140,12 +145,12 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                 holder.praiseListView.setOnItemClickListener(new PraiseListView.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {
-                        String userName = favortDatas.get(position).getUser().getNick();
-                        String userId = favortDatas.get(position).getUser().getUserId();
+                        String userName = praise_list.get(position).getUser_name();
+                        String userId = praise_list.get(position).getUser_id();
                         Toast.makeText(context, userName + " &id = " + userId, Toast.LENGTH_SHORT).show();
                     }
                 });
-                holder.praiseListView.setDatas(favortDatas);
+                holder.praiseListView.setDatas(praise_list);
                 holder.praiseListView.setVisibility(View.VISIBLE);
             } else {
                 holder.praiseListView.setVisibility(View.GONE);
@@ -155,8 +160,8 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                 holder.commentList.setOnItemClickListener(new CommentListView.OnItemClickListener() {
                     @Override
                     public void onItemClick(int commentPosition) {
-                        FriendCircleItem commentItem = commentsDatas.get(commentPosition);
-                        if (FriendCircleTestData.curUser.getUserId().equals(commentItem.getUser().getUserId())) {//复制或者删除自己的评论
+                        FriendCircleCommentEntity commentItem = comment_list.get(commentPosition);
+                        if (FriendCircleTestData.curUser.getUserId().equals(commentItem.getUid_from())) {//复制或者删除自己的评论
 
                             CommentDialog dialog = new CommentDialog(context, presenter, commentItem, circlePosition);
                             dialog.show();
@@ -166,7 +171,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                                 config.circlePosition = circlePosition;
                                 config.commentPosition = commentPosition;
                                 config.commentType = CommentConfig.Type.REPLY;
-                                config.replyUser = commentItem.getUser();
+                                config.uid_to_name = commentItem.getUid_to_name();
                                 presenter.showEditTextBody(config);
                             }
                         }
@@ -176,12 +181,12 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                     @Override
                     public void onItemLongClick(int commentPosition) {
                         //长按进行复制或者删除
-                        FriendCircleItem commentItem = commentsDatas.get(commentPosition);
+                        FriendCircleCommentEntity commentItem = comment_list.get(commentPosition);
                         CommentDialog dialog = new CommentDialog(context, presenter, commentItem, circlePosition);
                         dialog.show();
                     }
                 });
-                holder.commentList.setDatas(commentsDatas);
+                holder.commentList.setDatas(comment_list);
                 holder.commentList.setVisibility(View.VISIBLE);
 
             } else {
@@ -196,14 +201,14 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
 
         final SnsPopupWindow snsPopupWindow = holder.snsPopupWindow;
         //判断是否已点赞
-        String curUserFavortId = circleItem.getCurUserFavortId(FriendCircleTestData.curUser.getUserId());
-        if (!TextUtils.isEmpty(curUserFavortId)) {
+        int isPraise = entity.getIs_praise();
+        if (isPraise == 1) {
             snsPopupWindow.getmActionItems().get(0).mTitle = "取消";
         } else {
             snsPopupWindow.getmActionItems().get(0).mTitle = "点赞";
         }
         snsPopupWindow.update();
-        snsPopupWindow.setmItemClickListener(new PopupItemClickListener(circlePosition, circleItem, curUserFavortId));
+        snsPopupWindow.setmItemClickListener(new PopupItemClickListener(circlePosition, entity, feed_id));
         holder.snsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -216,26 +221,29 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
         switch (holder.viewType) {
             case CircleViewHolder.TYPE_URL:// 处理链接动态的链接内容和和图片
                 if (holder instanceof URLViewHolder) {
-                    String linkImg = circleItem.getLinkImg();
-                    String linkTitle = circleItem.getLinkTitle();
-                    Glide.with(context).load(linkImg).into(((URLViewHolder) holder).urlImageIv);
-                    ((URLViewHolder) holder).urlContentTv.setText(linkTitle);
-                    ((URLViewHolder) holder).urlBody.setVisibility(View.VISIBLE);
-                    ((URLViewHolder) holder).urlTipTv.setVisibility(View.VISIBLE);
-                    ((URLViewHolder) holder).urlBody.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(context, WebViewActivity.class);
-                            intent.putExtra("url", circleItem.getVideoUrl());
-                            context.startActivity(intent);
-                        }
-                    });
+                    final List<PhotoInfo> files = entity.getFiles();
+                    if (files != null && files.size() > 0) {
+                        String linkImg = files.get(0).file_url;
+                        Glide.with(context).load(linkImg).into(((URLViewHolder) holder).urlImageIv);
+                        ((URLViewHolder) holder).urlBody.setVisibility(View.VISIBLE);
+                        ((URLViewHolder) holder).urlTipTv.setVisibility(View.VISIBLE);
+                        ((URLViewHolder) holder).urlBody.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(context, WebViewActivity.class);
+                                intent.putExtra("url", files.get(0).file_url);
+                                context.startActivity(intent);
+                            }
+                        });
+                    }
+                    //String linkTitle = circleItem.getLinkTitle();
+                    //((URLViewHolder) holder).urlContentTv.setText(linkTitle);
                 }
 
                 break;
             case CircleViewHolder.TYPE_IMAGE:// 处理图片
                 if (holder instanceof ImageViewHolder) {
-                    final List<PhotoInfo> photos = circleItem.getPhotos();
+                    final List<PhotoInfo> photos = entity.getFiles();
                     if (photos != null && photos.size() > 0) {
                         ((ImageViewHolder) holder).multiImageView.setVisibility(View.VISIBLE);
                         ((ImageViewHolder) holder).multiImageView.setList(photos);
@@ -247,11 +255,9 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
 
                                 List<String> photoUrls = new ArrayList<String>();
                                 for (PhotoInfo photoInfo : photos) {
-                                    photoUrls.add(photoInfo.url);
+                                    photoUrls.add(photoInfo.file_url);
                                 }
                                 ImagePagerActivity.startImagePagerActivity(context, photoUrls, position, imageSize);
-
-
                             }
                         });
                     } else {
@@ -262,14 +268,17 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                 break;
             case CircleViewHolder.TYPE_VIDEO:
                 if (holder instanceof VideoViewHolder) {
-                    Glide.with(context).load(circleItem.getVideoImgUrl()).into(((VideoViewHolder) holder).iv_video_bg);
+                    //Glide.with(context).load(circleItem.getVideoImgUrl()).into(((VideoViewHolder) holder).iv_video_bg);
                     ((VideoViewHolder) holder).iv_video_play.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(context, VideoPlayerActivity.class);
-                            intent.putExtra("url", circleItem.getVideoUrl());
-                            intent.putExtra("imgurl", circleItem.getVideoImgUrl());
-                            context.startActivity(intent);
+                            List<PhotoInfo> files = entity.getFiles();
+                            if (files != null && files.size() > 0) {
+                                Intent intent = new Intent(context, VideoPlayerActivity.class);
+                                intent.putExtra("url", files.get(0).file_url);
+                                intent.putExtra("imgurl", "");
+                                context.startActivity(intent);
+                            }
                         }
                     });
                 }
@@ -291,13 +300,13 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
     }
 
     private class PopupItemClickListener implements SnsPopupWindow.OnItemClickListener {
-        private String mFavorId;
+        private int mFavorId;
         //动态在列表中的位置
         private int mCirclePosition;
         private long mLasttime = 0;
-        private CircleItem mCircleItem;
+        private FriendCircleEntity.FriendCircle mCircleItem;
 
-        public PopupItemClickListener(int circlePosition, CircleItem circleItem, String favorId) {
+        public PopupItemClickListener(int circlePosition, FriendCircleEntity.FriendCircle circleItem, int favorId) {
             this.mFavorId = favorId;
             this.mCirclePosition = circlePosition;
             this.mCircleItem = circleItem;
@@ -312,7 +321,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                     mLasttime = System.currentTimeMillis();
                     if (presenter != null) {
                         if ("点赞".equals(actionitem.mTitle.toString())) {
-                            presenter.addFavort(mCirclePosition);
+                            presenter.addFavort(mCirclePosition, mFavorId);
                         } else {//取消点赞
                             presenter.deleteFavort(mCirclePosition, mFavorId);
                         }
@@ -330,6 +339,10 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                     break;
             }
         }
+    }
+
+    public void getCurUserId(String uid) {
+        this.curUserid = uid;
     }
 
 }

@@ -33,7 +33,6 @@ public class CirclePresenter implements CircleContractListener.Presenter{
         }
     }
 
-
     /**
      *
      * @Title: deleteCircle
@@ -42,9 +41,9 @@ public class CirclePresenter implements CircleContractListener.Presenter{
      * @return void    返回类型
      * @throws
      */
-    public void deleteCircle(final String circleId){
+    public void deleteCircle(final int circleId,int postion){
         if(view!=null){
-            view.update2DeleteCircle(circleId);
+            view.update2DeleteCircle(circleId,postion);
         }
     }
     /**
@@ -55,10 +54,10 @@ public class CirclePresenter implements CircleContractListener.Presenter{
      * @return void    返回类型
      * @throws
      */
-    public void addFavort(final int circlePosition){
+    public void addFavort(final int circlePosition,int favortId){
         FavortItem item = new FavortItem();
         if(view !=null ){
-            view.update2AddFavorite(circlePosition, item);
+            view.update2AddFavorite(circlePosition, favortId);
         }
     }
     /**
@@ -70,7 +69,7 @@ public class CirclePresenter implements CircleContractListener.Presenter{
      * @return void    返回类型
      * @throws
      */
-    public void deleteFavort(final int circlePosition, final String favortId){
+    public void deleteFavort(final int circlePosition, final int favortId){
         if(view !=null ){
             view.update2DeleteFavort(circlePosition, favortId);
         }
@@ -94,7 +93,7 @@ public class CirclePresenter implements CircleContractListener.Presenter{
         if (config.commentType == CommentConfig.Type.PUBLIC) {
 
         } else if (config.commentType == CommentConfig.Type.REPLY) {
-            newItem.setToReplyUser(config.replyUser);
+            //newItem.setToReplyUser(config.replyUser);
         }
         if(view!=null){
             view.update2AddComment(config.circlePosition, newItem);

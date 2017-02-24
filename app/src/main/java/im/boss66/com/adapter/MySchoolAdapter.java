@@ -33,7 +33,7 @@ public class MySchoolAdapter extends BaseRecycleViewAdapter{
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindItemHolder(RecyclerView.ViewHolder holder, int position) {
         final MySchoolholder holder1  = (MySchoolholder) holder;
 
         MySchool item = (MySchool)datas.get(position);
@@ -51,7 +51,7 @@ public class MySchoolAdapter extends BaseRecycleViewAdapter{
 
     @Override
     public int getItemCount() {
-        return datas.size();
+        return datas!=null?datas.size():0;
     }
 
     public static class MySchoolholder extends RecyclerView.ViewHolder{

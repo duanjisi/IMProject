@@ -1,5 +1,6 @@
 package im.boss66.com.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -50,6 +51,8 @@ public class MainActivity extends BaseActivity implements Observer {
     //    private ImageView ivSearch, ivAdd;
 //    private RelativeLayout rl_top_bar;
 //    private String userid, uid;
+
+    private PeopleDataDialog peopleDataDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -367,7 +370,15 @@ public class MainActivity extends BaseActivity implements Observer {
                     break;
                 case R.id.rb_contact:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_3);
-                    new PeopleDataDialog(context).show();
+                   if(peopleDataDialog==null){
+                       peopleDataDialog = new PeopleDataDialog(MainActivity.this);
+                       peopleDataDialog.show();
+                   }else{
+                       if(!peopleDataDialog.isShowing()){
+                           peopleDataDialog.show();
+
+                       }
+                   }
                     break;
                 case R.id.rb_discover:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_4);

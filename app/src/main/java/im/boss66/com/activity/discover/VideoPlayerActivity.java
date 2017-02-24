@@ -29,6 +29,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     private VideoView vv_video;
     private ProgressBar pb_video;
     private ImageView iv_bg;
+    private boolean fullscreen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +42,32 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         pb_video = (ProgressBar) findViewById(R.id.pb_video);
         tv_close = (TextView) findViewById(R.id.tv_close);
         tv_close.setOnClickListener(this);
-        int sceenH = UIUtils.getScreenHeight(this)/10*3;
+        int sceenH = UIUtils.getScreenHeight(this) / 10 * 3;
         Intent intent = getIntent();
         if (intent != null) {
             String url = intent.getStringExtra("url");
             String imgurl = intent.getStringExtra("imgurl");
+            fullscreen = intent.getBooleanExtra("isFull",false);
             vv_video = (VideoView) findViewById(R.id.vv_video);
-            RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) vv_video.getLayoutParams();
-            params.height = sceenH;
-            vv_video.setLayoutParams(params);
+
+            if (!fullscreen) {//设置RelativeLayout的全屏模式
+                RelativeLayout.LayoutParams layoutParams =
+                        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                vv_video.setLayoutParams(layoutParams);
+                fullscreen = true;//改变全屏/窗口的标记
+            } else {//设置RelativeLayout的窗口模式
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) vv_video.getLayoutParams();
+                params.height = sceenH;
+                vv_video.setLayoutParams(params);
+                fullscreen = false;//改变全屏/窗口的标记
+            }
+
             iv_bg = (ImageView) findViewById(R.id.iv_bg);
-            RelativeLayout.LayoutParams params1= (RelativeLayout.LayoutParams) iv_bg.getLayoutParams();
+            RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) iv_bg.getLayoutParams();
             params1.height = sceenH;
             iv_bg.setLayoutParams(params1);
             mediaco = new MediaController(this);

@@ -16,7 +16,7 @@ public class CountrymanFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_countryman, null);
+        return inflater.inflate(R.layout.fragment_add_people, null);
     }
 
     @Override

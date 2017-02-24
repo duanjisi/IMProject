@@ -3,7 +3,6 @@ package im.boss66.com.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +27,12 @@ public class MyHometownAdapter extends BaseRecycleViewAdapter{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        view = LayoutInflater.from(context).inflate(R.layout.my_hometown,parent,false);
+        view = LayoutInflater.from(context).inflate(R.layout.my_shchool,parent,false);
         return new MySchoolholder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindItemHolder(RecyclerView.ViewHolder holder, int position) {
         final MySchoolholder holder1  = (MySchoolholder) holder;
 
         MySchool item = (MySchool)datas.get(position);

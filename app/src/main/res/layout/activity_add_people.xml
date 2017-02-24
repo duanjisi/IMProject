@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:hyman="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/background_color"
     android:layout_height="match_parent">
+
     <include layout="@layout/head_view" />
     
     <im.boss66.com.widget.ViewpagerIndicatorOver

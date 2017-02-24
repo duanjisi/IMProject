@@ -188,6 +188,8 @@ public class ClipImageActivity extends BaseActivity implements View.OnClickListe
                 finish();
             } catch (Exception e) {
                 //Looper.prepare();
+                if (mDialog != null)
+                    mDialog.dismiss();
                 Toast.makeText(ClipImageActivity.this, R.string.msg_could_not_save_photo, Toast.LENGTH_SHORT).show();
                 //Looper.loop();
             } finally {
@@ -305,7 +307,8 @@ public class ClipImageActivity extends BaseActivity implements View.OnClickListe
         private String inputPath;
         private String outputPath;
 
-        private ClipOptions() {}
+        private ClipOptions() {
+        }
 
         public ClipOptions aspectX(int aspectX) {
             this.aspectX = aspectX;
