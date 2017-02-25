@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import im.boss66.com.ABaseActivity;
+import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 
 /**

@@ -2,7 +2,6 @@ package im.boss66.com.activity.connection;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.view.LayoutInflater;
@@ -13,23 +12,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.github.jdsjlzx.interfaces.OnLoadMoreListener;
-import com.github.jdsjlzx.interfaces.OnRefreshListener;
 import com.github.jdsjlzx.recyclerview.LRecyclerView;
 import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
 
-import java.util.List;
-
-import im.boss66.com.ABaseActivity;
+import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
-import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.adapter.FriendCircleAdapter;
-import im.boss66.com.entity.CircleItem;
-import im.boss66.com.entity.CommentConfig;
-import im.boss66.com.entity.FriendCircleItem;
-import im.boss66.com.listener.CircleContractListener;
 import im.boss66.com.widget.dialog.MyNewsPop;
 
 /**

@@ -2,29 +2,19 @@ package im.boss66.com.activity.connection;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import im.boss66.com.ABaseActivity;
+import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 import im.boss66.com.adapter.MySchoolAdapter;
 import im.boss66.com.entity.MySchool;
-import im.boss66.com.fragment.CountrymanFragment;
-import im.boss66.com.fragment.CustomAddFragment;
-import im.boss66.com.fragment.FieldClubFragment;
-import im.boss66.com.fragment.LocalClubFragment;
-import im.boss66.com.fragment.SchoolmateFragment;
-import im.boss66.com.fragment.TradeClubFragment;
 import im.boss66.com.listener.RecycleViewItemListener;
-import im.boss66.com.widget.ViewpagerIndicatorOver;
 
 /**
  * 商会
