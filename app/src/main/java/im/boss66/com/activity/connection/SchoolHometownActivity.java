@@ -2,7 +2,6 @@ package im.boss66.com.activity.connection;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.view.LayoutInflater;
@@ -13,32 +12,21 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.github.jdsjlzx.interfaces.OnLoadMoreListener;
-import com.github.jdsjlzx.interfaces.OnRefreshListener;
 import com.github.jdsjlzx.recyclerview.LRecyclerView;
 import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
 
-import java.util.List;
-
-import im.boss66.com.ABaseActivity;
+import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
-import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.adapter.FriendCircleAdapter;
-import im.boss66.com.entity.CircleItem;
-import im.boss66.com.entity.CommentConfig;
-import im.boss66.com.entity.FavortItem;
-import im.boss66.com.entity.FriendCircleItem;
-import im.boss66.com.entity.FriendCircleTestData;
-import im.boss66.com.listener.CircleContractListener;
 import im.boss66.com.widget.dialog.MyNewsPop;
 
 /**
  * 学校和家乡类
  * Created by liw on 2017/2/22.
  */
-public class SchoolHometownActivity extends ABaseActivity implements View.OnClickListener, CircleContractListener.View {
+public class SchoolHometownActivity extends ABaseActivity implements View.OnClickListener {
     private MyNewsPop myNewsPop;
     private RelativeLayout rl_top_bar;
     private boolean isSchool; // 是否是学校
@@ -95,9 +83,9 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         TextView tv_introduce = (TextView) header.findViewById(R.id.tv_introduce);
         TextView tv_famous_person = (TextView) header.findViewById(R.id.tv_famous_person);
         TextView tv_club = (TextView) header.findViewById(R.id.tv_club);
+
         if(!isSchool){
             tv_club.setText("商会");
-
         }
         TextView tv_news = (TextView) header.findViewById(R.id.tv_news);
         tv_introduce.setOnClickListener(this);
@@ -108,10 +96,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
 
 
         // 回调接口和adapter设置
-        presenter = new CirclePresenter(this);
+//        presenter = new CirclePresenter(this);
 //        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
         adapter = new FriendCircleAdapter(this);
-        adapter.setCirclePresenter(presenter);
+//        adapter.setCirclePresenter(presenter);
 //        adapter.setDatas(list);
         mLRecyclerViewAdapter = new LRecyclerViewAdapter(adapter);
 
@@ -121,41 +109,43 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         RelativeLayout.LayoutParams linearParams =(RelativeLayout.LayoutParams) iv_bg.getLayoutParams(); //取控件textView当前的布局参数
         linearParams.height = UIUtils.getScreenWidth(context)/3*2;;
         iv_bg.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
+
+
         mLRecyclerViewAdapter.addHeaderView(header);
 
         //rcv设置adapter以及刷新
         rcv_news.setAdapter(mLRecyclerViewAdapter);
         rcv_news.setLoadMoreEnabled(true);
-        rcv_news.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        rcv_news.refreshComplete(15);
-                        ToastUtil.showShort(SchoolHometownActivity.this, "刷新完成");
-                        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
-                        adapter.setDatas(list);
-                        adapter.notifyDataSetChanged();
-                    }
-                }, 1000);
-            }
-        });
-        rcv_news.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        rcv_news.setNoMore(true);
-                        ToastUtil.showShort(SchoolHometownActivity.this, "加载更多");
-                        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
-                        adapter.getDatas().addAll(list);
-                        adapter.notifyDataSetChanged();
-                    }
-                }, 1000);
-            }
-        });
+//        rcv_news.setOnRefreshListener(new OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        rcv_news.refreshComplete(15);
+//                        ToastUtil.showShort(SchoolHometownActivity.this, "刷新完成");
+//                        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
+//                        adapter.setDatas(list);
+//                        adapter.notifyDataSetChanged();
+//                    }
+//                }, 1000);
+//            }
+//        });
+//        rcv_news.setOnLoadMoreListener(new OnLoadMoreListener() {
+//            @Override
+//            public void onLoadMore() {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        rcv_news.setNoMore(true);
+//                        ToastUtil.showShort(SchoolHometownActivity.this, "加载更多");
+//                        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
+//                        adapter.getDatas().addAll(list);
+//                        adapter.notifyDataSetChanged();
+//                    }
+//                }, 1000);
+//            }
+//        });
 
 
     }
@@ -201,6 +191,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
 
 
 
+
         }
 
     }
@@ -213,38 +204,4 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     }
 
 
-    @Override
-    public void update2DeleteCircle(int circleId, int postion) {
-
-    }
-
-    @Override
-    public void update2AddFavorite(int circlePosition, int favortId) {
-
-    }
-
-    @Override
-    public void update2DeleteFavort(int circlePosition, int favortId) {
-
-    }
-
-    @Override
-    public void update2AddComment(int circlePosition, FriendCircleItem addItem) {
-        ToastUtil.showShort(this, "评论");
-    }
-
-    @Override
-    public void update2DeleteComment(int circlePosition, String commentId,boolean isSchool) {
-        ToastUtil.showShort(this, "删除评论");
-    }
-
-    @Override
-    public void updateEditTextBodyVisible(int visibility, CommentConfig commentConfig) {
-        ToastUtil.showShort(this, "评论--键盘--" + visibility + ":" + commentConfig.toString());
-    }
-
-    @Override
-    public void update2loadData(int loadType, List<CircleItem> datas) {
-
-    }
 }

@@ -4,10 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import im.boss66.com.ABaseActivity;
+import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 
 /**
+ * 简介
  * Created by liw on 2017/2/22.
  */
 public class IntroduceActivity extends ABaseActivity implements View.OnClickListener {

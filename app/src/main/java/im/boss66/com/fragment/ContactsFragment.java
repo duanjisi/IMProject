@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -36,8 +37,13 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private PeopleConnectionPop peopleConnectionPop;
     private RelativeLayout rl_top_bar;
     private MySchoolAdapter mySchoolAdapter;
-    private MyHometownAdapter myHometownAdapter;
     private List<MySchool> list;
+
+    private ImageView img_hometown;
+    private TextView tv_hometown_name;
+    private TextView tv_hometown_info;
+    private RelativeLayout rl_my_hometown;
+
 
 
     @Nullable
@@ -58,9 +64,9 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         MySchool mySchool1 = new MySchool();
         MySchool mySchool2 = new MySchool();
         mySchool1.setSchoolinfo("11111111");
-        mySchool1.setSchoolname("中南林业科技大学");
+        mySchool1.setSchoolname("北京大学");
         mySchool1.setImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1487667055622&di=12bb18bc7c3c34d7b8f189f09857a5a7&imgtype=0&src=http%3A%2F%2Fwww.hhxx.com.cn%2Fuploads%2Fallimg%2F1609%2F276-160Z5150T4410.jpg");
-        mySchool2.setSchoolname("中南林业科技大学");
+        mySchool2.setSchoolname("清华大学");
         mySchool2.setSchoolinfo("22222222");
         mySchool2.setImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1487667055622&di=12bb18bc7c3c34d7b8f189f09857a5a7&imgtype=0&src=http%3A%2F%2Fwww.hhxx.com.cn%2Fuploads%2Fallimg%2F1609%2F276-160Z5150T4410.jpg");
         list.add(mySchool1);
@@ -70,7 +76,6 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private void initViews(View view) {
 
         rcv_mySchool = (RecyclerView) view.findViewById(R.id.rcv_mySchool);
-        rcv_myhome = (RecyclerView) view.findViewById(R.id.rcv_myhome);
         iv_add = (ImageView) view.findViewById(R.id.iv_add);
         rl_top_bar = (RelativeLayout) view.findViewById(R.id.rl_top_bar);
         iv_add.setOnClickListener(this);
@@ -95,25 +100,12 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         rcv_mySchool.setAdapter(mySchoolAdapter);
         rcv_mySchool.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        myHometownAdapter = new MyHometownAdapter(getActivity());
-        myHometownAdapter.setDatas(list);
-        myHometownAdapter.setItemListener(new RecycleViewItemListener() {
-            @Override
-            public void onItemClick(int position) {
-                Intent intent = new Intent(getActivity(), SchoolHometownActivity.class);
-                intent.putExtra("isSchool",false);
-                startActivity(intent);
 
-            }
-
-            @Override
-            public boolean onItemLongClick(int position) {
-                return false;
-            }
-        });
-        rcv_myhome.setAdapter(myHometownAdapter);
-        rcv_myhome.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        img_hometown = (ImageView) view.findViewById(R.id.img_hometown);
+        tv_hometown_name = (TextView) view.findViewById(R.id.tv_hometown_name);
+        tv_hometown_info = (TextView) view.findViewById(R.id.tv_hometown_info);
+        rl_my_hometown = (RelativeLayout) view.findViewById(R.id.rl_my_hometown);
+        rl_my_hometown.setOnClickListener(this);
 
 
     }
@@ -132,7 +124,10 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                     }
 
                 }
-
+                break;
+            case R.id.rl_my_hometown:
+                Intent intent = new Intent(getActivity(), SchoolHometownActivity.class);
+                startActivity(intent);
                 break;
         }
     }

@@ -199,7 +199,7 @@
         <!-- 我的关注 -->
         <activity android:name=".activity.connection.MyFollowActivity"></activity>
         <!-- 我的消息 -->
-        <activity android:name=".activity.connection.MyInformationActivity"></activity>
+        <activity android:name=".activity.connection.MyMessageActivity"></activity>
         <!-- 学校 家乡 -->
         <activity android:name=".activity.connection.SchoolHometownActivity"></activity>
         <!-- 发布消息-->
@@ -214,6 +214,8 @@
         <activity android:name=".activity.connection.BusinessClubActivity"></activity>
         <!-- 视频录制 -->
         <activity android:name=".activity.discover.RecordVideoActivity"></activity>
+        <!-- 商会详情 -->
+        <activity android:name=".activity.connection.ClubDetailActivity"></activity>
 
         <!-- 微信入口 -->
         <activity

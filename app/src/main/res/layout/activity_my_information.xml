@@ -46,4 +46,11 @@
             />
     </RelativeLayout>
 
+    <com.github.jdsjlzx.recyclerview.LRecyclerView
+        android:id="@+id/rcv_my_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.github.jdsjlzx.recyclerview.LRecyclerView>
+
 </LinearLayout>

@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="我的关注"
+            android:text="我的发布"
             android:textColor="@color/black"
             android:textSize="17.6dp" />
 
@@ -114,14 +114,14 @@
         android:background="@color/line_school" />
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/college_background"
-        android:paddingLeft="16.5dp"
-        android:paddingTop="11dp"
-        android:text="我的发布"
-        android:textSize="17.6dp" />
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/college_background"-->
+        <!--android:paddingLeft="16.5dp"-->
+        <!--android:paddingTop="11dp"-->
+        <!--android:text="我的发布"-->
+        <!--android:textSize="17.6dp" />-->
 
     <View
         android:layout_width="match_parent"

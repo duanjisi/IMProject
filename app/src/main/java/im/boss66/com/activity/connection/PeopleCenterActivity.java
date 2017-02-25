@@ -6,12 +6,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import im.boss66.com.ABaseActivity;
+import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 
 /**
  * 人脉中心
- * Created by admin on 2017/2/21.
+ * Created by liw on 2017/2/21.
  */
 public class PeopleCenterActivity extends ABaseActivity implements View.OnClickListener {
     private TextView tv_name;
@@ -62,11 +62,11 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.tv_my_follow:
-                intent = new Intent(this, MyFollowActivity.class);
-                startActivity(intent);
+//                intent = new Intent(this, MyFollowActivity.class);
+//                startActivity(intent);
                 break;
             case R.id.tv_my_information:
-                intent = new Intent(this, MyInformationActivity.class);
+                intent = new Intent(this, MyMessageActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_change_info:
