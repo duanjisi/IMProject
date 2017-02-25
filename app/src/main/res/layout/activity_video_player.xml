@@ -27,9 +27,21 @@
         android:id="@+id/tv_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dp_14"
+        android:padding="@dimen/dp_18"
         android:textColor="@color/white"
-        android:textSize="60sp"
-        android:text="×"/>
+        android:textSize="30sp"
+        android:text="╳"/>
+
+    <TextView
+        android:id="@+id/tv_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_14"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/dp_10"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:text="删除"/>
 
 </RelativeLayout>

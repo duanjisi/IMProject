@@ -1,6 +1,7 @@
 package im.boss66.com.widget;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,14 +20,16 @@ import im.boss66.com.entity.PhotoInfo;
 /**
  * Created by GMARUnity on 2017/2/3.
  */
-public class MultiImageView extends LinearLayout{
+public class MultiImageView extends LinearLayout {
 
     public static int MAX_WIDTH = 0;
 
     // 照片的Url列表
     private List<PhotoInfo> imagesList;
 
-    /** 长度 单位为Pixel **/
+    /**
+     * 长度 单位为Pixel
+     **/
     private int pxOneMaxWandH;  // 单张图最大允许宽高
     private int pxMoreWandH = 0;// 多张图的宽高
     private int pxImagePadding = UIUtils.dip2px(getContext(), 3);// 图片间的间距
@@ -38,7 +41,12 @@ public class MultiImageView extends LinearLayout{
     private LinearLayout.LayoutParams rowPara;
 
     private OnItemClickListener mOnItemClickListener;
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+
+    private int fromType = 0;
+
+    private int sceenW;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
 
@@ -50,14 +58,14 @@ public class MultiImageView extends LinearLayout{
         super(context, attrs);
     }
 
-    public void setList(List<PhotoInfo> lists) throws IllegalArgumentException{
-        if(lists==null){
+    public void setList(List<PhotoInfo> lists) throws IllegalArgumentException {
+        if (lists == null) {
             throw new IllegalArgumentException("imageList is null...");
         }
         imagesList = lists;
 
-        if(MAX_WIDTH > 0){
-            pxMoreWandH = (MAX_WIDTH - pxImagePadding*2 )/3; //解决右侧图片和内容对不齐问题
+        if (MAX_WIDTH > 0) {
+            pxMoreWandH = (MAX_WIDTH - pxImagePadding * 2) / 3; //解决右侧图片和内容对不齐问题
             pxOneMaxWandH = MAX_WIDTH * 2 / 3;
             initImageLayoutParams();
         }
@@ -67,11 +75,11 @@ public class MultiImageView extends LinearLayout{
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if(MAX_WIDTH == 0){
+        if (MAX_WIDTH == 0) {
             int width = measureWidth(widthMeasureSpec);
-            if(width>0){
+            if (width > 0) {
                 MAX_WIDTH = width;
-                if(imagesList!=null && imagesList.size()>0){
+                if (imagesList != null && imagesList.size() > 0) {
                     setList(imagesList);
                 }
             }
@@ -82,8 +90,7 @@ public class MultiImageView extends LinearLayout{
     /**
      * Determines the width of this view
      *
-     * @param measureSpec
-     *            A measureSpec packed into an int
+     * @param measureSpec A measureSpec packed into an int
      * @return The width of the view, honoring constraints from measureSpec
      */
     private int measureWidth(int measureSpec) {
@@ -110,8 +117,8 @@ public class MultiImageView extends LinearLayout{
     private void initImageLayoutParams() {
         int wrap = LinearLayout.LayoutParams.WRAP_CONTENT;
         int match = LinearLayout.LayoutParams.MATCH_PARENT;
-
-        onePicPara = new LinearLayout.LayoutParams(wrap, wrap);
+        int wrap_1 = (int) (sceenW / 3 * 0.7);
+        onePicPara = new LinearLayout.LayoutParams(wrap_1, wrap_1);
 
         moreParaColumnFirst = new LinearLayout.LayoutParams(pxMoreWandH, pxMoreWandH);
         morePara = new LinearLayout.LayoutParams(pxMoreWandH, pxMoreWandH);
@@ -124,7 +131,7 @@ public class MultiImageView extends LinearLayout{
     private void initView() {
         this.setOrientation(VERTICAL);
         this.removeAllViews();
-        if(MAX_WIDTH == 0){
+        if (MAX_WIDTH == 0) {
             //为了触发onMeasure()来测量MultiImageView的最大宽度，MultiImageView的宽设置为match_parent
             addView(new View(getContext()));
             return;
@@ -135,12 +142,17 @@ public class MultiImageView extends LinearLayout{
         }
 
         if (imagesList.size() == 1) {
-            addView(createImageView(0, false));
+            PhotoInfo info = imagesList.get(0);
+            if (!info.file_url.contains(".png") || !info.file_url.contains(".jpg") || !info.file_url.contains(".jpeg")) {
+                return;
+            } else {
+                addView(createImageView(0, false));
+            }
         } else {
             int allCount = imagesList.size();
-            if(allCount == 4){
+            if (fromType == 1 && allCount == 4) {
                 MAX_PER_ROW_COUNT = 2;
-            }else{
+            } else {
                 MAX_PER_ROW_COUNT = 3;
             }
             int rowCount = allCount / MAX_PER_ROW_COUNT
@@ -164,7 +176,15 @@ public class MultiImageView extends LinearLayout{
                 int rowOffset = rowCursor * MAX_PER_ROW_COUNT;// 行偏移
                 for (int columnCursor = 0; columnCursor < columnCount; columnCursor++) {
                     int position = columnCursor + rowOffset;
-                    rowLayout.addView(createImageView(position, true));
+                    PhotoInfo info = imagesList.get(position);
+                    String url = info.file_url;
+                    int type = info.type;
+                    if (type != 1 && url != null && !url.contains(".png") && !url.contains(".jpg")
+                            && !url.contains(".jpeg")) {
+                        return;
+                    } else {
+                        rowLayout.addView(createImageView(position, true));
+                    }
                 }
             }
         }
@@ -173,10 +193,10 @@ public class MultiImageView extends LinearLayout{
     private ImageView createImageView(int position, final boolean isMultiImage) {
         PhotoInfo photoInfo = imagesList.get(position);
         ImageView imageView = new ColorFilterImageView(getContext());
-        if(isMultiImage){
+        if (isMultiImage) {
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setLayoutParams(position % MAX_PER_ROW_COUNT == 0 ?moreParaColumnFirst : morePara);
-        }else {
+            imageView.setLayoutParams(position % MAX_PER_ROW_COUNT == 0 ? moreParaColumnFirst : morePara);
+        } else {
             imageView.setAdjustViewBounds(true);
             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             //imageView.setMaxHeight(pxOneMaxWandH);
@@ -184,51 +204,71 @@ public class MultiImageView extends LinearLayout{
             int expectW = photoInfo.w;
             int expectH = photoInfo.h;
 
-            if(expectW == 0 || expectH == 0){
+            if (expectW == 0 || expectH == 0) {
                 imageView.setLayoutParams(onePicPara);
-            }else{
+            } else {
                 int actualW = 0;
                 int actualH = 0;
-                float scale = ((float) expectH)/((float) expectW);
-                if(expectW > pxOneMaxWandH){
+                float scale = ((float) expectH) / ((float) expectW);
+                if (expectW > pxOneMaxWandH) {
                     actualW = pxOneMaxWandH;
-                    actualH = (int)(actualW * scale);
-                } else if(expectW < pxMoreWandH){
+                    actualH = (int) (actualW * scale);
+                } else if (expectW < pxMoreWandH) {
                     actualW = pxMoreWandH;
-                    actualH = (int)(actualW * scale);
-                }else{
+                    actualH = (int) (actualW * scale);
+                } else {
                     actualW = expectW;
                     actualH = expectH;
                 }
                 imageView.setLayoutParams(new LinearLayout.LayoutParams(actualW, actualH));
             }
         }
-
-        imageView.setId(photoInfo.file_url.hashCode());
+        if (photoInfo.type == 0) {
+            String url;
+            if (!TextUtils.isEmpty(photoInfo.file_thumb)) {
+                url = photoInfo.file_thumb;
+            } else {
+                url = photoInfo.file_url;
+            }
+            imageView.setId(url.hashCode());
+            Glide.with(getContext()).load(url).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+        } else {
+            imageView.setId(photoInfo.resourceid);
+            Glide.with(getContext()).load(photoInfo.resourceid).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+        }
         imageView.setOnClickListener(new ImageOnClickListener(position));
         imageView.setBackgroundColor(getResources().getColor(R.color.im_font_color_text_hint));
-        Glide.with(getContext()).load(photoInfo.file_url).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+
 
         return imageView;
     }
 
-    private class ImageOnClickListener implements View.OnClickListener{
+    private class ImageOnClickListener implements View.OnClickListener {
 
         private int position;
-        public ImageOnClickListener(int position){
+
+        public ImageOnClickListener(int position) {
             this.position = position;
         }
 
         @Override
         public void onClick(View view) {
-            if(mOnItemClickListener != null){
+            if (mOnItemClickListener != null) {
                 mOnItemClickListener.onItemClick(view, position);
             }
         }
     }
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         public void onItemClick(View view, int position);
+    }
+
+    public void setFromType(int fromType) {
+        this.fromType = fromType;
+    }
+
+    public void setSceenW(int sceenW) {
+        this.sceenW = sceenW;
     }
 
 }

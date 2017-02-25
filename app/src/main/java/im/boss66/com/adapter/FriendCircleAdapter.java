@@ -2,8 +2,11 @@ package im.boss66.com.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.Utils.UrlUtils;
 import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.activity.discover.ImagePagerActivity;
@@ -30,7 +34,6 @@ import im.boss66.com.entity.CommentConfig;
 import im.boss66.com.entity.FriendCircleCommentEntity;
 import im.boss66.com.entity.FriendCircleEntity;
 import im.boss66.com.entity.FriendCirclePraiseEntity;
-import im.boss66.com.entity.FriendCircleTestData;
 import im.boss66.com.entity.PhotoInfo;
 import im.boss66.com.widget.CommentListView;
 import im.boss66.com.widget.ExpandTextView;
@@ -52,6 +55,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
     public final int TYPE_IMG = 1;
     public final int TYPE_VIDEO = 2;
     private String curUserid;
+    private int sceenW;
 
     public void setCirclePresenter(CirclePresenter presenter) {
         this.presenter = presenter;
@@ -59,6 +63,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
 
     public FriendCircleAdapter(Context context) {
         this.context = context;
+        sceenW = UIUtils.getScreenWidth(context);
     }
 
     @Override
@@ -85,7 +90,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
         } else if (viewType == CircleViewHolder.TYPE_IMAGE) {
             viewHolder = new ImageViewHolder(view);
         } else if (viewType == CircleViewHolder.TYPE_VIDEO) {
-            viewHolder = new VideoViewHolder(view);
+            viewHolder = new VideoViewHolder(view,sceenW);
         }
         return viewHolder;
     }
@@ -161,10 +166,9 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                     @Override
                     public void onItemClick(int commentPosition) {
                         FriendCircleCommentEntity commentItem = comment_list.get(commentPosition);
-                        if (FriendCircleTestData.curUser.getUserId().equals(commentItem.getUid_from())) {//复制或者删除自己的评论
-
-                            CommentDialog dialog = new CommentDialog(context, presenter, commentItem, circlePosition);
-                            dialog.show();
+                        String feed_uid = entity.getFeed_uid();
+                        if (entity.getFeed_uid().equals(commentItem.getUid_from())) {//复制或者删除自己的评论
+                            presenter.deleteComment(circlePosition,commentItem.getComm_id(),false);
                         } else {//回复别人的评论
                             if (presenter != null) {
                                 CommentConfig config = new CommentConfig();
@@ -183,9 +187,11 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                         //长按进行复制或者删除
                         FriendCircleCommentEntity commentItem = comment_list.get(commentPosition);
                         CommentDialog dialog = new CommentDialog(context, presenter, commentItem, circlePosition);
+                        dialog.setMfeedId(entity.getFeed_uid());
                         dialog.show();
                     }
                 });
+                holder.commentList.getCurLoginUserId(curUserid);
                 holder.commentList.setDatas(comment_list);
                 holder.commentList.setVisibility(View.VISIBLE);
 
@@ -223,7 +229,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                 if (holder instanceof URLViewHolder) {
                     final List<PhotoInfo> files = entity.getFiles();
                     if (files != null && files.size() > 0) {
-                        String linkImg = files.get(0).file_url;
+                        String linkImg = files.get(0).file_thumb;
                         Glide.with(context).load(linkImg).into(((URLViewHolder) holder).urlImageIv);
                         ((URLViewHolder) holder).urlBody.setVisibility(View.VISIBLE);
                         ((URLViewHolder) holder).urlTipTv.setVisibility(View.VISIBLE);
@@ -246,6 +252,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                     final List<PhotoInfo> photos = entity.getFiles();
                     if (photos != null && photos.size() > 0) {
                         ((ImageViewHolder) holder).multiImageView.setVisibility(View.VISIBLE);
+                        ((ImageViewHolder) holder).multiImageView.setSceenW(sceenW);
                         ((ImageViewHolder) holder).multiImageView.setList(photos);
                         ((ImageViewHolder) holder).multiImageView.setOnItemClickListener(new MultiImageView.OnItemClickListener() {
                             @Override
@@ -257,7 +264,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                                 for (PhotoInfo photoInfo : photos) {
                                     photoUrls.add(photoInfo.file_url);
                                 }
-                                ImagePagerActivity.startImagePagerActivity(context, photoUrls, position, imageSize);
+                                ImagePagerActivity.startImagePagerActivity(context, photoUrls, position, imageSize,false);
                             }
                         });
                     } else {
@@ -269,20 +276,36 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
             case CircleViewHolder.TYPE_VIDEO:
                 if (holder instanceof VideoViewHolder) {
                     //Glide.with(context).load(circleItem.getVideoImgUrl()).into(((VideoViewHolder) holder).iv_video_bg);
-                    ((VideoViewHolder) holder).iv_video_play.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            List<PhotoInfo> files = entity.getFiles();
-                            if (files != null && files.size() > 0) {
-                                Intent intent = new Intent(context, VideoPlayerActivity.class);
-                                intent.putExtra("url", files.get(0).file_url);
-                                intent.putExtra("imgurl", "");
-                                context.startActivity(intent);
+                    String url = entity.getFiles().get(0).file_url;
+                    if (url != null && url.contains(".mp4")){
+                        try {
+                            MediaMetadataRetriever media = new MediaMetadataRetriever();
+                            media.setDataSource(url);
+                            Bitmap bitmap = media.getFrameAtTime();
+                            if (bitmap != null){
+                                ((VideoViewHolder) holder).iv_video_bg.setImageBitmap(bitmap);
                             }
+                        }catch(Exception e){
+                            Log.e("MediaMetadataRetriever",e.toString());
                         }
-                    });
-                }
 
+                        ((VideoViewHolder) holder).iv_video_play.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                List<PhotoInfo> files = entity.getFiles();
+                                if (files != null && files.size() > 0) {
+                                    String url = files.get(0).file_url;
+                                    if (!TextUtils.isEmpty(url) && url.contains(".mp4")){
+                                        Intent intent = new Intent(context, VideoPlayerActivity.class);
+                                        intent.putExtra("url", url);
+                                        intent.putExtra("imgurl", "");
+                                        context.startActivity(intent);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
                 break;
             default:
                 break;
@@ -332,6 +355,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                         CommentConfig config = new CommentConfig();
                         config.circlePosition = mCirclePosition;
                         config.commentType = CommentConfig.Type.PUBLIC;
+                        config.feedid = mFavorId;
                         presenter.showEditTextBody(config);
                     }
                     break;

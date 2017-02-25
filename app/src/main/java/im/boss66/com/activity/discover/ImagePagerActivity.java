@@ -17,6 +17,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -52,12 +54,18 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
     private ArrayList<String> imgUrls;
     private Bitmap bitmap;
     private PhotoView pv_view;
+    private boolean isDelete = false;
+    private ImageAdapter mAdapter;
+    private RelativeLayout rl_title;
+    private TextView tv_back, tv_right;
+    private ViewPager viewPager;
 
-    public static void startImagePagerActivity(Context context, List<String> imgUrls, int position, ImageSize imageSize) {
+    public static void startImagePagerActivity(Context context, List<String> imgUrls, int position, ImageSize imageSize, boolean isDelete) {
         Intent intent = new Intent(context, ImagePagerActivity.class);
-        intent.putStringArrayListExtra(INTENT_IMGURLS, new ArrayList<String>(imgUrls));
+        intent.putStringArrayListExtra(INTENT_IMGURLS, new ArrayList<>(imgUrls));
         intent.putExtra(INTENT_POSITION, position);
         intent.putExtra(INTENT_IMAGESIZE, imageSize);
+        intent.putExtra("isdelete", isDelete);
         context.startActivity(intent);
     }
 
@@ -65,12 +73,29 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_circle_imagepager);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.pager);
         guideGroup = (LinearLayout) findViewById(R.id.guideGroup);
-
+        rl_title = (RelativeLayout) findViewById(R.id.rl_title);
+        tv_back = (TextView) findViewById(R.id.tv_back);
+        tv_right = (TextView) findViewById(R.id.tv_right);
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList("lits",imgUrls);
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
+        tv_right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showActionSheet();
+            }
+        });
         getIntentData();
 
-        ImageAdapter mAdapter = new ImageAdapter(this);
+        mAdapter = new ImageAdapter(this);
         mAdapter.setDatas(imgUrls);
         mAdapter.setImageSize(imageSize);
         viewPager.setAdapter(mAdapter);
@@ -100,9 +125,16 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
     }
 
     private void getIntentData() {
-        startPos = getIntent().getIntExtra(INTENT_POSITION, 0);
-        imgUrls = getIntent().getStringArrayListExtra(INTENT_IMGURLS);
-        imageSize = (ImageSize) getIntent().getSerializableExtra(INTENT_IMAGESIZE);
+        Intent intent = getIntent();
+        if (intent != null) {
+            startPos = intent.getIntExtra(INTENT_POSITION, 0);
+            imgUrls = intent.getStringArrayListExtra(INTENT_IMGURLS);
+            imageSize = (ImageSize) intent.getSerializableExtra(INTENT_IMAGESIZE);
+            this.isDelete = intent.getBooleanExtra("isdelete", false);
+            if (isDelete){
+                rl_title.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void addGuideView(LinearLayout guideGroup, int startPos, ArrayList<String> imgUrls) {
@@ -159,7 +191,6 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
             return datas.size();
         }
 
-
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
             View view = inflater.inflate(R.layout.item_pager_image, container, false);
@@ -168,13 +199,17 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
                 pv_view.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
                     @Override
                     public void onPhotoTap(View view, float x, float y) {
-                        finish();
+                        if (!isDelete) {
+                            finish();
+                        }
                     }
                 });
                 pv_view.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        showActionSheet();
+                        if (!isDelete) {
+                            showActionSheet();
+                        }
                         return false;
                     }
                 });
@@ -243,6 +278,11 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
         }
 
         @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
         public boolean isViewFromObject(View view, Object object) {
             return view.equals(object);
         }
@@ -297,21 +337,44 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
                 .builder()
                 .setCancelable(false)
                 .setCanceledOnTouchOutside(true);
-        actionSheet.addSheetItem(getString(R.string.save_photo), ActionSheet.SheetItemColor.Black,
-                ImagePagerActivity.this);
+        if (isDelete) {
+            actionSheet.setTitle("要删除这张照片吗");
+            actionSheet.addSheetItem("删除", ActionSheet.SheetItemColor.Red,
+                    ImagePagerActivity.this);
+        } else {
+            actionSheet.addSheetItem(getString(R.string.save_photo), ActionSheet.SheetItemColor.Black,
+                    ImagePagerActivity.this);
+        }
         actionSheet.show();
     }
 
     @Override
     public void onClick(int which) {
-        if (pv_view != null) {
-            pv_view.setDrawingCacheEnabled(true);
-            Bitmap bitmap = pv_view.getDrawingCache();
-            FileUtils.saveImageToGallery(this,bitmap);
-            pv_view.setDrawingCacheEnabled(false);
-            ToastUtil.showShort(this, getString(R.string.success_save));
+        if (isDelete) {
+            int page = viewPager.getCurrentItem();
+            if (imgUrls != null){
+                if (imgUrls.size() > 1){
+                    if (imgUrls.size() > page){
+                        imgUrls.remove(page);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }else {
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList("lits",null);
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            }
         } else {
-            ToastUtil.showShort(this, getString(R.string.msg_could_not_save_photo));
+            if (pv_view != null) {
+                pv_view.setDrawingCacheEnabled(true);
+                Bitmap bitmap = pv_view.getDrawingCache();
+                FileUtils.saveImageToGallery(this, bitmap);
+                pv_view.setDrawingCacheEnabled(false);
+                ToastUtil.showShort(this, getString(R.string.success_save));
+            } else {
+                ToastUtil.showShort(this, getString(R.string.msg_could_not_save_photo));
+            }
         }
     }
 }

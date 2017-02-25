@@ -214,7 +214,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
 
 
     @Override
-    public void update2DeleteCircle(int circleId) {
+    public void update2DeleteCircle(int circleId, int postion) {
 
     }
 
@@ -234,7 +234,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     }
 
     @Override
-    public void update2DeleteComment(int circlePosition, String commentId) {
+    public void update2DeleteComment(int circlePosition, String commentId,boolean isSchool) {
         ToastUtil.showShort(this, "删除评论");
     }
 

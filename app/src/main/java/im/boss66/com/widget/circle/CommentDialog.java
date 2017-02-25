@@ -27,6 +27,7 @@ public class CommentDialog extends Dialog implements
     private CirclePresenter mPresenter;
     private FriendCircleCommentEntity mCommentItem;
     private int mCirclePosition;
+    private String mfeedId;
 
     public CommentDialog(Context context, CirclePresenter presenter,
                          FriendCircleCommentEntity commentItem, int circlePosition) {
@@ -63,7 +64,7 @@ public class CommentDialog extends Dialog implements
         copyTv.setOnClickListener(this);
         TextView deleteTv = (TextView) findViewById(R.id.deleteTv);
         if (mCommentItem != null
-                && FriendCircleTestData.curUser.getUserId().equals(
+                && getMfeedId().equals(
                 mCommentItem.getUid_from())) {
             deleteTv.setVisibility(View.VISIBLE);
         } else {
@@ -84,13 +85,21 @@ public class CommentDialog extends Dialog implements
                 break;
             case R.id.deleteTv:
                 if (mPresenter != null && mCommentItem != null) {
-                    mPresenter.deleteComment(mCirclePosition, mCommentItem.getComm_id());
+                    mPresenter.deleteComment(mCirclePosition, mCommentItem.getComm_id(),true);
                 }
                 dismiss();
                 break;
             default:
                 break;
         }
+    }
+
+    public String getMfeedId() {
+        return mfeedId;
+    }
+
+    public void setMfeedId(String mfeedId) {
+        this.mfeedId = mfeedId;
     }
 
 }

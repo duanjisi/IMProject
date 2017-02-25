@@ -75,14 +75,14 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                 finish();
                 break;
             case R.id.tv_photo_album://相册
-                imageName = getNowTime() + ".png";
-                imageUri = Uri
-                        .fromFile(new File(savePath, imageName));
-                Intent intent = new Intent(Intent.ACTION_PICK, null);
-                intent.setDataAndType(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-
-                startActivityForResult(intent, OPEN_ALBUM);
+//                imageName = getNowTime() + ".png";
+//                imageUri = Uri
+//                        .fromFile(new File(savePath, imageName));
+//                Intent intent = new Intent(Intent.ACTION_PICK, null);
+//                intent.setDataAndType(
+//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+//
+//                startActivityForResult(intent, OPEN_ALBUM);
                 break;
             case R.id.tv_take_photos://拍照
                 Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

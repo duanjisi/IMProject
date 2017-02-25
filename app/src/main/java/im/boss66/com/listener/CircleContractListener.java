@@ -17,7 +17,7 @@ public interface CircleContractListener {
         void update2AddFavorite(int circlePosition, int favortId);
         void update2DeleteFavort(int circlePosition, int favortId);
         void update2AddComment(int circlePosition, FriendCircleItem addItem);
-        void update2DeleteComment(int circlePosition, String commentId);
+        void update2DeleteComment(int circlePosition, String commentId,boolean isLong);
         void updateEditTextBodyVisible(int visibility, CommentConfig commentConfig);
         void update2loadData(int loadType, List<CircleItem> datas);
     }
@@ -27,7 +27,7 @@ public interface CircleContractListener {
         void deleteCircle(final int circleId,int postion);
         void addFavort(final int circlePosition,final int favortId);
         void deleteFavort(final int circlePosition, final int favortId);
-        void deleteComment(final int circlePosition, final String commentId);
+        void deleteComment(final int circlePosition, final String commentId,boolean isLong);
 
     }
 

@@ -87,4 +87,10 @@ public class HttpUrl {
     public static final String FRIEND_CIRCLE_DELETE = MAIN_URL + "api/v1/cofriends/delete";
     //获取某条朋友圈的赞列表
     public static final String FRIEND_CIRCLE_GET_PRAISE_LIST = MAIN_URL + "api/v1/praise";
+    //发表/回复评论
+    public static final String FRIEND_CIRCLE_COMMET_CREATE = MAIN_URL + "api/v1/comment/create";
+    //删除评论
+    public static final String FRIEND_CIRCLE_COMMET_DELETE = MAIN_URL + "api/v1/comment/delete";
+    //获取某条朋友圈的评论列表
+    public static final String FRIEND_CIRCLE_GET_COMMENT_LIST = MAIN_URL + "api/v1/comment";
 }

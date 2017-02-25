@@ -210,17 +210,13 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {    //打开相机
-            if (data == null) {
-                return;
-            } else {
-                if (imageUri != null) {
-                    String path = Utils.getPath(this, imageUri);
-                    if (!TextUtils.isEmpty(path)) {
-                        ClipImageActivity.prepare()
-                                .aspectX(2).aspectY(2)//裁剪框横向及纵向上的比例
-                                .inputPath(path).outputPath(mOutputPath)//要裁剪的图片地址及裁剪后保存的地址
-                                .startForResult(this, REQUEST_CLIP_IMAGE);
-                    }
+            if (imageUri != null) {
+                String path = Utils.getPath(this, imageUri);
+                if (!TextUtils.isEmpty(path)) {
+                    ClipImageActivity.prepare()
+                            .aspectX(2).aspectY(2)//裁剪框横向及纵向上的比例
+                            .inputPath(path).outputPath(mOutputPath)//要裁剪的图片地址及裁剪后保存的地址
+                            .startForResult(this, REQUEST_CLIP_IMAGE);
                 }
             }
         } else if (requestCode == OPEN_ALBUM && resultCode == RESULT_OK) { //打开相册
