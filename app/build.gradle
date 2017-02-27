@@ -98,4 +98,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
     compile files('libs/SocialSDK_QQZone_1.jar')
     compile files('libs/umeng_social_sdk.jar')
+    compile 'com.contrarywind:Android-PickerView:3.0.3'
 }
