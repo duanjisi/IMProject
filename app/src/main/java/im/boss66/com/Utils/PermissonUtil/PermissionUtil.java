@@ -37,8 +37,9 @@ public class PermissionUtil {
     // 相机需要权限
     public static final String[] PERMISSIONS_GROUP_CAMERA = {
             Manifest.permission.CAMERA,
-            "android.hardware.camera",
-            "android.hardware.camera.autofocus"};
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     // 录音需要权限
     public static final String[] PERMISSIONS_GROUP_RECORD_AUDIO = {
@@ -87,7 +88,7 @@ public class PermissionUtil {
      */
     public static boolean check(Context context, String... premissions) {
         try {
-            if(null == context)
+            if (null == context)
                 throw new RuntimeException("Context is null.");
             for (int i = 0; i < premissions.length; i++) {
                 Integer check = context.checkPermission(premissions[i],
@@ -98,7 +99,7 @@ public class PermissionUtil {
             }
             return true;
         } catch (Exception e) {
-            Log.e(TAG,e.getMessage(),e);
+            Log.e(TAG, e.getMessage(), e);
             return false;
         }
     }
@@ -290,22 +291,26 @@ public class PermissionUtil {
 
     @TargetApi(value = Build.VERSION_CODES.M)
     public void request(PermissionListener permissionListener) {
-        requestPermissions(object, mRequestCode, mPermissions,permissionListener);
+        requestPermissions(object, mRequestCode, mPermissions, permissionListener);
     }
 
-    private static void requestPermissions(Object obj, int requestCode, String[] permissions,PermissionListener permissionListener) {
+    private static void requestPermissions(Object obj, int requestCode, String[] permissions, PermissionListener permissionListener) {
         if (isOverMarshmallow()) {
-            if (permissions.length > 0) {
-                if (obj instanceof Activity) {
-                    ((Activity) obj).requestPermissions(permissions, requestCode);
-                } else if (obj instanceof Fragment) {
-                    ((Fragment) obj).requestPermissions(permissions, requestCode);
-                } else {
-                    throw new IllegalArgumentException(obj.getClass().getName() + " is not supported");
+            if (check(getContext(obj), permissions)) {
+                permissionListener.onRequestPermissionSuccess();
+            }else {
+                if (permissions.length > 0) {
+                    if (obj instanceof Activity) {
+                        ((Activity) obj).requestPermissions(permissions, requestCode);
+                    } else if (obj instanceof Fragment) {
+                        ((Fragment) obj).requestPermissions(permissions, requestCode);
+                    } else {
+                        throw new IllegalArgumentException(obj.getClass().getName() + " is not supported");
+                    }
                 }
             }
         } else {
-            onRequestPermissionsResult(obj, requestCode, permissions,permissionListener);
+            onRequestPermissionsResult(obj, requestCode, permissions, permissionListener);
         }
     }
 
@@ -316,7 +321,7 @@ public class PermissionUtil {
      * @param requestCode
      * @param permissions
      */
-    public static void onRequestPermissionsResult(Object obj, int requestCode, String[] permissions,PermissionListener permissionListener) {
+    public static void onRequestPermissionsResult(Object obj, int requestCode, String[] permissions, PermissionListener permissionListener) {
         if (check(getContext(obj), permissions)) {
             permissionListener.onRequestPermissionSuccess();
         } else {

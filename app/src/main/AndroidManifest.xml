@@ -220,6 +220,8 @@
         <activity android:name=".activity.connection.SchoolClubActivity"></activity>
         <!-- 商会 -->
         <activity android:name=".activity.connection.BusinessClubActivity"></activity>
+        <!-- 视频录制 -->
+        <activity android:name=".activity.discover.RecordVideoActivity"></activity>
         <!-- 商会详情 -->
         <activity android:name=".activity.connection.ClubDetailActivity"></activity>
 

@@ -6,9 +6,9 @@ package im.boss66.com.entity;
 public class PhotoInfo {
 
     public String file_url;//原图
-    private String file_thumb;//小图
+    public String file_thumb;//小图
     public int resourceid;
     public int w;
     public int h;
-    public int type;//0:加载string url 1:加载resource id
+    public int type;//0:加载string file_url 1:加载resource id
 }

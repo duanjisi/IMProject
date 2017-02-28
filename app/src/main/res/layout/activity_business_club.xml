@@ -1,26 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:hyman="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/head_view" />
 
-    <im.boss66.com.widget.ViewpagerIndicatorOver
-        android:id="@+id/vp_indicator"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        hyman:visiable_tab_count="3">
 
-    </im.boss66.com.widget.ViewpagerIndicatorOver>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp_business"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcv_club"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v4.view.ViewPager>
+    </android.support.v7.widget.RecyclerView>
+
 </LinearLayout>

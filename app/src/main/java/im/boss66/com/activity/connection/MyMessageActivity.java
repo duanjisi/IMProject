@@ -2,11 +2,7 @@ package im.boss66.com.activity.connection;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.jdsjlzx.recyclerview.LRecyclerView;
@@ -15,7 +11,7 @@ import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import im.boss66.com.ABaseActivity;
+import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 import im.boss66.com.adapter.MyMessageAdapter;
 import im.boss66.com.entity.MyMessage;

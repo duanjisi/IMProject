@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import im.boss66.com.ABaseActivity;
+import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 
 /**
@@ -62,8 +62,8 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.tv_my_follow:
-                intent = new Intent(this, MyFollowActivity.class);
-                startActivity(intent);
+//                intent = new Intent(this, MyFollowActivity.class);
+//                startActivity(intent);
                 break;
             case R.id.tv_my_information:
                 intent = new Intent(this, MyMessageActivity.class);

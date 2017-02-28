@@ -1,6 +1,8 @@
 package im.boss66.com.activity.discover;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -24,7 +26,7 @@ import im.boss66.com.activity.base.BaseActivity;
  */
 public class VideoPlayerActivity extends BaseActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener {
 
-    private TextView tv_close;
+    private TextView tv_close,tv_delete;
     private MediaController mediaco;
     private VideoView vv_video;
     private ProgressBar pb_video;
@@ -39,14 +41,21 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void initView() {
+        tv_delete = (TextView) findViewById(R.id.tv_delete);
         pb_video = (ProgressBar) findViewById(R.id.pb_video);
         tv_close = (TextView) findViewById(R.id.tv_close);
         tv_close.setOnClickListener(this);
+        tv_delete.setOnClickListener(this);
         int sceenH = UIUtils.getScreenHeight(this) / 10 * 3;
         Intent intent = getIntent();
         if (intent != null) {
             String url = intent.getStringExtra("url");
             String imgurl = intent.getStringExtra("imgurl");
+            boolean isDelete = intent.getBooleanExtra("isDelete",false);
+            if (isDelete){
+                tv_delete.setVisibility(View.VISIBLE);
+                tv_close.setText("返回");
+            }
             fullscreen = intent.getBooleanExtra("isFull",false);
             vv_video = (VideoView) findViewById(R.id.vv_video);
 
@@ -81,6 +90,14 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 vv_video.requestFocus();
                 if (!TextUtils.isEmpty(imgurl)) {
                     Glide.with(this).load(imgurl).into(iv_bg);
+                }else {
+                    MediaMetadataRetriever media = new MediaMetadataRetriever();
+                    media.setDataSource(url);
+                    Bitmap bitmap = media.getFrameAtTime();
+                    if (bitmap != null){
+                        iv_bg.setImageBitmap(bitmap);
+                    }
+                    media.release();
                 }
             }
         }
@@ -95,6 +112,12 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_close:
+                finish();
+                break;
+            case R.id.tv_delete:
+                Intent intent = new Intent();
+                intent.putExtra("isdelete",true);
+                setResult(RESULT_OK,intent);
                 finish();
                 break;
         }

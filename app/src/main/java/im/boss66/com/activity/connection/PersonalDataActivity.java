@@ -7,9 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import im.boss66.com.ABaseActivity;
+import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
-import im.boss66.com.activity.base.BaseActivity;
 
 /**
  * 完善资料

@@ -2,7 +2,6 @@ package im.boss66.com.activity.discover;
 
 import android.view.View;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.entity.CircleItem;
@@ -10,7 +9,6 @@ import im.boss66.com.entity.CommentConfig;
 import im.boss66.com.entity.FavortItem;
 import im.boss66.com.entity.FriendCircleItem;
 import im.boss66.com.entity.FriendCircleTestData;
-import im.boss66.com.entity.User;
 import im.boss66.com.listener.CircleContractListener;
 
 /**
@@ -109,9 +107,9 @@ public class CirclePresenter implements CircleContractListener.Presenter{
      * @return void    返回类型
      * @throws
      */
-    public void deleteComment(final int circlePosition, final String commentId){
+    public void deleteComment(final int circlePosition, final String commentId,boolean isLong){
         if(view!=null){
-            view.update2DeleteComment(circlePosition, commentId);
+            view.update2DeleteComment(circlePosition, commentId,isLong);
         }
     }
 

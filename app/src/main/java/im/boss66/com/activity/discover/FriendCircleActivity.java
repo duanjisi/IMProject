@@ -1,20 +1,34 @@
 package im.boss66.com.activity.discover;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,28 +49,46 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
+import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
+import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.personage.ClipImageActivity;
 import im.boss66.com.adapter.FriendCircleAdapter;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.CircleCommentListEntity;
 import im.boss66.com.entity.CircleItem;
+import im.boss66.com.entity.CirclePraiseListEntity;
 import im.boss66.com.entity.CommentConfig;
+import im.boss66.com.entity.FriendCircleCommentEntity;
 import im.boss66.com.entity.FriendCircleEntity;
 import im.boss66.com.entity.FriendCircleItem;
+import im.boss66.com.entity.FriendCirclePraiseEntity;
 import im.boss66.com.entity.FriendCircleTestData;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
+import im.boss66.com.http.request.CircleCommentCreateRequest;
+import im.boss66.com.http.request.CircleCommentDeleteRequest;
 import im.boss66.com.http.request.DoPraiseRequest;
 import im.boss66.com.http.request.FriendCircleRequest;
 import im.boss66.com.listener.CircleContractListener;
+import im.boss66.com.listener.PermissionListener;
+import im.boss66.com.util.Utils;
 import im.boss66.com.widget.ActionSheet;
 
 /**
@@ -65,6 +97,11 @@ import im.boss66.com.widget.ActionSheet;
 public class FriendCircleActivity extends BaseActivity implements View.OnClickListener,
         CircleContractListener.View, ActionSheet.OnSheetItemClickListener {
     private final static String TAG = FriendCircleActivity.class.getSimpleName();
+
+    private LinearLayout ll_edit_text;
+    private EditText et_send;
+    private Button bt_send;
+
     private TextView tv_back;
     private ImageView iv_set;
     private LRecyclerView rv_friend;
@@ -90,6 +127,14 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     private int feedId;
     private int curPostion;
     private String access_token;
+    private String commentId;
+    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    private final int OPEN_CAMERA = 1;//相机
+    private final int OPEN_ALBUM = 2;//相册
+    private Uri imageUri;
+    private final int RECORD_VIDEO = 3;//视频
+    private PermissionListener permissionListener;
+    private int cameraType;//1:相机 2：相册 3：视频
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,14 +145,31 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
     private void initView() {
         sceenW = UIUtils.getScreenWidth(context);
+        ll_edit_text = (LinearLayout) findViewById(R.id.ll_edit_text);
+        et_send = (EditText) findViewById(R.id.et_send);
+        bt_send = (Button) findViewById(R.id.bt_send);
         tv_back = (TextView) findViewById(R.id.tv_back);
         iv_set = (ImageView) findViewById(R.id.iv_set);
         rv_friend = (LRecyclerView) findViewById(R.id.rv_friend);
+        ((DefaultItemAnimator) rv_friend.getItemAnimator()).setSupportsChangeAnimations(false);
+
+        rv_friend.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (ll_edit_text.getVisibility() == View.VISIBLE) {
+                    updateEditTextBodyVisible(View.GONE, null);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         //设置为垂直布局，这也是默认的
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         //设置布局管理器
         rv_friend.setLayoutManager(layoutManager);
+        bt_send.setOnClickListener(this);
         iv_set.setOnClickListener(this);
         iv_set.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -170,7 +232,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        rv_friend.refreshComplete(15);
+                        rv_friend.refreshComplete(20);
                         ToastUtil.showShort(FriendCircleActivity.this, "刷新完成");
                         isOnRefresh = true;
                         isAddNew = false;
@@ -222,6 +284,20 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     dialog.dismiss();
                 }
                 break;
+            case R.id.bt_send://评论
+                String content = et_send.getText().toString().trim();
+                if (TextUtils.isEmpty(content)) {
+                    showToast("评论不能为空", false);
+                    return;
+                } else {
+                    updateEditTextBodyVisible(View.GONE, null);
+                    FriendCircleEntity.FriendCircle item = (FriendCircleEntity.FriendCircle) adapter.getDatas().get(curPostion);
+                    if (item != null) {
+                        String feed_uid = item.getFeed_uid();
+                        createComment(content, "0", feed_uid);
+                    }
+                }
+                break;
         }
     }
 
@@ -234,12 +310,16 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void update2AddFavorite(int circlePosition, int favortId) {
-        ToastUtil.showShort(this, "点赞");
+        //ToastUtil.showShort(this, "点赞");
+        curPostion = circlePosition;
+        doPraise(favortId, 1);
     }
 
     @Override
     public void update2DeleteFavort(int circlePosition, int favortId) {
-        ToastUtil.showShort(this, "取消点赞");
+        //ToastUtil.showShort(this, "取消点赞");
+        curPostion = circlePosition;
+        doPraise(favortId, 0);
     }
 
     @Override
@@ -248,13 +328,36 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    public void update2DeleteComment(int circlePosition, String commentId) {
-        ToastUtil.showShort(this, "删除评论");
+    public void update2DeleteComment(int circlePosition, String commentId, boolean isLong) {
+        //ToastUtil.showShort(this, "删除评论");
+        FriendCircleEntity.FriendCircle item = (FriendCircleEntity.FriendCircle) adapter.getDatas().get(curPostion);
+        if (item != null) {
+            feedId = item.getFeed_id();
+        }
+        this.commentId = commentId;
+        if (isLong) {
+            deleteComment(commentId);
+        } else {
+            showActionSheet(4);
+        }
     }
 
     @Override
     public void updateEditTextBodyVisible(int visibility, CommentConfig commentConfig) {
-        ToastUtil.showShort(this, "评论--键盘--" + visibility + ":" + commentConfig.toString());
+        ll_edit_text.setVisibility(visibility);
+        if (commentConfig != null) {
+            Log.i("评论--键盘--", visibility + ":" + commentConfig.toString());
+            feedId = commentConfig.feedid;
+            curPostion = commentConfig.circlePosition;
+        }
+        if (View.VISIBLE == visibility) {
+            et_send.requestFocus();
+            //弹出键盘
+            UIUtils.showSoftInput(et_send, this);
+        } else if (View.GONE == visibility) {
+            //隐藏键盘
+            UIUtils.hideSoftInput(et_send, this);
+        }
     }
 
     @Override
@@ -279,6 +382,9 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             actionSheet.addSheetItem(getString(R.string.replace_the_album_cover), ActionSheet.SheetItemColor.Black, FriendCircleActivity.this);
         } else if (type == 3) {//消息列表
             actionSheet.addSheetItem(getString(R.string.message_list), ActionSheet.SheetItemColor.Black, FriendCircleActivity.this);
+        } else if (type == 4) {//删除评论
+            actionSheet.setTitle("删除我的评论");
+            actionSheet.addSheetItem("删除", ActionSheet.SheetItemColor.Red, FriendCircleActivity.this);
         }
         actionSheet.show();
     }
@@ -287,48 +393,55 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(int which) {
         switch (which) {
-            case 1://1小视频 or 2更换相册封面 or 3消息列表
+            case 1://1小视频 or 2更换相册封面 or 3消息列表 or 4 删除评论
                 if (actionSheetType == 1) {
-
+                    cameraType = RECORD_VIDEO;
+                    getPermission();
                 } else if (actionSheetType == 2) {
                     openActivity(ReplaceAlbumCoverActivity.class);
                 } else if (actionSheetType == 3) {
                     openActivity(CircleMessageListActivity.class);
+                } else if (actionSheetType == 4) {
+                    deleteComment(commentId);
                 }
                 break;
             case 2://拍照
-                Bundle bundle = new Bundle();
-                String videoUrl = "http://livecdn.66boss.com/weibo_video/f9fe0be5f76a185e1fc8f62a1c04ac98.mp4";
-                bundle.putString("url",videoUrl);
-                bundle.putBoolean("isFull",false);
-                openActivity(VideoPlayerActivity.class,bundle);
+                cameraType = OPEN_CAMERA;
+                getPermission();
                 break;
             case 3://从手机相册选择
+                cameraType = OPEN_ALBUM;
+                getPermission();
                 break;
         }
     }
 
     private void getFriendCircleList() {
-        FriendCircleRequest request;
+        showLoadingDialog();
         String curPage, curSize;
-        if (page > 0) {
-            curPage = String.valueOf((page - 1));
-            curSize = String.valueOf(20 * page);
-        } else {
-            curPage = "0";
-            curSize = "20";
-        }
+        String url = HttpUrl.FRIEND_CIRCLE_LIST;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
         if (isOnRefresh) {
-            request = new FriendCircleRequest(TAG, curPage, curSize);
+            if (page > 0) {
+                curPage = String.valueOf((page - 1));
+                curSize = String.valueOf(20 * page);
+            } else {
+                curPage = "0";
+                curSize = "20";
+            }
+            url = url + "?page=" + curPage + "&size=" + curSize;
         } else {
-            request = new FriendCircleRequest(TAG, curPage, "20");
+            url = url + "?page=" + page + "&size=" + 20;
         }
-
-        request.send(new BaseDataRequest.RequestCallback<String>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
-            public void onSuccess(String pojo) {
-                if (pojo != null) {
-                    FriendCircleEntity data = JSON.parseObject(pojo, FriendCircleEntity.class);
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                if (result != null) {
+                    FriendCircleEntity data = JSON.parseObject(result, FriendCircleEntity.class);
                     if (data != null) {
                         if (data.getCode() == 1) {
                             List<FriendCircleEntity.FriendCircle> list = data.getResult();
@@ -337,15 +450,16 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                                 showData(list);
                             }
                         } else {
-                            showToast("获取失败", false);
+                            showToast(data.getMessage(), false);
                         }
                     }
                 }
             }
 
             @Override
-            public void onFailure(String msg) {
-                showToast(msg, false);
+            public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
+                showToast(e.getMessage(), false);
             }
         });
     }
@@ -371,6 +485,59 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             isOnRefresh = true;
             isAddNew = true;
             getFriendCircleList();
+        } else if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {    //打开相机
+//            if (data == null) {
+//                return;
+//            } else {
+//
+//            }
+            if (imageUri != null) {
+                String path = Utils.getPath(this, imageUri);
+                Bundle bundle = new Bundle();
+                bundle.putString("sendType", "photo");
+                bundle.putInt("type", OPEN_CAMERA);
+                bundle.putString("img", path);
+                openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
+            }
+        } else if (requestCode == OPEN_ALBUM && resultCode == RESULT_OK && data != null) { //打开相册
+            ArrayList<String> selectPicList = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", OPEN_ALBUM);
+            bundle.putString("sendType", "photo");
+            bundle.putStringArrayList("imglist", selectPicList);
+            openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
+        } else if (requestCode == RECORD_VIDEO && resultCode == RESULT_OK) {
+            // 录制视频完成
+            try {
+                AssetFileDescriptor videoAsset = getContentResolver()
+                        .openAssetFileDescriptor(data.getData(), "r");
+                FileInputStream fis = videoAsset.createInputStream();
+                File tmpFile = new File(
+                        Environment.getExternalStorageDirectory(),
+                        "recordvideo.mp4");
+                FileOutputStream fos = new FileOutputStream(tmpFile);
+
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = fis.read(buf)) > 0) {
+                    fos.write(buf, 0, len);
+                }
+                fis.close();
+                fos.close();
+                // 文件写完之后删除/sdcard/dcim/CAMERA/XXX.MP4
+
+                deleteDefaultFile(data.getData());
+                String videoPath = tmpFile.getAbsolutePath();
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("type", RECORD_VIDEO);
+                bundle.putString("sendType", "video");
+                bundle.putString("videoPath", videoPath);
+                openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -400,6 +567,17 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             dialog.setCanceledOnTouchOutside(false);
         }
         dialog.show();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            if (ll_edit_text != null && ll_edit_text.getVisibility() == View.VISIBLE) {
+                updateEditTextBodyVisible(View.GONE, null);
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     //删除朋友圈item
@@ -442,8 +620,8 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     }
 
     //获取点赞列表
-    private void getServerPraiseList(int feedId) {
-        showLoadingDialog();
+    private void getServerPraiseList(int feedId, final int isPraise) {
+        //showLoadingDialog();
         String main = HttpUrl.FRIEND_CIRCLE_GET_PRAISE_LIST + "?feed_id=" + feedId;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
@@ -451,34 +629,255 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                cancelLoadingDialog();
+                //cancelLoadingDialog();
                 String result = responseInfo.result;
                 if (!TextUtils.isEmpty(result)) {
-
+                    CirclePraiseListEntity entity = JSON.parseObject(result, CirclePraiseListEntity.class);
+                    if (entity != null) {
+                        List<FriendCirclePraiseEntity> list = entity.getResult();
+                        if (list != null) {
+                            FriendCircleEntity.FriendCircle item = (FriendCircleEntity.FriendCircle) adapter.getDatas().get(curPostion);
+                            if (item != null) {
+                                item.setPraise_list(list);
+                                item.setIs_praise(isPraise);
+                                adapter.notifyItemChanged(curPostion);
+                            }
+                        }
+                    }
                 }
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
+                //cancelLoadingDialog();
                 showToast(s, false);
             }
         });
     }
 
-    private void doPraise(int id, int isPraise) {
+    //点or取消赞
+    private void doPraise(final int id, final int isPraise) {
         DoPraiseRequest request = new DoPraiseRequest(TAG, String.valueOf(id), String.valueOf(isPraise));
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String pojo) {
-
+                Log.i("dopraise", pojo);
+                if (!TextUtils.isEmpty(pojo)) {
+                    try {
+                        JSONObject obj = new JSONObject(pojo);
+                        if (obj != null) {
+                            int code = obj.getInt("code");
+                            String msg = obj.getString("message");
+                            if (code == 1) {
+                                getServerPraiseList(id, isPraise);
+                            } else {
+                                showToast(msg, false);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             @Override
             public void onFailure(String msg) {
-
+                showToast(msg, false);
             }
         });
+    }
+
+    //发表评论
+    private void createComment(String content, String pid, String uid_to) {
+        CircleCommentCreateRequest request = new CircleCommentCreateRequest(TAG, String.valueOf(feedId), content, pid, uid_to);
+        request.send(new BaseDataRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String pojo) {
+                if (!TextUtils.isEmpty(pojo)) {
+                    try {
+                        JSONObject obj = new JSONObject(pojo);
+                        if (obj != null) {
+                            int code = obj.getInt("code");
+                            String msg = obj.getString("message");
+                            if (code == 1) {
+                                getServerCommentList(feedId);
+                            } else {
+                                showToast(msg, false);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, false);
+            }
+        });
+    }
+
+    //获取评论列表
+    private void getServerCommentList(int feedId) {
+        String main = HttpUrl.FRIEND_CIRCLE_GET_COMMENT_LIST + "?feed_id=" + feedId;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+                    CircleCommentListEntity entity = JSON.parseObject(result, CircleCommentListEntity.class);
+                    if (entity != null) {
+                        List<FriendCircleCommentEntity> list = entity.getResult();
+                        if (list != null) {
+                            FriendCircleEntity.FriendCircle item = (FriendCircleEntity.FriendCircle) adapter.getDatas().get(curPostion);
+                            if (item != null) {
+                                item.setComment_list(list);
+                                adapter.notifyItemChanged(curPostion);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                showToast(s, false);
+            }
+        });
+    }
+
+    private void deleteComment(String comm_id) {
+        CircleCommentDeleteRequest request = new CircleCommentDeleteRequest(TAG, comm_id);
+        request.send(new BaseDataRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String pojo) {
+                if (!TextUtils.isEmpty(pojo)) {
+                    try {
+                        JSONObject obj = new JSONObject(pojo);
+                        if (obj != null) {
+                            int code = obj.getInt("code");
+                            String msg = obj.getString("message");
+                            if (code == 1) {
+                                getServerCommentList(feedId);
+                            } else {
+                                showToast(msg, false);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        showToast(e.getMessage(), false);
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, false);
+            }
+        });
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private String getNowTime() {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddHHmmssSS");
+        return dateFormat.format(date);
+    }
+
+    // 删除在/sdcard/dcim/Camera/默认生成的文件
+    private void deleteDefaultFile(Uri uri) {
+        String fileName = null;
+        if (uri != null) {
+            // content
+            Log.d("Scheme", uri.getScheme().toString());
+            if (uri.getScheme().toString().equals("content")) {
+                Cursor cursor = getContentResolver().query(uri, null,
+                        null, null, null);
+                if (cursor.moveToNext()) {
+                    int columnIndex = cursor
+                            .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+                    fileName = cursor.getString(columnIndex);
+                    //获取缩略图id
+                    int id = cursor.getInt(cursor
+                            .getColumnIndex(MediaStore.Video.VideoColumns._ID));
+                    //获取缩略图
+//                    Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(
+//                            getContentResolver(), id, MediaStore.Images.Thumbnails.MICRO_KIND,
+//                            null);
+
+                    if (!fileName.startsWith("/mnt")) {
+                        fileName = "/mnt/" + fileName;
+                    }
+                    Log.d("fileName", fileName);
+                }
+            }
+        }
+        // 删除文件
+        File file = new File(fileName);
+        if (file.exists()) {
+            file.delete();
+            Log.d("delete", "删除成功");
+        }
+    }
+
+    private void getPermission() {
+        permissionListener = new PermissionListener() {
+            @Override
+            public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
+            }
+
+            @Override
+            public void onRequestPermissionSuccess() {
+                if (cameraType == RECORD_VIDEO) {
+                    Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                    //mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                    mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
+                    mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 20 * 1024 * 1024L);
+                    startActivityForResult(mIntent, RECORD_VIDEO);
+                    //openActivity(RecordVideoActivity.class);
+                } else if (cameraType == OPEN_CAMERA) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    String imageName = getNowTime() + ".png";
+                    // 指定调用相机拍照后照片的储存路径
+                    File dir = new File(savePath);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+                    File file = new File(dir, imageName);
+                    imageUri = Uri.fromFile(file);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(intent, OPEN_CAMERA);
+                    }
+                } else if (cameraType == OPEN_ALBUM) {
+                    MultiImageSelector.create(context).
+                            showCamera(false).
+                            count(9)
+                            .multi() // 多选模式, 默认模式;
+                            .start(FriendCircleActivity.this, OPEN_ALBUM);
+                }
+            }
+
+            @Override
+            public void onRequestPermissionError() {
+                ToastUtil.showShort(FriendCircleActivity.this, getString(R.string.giving_camera_permissions));
+            }
+        };
+        PermissionUtil
+                .with(this)
+                .permissions(
+                        PermissionUtil.PERMISSIONS_GROUP_CAMERA //相机权限
+                ).request(permissionListener);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
     }
 
 }

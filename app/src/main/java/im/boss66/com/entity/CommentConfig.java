@@ -13,7 +13,7 @@ public class CommentConfig {
         }
 
     }
-
+    public int feedid;
     public int circlePosition;
     public int commentPosition;
     public Type commentType;

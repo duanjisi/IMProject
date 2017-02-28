@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rl_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_navigation_bar_height"
-        android:background="@color/top_bar_color"
-        android:paddingLeft="11dp"
-        android:paddingRight="11dp">
+        android:background="@color/top_bar_color">
 
         <TextView
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:drawableLeft="@drawable/selector_text_bg_white_gary"
             android:drawablePadding="4dp"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_14"
+            android:paddingRight="@dimen/dp_14"
             android:text="返回"
             android:textColor="@drawable/selector_textcolor_white_gary"
             android:textSize="16.5sp" />
@@ -35,7 +37,9 @@
         <ImageView
             android:id="@+id/iv_set"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/dp_14"
+            android:paddingRight="@dimen/dp_14"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/hp_white_camera" />
@@ -46,6 +50,41 @@
         android:id="@+id/rv_friend"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/rl_title"
         android:clipToPadding="false" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="@dimen/dp_6"
+        android:paddingTop="@dimen/dp_6"
+        android:paddingRight="@dimen/dp_14"
+        android:paddingLeft="@dimen/dp_14"
+        android:background="@color/background_color"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_send"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/dp_10"
+            android:background="@drawable/bg_round_white"
+            android:textColorHint="@color/hint_text_color"
+            android:hint="评论" />
+
+        <Button
+            android:id="@+id/bt_send"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:text="发送"
+            android:textColor="@color/semi_transparent"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -5,20 +5,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import im.boss66.com.ABaseActivity;
+import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
-import im.boss66.com.fragment.CountrymanFragment;
-import im.boss66.com.fragment.CustomAddFragment;
 import im.boss66.com.fragment.MyCountrymanFragment;
 import im.boss66.com.fragment.MySchoolmateFragment;
-import im.boss66.com.fragment.SchoolmateFragment;
 import im.boss66.com.widget.ViewpagerIndicatorOver;
 
 /**
