@@ -16,7 +16,7 @@ import im.boss66.com.R;
 import im.boss66.com.entity.MySchool;
 
 /**
- * Created by admin on 2017/2/20.
+ * Created by liw on 2017/2/20.
  */
 public class MySchoolAdapter extends BaseRecycleViewAdapter{
     private Context context;
