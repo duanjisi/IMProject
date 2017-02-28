@@ -22,12 +22,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.AddFriendActivity;
 import im.boss66.com.activity.book.BookSearchActivity;
 import im.boss66.com.activity.book.NewFriendsActivity;
-import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.activity.im.ChatActivity;
 import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.BaseContact;
@@ -190,11 +190,11 @@ public class ContactBooksFragment extends BaseFragment {
 //                easeUser.setFriend_id(entity.getFriend_id());
                 contactList.add(easeUser);
             }
+            App.getInstance().setContacts((ArrayList<EaseUser>) contactList);
         }
 //        contactListLayout.init(contactList, header);
         contactListLayout.init(contactList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EaseUser user = (EaseUser) listView.getItemAtPosition(position);
@@ -204,17 +204,16 @@ public class ContactBooksFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                final EaseUser user = (EaseUser) listView.getItemAtPosition(position);
-                Intent intent = new Intent(getActivity(), PersonalNearbyDetailActivity.class);
-                intent.putExtra("ease_user", user);
-                startActivity(intent);
-                return true;
-            }
-        });
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                final EaseUser user = (EaseUser) listView.getItemAtPosition(position);
+//                Intent intent = new Intent(getActivity(), PersonalNearbyDetailActivity.class);
+//                intent.putExtra("ease_user", user);
+//                startActivity(intent);
+//                return true;
+//            }
+//        });
     }
 
     private void requestNewNums() {
@@ -252,80 +251,5 @@ public class ContactBooksFragment extends BaseFragment {
                 inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
         }
-    }
-
-    private void testDatas() {
-        EaseUser easeUser = new EaseUser();
-        easeUser.setAvatar("http://img3.imgtn.bdimg.com/it/u=2885730817,284862392&fm=11&gp=0.jpg");
-        easeUser.setInitialLetter("A");
-        easeUser.setNick("阿猫");
-        easeUser.setUserName("阿猫");
-        easeUser.setUserid("1001");
-        easeUser.setFid("01");
-
-        EaseUser user4 = new EaseUser();
-        user4.setAvatar("http://img5.imgtn.bdimg.com/it/u=1907434450,3070417799&fm=23&gp=0.jpg");
-        user4.setInitialLetter("C");
-        user4.setNick("陈明仁");
-        user4.setUserName("陈明仁");
-        user4.setUserid("1005");
-        user4.setFid("05");
-
-        EaseUser user7 = new EaseUser();
-        user7.setAvatar("http://img3.imgtn.bdimg.com/it/u=2885730817,284862392&fm=11&gp=0.jpg");
-        user7.setInitialLetter("C");
-        user7.setNick("陈杰");
-        user7.setUserName("陈杰");
-        user7.setUserid("1008");
-        user7.setFid("08");
-
-        EaseUser user3 = new EaseUser();
-        user3.setAvatar("http://img3.imgtn.bdimg.com/it/u=3138129898,245903813&fm=11&gp=0.jpg");
-        user3.setInitialLetter("H");
-        user3.setNick("胡宗南");
-        user3.setUserName("胡宗南");
-        user3.setUserid("1004");
-        user3.setFid("04");
-
-        EaseUser user1 = new EaseUser();
-        user1.setAvatar("http://img2.imgtn.bdimg.com/it/u=203482105,2168976613&fm=23&gp=0.jpg");
-        user1.setInitialLetter("L");
-        user1.setNick("李华");
-        user1.setUserName("李华");
-        user1.setUserid("1002");
-        user1.setFid("02");
-
-        EaseUser user2 = new EaseUser();
-        user2.setAvatar("http://img5.imgtn.bdimg.com/it/u=2933466676,571425337&fm=11&gp=0.jpg");
-        user2.setInitialLetter("Z");
-        user2.setNick("张灵埔");
-        user2.setUserName("张灵埔");
-        user2.setUserid("1003");
-        user2.setFid("03");
-
-        EaseUser user5 = new EaseUser();
-        user5.setAvatar("http://img3.imgtn.bdimg.com/it/u=3138129898,245903813&fm=11&gp=0.jpg");
-        user5.setInitialLetter("Z");
-        user5.setNick("张小华");
-        user5.setUserName("张小华");
-        user5.setUserid("1006");
-        user5.setFid("06");
-
-        EaseUser user6 = new EaseUser();
-        user6.setAvatar("http://img2.imgtn.bdimg.com/it/u=203482105,2168976613&fm=23&gp=0.jpg");
-        user6.setInitialLetter("Z");
-        user6.setNick("张学良");
-        user6.setUserName("张学良");
-        user6.setUserid("1007");
-        user6.setFid("07");
-
-        contactList.add(easeUser);
-        contactList.add(user1);
-        contactList.add(user4);
-        contactList.add(user7);
-        contactList.add(user3);
-        contactList.add(user2);
-        contactList.add(user5);
-        contactList.add(user6);
     }
 }

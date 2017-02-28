@@ -230,7 +230,7 @@ public class ChatServices extends Service {
                     senderAvartar);
         }
         MycsLog.i("info", "=====userid:" + userid);
-        mMsgDB.saveMsg(userid, item);// 保存数据库
+        mMsgDB.saveMsg(userid + "_" + datas[1], item);// 保存数据库
         for (int i = 0; i < callbacks.size(); i++)
             ((receiveMessageCallback) callbacks.get(i)).onMessageReceive(item);
     }

@@ -1,5 +1,7 @@
 package im.boss66.com.entity;
 
+import java.util.ArrayList;
+
 /**
  * Created by Johnny on 2017/2/18.
  * 表情包详细信息
@@ -19,6 +21,8 @@ public class EmojiInform {
     private String group_copyright = "";
     private String group_system = "";
     private String url = "";
+
+    private ArrayList<EmoEntity> emos = new ArrayList<>();
 
     public String getGroup_id() {
         return group_id;
@@ -130,5 +134,13 @@ public class EmojiInform {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public ArrayList<EmoEntity> getEmos() {
+        return emos;
+    }
+
+    public void setEmos(ArrayList<EmoEntity> emos) {
+        this.emos = emos;
     }
 }

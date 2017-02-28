@@ -12,6 +12,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.PrefKey;
@@ -28,10 +29,12 @@ public class EmojiWellAdapter extends BaseAdapter {
     private int defaultColor;
     private MyClickListener mListener;
     private ArrayList<EmoBagEntity> mList;
+    private String userid;
 
     public EmojiWellAdapter(Context context, MyClickListener clickListener) {
         this.context = context;
         this.mListener = clickListener;
+        userid = App.getInstance().getUid();
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         downloadedColor = context.getResources().getColor(R.color.btn_green_noraml);
         defaultColor = context.getResources().getColor(R.color.top_bar_color);
@@ -41,12 +44,12 @@ public class EmojiWellAdapter extends BaseAdapter {
     }
 
     private boolean isDownload(EmoBagEntity entity) {
-        String key = PrefKey.EMOJI_DOWNLOAD_KEY + "/" + entity.getGroup_id();
+        String key = PrefKey.EMOJI_DOWNLOAD_KEY + "/" + userid + "/" + entity.getGroup_id();
         return PreferenceUtils.getBoolean(context, key, false);
     }
 
     public void saveDownloadedStatus(EmoBagEntity entity) {
-        String key = PrefKey.EMOJI_DOWNLOAD_KEY + "/" + entity.getGroup_id();
+        String key = PrefKey.EMOJI_DOWNLOAD_KEY + "/" + userid + "/" + entity.getGroup_id();
         PreferenceUtils.putBoolean(context, key, true);
     }
 
@@ -100,9 +103,11 @@ public class EmojiWellAdapter extends BaseAdapter {
                     holder.image,
                     ImageLoaderUtils.getDisplayImageOptions());
             if (isDownload(entity)) {
+                holder.tvDownLoad.setEnabled(false);
                 holder.tvDownLoad.setTextColor(downloadedColor);
                 holder.tvDownLoad.setBackgroundResource(R.drawable.bg_frame_emo_default);
             } else {
+                holder.tvDownLoad.setEnabled(true);
                 holder.tvDownLoad.setTextColor(defaultColor);
                 holder.tvDownLoad.setBackgroundResource(R.drawable.bg_frame_emo_downloaded);
             }

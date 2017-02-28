@@ -2,6 +2,7 @@ package im.boss66.com.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
@@ -17,13 +18,14 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.HttpHandler;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-
-import org.apache.http.Header;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +41,7 @@ import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.SoundUtil;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.activity.discover.VideoPlayerActivity;
 import im.boss66.com.db.dao.EmoHelper;
 import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmotionEntity;
@@ -170,10 +173,10 @@ public class MessageAdapter extends BaseAdapter {
                 }
                 case MESSAGE_TYPE_MINE_VIDEO: {
                     convertView = mInflater.inflate(
-                            R.layout.zf_chat_mine_audio_message_item, parent, false);
-                    holder = new AudioMessageHolder();
+                            R.layout.zf_chat_mine_video_message_item, parent, false);
+                    holder = new VideoMessageHolder();
                     convertView.setTag(holder);
-                    fillAudioMessageHolder((AudioMessageHolder) holder,
+                    fillVideoMessageHolder((VideoMessageHolder) holder,
                             convertView);
                     break;
                 }
@@ -216,11 +219,11 @@ public class MessageAdapter extends BaseAdapter {
                 }
                 case MESSAGE_TYPE_OTHER_VIDEO: {
                     convertView = mInflater
-                            .inflate(R.layout.zf_chat_other_audio_message_item,
+                            .inflate(R.layout.zf_chat_other_video_message_item,
                                     parent, false);
-                    holder = new AudioMessageHolder();
+                    holder = new VideoMessageHolder();
                     convertView.setTag(holder);
-                    fillAudioMessageHolder((AudioMessageHolder) holder,
+                    fillVideoMessageHolder((VideoMessageHolder) holder,
                             convertView);
                     break;
                 }
@@ -255,12 +258,12 @@ public class MessageAdapter extends BaseAdapter {
                 handleEmotionMessage((EmotionMessageHolder) holder, mItem, parent);
             } else if (msgType == MessageItem.MESSAGE_TYPE_IMG) {
                 handleImageMessage((ImageMessageHolder) holder, mItem, parent);
-            } else if (msgType == MessageItem.MESSAGE_TYPE_VIDEO) {
-                handleAudioMessage((AudioMessageHolder) holder, mItem, parent);
             } else if (msgType == MessageItem.MESSAGE_TYPE_TXT) {
                 handleTextMessage((TextMessageHolder) holder, mItem, parent);
             } else if (msgType == MessageItem.MESSAGE_TYPE_AUDIO) {
                 handleAudioMessage((AudioMessageHolder) holder, mItem, parent);
+            } else if (msgType == MessageItem.MESSAGE_TYPE_VIDEO) {
+                handleVideoMessage((VideoMessageHolder) holder, mItem, parent);
             }
         }
         return convertView;
@@ -347,46 +350,59 @@ public class MessageAdapter extends BaseAdapter {
         });
     }
 
-    private AsyncHttpClient asyncHttpClient;
-
     private void bindEmo(final EmotionMessageHolder holder, EmotionEntity entity) {
         if (entity != null) {
-            saveEmoEntity(entity);
-            String name = FileUtils.getFileNameFromPath(entity.getEmo_url());
+            String emo_url = entity.getEmo_url();
+            String name = FileUtils.getFileNameFromPath(emo_url);
             if (name.contains(".gif")) {
-                asyncHttpClient = new AsyncHttpClient();
-                asyncHttpClient
-                        .get(entity.getEmo_url(),
-                                new AsyncHttpResponseHandler() {
-                                    @Override
-                                    public void onSuccess(int arg0, Header[] arg1,
-                                                          byte[] arg2) {
-                                        // TODO Auto-generated method stub
-                                        GifDrawable drawable = null;
-                                        try {
-                                            drawable = new GifDrawable(arg2);
-                                        } catch (IOException e) {
-                                            // TODO Auto-generated catch block
-                                            e.printStackTrace();
-                                        }
-                                        holder.gifView
-                                                .setBackgroundDrawable(drawable);
-                                    }
+                final String cachePath = Constants.EMO_DIR_PATH + "emotion" + File.separator + name;
+                File f = new File(cachePath);
+                if (f.exists()) {
+                    try {
+                        GifDrawable drawable = new GifDrawable(cachePath);
+                        holder.gifView.setImageDrawable(drawable);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    HttpUtils http = new HttpUtils();
+                    final HttpHandler handler = http.download(emo_url,
+                            cachePath,
+                            true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
+                            true, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
+                            new RequestCallBack<File>() {
 
-                                    @Override
-                                    public void onFailure(int arg0, Header[] arg1,
-                                                          byte[] arg2, Throwable arg3) {
-                                        Log.i("info", "============arg2:" + arg2);
-                                        // TODO Auto-generated method stub
-//                                        Toast.makeText(mContext, "显示异常", Toast.LENGTH_LONG).show();
-                                        mHandler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                holder.gifView.setImageResource(R.drawable.emo_default_img);
-                                            }
-                                        });
+                                @Override
+                                public void onStart() {
+
+                                }
+
+                                @Override
+                                public void onLoading(long total, long current, boolean isUploading) {
+                                }
+
+                                @Override
+                                public void onSuccess(ResponseInfo<File> responseInfo) {
+                                    Log.i("info", "downloaded:" + responseInfo.result.getPath());
+                                    try {
+                                        GifDrawable drawable = new GifDrawable(cachePath);
+                                        holder.gifView.setImageDrawable(drawable);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
                                     }
-                                });
+                                }
+
+                                @Override
+                                public void onFailure(HttpException error, String msg) {
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            holder.gifView.setImageResource(R.drawable.emo_default_img);
+                                        }
+                                    });
+                                }
+                            });
+                }
             } else {
                 imageLoader.displayImage(entity.getEmo_url(), holder.gifView, ImageLoaderUtils.getDisplayImageOptions());
             }
@@ -522,6 +538,29 @@ public class MessageAdapter extends BaseAdapter {
         });
     }
 
+    private void handleVideoMessage(final VideoMessageHolder holder,
+                                    final MessageItem mItem, final View parent) {
+        handleBaseMessage(holder, mItem);
+//        holder.duration.setText("");
+        final String videoPath = mItem.getMessage();
+        String imageUrl = null;
+        if (videoPath.contains(".mp4")) {
+            imageUrl = videoPath.replace(".mp4", ".jpg");
+            imageLoader.displayImage(imageUrl, holder.iv_cover, ImageLoaderUtils.getDisplayImageOptions());
+        }
+        final String cover = imageUrl;
+        holder.iv_player.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, VideoPlayerActivity.class);
+                intent.putExtra("url", videoPath);
+                intent.putExtra("imgurl", cover);
+                intent.putExtra("isFull", false);
+                mContext.startActivity(intent);
+            }
+        });
+    }
+
     private void startAnimation(ImageView imageView, int resId) {
         imageView.setImageResource(resId);
         AnimationDrawable animationDrawable = (AnimationDrawable) imageView.getDrawable();
@@ -597,6 +636,16 @@ public class MessageAdapter extends BaseAdapter {
 //        holder.msg = (GifView) convertView.findViewById(R.id.textView2);
     }
 
+    private void fillVideoMessageHolder(VideoMessageHolder holder,
+                                        View convertView) {
+        fillBaseMessageholder(holder, convertView);
+        holder.iv_cover = (ImageView) convertView
+                .findViewById(R.id.textView2);
+        holder.iv_player = (ImageView) convertView
+                .findViewById(R.id.iv_video_play);
+        holder.duration = (TextView) convertView.findViewById(R.id.tv_duration);
+    }
+
     private static class MessageHolderBase {
         ImageView head;
         TextView time;
@@ -640,6 +689,11 @@ public class MessageAdapter extends BaseAdapter {
         ImageView msg;
     }
 
+    private static class VideoMessageHolder extends MessageHolderBase {
+        ImageView iv_cover;
+        TextView duration;
+        ImageView iv_player;
+    }
 
     /**
      * 另外一种方法解析表情将[表情]换成fxxx

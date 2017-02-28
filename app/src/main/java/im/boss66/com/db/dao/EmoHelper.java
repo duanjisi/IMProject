@@ -21,12 +21,14 @@ import im.boss66.com.entity.EmoEntity;
 public class EmoHelper extends ColumnHelper<EmoEntity> {
     private static EmoHelper helper;
     private Context mContext;
+    private static String userId;
 
     public EmoHelper() {
         mContext = App.getInstance().getApplicationContext();
     }
 
     public static EmoHelper getInstance() {
+        userId = App.getInstance().getUid();
         if (helper == null) {
             synchronized (EmoHelper.class) {
                 if (helper == null) {
@@ -47,6 +49,7 @@ public class EmoHelper extends ColumnHelper<EmoEntity> {
         values.put(EmoColumn.EMO_CATE_ID, bean.getEmo_cate_id());
         values.put(EmoColumn.EMO_CODE, bean.getEmo_code());
         values.put(EmoColumn.EMO_DESC, bean.getEmo_desc());
+        values.put(EmoColumn.USER_ID, userId);
         return values;
     }
 
@@ -59,13 +62,11 @@ public class EmoHelper extends ColumnHelper<EmoEntity> {
         cate.setEmo_format(getString(c, EmoColumn.EMO_FORMAT));
         cate.setEmo_cate_id(getString(c, EmoColumn.EMO_CATE_ID));
         cate.setEmo_code(getString(c, EmoColumn.EMO_CODE));
-        cate.setEmo_desc(getString(c, EmoColumn.EMO_DESC));
         return cate;
     }
 
     @Override
     public void save(List<EmoEntity> list) {
-        deleteAllDatas();
         Collections.reverse(list);
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
@@ -85,9 +86,11 @@ public class EmoHelper extends ColumnHelper<EmoEntity> {
 
     @Override
     public void save(EmoEntity entity) {
-        String[] args = new String[]{entity.getEmo_id()};
+        String[] args = new String[]{entity.getEmo_id(), userId};
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                getSelectSql(EmoColumn.TABLE_NAME, new String[]{EmoColumn.EMO_ID}), args);
+                getSelectSql(EmoColumn.TABLE_NAME, new String[]{EmoColumn.EMO_ID,
+                        EmoColumn.USER_ID
+                }), args);
         if (exist(c)) {
 //            c.moveToFirst();
 //            this.delete(entity.getUser_name());
@@ -106,7 +109,9 @@ public class EmoHelper extends ColumnHelper<EmoEntity> {
     @Override
     public List<EmoEntity> query() {
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                "SELECT * FROM " + EmoColumn.TABLE_NAME, null);
+                "SELECT * FROM " + EmoColumn.TABLE_NAME +
+                        " WHERE " + EmoColumn.USER_ID
+                        + " = ? ", new String[]{userId});
         List<EmoEntity> bos = new ArrayList<EmoEntity>();
         if (exist(c)) {
             c.moveToLast();
@@ -120,8 +125,9 @@ public class EmoHelper extends ColumnHelper<EmoEntity> {
 
     public List<EmoEntity> queryByGroupId(String cateId) {//根据分类id查询组
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                "SELECT * FROM " + EmoColumn.TABLE_NAME + " WHERE " + EmoColumn.EMO_GROUP_ID
-                        + " = ? ", new String[]{cateId});
+                "SELECT * FROM " + EmoColumn.TABLE_NAME +
+                        " WHERE " + EmoColumn.EMO_GROUP_ID + " = ? " +
+                        " and " + EmoColumn.USER_ID + " =?", new String[]{cateId, userId});
         List<EmoEntity> bos = new ArrayList<EmoEntity>();
         if (exist(c, mContext)) {
             c.moveToFirst();
@@ -135,8 +141,9 @@ public class EmoHelper extends ColumnHelper<EmoEntity> {
 
     public EmoEntity queryByCode(String code) {//根据分类id查询组
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                "SELECT * FROM " + EmoColumn.TABLE_NAME + " WHERE " + EmoColumn.EMO_CODE
-                        + " = ? ", new String[]{code});
+                "SELECT * FROM " + EmoColumn.TABLE_NAME +
+                        " WHERE " + EmoColumn.EMO_CODE + " = ? " +
+                        " and " + EmoColumn.USER_ID + " =?", new String[]{code, userId});
         EmoEntity entity = null;
         if (exist(c, mContext)) {
             c.moveToFirst();
@@ -149,8 +156,15 @@ public class EmoHelper extends ColumnHelper<EmoEntity> {
     }
 
     public void deleteByCateId(String cateId) {//根据分类id删除表情
-        DBHelper.getInstance(mContext).delete(EmoColumn.TABLE_NAME, EmoColumn.EMO_CATE_ID + " = ?",
-                new String[]{cateId});
+        DBHelper.getInstance(mContext).delete(EmoColumn.TABLE_NAME, EmoColumn.EMO_CATE_ID + " = ?" +
+                        " and " + EmoColumn.USER_ID + " =?",
+                new String[]{cateId, userId});
+    }
+
+    public void deleteByGroupId(String cateId) {//根据组id删除表情
+        DBHelper.getInstance(mContext).delete(EmoColumn.TABLE_NAME, EmoColumn.EMO_GROUP_ID + " = ?" +
+                        " and " + EmoColumn.USER_ID + " =?",
+                new String[]{cateId, userId});
     }
 
     @Override

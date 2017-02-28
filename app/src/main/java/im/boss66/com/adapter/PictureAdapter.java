@@ -1,10 +1,10 @@
 package im.boss66.com.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -18,18 +18,21 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.db.dao.EmoLoveHelper;
+import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.request.EmoCollectionDeleteRequest;
 
 /**
  * Created by Johnny on 2016/7/19.
  */
-public class PictureAdapter extends BaseAdapter {
+public class PictureAdapter extends BasePicAdapter {
+    private final static String TAG = PictureAdapter.class.getSimpleName();
     private ImageLoader imageLoader;
     private Context context;
     private float mImageHeight;
     private ArrayList<String> images;
     private boolean isAddPager = false;
+
 //    private boolean isFirst = false;
-//
 //    public void setFirst(boolean first) {
 //        isFirst = first;
 //    }
@@ -39,6 +42,7 @@ public class PictureAdapter extends BaseAdapter {
     }
 
     public PictureAdapter(Context context) {
+        super(context);
         this.context = context;
         mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 4;
         imageLoader = ImageLoaderUtils.createImageLoader(context);
@@ -118,8 +122,7 @@ public class PictureAdapter extends BaseAdapter {
             Toast.makeText(context, "最多只能添加9张图片", Toast.LENGTH_LONG).show();
         }
     }
-
-    //    public void addItem2(String entity) {
+//    public void addItem2(String entity) {
 //        int totals = images.size() - 1;
 //        int count = 9 - totals;
 //        if (count > 0) {
@@ -211,7 +214,8 @@ public class PictureAdapter extends BaseAdapter {
                         holder.ivClose.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                removeItem(imageUrl);
+//                                removeItem(imageUrl);
+                                reuqestDeleteEmoLove(imageUrl);
                             }
                         });
                     }
@@ -234,13 +238,32 @@ public class PictureAdapter extends BaseAdapter {
                 stringIterator.remove();
             }
         }
-//        if (images.size() - 1 != 9 && !images.contains("lastItem")) {
-//            images.add("lastItem");
-//        }
         if (!images.contains("lastItem")) {
             images.add("lastItem");
         }
         notifyDataSetChanged();
+    }
+
+    private void reuqestDeleteEmoLove(final String url) {
+        String collectid = EmoLoveHelper.getInstance().qureEmoByUrl(url);
+        if (TextUtils.isEmpty(collectid)) {
+            return;
+        }
+        showLoadingDialog();
+        EmoCollectionDeleteRequest request = new EmoCollectionDeleteRequest(TAG, collectid);
+        request.send(new BaseDataRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String pojo) {
+                cancelLoadingDialog();
+                removeItem(url);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                cancelLoadingDialog();
+                showToast(msg, true);
+            }
+        });
     }
 
     private class ViewHolder {
@@ -271,23 +294,4 @@ public class PictureAdapter extends BaseAdapter {
         }
         return item;
     }
-
-//    private void loadBitmapFromUrl(final ImageView iv, String picPath) {
-//        if (picPath != null) {
-//            MycsLog.d(picPath);
-//            // Point point = null;
-//            Point point = new Point(UIUtils.getScreenWidth(context), UIUtils.getScreenHeight(context));
-//            PictureLoader.getInstance().loadImageNoLru(picPath, point, new PictureLoader.NativeImageCallBack() {
-//                @Override
-//                public void onImageLoader(Bitmap bitmap, String path) {
-//                    if (bitmap != null) {
-//                        iv.setImageBitmap(bitmap);
-////                        upload(bitmap2Base64(bitmap), iv);
-//                    }
-//                }
-//            });
-//        } else {
-//            MycsLog.d("url is null");
-//        }
-//    }
 }

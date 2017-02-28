@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <!-- 录音 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
@@ -83,6 +83,10 @@
         <activity android:name=".activity.im.EmojiMakeActivity"></activity>
         <activity android:name=".activity.im.EmojiSelectWellActivity"></activity>
 
+        <!--选择联系人(发起群聊)-->
+        <activity android:name=".activity.book.SelectContactsActivity"></activity>
+        <!--手机联系人-->
+        <activity android:name=".activity.book.PhoneContactsActivity"></activity>
         <!--验证申请-->
         <activity android:name=".activity.im.VerifyApplyActivity"></activity>
         <!--表情包商店搜索-->

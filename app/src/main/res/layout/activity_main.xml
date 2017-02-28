@@ -134,6 +134,7 @@
         </FrameLayout>
     </LinearLayout>
 
+
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
@@ -141,4 +142,17 @@
         android:layout_above="@id/bottom_layout"
         android:background="@color/background_color" />
 
+    <!--<com.facebook.drawee.view.SimpleDraweeView-->
+    <!--android:id="@+id/iv_gif_00"-->
+    <!--android:layout_width="80dp"-->
+    <!--android:layout_height="80dp"-->
+    <!--android:layout_centerInParent="true" />-->
+
+    <!--<com.facebook.drawee.view.SimpleDraweeView-->
+    <!--android:id="@+id/iv_gif_01"-->
+    <!--android:layout_width="80dp"-->
+    <!--android:layout_height="80dp"-->
+    <!--android:layout_above="@+id/iv_gif_00"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginBottom="10dp" />-->
 </RelativeLayout>

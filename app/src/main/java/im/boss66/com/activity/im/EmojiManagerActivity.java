@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
@@ -38,6 +39,7 @@ public class EmojiManagerActivity extends BaseActivity implements View.OnClickLi
 
         ArrayList<EmoGroup> list = (ArrayList<EmoGroup>) EmoGroupHelper.getInstance().query();
         if (list != null && list.size() != 0) {
+            Collections.reverse(list);
             mAdapter = new DragListAdapter(context, list);
             listView.setAdapter(mAdapter);
             listView.setOrder(true);
@@ -60,7 +62,7 @@ public class EmojiManagerActivity extends BaseActivity implements View.OnClickLi
     private void sortList() {
         ArrayList<EmoGroup> list = (ArrayList<EmoGroup>) mAdapter.getList();
         if (list != null && list.size() != 0) {
-            EmoGroupHelper.getInstance().save(list);
+            EmoGroupHelper.getInstance().saveSortList(list);
         }
         setResult(RESULT_OK, new Intent());
         finish();

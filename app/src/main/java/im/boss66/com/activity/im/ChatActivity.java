@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,6 +25,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,14 +39,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.lidroid.xutils.http.client.multipart.content.StringBody;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONException;
@@ -52,7 +59,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -65,7 +74,7 @@ import im.boss66.com.Session;
 import im.boss66.com.Utils.Base64Utils;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
-import im.boss66.com.Utils.MycsLog;
+import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.Utils.SharePreferenceUtil;
 import im.boss66.com.Utils.SoundUtil;
 import im.boss66.com.Utils.TimeUtil;
@@ -78,6 +87,7 @@ import im.boss66.com.db.MessageDB;
 import im.boss66.com.db.RecentDB;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
+import im.boss66.com.db.dao.EmoHelper;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.CellEntity;
 import im.boss66.com.entity.EmoCate;
@@ -97,6 +107,8 @@ import im.boss66.com.xlistview.MsgListView;
 public class ChatActivity extends BaseActivity implements View.OnClickListener, ChatServices.receiveMessageCallback,
         View.OnTouchListener, MsgListView.IXListViewListener, FaceFragment.clickCallback, FaceLoveFragment.LoveCallback {
     private static final String TAG = ChatActivity.class.getSimpleName();
+    private Map<String, EmoEntity> mEmoMap = new LinkedHashMap<String, EmoEntity>();
+    private PopupWindow popupWindow;
     private static final int MESSAGE_TYPE_EMOTION = 0x011;
     private static final int MESSAGE_TYPE_IMG = 0x012;
     private static final int MESSAGE_TYPE_VIDEO = 0x013;
@@ -167,6 +179,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private static MessageAdapter adapter;// 发送消息展示的adapter
     private MsgListView mMsgListView;// 展示消息的
     private MessageDB mMsgDB;// 保存消息的数据库
+    private String mMsgId;
     private RecentDB mRecentDB;
     private SoundUtil mSoundUtil;
     private String userid, toUid, title;
@@ -183,6 +196,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private ImageView ivSelect, ivMake, ivAddPerson, ivEditPic;
     private ImageLoader imageLoader;
     private boolean isSpeech = false;
+    private LinearLayout ll_input;
     /**
      * 接收到数据，用来更新listView
      */
@@ -255,6 +269,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(ChatActivity.this);//注册，在setContentView之前。
         setContentView(R.layout.activity_chat);
         initViews();
     }
@@ -264,11 +279,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         account = App.getInstance().getAccount();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-//            userid = bundle.getString("uid1", "");
             userid = account.getUser_id();
             toUid = bundle.getString("toUid", "");
             title = bundle.getString("title", "");
             isGroupChat = bundle.getBoolean("isgroup", false);
+            mMsgId = userid + "_" + toUid;
         }
         MSGPAGERNUM = 0;
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -306,6 +321,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         ivMake = (ImageView) findViewById(R.id.iv_add_pic);
         ivAddPerson = (ImageView) findViewById(R.id.iv_add_person);
         ivEditPic = (ImageView) findViewById(R.id.iv_edit_pic);
+        ll_input = (LinearLayout) findViewById(R.id.ll_chatmain_input);
 
         ivSelect.setOnClickListener(this);
         ivMake.setOnClickListener(this);
@@ -428,7 +444,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        List<MessageItem> list = mMsgDB
 //                .getMsg(mSpUtil.getUserId(), MSGPAGERNUM);
         List<MessageItem> list = mMsgDB
-                .getMsg(userid, MSGPAGERNUM);
+                .getMsg(mMsgId, MSGPAGERNUM);
         List<MessageItem> msgList = new ArrayList<MessageItem>();// 消息对象数组
         if (list.size() > 0) {
             for (MessageItem entity : list) {
@@ -470,6 +486,22 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
+                String key = s.toString();
+                Log.i("info", "========key:" + key);
+                Log.i("info", "========mEmoMap:" + mEmoMap.keySet().toString());
+                if (mEmoMap.containsKey(key)) {
+                    EmoEntity entity = mEmoMap.get(key);
+                    if (entity != null) {
+                        Log.i("info", "========showCurrentEmo()");
+                        if (popupWindow == null) {
+                            showCurrentEmo(entity, ll_input);
+                        } else {
+                            if (!popupWindow.isShowing()) {
+                                showCurrentEmo(entity, ll_input);
+                            }
+                        }
+                    }
+                }
             }
 
             @Override
@@ -787,7 +819,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 false, 0, 0, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
         adapter.upDateMsg(item);
         mMsgListView.setSelection(adapter.getCount() - 1);
-        mMsgDB.saveMsg(userid, item);// 消息保存数据库
+        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
 //        mEtMsg.setText("");
 //        if ("".equals(mSpUtil.getUserId())) {
 //            showToast("发送者未登录!", true);
@@ -852,12 +884,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 false, 0, 0, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
         adapter.upDateMsg(item);
         mMsgListView.setSelection(adapter.getCount() - 1);
-        mMsgDB.saveMsg(userid, item);// 消息保存数据库
-//        mEtMsg.setText("");
-//        if ("".equals(mSpUtil.getUserId())) {
-//            showToast("发送者未登录!", true);
-//            return;
-//        }
+        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
         ChatServices.sendMessage(getString(MESSAGE_TYPE_IMG, photoPath));
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
@@ -875,7 +902,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 false, 0, 0, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
         adapter.upDateMsg(item);
         mMsgListView.setSelection(adapter.getCount() - 1);
-        mMsgDB.saveMsg(userid, item);// 消息保存数据库
+        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
 //        mEtMsg.setText("");
 //        if ("".equals(mSpUtil.getUserId())) {
 //            showToast("发送者未登录!", true);
@@ -898,7 +925,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 false, 0, voiceTime, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
         adapter.upDateMsg(item);
         mMsgListView.setSelection(adapter.getCount() - 1);
-        mMsgDB.saveMsg(userid, item);// 消息保存数据库
+        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
 //        mEtMsg.setText("");
 //        if ("".equals(mSpUtil.getUserId())) {
 //            showToast("发送者未登录!", true);
@@ -923,7 +950,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 account.getAvatar());
         adapter.upDateMsg(item);
         mMsgListView.setSelection(adapter.getCount() - 1);
-        mMsgDB.saveMsg(mSpUtil.getUserId(), item);// 消息保存数据库
+        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
 //        mEtMsg.setText("");
 //        if ("".equals(mSpUtil.getUserId())) {
 //            showToast("发送者未登录!", true);
@@ -997,7 +1024,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             handler.sendMessage(msg);
         }
     }
-
 //    @Override
 //    public void onMessageReceive(String msgType, String senderId,
 //                                 String senderName, String senderAvatar,
@@ -1039,6 +1065,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     protected void onResume() {
         super.onResume();
         Log.i("info", "=======onResume()");
+        initEmoMap();
         initEmotionData();
         ChatServices.callbacks.add(this);
     }
@@ -1046,6 +1073,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onPause() {
         super.onPause();
+        if (mEmoMap.size() != 0) {
+            mEmoMap.clear();
+        }
         ChatServices.callbacks.remove(this);
     }
 
@@ -1109,6 +1139,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     private void uploadVideoFile(String videoPath) {
         if (TextUtils.isEmpty(videoPath)) {
+            showToast("视频文件路径未找到!", true);
             return;
         }
         showLoadingDialog();
@@ -1128,8 +1159,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     new RequestCallBack<String>() {
                         @Override
                         public void onSuccess(ResponseInfo<String> responseInfo) {
-                            Log.i("info", "responseInfo:" + responseInfo.result);
                             cancelLoadingDialog();
+                            String path = parsePath(responseInfo.result);
+                            Log.i("info", "======videoPath:" + path);
+                            if (path != null && !path.equals("")) {
+                                sendVideoMessage(path);
+                            }
                         }
 
                         @Override
@@ -1182,8 +1217,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void InItTitle1() {
+        linearLayout.removeAllViews();
+        if (textViews != null) {
+            textViews.clear();
+            textViews = null;
+        }
         if (categorys != null && categorys.size() != 0) {
-            linearLayout.removeAllViews();
             textViews = new ArrayList<TextView>();
             int width = getWindowManager().getDefaultDisplay().getWidth() / 5;
 //        int height = 70;
@@ -1218,20 +1257,28 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void setSelector(int id) {
-        for (int i = 0; i < categorys.size(); i++) {
-            if (id == i) {
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                        R.drawable.grouplist_item_bg_normal);
-                textViews.get(id).setBackgroundDrawable(
-                        new BitmapDrawable(bitmap));
-                textViews.get(id).setTextColor(Color.RED);
+        if (categorys != null && categorys.size() != 0) {
+            for (int i = 0; i < categorys.size(); i++) {
+                if (id == i) {
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.grouplist_item_bg_normal);
+                    textViews.get(id).setBackgroundDrawable(
+                            new BitmapDrawable(bitmap));
+                    textViews.get(id).setTextColor(Color.RED);
 //                viewPager.setCurrentItem(i);
-                EmoCate cate = categorys.get(i);
-                initCatePager(cate.getCate_id());
-            } else {
-                textViews.get(i).setBackgroundDrawable(new BitmapDrawable());
-                textViews.get(i).setTextColor(resources.getColor(R.color.black));
+                    EmoCate cate = categorys.get(i);
+                    initCatePager(cate.getCate_id());
+                } else {
+                    textViews.get(i).setBackgroundDrawable(new BitmapDrawable());
+                    textViews.get(i).setTextColor(resources.getColor(R.color.black));
+                }
             }
+        } else {
+            initCatePager("");
+//            if (fragments != null && fragments.size() != 0) {
+//                fragments.clear();
+//            }
+//            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -1246,12 +1293,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         ArrayList<EmoGroup> groups = (ArrayList<EmoGroup>) EmoGroupHelper.getInstance().queryByCateId(cateId);
         Log.i("info", "====cateId:" + cateId);
         Log.i("info", "====groups.size():" + groups.size());
+
+        FaceLoveFragment frag = FaceLoveFragment.newInstance();
+        frag.setLoveCallback(this);
+        fragments.add(frag);
+        InItBottomBar(groups);
         if (groups != null && groups.size() != 0) {
-            InItBottomBar(groups);
-//            ArrayList<Fragment> fragments = new ArrayList<>();
-            FaceLoveFragment frag = FaceLoveFragment.newInstance();
-            frag.setLoveCallback(this);
-            fragments.add(frag);
             for (int i = 0; i < groups.size(); i++) {
                 EmoGroup group = groups.get(i);
                 FaceFragment fragment = FaceFragment.newInstance(group.getGroup_id());
@@ -1260,6 +1307,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             }
             mAdapter.setFragments(fragments);
             setBotBarSelector(1);
+        } else {
+            mAdapter.setFragments(fragments);
+            setBotBarSelector(0);
         }
     }
 
@@ -1274,7 +1324,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onItemLoveClick(String image) {
-        showToast("image:" + image, true);
+//        showToast("image:" + image, true);
+        if (image != null && !image.equals("")) {
+            sendImageMessage(image);
+        }
     }
 
     public void setBotBarSelector(int id) {
@@ -1309,7 +1362,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             }
             textView.setTag("bottom");
             textView.setOnClickListener(this);
-            textView.setMinimumWidth(width);
+//            textView.setMinimumWidth(width);
+            LinearLayout.LayoutParams params = new LayoutParams(
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            params.width = width;
+            params.height = height - 32;
+            params.gravity = Gravity.CENTER;
+            textView.setLayoutParams(params);
             if (i == groups.size() + 1) {
                 textView.setImageResource(R.drawable.hp_ch_setup);
             } else if (i == 0) {
@@ -1322,7 +1381,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 if (bitmap != null) {
                     textView.setImageBitmap(bitmap);
                 }
-//                textView.setImageResource(R.drawable.f008);
             }
             imageViews.add(textView);
             // �ָ���
@@ -1330,7 +1388,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             LinearLayout.LayoutParams layoutParams = new LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             layoutParams.width = 1;
-            layoutParams.height = height - 40;
+            layoutParams.height = height - 32;
             layoutParams.gravity = Gravity.CENTER;
             view.setLayoutParams(layoutParams);
             view.setBackgroundColor(resources.getColor(R.color.gray));
@@ -1599,7 +1657,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 false, 0, 0, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
         adapter.upDateMsg(item);
         mMsgListView.setSelection(adapter.getCount() - 1);
-        mMsgDB.saveMsg(mSpUtil.getUserId(), item);// 消息保存数据库
+        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
         // ===发送消息到服务器
 //        com.pzf.liaotian.bean.Message msgItem = new com.pzf.liaotian.bean.Message(
 //                MessageItem.MESSAGE_TYPE_RECORD, System.currentTimeMillis(),
@@ -1726,7 +1784,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
      * @param signalEMA
      */
     private void updateDisplay(double signalEMA) {
-
         switch ((int) signalEMA) {
             case 0:
             case 1:
@@ -1735,7 +1792,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             case 2:
             case 3:
                 volume.setImageResource(R.drawable.amp2);
-
                 break;
             case 4:
             case 5:
@@ -1757,6 +1813,51 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 volume.setImageResource(R.drawable.amp7);
                 break;
         }
+    }
+
+
+    private void initEmoMap() {
+        ArrayList<EmoEntity> list = (ArrayList<EmoEntity>) EmoHelper.getInstance().query();
+        if (list != null && list.size() != 0) {
+            for (int i = 0; i < list.size(); i++) {
+                EmoEntity entity = list.get(i);
+                String key = entity.getEmo_name();
+                if (!mEmoMap.containsKey(key)) {
+                    mEmoMap.put(key, entity);
+                }
+            }
+        }
+    }
+
+    private void showCurrentEmo(EmoEntity entity, View v) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.popwindows_item_emo, null);
+        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.FILL_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, false);
+
+        popupWindow.setAnimationStyle(R.style.PopupTitleBarAnim);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(getDrawableFromRes(R.drawable.bg_popwindow));
+        SimpleDraweeView gif = (SimpleDraweeView) view.findViewById(R.id.gif);
+        String imageUrl = entity.getUrl();
+        if (NetworkUtil.networkAvailable(context) && !imageUrl.equals("")) {
+            Uri uri = Uri.parse(imageUrl);
+            //加载动态图片
+            DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).setAutoPlayAnimations(true).build();
+            gif.setController(controller);
+        }
+        int[] location = new int[2];
+        v.getLocationOnScreen(location);
+//        popupWindow.showAtLocation(Parent, Gravity.NO_GRAVITY, location[0], location[1]);
+        popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWindow.getWidth() / 2, location[1] - popupWindow.getHeight());
+    }
+
+    private Drawable getDrawableFromRes(int resId) {
+        Resources res = getResources();
+        Bitmap bmp = BitmapFactory.decodeResource(res, resId);
+        return new BitmapDrawable(bmp);
     }
 
     @Override

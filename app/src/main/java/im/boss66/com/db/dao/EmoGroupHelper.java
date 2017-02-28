@@ -22,12 +22,14 @@ import im.boss66.com.entity.EmoGroup;
 public class EmoGroupHelper extends ColumnHelper<EmoGroup> {
     private static EmoGroupHelper helper;
     private Context mContext;
+    private static String userId;
 
     public EmoGroupHelper() {
         mContext = App.getInstance().getApplicationContext();
     }
 
     public static EmoGroupHelper getInstance() {
+        userId = App.getInstance().getUid();
         if (helper == null) {
             synchronized (EmoGroupHelper.class) {
                 if (helper == null) {
@@ -49,6 +51,7 @@ public class EmoGroupHelper extends ColumnHelper<EmoGroup> {
         values.put(EmoGroupColumn.GROUP_ICON, bean.getGroup_icon());
         values.put(EmoGroupColumn.GROUP_ID, bean.getGroup_id());
         values.put(EmoGroupColumn.GROUP_NAME, bean.getGroup_name());
+        values.put(EmoGroupColumn.USER_ID, userId);
         return values;
     }
 
@@ -68,12 +71,22 @@ public class EmoGroupHelper extends ColumnHelper<EmoGroup> {
 
     @Override
     public void save(List<EmoGroup> list) {
-        deleteAllDatas();
         Collections.reverse(list);
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
                 EmoGroup group = list.get(i);
-                Log.i("info", "=====groupName:" + group.getGroup_name());
+                this.save(group);
+                saveEmo(group);
+            }
+        }
+    }
+
+    public void saveSortList(List<EmoGroup> list) {
+        deleteAllDatas();
+//        Collections.reverse(list);
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                EmoGroup group = list.get(i);
                 this.save(group);
                 saveEmo(group);
             }
@@ -89,9 +102,10 @@ public class EmoGroupHelper extends ColumnHelper<EmoGroup> {
 
     @Override
     public void save(EmoGroup entity) {
-        String[] args = new String[]{entity.getGroup_id()};
+        String[] args = new String[]{entity.getGroup_id(), userId};
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                getSelectSql(EmoGroupColumn.TABLE_NAME, new String[]{EmoGroupColumn.GROUP_ID}), args);
+                getSelectSql(EmoGroupColumn.TABLE_NAME, new String[]{EmoGroupColumn.GROUP_ID,
+                        EmoGroupColumn.USER_ID}), args);
         if (exist(c)) {
 //            c.moveToFirst();
 //            this.delete(entity.getUser_name());
@@ -112,7 +126,8 @@ public class EmoGroupHelper extends ColumnHelper<EmoGroup> {
     @Override
     public List<EmoGroup> query() {
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                "SELECT * FROM " + EmoGroupColumn.TABLE_NAME, null);
+                "SELECT * FROM " + EmoGroupColumn.TABLE_NAME + " WHERE " + EmoGroupColumn.USER_ID
+                        + " = ? ", new String[]{userId});
         List<EmoGroup> bos = new ArrayList<EmoGroup>();
         if (exist(c)) {
             c.moveToLast();
@@ -127,7 +142,7 @@ public class EmoGroupHelper extends ColumnHelper<EmoGroup> {
     public List<EmoGroup> queryByCateId(String cateId) {//根据分类id查询组
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
                 "SELECT * FROM " + EmoGroupColumn.TABLE_NAME + " WHERE " + EmoGroupColumn.CATE_ID
-                        + " = ? ", new String[]{cateId});
+                        + " = ? " + " and " + EmoGroupColumn.USER_ID + " =?", new String[]{cateId, userId});
         List<EmoGroup> bos = new ArrayList<EmoGroup>();
         if (exist(c, mContext)) {
             Log.i("info", "====count:" + c.getCount());
@@ -151,16 +166,44 @@ public class EmoGroupHelper extends ColumnHelper<EmoGroup> {
     }
 
     @Override
-    public void delete(String str) {//删除某一组
-        DBHelper.getInstance(mContext).delete(EmoGroupColumn.TABLE_NAME, EmoGroupColumn.GROUP_ID + " = ?",
-                new String[]{str});
+    public void delete(String str) {
+
+    }
+
+    public void delete(String cateid, String str) {//删除某一组
+        DBHelper.getInstance(mContext).delete(EmoGroupColumn.TABLE_NAME, EmoGroupColumn.GROUP_ID + " = ?"
+                        + " and " + EmoGroupColumn.USER_ID + " =?",
+                new String[]{str, userId});
+        EmoHelper.getInstance().deleteByGroupId(str);
+        deleteCate(cateid);
+    }
+
+    private void deleteCate(String cateid) {//根据groupid查询有多少组，如果只有一组，删除该父级
+        Cursor c = DBHelper.getInstance(mContext).rawQuery(
+                "SELECT * FROM " + EmoGroupColumn.TABLE_NAME + " WHERE " + EmoGroupColumn.CATE_ID
+                        + " = ? " + " and " + EmoGroupColumn.USER_ID + " =?", new String[]{cateid, userId});
+        if (exist(c, mContext)) {
+            int count = c.getCount();
+            Log.i("info", "======count:" + count);
+            if (count == 0) {
+                EmoCateHelper.getInstance().delete(cateid);
+            }
+        } else {
+            EmoCateHelper.getInstance().delete(cateid);
+        }
+        c.close();
+    }
+
+
+    private void deleteEmos() {//删除某一组下的所有表情
+        EmoHelper.getInstance().deleteAllDatas();
     }
 
     /**
      * 删除表内所有数据
      */
     public void deleteAllDatas() {
-        DBHelper.getInstance(mContext).delete(EmoGroupColumn.TABLE_NAME, null, null);
+        DBHelper.getInstance(mContext).delete(EmoGroupColumn.TABLE_NAME, EmoGroupColumn.USER_ID + " =?", new String[]{userId});
     }
 
     @Override

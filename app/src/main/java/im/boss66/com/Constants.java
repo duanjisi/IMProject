@@ -5,5 +5,5 @@ package im.boss66.com;
  */
 public class Constants {
     public static final String EMO_DIR_PATH =
-            android.os.Environment.getExternalStorageDirectory() + "/HaiMeng/";
+            android.os.Environment.getExternalStorageDirectory() + "/HaiMeng/" + App.getInstance().getUid() + "/";
 }

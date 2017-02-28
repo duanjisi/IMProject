@@ -103,7 +103,8 @@
             android:id="@+id/tv_voice_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/relativeLayout1"
             android:clickable="true"
             android:focusable="true"
             android:gravity="left|center"
@@ -111,7 +112,6 @@
             android:minHeight="50dp"
             android:textColor="#ff000000"
             android:textSize="15sp" />
-
         <!--
                <ImageView 
             android:id="@+id/iv_chart_item_photo"

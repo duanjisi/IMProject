@@ -1,6 +1,5 @@
 package im.boss66.com.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import com.facebook.drawee.backends.pipeline.Fresco;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -21,15 +22,20 @@ import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
 import im.boss66.com.db.dao.EmoHelper;
+import im.boss66.com.db.dao.EmoLoveHelper;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.BaseEmoCollection;
 import im.boss66.com.entity.EmoCate;
 import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmoGroup;
+import im.boss66.com.entity.EmoLove;
 import im.boss66.com.fragment.ContactBooksFragment;
 import im.boss66.com.fragment.ContactsFragment;
 import im.boss66.com.fragment.DiscoverFragment;
 import im.boss66.com.fragment.HomePagerFragment;
 import im.boss66.com.fragment.MineFragment;
+import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.request.EmoCollectionsRequest;
 import im.boss66.com.services.ChatServices;
 import im.boss66.com.widget.dialog.PeopleDataDialog;
 
@@ -37,6 +43,7 @@ import im.boss66.com.widget.dialog.PeopleDataDialog;
  * Created by Johnny on 2017/1/14.
  */
 public class MainActivity extends BaseActivity implements Observer {
+    private final static String TAG = MainActivity.class.getSimpleName();
     private static final int VIEW_PAGER_PAGE_1 = 0;
     private static final int VIEW_PAGER_PAGE_2 = 1;
     private static final int VIEW_PAGER_PAGE_3 = 2;
@@ -53,11 +60,13 @@ public class MainActivity extends BaseActivity implements Observer {
 //    private String userid, uid;
 
     private PeopleDataDialog peopleDataDialog;
+//    private SimpleDraweeView simpleDrawee00, simpleDrawee01;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Session.getInstance().addObserver(this);
+        Fresco.initialize(MainActivity.this);//注册，在setContentView之前。
         setContentView(R.layout.activity_main);
         initViews();
     }
@@ -69,6 +78,8 @@ public class MainActivity extends BaseActivity implements Observer {
 //            userid = bundle.getString("uid1", "");
 //            uid = bundle.getString("uid2", "");
 //        }
+//        simpleDrawee00 = (SimpleDraweeView) findViewById(R.id.iv_gif_00);
+//        simpleDrawee01 = (SimpleDraweeView) findViewById(R.id.iv_gif_01);
         mRadioGroup = (RadioGroup) findViewById(R.id.bottom_navigation_rg);
         rbHomePager = (RadioButton) findViewById(R.id.rb_home_pager);
         rbBooks = (RadioButton) findViewById(R.id.rb_contact_book);
@@ -85,11 +96,46 @@ public class MainActivity extends BaseActivity implements Observer {
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(new MyPageChangeListener());
         mViewPager.setCurrentItem(VIEW_PAGER_PAGE_1);
-
 //        Intent intent = new Intent(context, ChatServices.class);
 //        intent.putExtra("userid", account.getUser_id());
 //        startService(intent);
         ChatServices.startChatService(context);
+        requestLoveStore();
+//        loadGif();
+    }
+
+
+    private void loadGif() {
+//        String url = "https://imgcdn.66boss.com/emo/assets/2/3/Mi8zL~a6kOawj3dlYi5naWY=.gif";
+//        Uri uri = Uri.parse(url);
+//        //加载静态图片
+//        simpleDrawee00.setImageURI(uri);
+//        //加载动态图片
+//        DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).setAutoPlayAnimations(true).build();
+//        simpleDrawee01.setController(controller);
+    }
+
+    private void requestLoveStore() {
+        EmoCollectionsRequest request = new EmoCollectionsRequest(TAG, "", "", "1");
+        request.send(new BaseDataRequest.RequestCallback<BaseEmoCollection>() {
+            @Override
+            public void onSuccess(BaseEmoCollection pojo) {
+                saveToDb(pojo);
+            }
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void saveToDb(BaseEmoCollection pojo) {
+        if (pojo != null) {
+            ArrayList<EmoLove> loves = pojo.getResult();
+            if (loves != null && loves.size() != 0) {
+                EmoLoveHelper.getInstance().save(loves);
+            }
+        }
     }
 
     private String groupIcon = "http://pics.sc.chinaz.com/Files/pic/icons128/5858/261.png";
@@ -370,15 +416,15 @@ public class MainActivity extends BaseActivity implements Observer {
                     break;
                 case R.id.rb_contact:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_3);
-                   if(peopleDataDialog==null){
-                       peopleDataDialog = new PeopleDataDialog(MainActivity.this);
-                       peopleDataDialog.show();
-                   }else{
-                       if(!peopleDataDialog.isShowing()){
-                           peopleDataDialog.show();
+                    if (peopleDataDialog == null) {
+                        peopleDataDialog = new PeopleDataDialog(MainActivity.this);
+                        peopleDataDialog.show();
+                    } else {
+                        if (!peopleDataDialog.isShowing()) {
+                            peopleDataDialog.show();
 
-                       }
-                   }
+                        }
+                    }
                     break;
                 case R.id.rb_discover:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_4);
