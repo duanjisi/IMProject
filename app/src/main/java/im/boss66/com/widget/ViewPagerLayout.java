@@ -174,7 +174,7 @@ public class ViewPagerLayout extends FrameLayout {
             }
         });
         ImageView img = (ImageView) layout.findViewById(R.id.ad_im);
-        String url = entity.getCover();
+        String url = entity.getGroup_cover();
         mImageLoader.displayImage(url, img, ImageLoaderUtils.getDisplayImageOptions());
         return layout;
     }

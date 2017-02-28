@@ -6,6 +6,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
@@ -42,6 +43,7 @@ public class EmojiRecordActivity extends BaseActivity implements View.OnClickLis
     private void initDatas() {
         ArrayList<EmoGroup> groups = (ArrayList<EmoGroup>) EmoGroupHelper.getInstance().query();
         if (groups != null && groups.size() != 0) {
+            Collections.reverse(groups);
             adapter.initData(groups);
         }
     }

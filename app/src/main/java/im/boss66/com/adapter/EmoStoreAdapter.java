@@ -37,7 +37,7 @@ public class EmoStoreAdapter extends ABaseAdapter<EmoStore> {
         if (entity != null) {
             holder.tvName.setText(getSpanned(entity.getSname()));
             holder.tvDescr.setText(getSpanned(entity.getSdesc()));
-            imageLoader.displayImage(entity.getUrl(), holder.image, ImageLoaderUtils.getDisplayImageOptions());
+            imageLoader.displayImage(entity.getIcon(), holder.image, ImageLoaderUtils.getDisplayImageOptions());
         }
         return convertView;
     }

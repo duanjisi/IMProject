@@ -6,10 +6,12 @@ package im.boss66.com.entity;
  */
 public class EmoStore {
     private String group_id = "";
+    private String cate_id = "";
     private String emo_id = "";
     private String sname = "";
     private String sdesc = "";
     private String url = "";
+    private String icon = "";
 
     public String getGroup_id() {
         return group_id;
@@ -49,5 +51,21 @@ public class EmoStore {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getCate_id() {
+        return cate_id;
+    }
+
+    public void setCate_id(String cate_id) {
+        this.cate_id = cate_id;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

@@ -3,7 +3,6 @@ package im.boss66.com.activity.im;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.EmojiWellAdapter;
@@ -102,7 +102,11 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
         ivSeting = (ImageView) findViewById(R.id.iv_more);
         tvSearch = (TextView) findViewById(R.id.tv_search);
         listView = (ListView) findViewById(R.id.listView);
+
+        ivSeting.setOnClickListener(this);
         tvBack.setOnClickListener(this);
+        tvSearch.setOnClickListener(this);
+
         listView.addHeaderView(header);
         listView.addFooterView(rootView);
         adapter = new EmojiWellAdapter(context, mListener);
@@ -207,7 +211,6 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
 //                            tv_download.setTextColor(resources.getColor(R.color.btn_green_noraml));
 //                            tv_download.setBackgroundResource(R.drawable.bg_frame_emo_default);
 //                        }
-                        Log.i("info", "======path:" + file.getPath() + "\n" + "AbsolutePath:" + file.getAbsolutePath());
                         ZipExtractorTask task = new ZipExtractorTask(file.getPath(), Constants.EMO_DIR_PATH,
                                 EmojiSelectWellActivity.this, true, new ZipExtractorTask.Callback() {
                             @Override
@@ -222,21 +225,15 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
                             }
 
                             @Override
-                            public void onComplete() {
-//                                if (tv_download != null) {
-//                                    progressBar.setVisibility(View.GONE);
-//                                    tv_download.setVisibility(View.VISIBLE);
-//                                    tv_download.setText("下载");
-//                                    adapter.saveDownloadedStatus(entity);
-//                                    tv_download.setTextColor(resources.getColor(R.color.btn_green_noraml));
-//                                    tv_download.setBackgroundResource(R.drawable.bg_frame_emo_default);
-//                                }
+                            public void onComplete() {//解压完成，删除压缩包文件
+                                FileUtil.deleteFile(file.getPath().toString());
                                 String filepath = Constants.EMO_DIR_PATH + File.separator + fileName.replace(".zip", ".json");
-                                EmoDbTask dbTask = new EmoDbTask(filepath, new EmoDbTask.dbTaskCallback() {
+                                EmoDbTask dbTask = new EmoDbTask(filepath, new EmoDbTask.dbTaskCallback() {//解析.json文件。保持db数据
                                     @Override
                                     public void onPreExecute() {
 
                                     }
+
                                     @Override
                                     public void onComplete() {
                                         if (tv_download != null) {
@@ -300,7 +297,7 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
                 openActivity(EmojiMyActivity.class);
                 break;
             case R.id.tv_search://收索
-
+                openActivity(EmojiStoreSearchActivity.class);
                 break;
         }
     }

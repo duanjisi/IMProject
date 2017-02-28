@@ -6,6 +6,8 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.media.MediaPlayer;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,6 +18,7 @@ import im.boss66.com.config.LoginStatus;
 import im.boss66.com.db.MessageDB;
 import im.boss66.com.db.RecentDB;
 import im.boss66.com.db.UserDB;
+import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.LocalAddressEntity;
 
@@ -54,6 +57,7 @@ public class App extends Application {
         mApplication = this;
         initFaceMap();
         initData();
+        Fresco.initialize(getApplicationContext());//注册，在setContentView之前。
     }
 
     private void initData() {
@@ -175,6 +179,13 @@ public class App extends Application {
 //        mNotificationManager.notify(PushMessageReceiver.NOTIFY_ID,
 //                mNotification);
 //    }
+
+    public String getUid() {
+        if (sAccount == null) {
+            return LoginStatus.getInstance().getUser_id();
+        }
+        return sAccount.getUser_id();
+    }
 
     public AccountEntity getAccount() {
         if (sAccount != null) {
@@ -332,14 +343,27 @@ public class App extends Application {
         mFaceMap.put("[表情三]", R.drawable.f109);
     }
 
-    public void addTempActivity(Activity activity){
-        if (tempActivityList == null){
+    public ArrayList<EaseUser> contactList;
+
+    public ArrayList<EaseUser> getContacts() {
+        if (contactList == null) {
+            contactList = new ArrayList<>();
+        }
+        return contactList;
+    }
+
+    public void setContacts(ArrayList<EaseUser> list) {
+        this.contactList = list;
+    }
+
+    public void addTempActivity(Activity activity) {
+        if (tempActivityList == null) {
             tempActivityList = new ArrayList<>();
         }
         tempActivityList.add(activity);
     }
 
-    public List<Activity> getTempActivityList(){
+    public List<Activity> getTempActivityList() {
         return tempActivityList;
     }
 

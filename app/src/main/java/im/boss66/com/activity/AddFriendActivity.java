@@ -29,6 +29,7 @@ import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.MakeQRCodeUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.book.PhoneContactsActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.widget.RoundImageView;
 
@@ -85,7 +86,7 @@ public class AddFriendActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.rl_phone_contacts:
-
+                openActivity(PhoneContactsActivity.class);
                 break;
             case R.id.iv_code:
                 if (popupWindow == null) {

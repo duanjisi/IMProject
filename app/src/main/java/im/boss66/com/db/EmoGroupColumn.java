@@ -18,7 +18,7 @@ public class EmoGroupColumn extends DatabaseColumn {
     public static final String GROUP_COVER = "group_cover";
     public static final String GROUP_ICON = "group_icon";
     public static final String GROUP_FORMAT = "group_format";
-
+    public static final String USER_ID = "user_id";
     private static final Map<String, String> mColumnMap = new HashMap<String, String>();
 
     static {
@@ -31,6 +31,7 @@ public class EmoGroupColumn extends DatabaseColumn {
         mColumnMap.put(GROUP_COVER, "text");
         mColumnMap.put(GROUP_ICON, "text");
         mColumnMap.put(GROUP_FORMAT, "text");
+        mColumnMap.put(USER_ID, "text");
     }
 
     @Override

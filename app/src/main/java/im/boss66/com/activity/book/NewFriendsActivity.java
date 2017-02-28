@@ -91,7 +91,7 @@ public class NewFriendsActivity extends BaseActivity implements View.OnClickList
                 openActivity(AddFriendActivity.class);
                 break;
             case R.id.tv_add_contacts:
-
+                openActivity(PhoneContactsActivity.class);
                 break;
             case R.id.rl_tag:
 

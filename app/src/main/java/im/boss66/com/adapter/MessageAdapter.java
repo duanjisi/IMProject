@@ -2,9 +2,11 @@ package im.boss66.com.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.AnimationDrawable;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,23 +18,39 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.HttpHandler;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.SoundUtil;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.activity.discover.VideoPlayerActivity;
+import im.boss66.com.db.dao.EmoHelper;
+import im.boss66.com.entity.EmoEntity;
+import im.boss66.com.entity.EmotionEntity;
 import im.boss66.com.entity.MessageItem;
-import im.boss66.com.widget.GifView;
+import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.request.EmoParseRequest;
 import im.boss66.com.xlistview.GifTextView;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * @author pangzf
@@ -44,6 +62,7 @@ import im.boss66.com.xlistview.GifTextView;
  */
 @SuppressLint("NewApi")
 public class MessageAdapter extends BaseAdapter {
+    private static final String TAG = MessageAdapter.class.getSimpleName();
     public static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
     public static final int MESSAGE_TYPE_INVALID = -1;
 
@@ -69,6 +88,8 @@ public class MessageAdapter extends BaseAdapter {
     private Resources resources;
     private ImageLoader imageLoader;
     private int widthScreen;
+    private SoundUtil mSoundUtil = SoundUtil.getInstance();
+    private Handler mHandler = new Handler();
 
     public MessageAdapter(Context context, List<MessageItem> msgList) {
         this.mContext = context;
@@ -152,10 +173,10 @@ public class MessageAdapter extends BaseAdapter {
                 }
                 case MESSAGE_TYPE_MINE_VIDEO: {
                     convertView = mInflater.inflate(
-                            R.layout.zf_chat_mine_audio_message_item, parent, false);
-                    holder = new AudioMessageHolder();
+                            R.layout.zf_chat_mine_video_message_item, parent, false);
+                    holder = new VideoMessageHolder();
                     convertView.setTag(holder);
-                    fillAudioMessageHolder((AudioMessageHolder) holder,
+                    fillVideoMessageHolder((VideoMessageHolder) holder,
                             convertView);
                     break;
                 }
@@ -165,6 +186,15 @@ public class MessageAdapter extends BaseAdapter {
                     holder = new TextMessageHolder();
                     convertView.setTag(holder);
                     fillTextMessageHolder((TextMessageHolder) holder,
+                            convertView);
+                    break;
+                }
+                case MESSAGE_TYPE_MINE_AUDIO: {//声音
+                    convertView = mInflater.inflate(
+                            R.layout.zf_chat_mine_audio_message_item, parent, false);
+                    holder = new AudioMessageHolder();
+                    convertView.setTag(holder);
+                    fillAudioMessageHolder((AudioMessageHolder) holder,
                             convertView);
                     break;
                 }
@@ -189,11 +219,11 @@ public class MessageAdapter extends BaseAdapter {
                 }
                 case MESSAGE_TYPE_OTHER_VIDEO: {
                     convertView = mInflater
-                            .inflate(R.layout.zf_chat_other_audio_message_item,
+                            .inflate(R.layout.zf_chat_other_video_message_item,
                                     parent, false);
-                    holder = new AudioMessageHolder();
+                    holder = new VideoMessageHolder();
                     convertView.setTag(holder);
-                    fillAudioMessageHolder((AudioMessageHolder) holder,
+                    fillVideoMessageHolder((VideoMessageHolder) holder,
                             convertView);
                     break;
                 }
@@ -203,6 +233,15 @@ public class MessageAdapter extends BaseAdapter {
                     holder = new TextMessageHolder();
                     convertView.setTag(holder);
                     fillTextMessageHolder((TextMessageHolder) holder,
+                            convertView);
+                    break;
+                }
+                case MESSAGE_TYPE_OTHER_AUDIO: {
+                    convertView = mInflater.inflate(
+                            R.layout.zf_chat_other_audio_message_item, parent, false);
+                    holder = new AudioMessageHolder();
+                    convertView.setTag(holder);
+                    fillAudioMessageHolder((AudioMessageHolder) holder,
                             convertView);
                     break;
                 }
@@ -219,10 +258,12 @@ public class MessageAdapter extends BaseAdapter {
                 handleEmotionMessage((EmotionMessageHolder) holder, mItem, parent);
             } else if (msgType == MessageItem.MESSAGE_TYPE_IMG) {
                 handleImageMessage((ImageMessageHolder) holder, mItem, parent);
-            } else if (msgType == MessageItem.MESSAGE_TYPE_VIDEO) {
-                handleAudioMessage((AudioMessageHolder) holder, mItem, parent);
             } else if (msgType == MessageItem.MESSAGE_TYPE_TXT) {
                 handleTextMessage((TextMessageHolder) holder, mItem, parent);
+            } else if (msgType == MessageItem.MESSAGE_TYPE_AUDIO) {
+                handleAudioMessage((AudioMessageHolder) holder, mItem, parent);
+            } else if (msgType == MessageItem.MESSAGE_TYPE_VIDEO) {
+                handleVideoMessage((VideoMessageHolder) holder, mItem, parent);
             }
         }
         return convertView;
@@ -237,16 +278,147 @@ public class MessageAdapter extends BaseAdapter {
     private void handleEmotionMessage(final EmotionMessageHolder holder,
                                       final MessageItem mItem, final View parent) {
         handleBaseMessage(holder, mItem);
-        Map<String, Integer> map = App.getInstance().getFaceMap();
-        if (map.containsKey(mItem.getMessage())) {
-            int resId = map.get(mItem.getMessage());
-            Bitmap bitmap = BitmapFactory.decodeResource(resources, resId);
-            if (bitmap != null) {
-                holder.gifView.getLayoutParams().width = bitmap.getWidth();
-                holder.gifView.getLayoutParams().height = bitmap.getHeight();
+//        Map<String, Integer> map = App.getInstance().getFaceMap();
+//        if (map.containsKey(mItem.getMessage())) {
+//            int resId = map.get(mItem.getMessage());
+//            Bitmap bitmap = BitmapFactory.decodeResource(resources, resId);
+//            if (bitmap != null) {
+//                holder.gifView.getLayoutParams().width = bitmap.getWidth();
+//                holder.gifView.getLayoutParams().height = bitmap.getHeight();
+//            }
+//            holder.gifView.setMovieResource(resId);
+//        }
+        String emo_code = mItem.getMessage();
+        EmoEntity entity = EmoHelper.getInstance().queryByCode(emo_code);
+        if (entity != null) {
+            String format = entity.getEmo_format();
+            if (format.equals("gif")) {
+                try {
+                    GifDrawable drawable = new GifDrawable(getPath(entity));
+                    holder.gifView.setImageDrawable(drawable);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.i("info", "============IOException:" + e.getMessage());
+                    holder.gifView.setImageResource(R.drawable.emo_default_img);
+                }
+            } else {
+                holder.gifView.setImageBitmap(FileUtils.getBitmapByPath(getPath(entity)));
             }
-            holder.gifView.setMovieResource(resId);
+        } else {
+            requestParseEmo(holder, emo_code);
         }
+    }
+
+    private Bitmap getBitmap(EmoEntity entity) {
+        String path = Constants.EMO_DIR_PATH + File.separator +
+                entity.getEmo_cate_id() + File.separator +
+                entity.getEmo_group_id() + File.separator +
+                entity.getEmo_code() + "." +
+                entity.getEmo_format();
+        return FileUtils.getBitmapByPath(path);
+    }
+
+    private String getPath(EmoEntity entity) {
+        String path = Constants.EMO_DIR_PATH + File.separator +
+                entity.getEmo_cate_id() + File.separator +
+                entity.getEmo_group_id() + File.separator +
+                entity.getEmo_code() + "." +
+                entity.getEmo_format();
+        return path;
+    }
+
+
+    private void requestParseEmo(final EmotionMessageHolder holder, String code) {
+        EmoParseRequest request = new EmoParseRequest(TAG, code);
+        request.send(new BaseDataRequest.RequestCallback<EmotionEntity>() {
+            @Override
+            public void onSuccess(EmotionEntity pojo) {
+                bindEmo(holder, pojo);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                Log.i("info", "============msg:" + msg);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        holder.gifView.setImageResource(R.drawable.emo_default_img);
+                    }
+                });
+//                Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void bindEmo(final EmotionMessageHolder holder, EmotionEntity entity) {
+        if (entity != null) {
+            String emo_url = entity.getEmo_url();
+            String name = FileUtils.getFileNameFromPath(emo_url);
+            if (name.contains(".gif")) {
+                final String cachePath = Constants.EMO_DIR_PATH + "emotion" + File.separator + name;
+                File f = new File(cachePath);
+                if (f.exists()) {
+                    try {
+                        GifDrawable drawable = new GifDrawable(cachePath);
+                        holder.gifView.setImageDrawable(drawable);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    HttpUtils http = new HttpUtils();
+                    final HttpHandler handler = http.download(emo_url,
+                            cachePath,
+                            true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
+                            true, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
+                            new RequestCallBack<File>() {
+
+                                @Override
+                                public void onStart() {
+
+                                }
+
+                                @Override
+                                public void onLoading(long total, long current, boolean isUploading) {
+                                }
+
+                                @Override
+                                public void onSuccess(ResponseInfo<File> responseInfo) {
+                                    Log.i("info", "downloaded:" + responseInfo.result.getPath());
+                                    try {
+                                        GifDrawable drawable = new GifDrawable(cachePath);
+                                        holder.gifView.setImageDrawable(drawable);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(HttpException error, String msg) {
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            holder.gifView.setImageResource(R.drawable.emo_default_img);
+                                        }
+                                    });
+                                }
+                            });
+                }
+            } else {
+                imageLoader.displayImage(entity.getEmo_url(), holder.gifView, ImageLoaderUtils.getDisplayImageOptions());
+            }
+        }
+    }
+
+    private void saveEmoEntity(EmotionEntity model) {
+        EmoEntity entity = new EmoEntity();
+        entity.setEmo_group_id(model.getEmo_group());
+        entity.setEmo_id(model.getEmo_id());
+        entity.setEmo_code(model.getEmo_code());
+        entity.setEmo_cate_id(model.getEmo_cate());
+        entity.setEmo_format(model.getEmo_format());
+        entity.setEmo_name(model.getEmo_name());
+        entity.setEmo_desc(model.getEmo_name());
+        EmoHelper.getInstance().save(entity);
     }
 
     /**
@@ -337,17 +509,68 @@ public class MessageAdapter extends BaseAdapter {
         // 语音
 //        holder.msg.setCompoundDrawablesWithIntrinsicBounds(0, 0,
 //                R.drawable.chatto_voice_playing, 0);
-//        holder.voiceTime.setText(TimeUtil.getVoiceRecorderTime(mItem
-//                .getVoiceTime()));
-//        holder.msg.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mItem.getMsgType() == MessageItem.MESSAGE_TYPE_RECORD) {
-//                    // 播放语音
-//                    mSoundUtil.playRecorder(mContext, mItem.getMessage());
-//                }
-//            }
-//        });
+        holder.voiceTime.setText(TimeUtil.getVoiceRecorderTime(mItem
+                .getVoiceTime()));
+        holder.msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mItem.getMsgType() == MessageItem.MESSAGE_TYPE_AUDIO) {
+                    if (mItem.isComMeg()) {
+                        startAnimation(holder.msg, R.drawable.voice_other_animlist);
+                    } else {
+                        startAnimation(holder.msg, R.drawable.voice_my_animlist);
+                    }
+                    // 播放语音
+                    mSoundUtil.playRecorder(mContext, mItem.getMessage(), new SoundUtil.CompletionListener() {
+                        @Override
+                        public void onCompletion() {
+                            if (mItem.isComMeg()) {
+                                stopAnimation(holder.msg, R.drawable.voice_other_animlist);
+                                holder.msg.setImageResource(R.drawable.chatto_se_playing);
+                            } else {
+                                stopAnimation(holder.msg, R.drawable.voice_my_animlist);
+                                holder.msg.setImageResource(R.drawable.chatto_voice_playing);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void handleVideoMessage(final VideoMessageHolder holder,
+                                    final MessageItem mItem, final View parent) {
+        handleBaseMessage(holder, mItem);
+//        holder.duration.setText("");
+        final String videoPath = mItem.getMessage();
+        String imageUrl = null;
+        if (videoPath.contains(".mp4")) {
+            imageUrl = videoPath.replace(".mp4", ".jpg");
+            imageLoader.displayImage(imageUrl, holder.iv_cover, ImageLoaderUtils.getDisplayImageOptions());
+        }
+        final String cover = imageUrl;
+        holder.iv_player.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, VideoPlayerActivity.class);
+                intent.putExtra("url", videoPath);
+                intent.putExtra("imgurl", cover);
+                intent.putExtra("isFull", false);
+                mContext.startActivity(intent);
+            }
+        });
+    }
+
+    private void startAnimation(ImageView imageView, int resId) {
+        imageView.setImageResource(resId);
+        AnimationDrawable animationDrawable = (AnimationDrawable) imageView.getDrawable();
+        animationDrawable.start();
+    }
+
+    private void stopAnimation(ImageView imageView, int resId) {
+        imageView.setImageResource(resId);
+        AnimationDrawable animationDrawable = (AnimationDrawable) imageView.getDrawable();
+        animationDrawable.stop();
     }
 
     private void handleBaseMessage(MessageHolderBase holder,
@@ -390,7 +613,9 @@ public class MessageAdapter extends BaseAdapter {
     private void fillEmotionMessageHolder(EmotionMessageHolder holder,
                                           View convertView) {
         fillBaseMessageholder(holder, convertView);
-        holder.gifView = (GifView) convertView.findViewById(R.id.textView2);
+//        holder.gifView = (GifView) convertView.findViewById(R.id.textView2);
+        holder.gifView = (GifImageView) convertView.findViewById(R.id.textView2);
+        holder.ivEmo = (ImageView) convertView.findViewById(R.id.iv_emo);
     }
 
     private void fillImageMessageHolder(ImageMessageHolder holder,
@@ -407,7 +632,18 @@ public class MessageAdapter extends BaseAdapter {
                 .findViewById(R.id.tv_voice_time);
         holder.ivphoto = (ImageView) convertView
                 .findViewById(R.id.iv_chart_item_photo);
-        holder.msg = (GifView) convertView.findViewById(R.id.textView2);
+        holder.msg = (ImageView) convertView.findViewById(R.id.textView2);
+//        holder.msg = (GifView) convertView.findViewById(R.id.textView2);
+    }
+
+    private void fillVideoMessageHolder(VideoMessageHolder holder,
+                                        View convertView) {
+        fillBaseMessageholder(holder, convertView);
+        holder.iv_cover = (ImageView) convertView
+                .findViewById(R.id.textView2);
+        holder.iv_player = (ImageView) convertView
+                .findViewById(R.id.iv_video_play);
+        holder.duration = (TextView) convertView.findViewById(R.id.tv_duration);
     }
 
     private static class MessageHolderBase {
@@ -430,7 +666,9 @@ public class MessageAdapter extends BaseAdapter {
         /**
          * 表情消息体
          */
-        GifView gifView;
+//        GifView gifView;
+        GifImageView gifView;
+        ImageView ivEmo;
     }
 
     private static class ImageMessageHolder extends MessageHolderBase {
@@ -447,9 +685,15 @@ public class MessageAdapter extends BaseAdapter {
          * 语音秒数
          */
         TextView voiceTime;
-        GifView msg;
+        //        GifView msg;
+        ImageView msg;
     }
 
+    private static class VideoMessageHolder extends MessageHolderBase {
+        ImageView iv_cover;
+        TextView duration;
+        ImageView iv_player;
+    }
 
     /**
      * 另外一种方法解析表情将[表情]换成fxxx

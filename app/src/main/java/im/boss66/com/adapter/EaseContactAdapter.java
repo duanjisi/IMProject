@@ -14,18 +14,25 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hyphenate.util.EMLog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import im.boss66.com.R;
+import im.boss66.com.Session;
+import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.domain.EaseUser;
+import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.request.AddFriendRequest;
 
-public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements SectionIndexer {
+public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements SectionIndexer, Observer {
     private static final String TAG = "ContactAdapter";
     List<String> list;
     List<EaseUser> userList;
@@ -38,6 +45,7 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
     private boolean notiyfyByFilter;
     private ImageLoader imageLoader;
     private boolean isShow = false;
+    private boolean isPhoneContact = false;
 
     public EaseContactAdapter(Context context, int resource, List<EaseUser> objects) {
         super(context, resource, objects);
@@ -47,8 +55,16 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
         copyUserList = new ArrayList<EaseUser>();
         copyUserList.addAll(objects);
         layoutInflater = LayoutInflater.from(context);
+        Session.getInstance().addObserver(this);
     }
 
+    public List<EaseUser> getUserList() {
+        return copyUserList;
+    }
+
+    public void setPhoneContact(boolean phoneContact) {
+        isPhoneContact = phoneContact;
+    }
 
     public void addAll(List<EaseUser> objects) {
         this.userList = objects;
@@ -65,6 +81,7 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
     private static class ViewHolder {
         ImageView avatar;
         TextView nameView;
+        TextView contact;
         TextView headerView;
         TextView notice;
         TextView addFriend;
@@ -80,7 +97,6 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
                 convertView = layoutInflater.inflate(R.layout.ease_row_contact, null);
             else
                 convertView = layoutInflater.inflate(res, null);
-
             if (res == 0) {
                 holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
                 holder.nameView = (TextView) convertView.findViewById(R.id.name);
@@ -89,6 +105,7 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
             } else {
                 holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
                 holder.nameView = (TextView) convertView.findViewById(R.id.name);
+                holder.contact = (TextView) convertView.findViewById(R.id.tv_contact);
                 holder.headerView = (TextView) convertView.findViewById(R.id.header);
                 holder.notice = (TextView) convertView.findViewById(R.id.tv_notice);
                 holder.addFriend = (TextView) convertView.findViewById(R.id.btn_add);
@@ -98,10 +115,17 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
             holder = (ViewHolder) convertView.getTag();
         }
 
-        EaseUser user = getItem(position);
+        final EaseUser user = getItem(position);
         if (user == null)
             Log.d("ContactAdapter", position + "");
-        String username = user.getUsername();
+//        String username = user.getUsername();
+        String contactName = user.getContactName();
+        String username;
+        if (isPhoneContact) {
+            username = "嗨萌:" + user.getUsername();
+        } else {
+            username = user.getUsername();
+        }
         String header = user.getInitialLetter();
 
         boolean ischecked = user.isChecked();
@@ -116,13 +140,14 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
         } else {
             holder.headerView.setVisibility(View.GONE);
         }
-//        EaseUserUtils.setUserNick(username, holder.nameView);
-//        EaseUserUtils.setUserAvatar(imageLoader, user.getAvatar(), holder.avatar);
+
+        setUserNick(username, holder.nameView);
+        setUserNick(contactName, holder.contact);
         if (username != null && !username.equals("")) {
             holder.nameView.setText(username);
         }
-        imageLoader.displayImage(user.getAvatar(), holder.avatar, ImageLoaderUtils.getDisplayImageOptions());
 
+        imageLoader.displayImage(user.getAvatar(), holder.avatar, ImageLoaderUtils.getDisplayImageOptions());
         if (primaryColor != 0)
             holder.nameView.setTextColor(primaryColor);
         if (primarySize != 0)
@@ -138,23 +163,25 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
                 holder.notice.setVisibility(View.VISIBLE);
                 holder.notice.setText("已添加");
             } else {
-                if (user.getRequest_status().equals("1")) {
-                    holder.addFriend.setVisibility(View.INVISIBLE);
-                    holder.notice.setVisibility(View.VISIBLE);
-                    holder.notice.setText("等待验证");
-                } else if (user.getRequest_status().equals("0")) {
-                    holder.addFriend.setVisibility(View.INVISIBLE);
-                    holder.notice.setVisibility(View.VISIBLE);
-                    holder.notice.setText("已拒绝");
-                } else {
-                    holder.addFriend.setVisibility(View.VISIBLE);
-                    holder.notice.setVisibility(View.INVISIBLE);
-                }
+//                if (user.getRequest_status().equals("1")) {
+//                    holder.addFriend.setVisibility(View.INVISIBLE);
+//                    holder.notice.setVisibility(View.VISIBLE);
+//                    holder.notice.setText("等待验证");
+//                } else if (user.getRequest_status().equals("0")) {
+//                    holder.addFriend.setVisibility(View.INVISIBLE);
+//                    holder.notice.setVisibility(View.VISIBLE);
+//                    holder.notice.setText("已拒绝");
+//                } else {
+//                    holder.addFriend.setVisibility(View.VISIBLE);
+//                    holder.notice.setVisibility(View.INVISIBLE);
+//                }
+                holder.addFriend.setVisibility(View.VISIBLE);
+                holder.notice.setVisibility(View.INVISIBLE);
             }
             holder.addFriend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    addFriend(user);
                 }
             });
         } else {
@@ -175,6 +202,32 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
             }
         }
         return convertView;
+    }
+
+    public void setUserNick(String username, TextView textView) {
+        if (username != null && !username.equals("") && textView != null) {
+            textView.setText(username);
+        }
+    }
+
+    private void addFriend(final EaseUser user) {
+        if (user.getUserid() != null && !user.getUserid().equals("")) {
+            AddFriendRequest request = new AddFriendRequest(TAG, user.getUserid(), "");
+            request.send(new BaseDataRequest.RequestCallback<String>() {
+                @Override
+                public void onSuccess(String pojo) {
+//                    user.setIs_friends("1");
+//                    notifyDataSetChanged();
+//                    sendNotification(user.getUserid());
+                    Toast.makeText(getContext(), "已发送", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(String msg) {
+                    Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     @Override
@@ -253,8 +306,13 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
                 final ArrayList<EaseUser> newValues = new ArrayList<EaseUser>();
                 for (int i = 0; i < count; i++) {
                     final EaseUser user = mOriginalList.get(i);
-                    String username = user.getUsername();
-
+//                    String username = user.getUsername();
+                    String username;
+                    if (isPhoneContact) {
+                        username = user.getContactName();
+                    } else {
+                        username = user.getUsername();
+                    }
                     if (username.startsWith(prefixString)) {
                         newValues.add(user);
                     } else {
@@ -329,4 +387,14 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
         return this;
     }
 
+    @Override
+    public void update(Observable observable, Object o) {
+        SessionInfo sin = (SessionInfo) o;
+        if (sin.getAction() == Session.ACTION_REFRESH_VIEWS) {
+            int position = sin.getTag();
+            getItem(position).setChecked(false);
+            notifyDataSetChanged();
+            Log.i("info", "=======update()");
+        }
+    }
 }

@@ -10,13 +10,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.exception.SocializeException;
-
 import java.util.Map;
-
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.UIUtils;
