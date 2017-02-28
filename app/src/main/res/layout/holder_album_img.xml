@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_weight="3"
+        android:paddingTop="@dimen/dp_10">
+
+        <TextView
+            android:id="@+id/tv_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="34sp" />
+
+        <TextView
+            android:id="@+id/tv_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tv_day"
+            android:layout_toRightOf="@+id/tv_day"
+            android:padding="@dimen/dp_6"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:paddingTop="@dimen/dp_10">
+
+        <im.boss66.com.widget.MultiImageView
+            android:id="@+id/multiImagView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></im.boss66.com.widget.MultiImageView>
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/multiImagView"
+            android:layout_toRightOf="@+id/multiImagView"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:padding="@dimen/dp_4"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tv_content"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/gray_normal" />
+
+    </RelativeLayout>
+
+</LinearLayout>

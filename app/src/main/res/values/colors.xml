@@ -122,7 +122,7 @@
     <color name="dialog_view">#9b9e9e</color>
     <color name="dialog_cancle">#157EFB</color>
     <color name="dialog_confirm">#FD2741</color>
-
+    <color name="text_bg">#eaeaea</color>
 
 
 </resources>

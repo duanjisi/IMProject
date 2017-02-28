@@ -103,24 +103,31 @@
 
     <LinearLayout
         android:id="@+id/ll_personal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/dp_10"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
             android:text="今天"
             android:textSize="30sp"
             android:textColor="@color/black"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/hp_addmore_photo"
-            android:layout_marginLeft="@dimen/dp_18"/>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/hp_addmore_photo"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
