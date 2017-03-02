@@ -2,18 +2,26 @@ package im.boss66.com.activity.im;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observable;
 import java.util.Observer;
 
+import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
+import im.boss66.com.Utils.FileUtil;
+import im.boss66.com.Utils.PrefKey;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.MyEmojiAdapter;
 import im.boss66.com.db.dao.EmoGroupHelper;
@@ -29,6 +37,7 @@ public class EmojiMyActivity extends BaseActivity implements View.OnClickListene
     private RelativeLayout rl_add_emoji, rl_emoji_buy;
     private ListView listView;
     private MyEmojiAdapter adapter;
+    private String userid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +48,7 @@ public class EmojiMyActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initViews() {
+        userid = App.getInstance().getUid();
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvSort = (TextView) findViewById(R.id.iv_more);
         rl_add_emoji = (RelativeLayout) findViewById(R.id.rl_add_emoji);
@@ -85,6 +95,7 @@ public class EmojiMyActivity extends BaseActivity implements View.OnClickListene
 //        list.add(emo5);
         ArrayList<EmoGroup> list = (ArrayList<EmoGroup>) EmoGroupHelper.getInstance().query();
         if (list != null && list.size() != 0) {
+            Collections.reverse(list);
             adapter.initData(list);
         }
     }
@@ -115,6 +126,7 @@ public class EmojiMyActivity extends BaseActivity implements View.OnClickListene
         if (requestCode == 100) {
             ArrayList<EmoGroup> list = (ArrayList<EmoGroup>) EmoGroupHelper.getInstance().query();
             if (list != null && list.size() != 0) {
+                Collections.reverse(list);
                 adapter.initData(list);
             }
         }
@@ -132,10 +144,23 @@ public class EmojiMyActivity extends BaseActivity implements View.OnClickListene
         ArrayList<EmoGroup> groups = (ArrayList<EmoGroup>) adapter.getData();
         for (EmoGroup group : groups) {
             if (group.getGroup_id().equals(groupid)) {
-                EmoGroupHelper.getInstance().delete(groupid);
+                deleteThings(group);
                 adapter.remove(group);
                 break;
             }
         }
+    }
+
+    private void deleteThings(EmoGroup group) {
+        EmoGroupHelper.getInstance().delete(group.getCate_id(), group.getGroup_id());//清除数据库记录
+        setDownloadStatus(group.getGroup_id(), false);//更改下载状态记录
+        String path = Constants.EMO_DIR_PATH + group.getCate_id() + File.separator + group.getGroup_id();
+        Log.i("info", "======path:" + path);
+        FileUtil.deleteFile(path);
+    }
+
+    private void setDownloadStatus(String groupid, boolean flag) {
+        String key = PrefKey.EMOJI_DOWNLOAD_KEY + "/" + userid + "/" + groupid;
+        PreferenceUtils.putBoolean(context, key, flag);
     }
 }

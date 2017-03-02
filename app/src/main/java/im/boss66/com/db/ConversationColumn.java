@@ -8,13 +8,13 @@ import java.util.Map;
  */
 public class ConversationColumn extends DatabaseColumn {
     public static final String TABLE_NAME = "conversation";
-    public static final String USER_ID = "user_id";
     public static final String USER_NAME = "user_name";
     public static final String USER_AVATAR = "avatar";
     public static final String UNREAD_COUNT = "unread_count";
     public static final String MSG_TIME = "msg_time";
     public static final String MSG_TYPE = "msg_type";
     public static final String MSG_TXT = "msg_txt";
+    public static final String USER_ID = "user_id";
     private static final Map<String, String> mColumnMap = new HashMap<String, String>();
 
     static {

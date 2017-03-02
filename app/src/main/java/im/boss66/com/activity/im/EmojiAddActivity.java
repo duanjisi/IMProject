@@ -3,7 +3,6 @@ package im.boss66.com.activity.im;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -30,7 +29,9 @@ import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.PictureAdapter;
 import im.boss66.com.db.dao.EmoLoveHelper;
 import im.boss66.com.entity.EmoLove;
+import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
+import im.boss66.com.http.request.EmoCollectionAddRequest;
 import im.boss66.com.widget.MyGridView;
 
 /**
@@ -38,6 +39,7 @@ import im.boss66.com.widget.MyGridView;
  * Created by Johnny on 2017/2/11.
  */
 public class EmojiAddActivity extends BaseActivity implements View.OnClickListener {
+    private final static String TAG = EmojiAddActivity.class.getSimpleName();
     public final static String CHATPHOTO_PATH = Environment
             .getExternalStorageDirectory()
             + File.separator;
@@ -82,7 +84,6 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String string = (String) parent.getItemAtPosition(position);
             if (string.equals("lastItem")) {
-                Log.i("info", "=====lastItem");
                 MultiImageSelector.create(context).
                         showCamera(true).
                         count(1)
@@ -109,7 +110,6 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
 
     private void uploadImageFile(final String path) {
         String main = HttpUrl.UPLOAD_IMAGE_URL;
-//        showLoadingDialog();
         final HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         final com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         try {
@@ -118,16 +118,16 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
             File file = new File(compressPath);
             if (file.exists() && file.length() > 0) {
                 params.addBodyParameter("file", file);
+            } else {
+                showToast("本地文件不存在", true);
+                return;
             }
+            showLoadingDialog();
             MycsLog.i("info", "AbsolutePath:" + file.getAbsolutePath());
             httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
                 @Override
                 public void onSuccess(ResponseInfo<String> responseInfo) {
-                    Log.i("info", "responseInfo:" + responseInfo.result);
-                    EmoLove love = new EmoLove();
-                    love.setEmo_url(parsePath(responseInfo.result));
-                    EmoLoveHelper.getInstance().save(love);
-                    adapter.addItem2(parsePath(responseInfo.result));
+                    requestAddStore(parsePath(responseInfo.result));
                 }
 
                 @Override
@@ -154,5 +154,26 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
             e.printStackTrace();
             return null;
         }
+    }
+
+    private void requestAddStore(final String imageUrl) {
+        EmoCollectionAddRequest request = new EmoCollectionAddRequest(TAG, imageUrl, "", "");
+        request.send(new BaseDataRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String pojo) {
+                cancelLoadingDialog();
+                EmoLove love = new EmoLove();
+                love.setEmo_url(imageUrl);
+                EmoLoveHelper.getInstance().save(love);
+                adapter.addItem2(imageUrl);
+                showToast("添加成功!", true);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                cancelLoadingDialog();
+                showToast(msg, true);
+            }
+        });
     }
 }

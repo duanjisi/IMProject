@@ -58,10 +58,13 @@
         <TextView
             android:id="@+id/tv_search"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:drawableLeft="@drawable/hp_search_gnm"
             android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="11dp"
+            android:paddingRight="11dp"
             android:text="搜索"
             android:textColor="@color/bottom_text_color_default" />
     </RelativeLayout>

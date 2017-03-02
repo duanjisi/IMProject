@@ -75,6 +75,7 @@ import im.boss66.com.entity.CircleCommentListEntity;
 import im.boss66.com.entity.CircleItem;
 import im.boss66.com.entity.CirclePraiseListEntity;
 import im.boss66.com.entity.CommentConfig;
+import im.boss66.com.entity.FriendCircle;
 import im.boss66.com.entity.FriendCircleCommentEntity;
 import im.boss66.com.entity.FriendCircleEntity;
 import im.boss66.com.entity.FriendCircleItem;
@@ -119,7 +120,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     private int SEND_TYPE_VIDEO_TX = 102;
     private int page = 0;
     private boolean isOnRefresh = false;
-    private List<FriendCircleEntity.FriendCircle> allList;
+    private List<FriendCircle> allList;
     private ImageLoader imageLoader;
     private boolean isAddNew = false;
     private Dialog dialog;
@@ -291,7 +292,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     return;
                 } else {
                     updateEditTextBodyVisible(View.GONE, null);
-                    FriendCircleEntity.FriendCircle item = (FriendCircleEntity.FriendCircle) adapter.getDatas().get(curPostion);
+                    FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
                     if (item != null) {
                         String feed_uid = item.getFeed_uid();
                         createComment(content, "0", feed_uid);
@@ -330,7 +331,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void update2DeleteComment(int circlePosition, String commentId, boolean isLong) {
         //ToastUtil.showShort(this, "删除评论");
-        FriendCircleEntity.FriendCircle item = (FriendCircleEntity.FriendCircle) adapter.getDatas().get(curPostion);
+        FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
         if (item != null) {
             feedId = item.getFeed_id();
         }
@@ -444,7 +445,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     FriendCircleEntity data = JSON.parseObject(result, FriendCircleEntity.class);
                     if (data != null) {
                         if (data.getCode() == 1) {
-                            List<FriendCircleEntity.FriendCircle> list = data.getResult();
+                            List<FriendCircle> list = data.getResult();
                             if (list != null && list.size() > 0) {
                                 Collections.reverse(list);
                                 showData(list);
@@ -452,6 +453,8 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                         } else {
                             showToast(data.getMessage(), false);
                         }
+                    }else {
+                        showToast("没有更多数据了", false);
                     }
                 }
             }
@@ -464,7 +467,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         });
     }
 
-    private void showData(List<FriendCircleEntity.FriendCircle> list) {
+    private void showData(List<FriendCircle> list) {
         if (allList == null) {
             allList = new ArrayList<>();
         }
@@ -485,12 +488,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             isOnRefresh = true;
             isAddNew = true;
             getFriendCircleList();
-        } else if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {    //打开相机
-//            if (data == null) {
-//                return;
-//            } else {
-//
-//            }
+        } else if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {//打开相机
             if (imageUri != null) {
                 String path = Utils.getPath(this, imageUri);
                 Bundle bundle = new Bundle();
@@ -636,7 +634,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     if (entity != null) {
                         List<FriendCirclePraiseEntity> list = entity.getResult();
                         if (list != null) {
-                            FriendCircleEntity.FriendCircle item = (FriendCircleEntity.FriendCircle) adapter.getDatas().get(curPostion);
+                            FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
                             if (item != null) {
                                 item.setPraise_list(list);
                                 item.setIs_praise(isPraise);
@@ -733,7 +731,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     if (entity != null) {
                         List<FriendCircleCommentEntity> list = entity.getResult();
                         if (list != null) {
-                            FriendCircleEntity.FriendCircle item = (FriendCircleEntity.FriendCircle) adapter.getDatas().get(curPostion);
+                            FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
                             if (item != null) {
                                 item.setComment_list(list);
                                 adapter.notifyItemChanged(curPostion);

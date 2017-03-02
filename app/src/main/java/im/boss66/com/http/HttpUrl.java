@@ -6,6 +6,7 @@ package im.boss66.com.http;
 public class HttpUrl {
     public static final String MAIN_URL = "https://api.66boss.com/";
     public static final String BASE_URL = "http://live.66boss.com/";
+    public static final String BASE_IM_URL = "http://live.66boss.com:6060/";
     public static final String WS_URL = "ws://live.66boss.com:6060/entry";
 
     public static final String UPLOAD_IMAGE_URL = BASE_URL + "upload/writev2?";
@@ -48,6 +49,8 @@ public class HttpUrl {
     //表情商店搜索
     public static final String EMO_STORE_SEARCH_URL = MAIN_URL + "api/v1/store/search";
 
+    //表情编码解析
+    public static final String EMO_PARSE_URL = MAIN_URL + "api/v1/pack/topath";
     //获取表情收藏
     public static final String EMO_COLLECTIONS_URL = MAIN_URL + "api/v1/collect";
     //添加收藏表情
@@ -56,6 +59,19 @@ public class HttpUrl {
     public static final String EMO_COLLECTIONS_DELETE_URL = MAIN_URL + "api/v1/collect/delete";
     //获取用户信息接口
     public static final String PERSON_INFORM_URL = MAIN_URL + "ucenter/userinfo/index";
+    //匹配手机通讯录接口
+    public static final String MATCH_PHONE_BOOK_URL = MAIN_URL + "ucenter/matchphone";
+    //创建群接口
+    public static final String CREATE_GROUP_URL = BASE_IM_URL + "creategrp";
+    //增加群成员
+    public static final String ADD_GROUP_MEMBERS = BASE_IM_URL + "addmembers";
+    //踢出群成员
+    public static final String DELETE_GROUP_MEMBERS = BASE_IM_URL + "delmembers";
+    //更改群资料
+    public static final String UPDATE_GROUP_INFORMS = BASE_IM_URL + "editgrp";
+    //查询我的群
+    public static final String QURE_MY_GROUP = BASE_IM_URL + "querymygrps";
+
 
     //附近的人
     public static final String PEOPLE_NEARBY = MAIN_URL + "ucenter/nearuser/index";
@@ -96,4 +112,6 @@ public class HttpUrl {
     //获取行业列表
     public static final String CHOOSE_JOB_LIST = MAIN_URL + "ucenter/userinfo/update";
 
+    //获取个人相册
+    public static final String GET_PERSONAL_GALLERY = MAIN_URL + "api/v1/gallery";
 }

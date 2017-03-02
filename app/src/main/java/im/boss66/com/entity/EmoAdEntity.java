@@ -9,7 +9,7 @@ public class EmoAdEntity {
     private String group_name = "";
     private String cate_id = "";
     private String group_format = "";
-    private String cover = "";
+    private String group_cover = "";
     private String url = "";
 
     public String getGroup_id() {
@@ -44,19 +44,19 @@ public class EmoAdEntity {
         this.group_format = group_format;
     }
 
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
     public String getUrl() {
         return url;
     }
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getGroup_cover() {
+        return group_cover;
+    }
+
+    public void setGroup_cover(String group_cover) {
+        this.group_cover = group_cover;
     }
 }

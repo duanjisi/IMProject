@@ -23,11 +23,13 @@ public class EmoCollectionsRequest extends BaseDataRequest<BaseEmoCollection> {
 
     @Override
     protected Map<String, String> getParams() {
-        String number = (String) mParams[0];
-        String pass = (String) mParams[1];
+        String page = (String) mParams[0];
+        String size = (String) mParams[1];
+        String all = (String) mParams[2];
         Map<String, String> map = new HashMap<String, String>();
-        map.put("mobile_phone", number);
-        map.put("password", pass);
+        map.put("page", page);
+        map.put("size", size);
+        map.put("all", all);
         return map;
     }
 

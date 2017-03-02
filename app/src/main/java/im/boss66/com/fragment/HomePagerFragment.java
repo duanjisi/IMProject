@@ -30,6 +30,7 @@ import im.boss66.com.Utils.PrefKey;
 import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.AddFriendActivity;
 import im.boss66.com.activity.CaptureActivity;
+import im.boss66.com.activity.book.SelectContactsActivity;
 import im.boss66.com.activity.im.ChatActivity;
 import im.boss66.com.adapter.ConversationAdapter;
 import im.boss66.com.db.dao.ConversationHelper;
@@ -151,9 +152,11 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
                 if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 }
-                Intent intent = new Intent(context, ChatActivity.class);
+//                Intent intent = new Intent(context, ChatActivity.class);
 //                intent.putExtra("uid1", userid);
 //                intent.putExtra("uid2", uid);
+//                startActivity(intent);
+                Intent intent = new Intent(context, SelectContactsActivity.class);
                 startActivity(intent);
             }
         });

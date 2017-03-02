@@ -19,12 +19,14 @@ import im.boss66.com.entity.BaseConversation;
 public class ConversationHelper extends ColumnHelper<BaseConversation> {
     private static ConversationHelper helper;
     private Context mContext;
+    private static String userId;
 
     public ConversationHelper() {
         mContext = App.getInstance().getApplicationContext();
     }
 
     public static ConversationHelper getInstance() {
+        userId = App.getInstance().getUid();
         if (helper == null) {
             synchronized (ConversationHelper.class) {
                 if (helper == null) {

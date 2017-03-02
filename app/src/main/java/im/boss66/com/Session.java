@@ -10,6 +10,7 @@ public class Session extends Observable {
     public static final int ACTION_REFRSH_CONVERSATION_PAGE = 1011;
     public static final int ACTION_DELETE_CURRENT_EMOJI_GROUP = 1012;
     public static final int ACTION_APPLICATION_EXIT = 1013;//退出当前所有activity
+    public static final int ACTION_REFRESH_VIEWS = 1014;//刷新视图
 
     public Session() {
 
@@ -40,6 +41,15 @@ public class Session extends Observable {
     public void exitActivitys() {
         SessionInfo sin = new SessionInfo();
         sin.setAction(ACTION_APPLICATION_EXIT);
+        this.setChanged();
+        this.notifyObservers(sin);
+    }
+
+    public void actionRefreshViews(String userid, int tag) {
+        SessionInfo sin = new SessionInfo();
+        sin.setAction(ACTION_REFRESH_VIEWS);
+        sin.setData(userid);
+        sin.setTag(tag);
         this.setChanged();
         this.notifyObservers(sin);
     }

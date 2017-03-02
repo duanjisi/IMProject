@@ -5,7 +5,6 @@ package im.boss66.com.entity;
  */
 public class EmoLove {
 
-//    private String icon = "";
     private String collect_id = "";
     private String user_id = "";
     private String emo_id = "";
@@ -13,12 +12,6 @@ public class EmoLove {
     private String emo_url = "";
     private String emo_desc = "";
 
-//    public String getIcon() {
-//        return icon;
-//    }
-//    public void setIcon(String icon) {
-//        this.icon = icon;
-//    }
 
     public String getCollect_id() {
         return collect_id;

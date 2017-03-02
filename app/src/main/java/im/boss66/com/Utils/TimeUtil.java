@@ -207,6 +207,66 @@ public final class TimeUtil {
             return String.valueOf(second);
         }
         return minute + ":" + second;
-
     }
+
+    public static String getCircleTime(long timesamp) {
+        String result = "";
+        SimpleDateFormat sdf = new SimpleDateFormat("dd");
+        Date today = new Date(System.currentTimeMillis());
+        Date otherDay = new Date(timesamp);
+        int temp = Integer.parseInt(sdf.format(today))
+                - Integer.parseInt(sdf.format(otherDay));
+        long time = System.currentTimeMillis();
+        MycsLog.i("info", "====timesamp:" + timesamp + "\n" + "=====currentTime:" + time);
+        MycsLog.i("info", "====时间差：" + (time - timesamp));
+        switch (temp) {
+            case 0:
+                result = "今天 " + getHourAndMin(timesamp);
+                break;
+            case 1:
+                result = "昨天 " + getHourAndMin(timesamp);
+                break;
+            default:
+                result = getTime(timesamp);
+                break;
+        }
+
+        return result;
+    }
+
+    /**
+     * 并用分割符把时间分成时间数组
+     *
+     * @param time
+     * @return
+     */
+    public static String[] timestamp(String time) {
+        SimpleDateFormat sdr = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒");
+        @SuppressWarnings("unused")
+        long lcc = Long.valueOf(time);
+        int i = Integer.parseInt(time);
+        String times = sdr.format(new Date(i * 1000L));
+        String[] fenge = times.split("[年月日时分秒]");
+        return fenge;
+    }
+
+    public static String getTimeisTodayOrYestday(long timesamp) {
+        String result = "";
+        SimpleDateFormat sdf = new SimpleDateFormat("dd");
+        Date today = new Date(System.currentTimeMillis());
+        Date otherDay = new Date(timesamp);
+        int temp = Integer.parseInt(sdf.format(today))
+                - Integer.parseInt(sdf.format(otherDay));
+        switch (temp) {
+            case 0:
+                result = "今天";
+                break;
+            case 1:
+                result = "昨天";
+                break;
+        }
+
+        return result;
+    }
+
 }

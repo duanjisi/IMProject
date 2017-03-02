@@ -118,12 +118,17 @@ public class MultiImageView extends LinearLayout {
         int wrap = LinearLayout.LayoutParams.WRAP_CONTENT;
         int match = LinearLayout.LayoutParams.MATCH_PARENT;
         int wrap_1 = (int) (sceenW / 3 * 0.7);
-        onePicPara = new LinearLayout.LayoutParams(wrap_1, wrap_1);
+
 
         moreParaColumnFirst = new LinearLayout.LayoutParams(pxMoreWandH, pxMoreWandH);
-        morePara = new LinearLayout.LayoutParams(pxMoreWandH, pxMoreWandH);
+        if (fromType == 1){
+            morePara = new LinearLayout.LayoutParams(sceenW/7, pxMoreWandH);
+            onePicPara = new LinearLayout.LayoutParams(sceenW/7, wrap_1);
+        }else {
+            onePicPara = new LinearLayout.LayoutParams(wrap_1, wrap_1);
+            morePara = new LinearLayout.LayoutParams(pxMoreWandH, pxMoreWandH);
+        }
         morePara.setMargins(pxImagePadding, 0, 0, 0);
-
         rowPara = new LinearLayout.LayoutParams(match, wrap);
     }
 
@@ -150,13 +155,16 @@ public class MultiImageView extends LinearLayout {
             }
         } else {
             int allCount = imagesList.size();
-            if (fromType == 1 && allCount == 4) {
+            if (fromType == 1 && allCount >= 2) {
                 MAX_PER_ROW_COUNT = 2;
             } else {
                 MAX_PER_ROW_COUNT = 3;
             }
             int rowCount = allCount / MAX_PER_ROW_COUNT
                     + (allCount % MAX_PER_ROW_COUNT > 0 ? 1 : 0);// 行数
+            if (fromType == 1 && rowCount > 2) {
+                rowCount = 2;
+            }
             for (int rowCursor = 0; rowCursor < rowCount; rowCursor++) {
                 LinearLayout rowLayout = new LinearLayout(getContext());
                 rowLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -192,7 +200,12 @@ public class MultiImageView extends LinearLayout {
 
     private ImageView createImageView(int position, final boolean isMultiImage) {
         PhotoInfo photoInfo = imagesList.get(position);
-        ImageView imageView = new ColorFilterImageView(getContext());
+        ImageView imageView;
+        if (fromType == 1){
+            imageView = new ImageView(getContext());
+        }else {
+            imageView = new ColorFilterImageView(getContext());
+        }
         if (isMultiImage) {
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setLayoutParams(position % MAX_PER_ROW_COUNT == 0 ? moreParaColumnFirst : morePara);

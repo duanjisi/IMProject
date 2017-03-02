@@ -20,12 +20,14 @@ import im.boss66.com.entity.EmoLove;
 public class EmoLoveHelper extends ColumnHelper<EmoLove> {
     private static EmoLoveHelper helper;
     private Context mContext;
+    private static String userId;
 
     public EmoLoveHelper() {
         mContext = App.getInstance().getApplicationContext();
     }
 
     public static EmoLoveHelper getInstance() {
+        userId = App.getInstance().getUid();
         if (helper == null) {
             synchronized (EmoLoveHelper.class) {
                 if (helper == null) {
@@ -46,6 +48,7 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
         values.put(EmoLoveColumn.EMO_LOVE_NAME, bean.getEmo_name());
         values.put(EmoLoveColumn.EMO_LOVE_URL, bean.getEmo_url());
         values.put(EmoLoveColumn.EMO_LOVE_USER_ID, bean.getUser_id());
+        values.put(EmoLoveColumn.USER_ID, userId);
         return values;
     }
 
@@ -64,7 +67,6 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
 
     @Override
     public void save(List<EmoLove> list) {
-        deleteAllDatas();
         Collections.reverse(list);
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
@@ -75,12 +77,10 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
 
     @Override
     public void save(EmoLove entity) {
-        String[] args = new String[]{entity.getEmo_url()};
+        String[] args = new String[]{entity.getEmo_url(), userId};
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                getSelectSql(EmoLoveColumn.TABLE_NAME, new String[]{EmoLoveColumn.EMO_LOVE_URL}), args);
+                getSelectSql(EmoLoveColumn.TABLE_NAME, new String[]{EmoLoveColumn.EMO_LOVE_URL, EmoLoveColumn.USER_ID}), args);
         if (exist(c)) {
-//            c.moveToFirst();
-//            this.delete(entity.getUser_name());
             this.update(entity);
         } else {
             DBHelper.getInstance(mContext).insert(EmoLoveColumn.TABLE_NAME, getValues(entity));
@@ -110,7 +110,9 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
 
     public ArrayList<String> qureList() {
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                "SELECT * FROM " + EmoLoveColumn.TABLE_NAME, null);
+                "SELECT * FROM " + EmoLoveColumn.TABLE_NAME +
+                        " WHERE " + EmoLoveColumn.USER_ID
+                        + " = ? ", new String[]{userId});
         ArrayList<String> bos = new ArrayList<String>();
         if (exist(c)) {
             c.moveToLast();
@@ -122,25 +124,22 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
         return bos;
     }
 
-//    public List<EmoLove> queryByCateId(String cateId) {//根据分类id查询组
-//        Cursor c = DBHelper.getInstance(mContext).rawQuery(
-//                "SELECT * FROM " + EmoLoveColumn.TABLE_NAME + " WHERE " + EmoLoveColumn.CATE_ID
-//                        + " = ? ", new String[]{cateId});
-//        List<EmoLove> bos = new ArrayList<EmoLove>();
-//        if (exist(c, mContext)) {
-//            c.moveToFirst();
-//            do {
-//                bos.add(getBean(c));
-//            } while (c.moveToNext());
-//        }
-//        c.close();
-//        return bos;
-//    }
-
-//    public void deleteByCateId(String cateId) {//根据分类id删除组
-//        DBHelper.getInstance(mContext).delete(EmoLoveColumn.TABLE_NAME, EmoLoveColumn.CATE_ID + " = ?",
-//                new String[]{cateId});
-//    }
+    public String qureEmoByUrl(String url) {
+        Cursor c = DBHelper.getInstance(mContext).rawQuery(
+                "SELECT * FROM " + EmoLoveColumn.TABLE_NAME +
+                        " WHERE " + EmoLoveColumn.USER_ID
+                        + " = ? " +
+                        " and " + EmoLoveColumn.EMO_LOVE_URL + " =?", new String[]{userId, url});
+        String str;
+        if (exist(c)) {
+            c.moveToFirst();
+            str = getBean(c).getEmo_url();
+        } else {
+            str = "";
+        }
+        c.close();
+        return str;
+    }
 
     @Override
     public void delete(int id) {
@@ -149,15 +148,16 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
 
     @Override
     public void delete(String str) {//删除某一组
-        DBHelper.getInstance(mContext).delete(EmoLoveColumn.TABLE_NAME, EmoLoveColumn.EMO_LOVE_URL + " = ?",
-                new String[]{str});
+        DBHelper.getInstance(mContext).delete(EmoLoveColumn.TABLE_NAME, EmoLoveColumn.EMO_LOVE_URL + " = ?" +
+                        " and " + EmoLoveColumn.USER_ID + " =?",
+                new String[]{str, userId});
     }
 
     /**
      * 删除表内所有数据
      */
     public void deleteAllDatas() {
-        DBHelper.getInstance(mContext).delete(EmoLoveColumn.TABLE_NAME, null, null);
+        DBHelper.getInstance(mContext).delete(EmoLoveColumn.TABLE_NAME, EmoLoveColumn.USER_ID + " = ?", new String[]{userId});
     }
 
     @Override

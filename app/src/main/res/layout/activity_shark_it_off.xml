@@ -8,15 +8,15 @@
         android:id="@+id/rl_top_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_navigation_bar_height"
-        android:background="@color/top_bar_color"
-        android:paddingLeft="11dp"
-        android:paddingRight="11dp">
+        android:background="@color/top_bar_color">
 
         <TextView
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
+            android:paddingLeft="11dp"
+            android:gravity="center"
             android:drawableLeft="@drawable/selector_text_bg_white_gary"
             android:drawablePadding="4dp"
             android:text="返回"
@@ -34,7 +34,9 @@
         <ImageView
             android:id="@+id/iv_set"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_10"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/hp_setup" />

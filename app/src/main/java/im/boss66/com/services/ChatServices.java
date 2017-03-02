@@ -1,6 +1,7 @@
 package im.boss66.com.services;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -51,7 +52,8 @@ public class ChatServices extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-        userid = intent.getExtras().getString("userid", "");
+//        userid = intent.getExtras().getString("userid", "");
+        userid = App.getInstance().getAccount().getUser_id();
     }
 
     @Override
@@ -69,6 +71,17 @@ public class ChatServices extends Service {
         void onNotify(String title, String content);
 
         void onNetChange(boolean isNetConnected);
+    }
+
+    public static void stopChatService(Context context) {
+        Intent iService = new Intent(context, ChatServices.class);
+        iService.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.stopService(iService);
+    }
+
+    public static void startChatService(Context context) {
+        Intent iService = new Intent(context, ChatServices.class);
+        context.startService(iService);
     }
 
     private void startConnection() {
@@ -145,6 +158,8 @@ public class ChatServices extends Service {
                         msg = "[图片]";
                     } else if (datas[0].equals("video")) {
                         msg = "[视频]";
+                    } else if (datas[0].equals("audio")) {
+                        msg = "[声音]";
                     } else {
                         msg = "";
                     }
@@ -155,6 +170,8 @@ public class ChatServices extends Service {
                         msg = sender + "发了一条 [图片]";
                     } else if (datas[0].equals("video")) {
                         msg = sender + "发了一条 [视频]";
+                    } else if (datas[0].equals("audio")) {
+                        msg = sender + "发了一条 [声音]";
                     } else {
                         msg = "";
                     }
@@ -213,7 +230,7 @@ public class ChatServices extends Service {
                     senderAvartar);
         }
         MycsLog.i("info", "=====userid:" + userid);
-        mMsgDB.saveMsg(userid, item);// 保存数据库
+        mMsgDB.saveMsg(userid + "_" + datas[1], item);// 保存数据库
         for (int i = 0; i < callbacks.size(); i++)
             ((receiveMessageCallback) callbacks.get(i)).onMessageReceive(item);
     }

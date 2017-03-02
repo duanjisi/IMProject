@@ -9,14 +9,12 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import im.boss66.com.R;
-
 /**
  * Created by Johnny on 2017/1/13.
  */

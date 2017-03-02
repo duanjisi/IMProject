@@ -172,7 +172,6 @@ public class EmojiStoreSearchActivity extends BaseActivity {
         }
     }
 
-
     private class scrollListener implements AbsListView.OnScrollListener {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -293,7 +292,12 @@ public class EmojiStoreSearchActivity extends BaseActivity {
     }
 
     private void requestNextPager() {
-        EmoStoreRequest request = new EmoStoreRequest(TAG, "" + pager, pagerNum);
+        String keyWords = getText(editText);
+        if (TextUtils.isEmpty(keyWords)) {
+            showToast("关键字为空!", true);
+            return;
+        }
+        EmoStoreRequest request = new EmoStoreRequest(TAG, keyWords, "" + pager, "" + pagerNum);
         request.send(new BaseDataRequest.RequestCallback<BaseEmoStore>() {
             @Override
             public void onSuccess(BaseEmoStore pojo) {

@@ -64,24 +64,55 @@
             android:clickable="true"
             android:minHeight="44.0dip">
 
-            <im.boss66.com.widget.GifView
-                android:id="@+id/textView2"
-                style="@style/B5_Font"
+            <RelativeLayout
+                android:id="@+id/rl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:maxWidth="250dp"
-                android:textColor="@color/color_hei"
-                android:textSize="16.0sp" />
+                android:layout_centerVertical="true">
+
+                <!--<im.boss66.com.widget.GifView-->
+                <!--android:id="@+id/textView2"-->
+                <!--style="@style/B5_Font"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:maxWidth="250dp"-->
+                <!--android:textColor="@color/color_hei"-->
+                <!--android:textSize="16.0sp" />-->
+                <pl.droidsonroids.gif.GifImageView
+                    android:id="@+id/textView2"
+                    style="@style/B5_Font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="250dp"
+                    android:textColor="@color/color_hei"
+                    android:textSize="16.0sp" />
+
+                <ImageView
+                    android:id="@+id/iv_emo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/zf_default_message_image"
+                    android:visibility="gone" />
+            </RelativeLayout>
+            <!--<im.boss66.com.widget.GifView-->
+            <!--android:id="@+id/textView2"-->
+            <!--style="@style/B5_Font"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:maxWidth="250dp"-->
+            <!--android:textColor="@color/color_hei"-->
+            <!--android:textSize="16.0sp" />-->
 
             <ProgressBar
                 android:id="@+id/progressBar1"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="7.0dip"
-                android:layout_alignBottom="@id/textView2"
-                android:layout_alignLeft="@id/textView2"
-                android:layout_alignRight="@id/textView2"
+                android:layout_alignBottom="@id/rl"
+                android:layout_alignLeft="@id/rl"
+                android:layout_alignRight="@id/rl"
                 android:layout_marginBottom="3.0dip"
                 android:layout_marginLeft="4.0dip"
                 android:layout_marginRight="4.0dip"

@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -33,13 +34,20 @@ public class EaseContactList extends RelativeLayout {
     protected Drawable initialLetterBg;
 
     static final int MSG_UPDATE_LIST = 0;
-
+    static final int MSG_UPDATE_LIST2 = 1;
     Handler handler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_UPDATE_LIST:
+                    if (adapter != null) {
+//                        adapter.clear();
+//                        adapter.addAll(new ArrayList<EaseUser>(contactList));
+                        adapter.notifyDataSetChanged();
+                    }
+                    break;
+                case MSG_UPDATE_LIST2:
                     if (adapter != null) {
                         adapter.clear();
                         adapter.addAll(new ArrayList<EaseUser>(contactList));
@@ -118,6 +126,21 @@ public class EaseContactList extends RelativeLayout {
         }
     }
 
+    public void init(List<EaseUser> contactList, View header, boolean isshowTag) {
+        this.contactList = contactList;
+        adapter = new EaseContactAdapter(context, 0, new ArrayList<EaseUser>(contactList));
+        adapter.setShow(isshowTag);
+        adapter.setPrimaryColor(primaryColor).setPrimarySize(primarySize).setInitialLetterBg(initialLetterBg)
+                .setInitialLetterColor(initialLetterColor);
+        if (header != null) {
+            listView.addHeaderView(header);
+        }
+        listView.setAdapter(adapter);
+        if (showSiderBar) {
+            sidebar.setListView(listView);
+        }
+    }
+
     public void refreshDatas(List<EaseUser> contactList) {
         this.contactList.clear();
         if (adapter != null) {
@@ -139,6 +162,22 @@ public class EaseContactList extends RelativeLayout {
         }
     }
 
+    public void init(List<EaseUser> contactList, int resId, View header) {
+        this.contactList = contactList;
+        adapter = new EaseContactAdapter(context, resId, new ArrayList<EaseUser>(contactList));
+        adapter.setPhoneContact(true);
+        adapter.setPrimaryColor(primaryColor).setPrimarySize(primarySize).setInitialLetterBg(initialLetterBg)
+                .setInitialLetterColor(initialLetterColor);
+        if (header != null) {
+            listView.addHeaderView(header);
+        }
+        listView.setAdapter(adapter);
+
+        if (showSiderBar) {
+            sidebar.setListView(listView);
+        }
+    }
+
     /*
         * init view
         */
@@ -149,20 +188,20 @@ public class EaseContactList extends RelativeLayout {
         adapter.setPrimaryColor(primaryColor).setPrimarySize(primarySize).setInitialLetterBg(initialLetterBg)
                 .setInitialLetterColor(initialLetterColor);
         listView.setAdapter(adapter);
-
         if (showSiderBar) {
             sidebar.setListView(listView);
         }
     }
 
     public void refresh() {
+        Log.i("info", "========refresh()");
         Message msg = handler.obtainMessage(MSG_UPDATE_LIST);
         handler.sendMessage(msg);
     }
 
 
     public void refresh(List<EaseUser> contactList) {
-        Message msg = handler.obtainMessage(MSG_UPDATE_LIST);
+        Message msg = handler.obtainMessage(MSG_UPDATE_LIST2);
         handler.sendMessage(msg);
     }
 
@@ -172,6 +211,14 @@ public class EaseContactList extends RelativeLayout {
 
     public ListView getListView() {
         return listView;
+    }
+
+    public List<EaseUser> getList() {
+        return contactList;
+    }
+
+    public EaseContactAdapter getAdapter() {
+        return adapter;
     }
 
     public void setShowSiderBar(boolean showSiderBar) {
