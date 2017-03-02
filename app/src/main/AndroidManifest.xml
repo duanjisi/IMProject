@@ -174,7 +174,9 @@
         <!-- 设置-通用 -->
         <activity android:name=".activity.personage.PersonalPhotoAlbumActivity"></activity>
         <!-- 个人资料 -->
-        <activity android:name=".activity.connection.PersonalDataActivity"></activity>
+        <activity android:name=".activity.connection.PersonalDataActivity"
+            android:windowSoftInputMode="stateHidden"
+            ></activity>
         <!-- 个人资料2 -->
         <activity android:name=".activity.connection.PersonalData2Activity"></activity>
         <!-- 添加人脉 -->
@@ -216,6 +218,19 @@
         <activity android:name=".activity.discover.RecordVideoActivity"></activity>
         <!-- 商会详情 -->
         <activity android:name=".activity.connection.ClubDetailActivity"></activity>
+        <!-- 发动态 -->
+        <activity android:name=".activity.connection.ConnectionSendMsgActivity"></activity>
+        <!-- 学校列表 -->
+        <activity android:name=".activity.connection.SchoolListActivity"></activity>
+        <!-- 添加学校-->
+        <activity android:name=".activity.connection.AddSchoolActivity"></activity>
+        <!-- 编辑学校-->
+        <activity android:name=".activity.connection.EditSchoolActivity"></activity>
+        <!-- 查找学校-->
+        <activity android:name=".activity.connection.SearchSchoolActivity"></activity>
+        <!-- 编辑姓名-->
+        <activity android:name=".activity.connection.EditNameActivity"></activity>
+
 
         <!-- 微信入口 -->
         <activity

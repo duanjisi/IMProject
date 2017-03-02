@@ -13,6 +13,4 @@ public class ABaseActivity extends BaseActivity {
     protected TextView tv_headcenter_view;
     protected ImageView iv_headright_view;
 
-
-
 }
