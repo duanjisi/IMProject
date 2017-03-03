@@ -121,10 +121,10 @@ public class MultiImageView extends LinearLayout {
 
 
         moreParaColumnFirst = new LinearLayout.LayoutParams(pxMoreWandH, pxMoreWandH);
-        if (fromType == 1){
-            morePara = new LinearLayout.LayoutParams(sceenW/7, pxMoreWandH);
-            onePicPara = new LinearLayout.LayoutParams(sceenW/7, wrap_1);
-        }else {
+        if (fromType == 1) {
+            morePara = new LinearLayout.LayoutParams(sceenW / 7, pxMoreWandH);
+            onePicPara = new LinearLayout.LayoutParams(sceenW / 7, wrap_1);
+        } else {
             onePicPara = new LinearLayout.LayoutParams(wrap_1, wrap_1);
             morePara = new LinearLayout.LayoutParams(pxMoreWandH, pxMoreWandH);
         }
@@ -148,10 +148,13 @@ public class MultiImageView extends LinearLayout {
 
         if (imagesList.size() == 1) {
             PhotoInfo info = imagesList.get(0);
-            if (!info.file_url.contains(".png") || !info.file_url.contains(".jpg") || !info.file_url.contains(".jpeg")) {
-                return;
-            } else {
-                addView(createImageView(0, false));
+            String imgurl = info.file_url;
+            if (!TextUtils.isEmpty(imgurl)) {
+                if (!imgurl.contains(".png") && !imgurl.contains(".jpg") && !imgurl.contains(".jpeg")) {
+                    return;
+                } else {
+                    addView(createImageView(0, false));
+                }
             }
         } else {
             int allCount = imagesList.size();
@@ -201,9 +204,9 @@ public class MultiImageView extends LinearLayout {
     private ImageView createImageView(int position, final boolean isMultiImage) {
         PhotoInfo photoInfo = imagesList.get(position);
         ImageView imageView;
-        if (fromType == 1){
+        if (fromType == 1) {
             imageView = new ImageView(getContext());
-        }else {
+        } else {
             imageView = new ColorFilterImageView(getContext());
         }
         if (isMultiImage) {

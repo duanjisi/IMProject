@@ -27,8 +27,6 @@ import java.util.regex.Pattern;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ContactUtils;
-import im.boss66.com.Utils.MycsLog;
-import im.boss66.com.Utils.PingYinUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.domain.EaseUser;
@@ -196,14 +194,14 @@ public class PhoneContactsActivity extends BaseActivity {
                     String word = String.valueOf(mChar[0]);
                     String letter;
                     if (isHanzi(word)) {
-                        letter = PingYinUtils.toPinYin(mChar[0]);
+                        //letter = PingYinUtils.toPinYin(mChar[0]);
                     } else if (isChar(word)) {
                         letter = word.toUpperCase();
                     } else {
                         letter = "#";
                     }
-                    MycsLog.i("info", "letter:" + letter);
-                    easeUser.setInitialLetter(letter);
+                    //MycsLog.i("info", "letter:" + letter);
+                    //easeUser.setInitialLetter(letter);
                 }
                 easeUser.setAvatar(contact.getAvatar());
                 easeUser.setIs_friends(contact.getIs_friends());

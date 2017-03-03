@@ -31,8 +31,8 @@ public class PermissionUtil {
     // 通讯录操作权限
     public static final String[] PERMISSIONS_GROUP_CONTCATS = {
             Manifest.permission.GET_ACCOUNTS,
-            Manifest.permission.READ_CONTACTS,
-            Manifest.permission.WRITE_CONTACTS};
+            Manifest.permission.READ_CONTACTS};
+            //Manifest.permission.WRITE_CONTACTS
 
     // 相机需要权限
     public static final String[] PERMISSIONS_GROUP_CAMERA = {

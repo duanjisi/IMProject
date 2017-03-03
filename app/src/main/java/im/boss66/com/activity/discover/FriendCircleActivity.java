@@ -136,6 +136,8 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     private final int RECORD_VIDEO = 3;//视频
     private PermissionListener permissionListener;
     private int cameraType;//1:相机 2：相册 3：视频
+    private boolean isReply;
+    private String commentFromId,commentPid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,8 +296,13 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     updateEditTextBodyVisible(View.GONE, null);
                     FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
                     if (item != null) {
-                        String feed_uid = item.getFeed_uid();
-                        createComment(content, "0", feed_uid);
+                        String feed_uid ="0";
+                        String pid = "0";
+                        if (isReply){
+                            pid = commentPid;
+                            feed_uid = commentFromId;
+                        }
+                        createComment(content, pid, feed_uid);
                     }
                 }
                 break;
@@ -350,6 +357,10 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             Log.i("评论--键盘--", visibility + ":" + commentConfig.toString());
             feedId = commentConfig.feedid;
             curPostion = commentConfig.circlePosition;
+            commentId = commentConfig.commentId;
+            isReply = commentConfig.isReply;
+            commentFromId = commentConfig.commentFromId;
+            commentPid = commentConfig.pid;
         }
         if (View.VISIBLE == visibility) {
             et_send.requestFocus();

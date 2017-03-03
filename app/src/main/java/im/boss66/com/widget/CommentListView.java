@@ -23,7 +23,6 @@ import im.boss66.com.Utils.CircleMovementMethod;
 import im.boss66.com.Utils.SpannableClickable;
 import im.boss66.com.Utils.UrlUtils;
 import im.boss66.com.entity.FriendCircleCommentEntity;
-import im.boss66.com.entity.FriendCircleItem;
 
 /**
  * 处理朋友圈评论列表
@@ -127,7 +126,7 @@ public class CommentListView extends LinearLayout {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         builder.append(setClickableSpan(name, bean.getUid_from()));
         String from_id = bean.getUid_from();
-        if (!curUserId.equals(from_id) && !TextUtils.isEmpty(toReplyName)) {
+        if (from_id != null && !curUserId.equals(from_id) && !TextUtils.isEmpty(toReplyName)) {
             builder.append(" 回复 ");
             builder.append(setClickableSpan(toReplyName, bean.getUid_to()));
         }

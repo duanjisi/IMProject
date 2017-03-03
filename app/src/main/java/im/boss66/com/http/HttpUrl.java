@@ -111,4 +111,8 @@ public class HttpUrl {
     public static final String FRIEND_CIRCLE_GET_COMMENT_LIST = MAIN_URL + "api/v1/comment";
     //获取个人相册
     public static final String GET_PERSONAL_GALLERY = MAIN_URL + "api/v1/gallery";
+    //获取某条朋友圈详情
+    public static final String GET_FRIEND_CIRCLE_DETAIL = MAIN_URL + "api/v1/cofriends/view";
+    //全网搜索(添加好友、朋友圈、表情)不包含人脉
+    public static final String SEARCH_BY_ALL_NET = MAIN_URL + "api/v1/search";
 }

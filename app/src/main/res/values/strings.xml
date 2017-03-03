@@ -209,4 +209,5 @@
     <string name="sure_delete">确定删除吗</string>
     <string name="giving_camera_permissions">请给予相机权限，否则无法正常在朋友圈发布相片或者视频.</string>
     <string name="if_exit_edit">退出此次编辑？</string>
+    <string name="search_the_specified_content">搜索以下内容</string>
 </resources>

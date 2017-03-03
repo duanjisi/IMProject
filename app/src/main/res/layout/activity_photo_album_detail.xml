@@ -11,10 +11,7 @@
         android:id="@+id/rl_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10"
-        android:paddingTop="@dimen/dp_10"
-        android:visibility="gone">
+        android:paddingTop="@dimen/dp_10">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -23,46 +20,78 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10">
 
                 <RelativeLayout
-                    android:id="@+id/rl_head"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <ImageView
                         android:id="@+id/iv_head"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginRight="@dimen/dp_6"
-                        android:src="@drawable/person" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dp_10" />
 
                     <TextView
                         android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/iv_head"
-                        android:text="测试"
                         android:textColor="@color/text_color_blue" />
 
-                    <TextView
-                        android:id="@+id/tv_content"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:id="@+id/ll_content"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/tv_name"
                         android:layout_below="@+id/tv_name"
-                        android:layout_marginTop="@dimen/dp_6"
-                        android:text="测试赛所所所所所所所所ssssssss反反复复付付付付付付付付付付付付付所所所"
-                        android:textColor="@color/black" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_6"
+                            android:textColor="@color/black" />
+
+                        <im.boss66.com.widget.MultiImageView
+                            android:id="@+id/multiImagView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"></im.boss66.com.widget.MultiImageView>
+
+                        <FrameLayout
+                            android:id="@+id/fl_video"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/iv_video_bg"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <ImageView
+                                android:id="@+id/iv_video_play"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_video_play" />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tv_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/tv_content"
-                        android:layout_below="@+id/tv_content"
+                        android:layout_alignLeft="@+id/ll_content"
+                        android:layout_below="@+id/ll_content"
                         android:layout_marginTop="@dimen/dp_6"
-                        android:text="2012.2.15"
+                        android:text="2012.6.5"
                         android:textColor="@color/hint_text_color" />
 
                     <TextView
@@ -76,7 +105,7 @@
                         android:textColor="@color/text_color_blue" />
 
                     <ImageView
-                        android:id="@+id/iv_delete"
+                        android:id="@+id/iv_sns"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -86,10 +115,9 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:id="@+id/digCommentBody"
+                    android:id="@+id/ll_midden"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/rl_head"
                     android:background="@drawable/im_distribute_comm_bg"
                     android:minHeight="10dip"
                     android:orientation="vertical"
@@ -130,7 +158,6 @@
         </ScrollView>
 
         <LinearLayout
-            android:id="@+id/ll_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

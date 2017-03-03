@@ -18,6 +18,10 @@ public class CommentConfig {
     public int commentPosition;
     public Type commentType;
     public String uid_to_name;
+    public String commentId;
+    public boolean isReply;
+    public String commentFromId;
+    public String pid;
     //public User replyUser;
 
     @Override

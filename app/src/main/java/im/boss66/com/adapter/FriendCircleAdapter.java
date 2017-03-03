@@ -2,17 +2,13 @@ package im.boss66.com.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -36,7 +32,6 @@ import im.boss66.com.entity.ActionItem;
 import im.boss66.com.entity.CommentConfig;
 import im.boss66.com.entity.FriendCircle;
 import im.boss66.com.entity.FriendCircleCommentEntity;
-import im.boss66.com.entity.FriendCircleEntity;
 import im.boss66.com.entity.FriendCirclePraiseEntity;
 import im.boss66.com.entity.PhotoInfo;
 import im.boss66.com.widget.CommentListView;
@@ -170,8 +165,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                     @Override
                     public void onItemClick(int commentPosition) {
                         FriendCircleCommentEntity commentItem = comment_list.get(commentPosition);
-                        String feed_uid = entity.getFeed_uid();
-                        if (entity.getFeed_uid().equals(commentItem.getUid_from())) {//复制或者删除自己的评论
+                        if (curUserid.equals(commentItem.getUid_from())) {//复制或者删除自己的评论
                             presenter.deleteComment(circlePosition, commentItem.getComm_id(), false);
                         } else {//回复别人的评论
                             if (presenter != null) {
@@ -180,6 +174,9 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                                 config.commentPosition = commentPosition;
                                 config.commentType = CommentConfig.Type.REPLY;
                                 config.uid_to_name = commentItem.getUid_to_name();
+                                config.commentFromId = commentItem.getUid_from();
+                                config.pid = commentItem.getPid();
+                                config.isReply = true;
                                 presenter.showEditTextBody(config);
                             }
                         }
@@ -364,6 +361,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                         config.circlePosition = mCirclePosition;
                         config.commentType = CommentConfig.Type.PUBLIC;
                         config.feedid = mFavorId;
+                        config.isReply = false;
                         presenter.showEditTextBody(config);
                     }
                     break;

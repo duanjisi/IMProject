@@ -1,9 +1,11 @@
 package im.boss66.com.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by GMARUnity on 2017/2/3.
  */
-public class PhotoInfo {
+public class PhotoInfo implements Serializable {
 
     public String file_url;//原图
     public String file_thumb;//小图

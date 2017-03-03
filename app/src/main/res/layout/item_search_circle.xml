@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_head"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/person" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/iv_head"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_toRightOf="@+id/iv_head"
+        android:text="水水水水搜索所"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_name"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_toRightOf="@+id/tv_name"
+        android:text="2015-5"
+        android:textColor="@color/actionsheet_gray" />
+
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_name"
+        android:layout_below="@+id/tv_name"
+        android:layout_marginTop="@dimen/dp_14"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ssa少时诵诗书所"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_30" />
+
+        <im.boss66.com.widget.MultiImageView
+            android:id="@+id/multiImagView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"></im.boss66.com.widget.MultiImageView>
+
+        <FrameLayout
+            android:id="@+id/fl_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_video_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/iv_video_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_video_play" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

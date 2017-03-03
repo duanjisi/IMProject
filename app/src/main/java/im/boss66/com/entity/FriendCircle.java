@@ -1,11 +1,12 @@
 package im.boss66.com.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by GMARUnity on 2017/2/27.
  */
-public class FriendCircle {
+public class FriendCircle implements Serializable {
 
     private int did;
     private String user_id; //用户ID(当前用户ID)
