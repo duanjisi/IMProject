@@ -4,7 +4,7 @@ package im.boss66.com.entity;
  * Created by Johnny on 2016/7/11.
  */
 public class BaseConversation {
-    private String user_id = "";
+    private String conversation_id = "";//如果单聊则是用户id,群聊则是群id
     private String user_name = "";//如果单聊则是用户名,群聊则是群名
     private String avatar = "";
     private String unread_msg_count = "";
@@ -12,13 +12,6 @@ public class BaseConversation {
     private String newest_msg_type = "";//unicast, group 单聊，群聊
     private String newest_msg = "";
 
-    public String getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
-    }
 
     public String getUser_name() {
         return user_name;
@@ -59,6 +52,14 @@ public class BaseConversation {
 
     public void setNewest_msg_type(String newest_msg_type) {
         this.newest_msg_type = newest_msg_type;
+    }
+
+    public String getConversation_id() {
+        return conversation_id;
+    }
+
+    public void setConversation_id(String conversation_id) {
+        this.conversation_id = conversation_id;
     }
 
     public String getNewest_msg() {

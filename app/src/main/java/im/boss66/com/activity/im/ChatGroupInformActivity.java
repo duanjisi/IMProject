@@ -1,26 +1,49 @@
 package im.boss66.com.activity.im;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.CommonDialogUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.book.SelectContactsActivity;
+import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
+import im.boss66.com.adapter.MemberAdapter;
+import im.boss66.com.db.MessageDB;
+import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.GroupInform;
+import im.boss66.com.entity.MemberEntity;
+import im.boss66.com.http.BaseModelRequest;
+import im.boss66.com.http.request.GroupMembersRequest;
+import im.boss66.com.widget.MyGridView;
 
 /**
  * Created by Johnny on 2017/2/9.
  * 群聊天信息
  */
 public class ChatGroupInformActivity extends BaseActivity implements View.OnClickListener {
-    private TextView tvBack;
+    private final static String TAG = ChatGroupInformActivity.class.getSimpleName();
+    private TextView tvBack, tvTitle, tvGroupName, tvGroupNotice, tvMyNick;
     private RelativeLayout rlGroupName, rlCode, rlNotice, rlNick, rlBg, rlRecords, rlFile, rlClearRecords;
+    private MyGridView gridView;
+    private MemberAdapter adapter;
     private Button btnExit;
+    private MessageDB mMsgDB;// 保存消息的数据库
+    private String userid;
+    private String groupid;
+    private String MsgTab;
+    private AccountEntity account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +53,16 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
     }
 
     private void initViews() {
+        account = App.getInstance().getAccount();
+        groupid = getIntent().getExtras().getString("groupid", "");
+        userid = App.getInstance().getUid();
+        MsgTab = userid + "_" + groupid;
+        mMsgDB = App.getInstance().getMessageDB();
         tvBack = (TextView) findViewById(R.id.tv_back);
-
+        tvTitle = (TextView) findViewById(R.id.tv_title);
+        tvGroupName = (TextView) findViewById(R.id.tv_group_name);
+        tvMyNick = (TextView) findViewById(R.id.tv_group_my_nick);
+        tvGroupNotice = (TextView) findViewById(R.id.tv_group_notic);
         rlGroupName = (RelativeLayout) findViewById(R.id.rl_name);
         rlCode = (RelativeLayout) findViewById(R.id.rl_qr_code);
         rlNotice = (RelativeLayout) findViewById(R.id.rl_group_info);
@@ -40,9 +71,12 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
         rlRecords = (RelativeLayout) findViewById(R.id.rl_chat_content);
         rlFile = (RelativeLayout) findViewById(R.id.rl_chat_file);
         rlClearRecords = (RelativeLayout) findViewById(R.id.rl_chat_clear);
+        gridView = (MyGridView) findViewById(R.id.gridView);
+        adapter = new MemberAdapter(context);
+        gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(new ItemClickListener());
 
         btnExit = (Button) findViewById(R.id.btn_exit);
-
         tvBack.setOnClickListener(this);
         rlGroupName.setOnClickListener(this);
         rlCode.setOnClickListener(this);
@@ -53,6 +87,55 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
         rlFile.setOnClickListener(this);
         rlClearRecords.setOnClickListener(this);
         btnExit.setOnClickListener(this);
+        requestMembers();
+    }
+
+    private void requestMembers() {
+        showLoadingDialog();
+        GroupMembersRequest request = new GroupMembersRequest(TAG, groupid);
+        request.send(new BaseModelRequest.RequestCallback<GroupInform>() {
+            @Override
+            public void onSuccess(GroupInform pojo) {
+                cancelLoadingDialog();
+                bindDatas(pojo);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                cancelLoadingDialog();
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void bindDatas(GroupInform inform) {
+        if (inform != null) {
+            tvMyNick.setText(account.getUser_name());
+            tvGroupName.setText(inform.getName());
+            tvGroupNotice.setText(inform.getNotice());
+            ArrayList<MemberEntity> list = inform.getMembers();
+            if (list.size() != 0) {
+                tvTitle.setText("聊天信息(" + list.size() + ")");
+            } else {
+                tvTitle.setText("聊天信息");
+            }
+
+            if (userid.equals(inform.getCreator())) {//是群主
+                MemberEntity entity1 = new MemberEntity();
+                entity1.setType(1);
+                MemberEntity entity2 = new MemberEntity();
+                entity2.setType(2);
+                list.add(entity1);
+                list.add(entity2);
+            } else {
+                MemberEntity entity1 = new MemberEntity();
+                entity1.setType(1);
+                list.add(entity1);
+            }
+            if (list != null && list.size() != 0) {
+                adapter.initData(list);
+            }
+        }
     }
 
     @Override
@@ -68,7 +151,10 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
                 openActivity(ChatGroupNameActivity.class);
                 break;
             case R.id.rl_qr_code://群二维码
-                openActivity(ChatGroupCodeActivity.class);
+                Intent intent = new Intent(context, ChatGroupCodeActivity.class);
+                intent.putExtra("groupid", groupid);
+                startActivity(intent);
+//                openActivity(ChatGroupCodeActivity.class);
                 break;
             case R.id.rl_group_info://群聊公告
 
@@ -102,6 +188,7 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
         view.findViewById(R.id.option).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mMsgDB.clearMsgDatas(MsgTab);
                 dialog.dismiss();
             }
         });
@@ -154,6 +241,57 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
                 CommonDialogUtils.dismiss();
             }
         }, context, msg);
+    }
+
+    private class ItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            MemberEntity member = (MemberEntity) parent.getItemAtPosition(position);
+            int type = member.getType();
+            if (type == 1) {
+                Intent intent = new Intent(context, SelectContactsActivity.class);
+                intent.putExtra("groupid", groupid);
+                intent.putExtra("isAddMember", true);
+                intent.putExtra("user_ids", getStrs());
+                startActivityForResult(intent, 0);
+            } else if (type == 2) {
+                Intent intent = new Intent(context, GroupAllMembersActivity.class);
+                intent.putExtra("groupid", groupid);
+                startActivityForResult(intent, 0);
+            } else {
+                Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
+                intent.putExtra("classType", "ChatGroupInformActivity");
+                intent.putExtra("userid", member.getUserid());
+                startActivity(intent);
+            }
+        }
+    }
+
+    private String getStrs() {
+        StringBuilder sb = new StringBuilder();
+        ArrayList<MemberEntity> list = (ArrayList<MemberEntity>) adapter.getData();
+        for (int i = 0; i < list.size(); i++) {
+            MemberEntity entity = list.get(i);
+            sb.append(entity.getUserid() + ",");
+        }
+        String str = sb.toString();
+        if (!str.contains(",")) {
+            return "";
+        } else {
+            return str.substring(0, str.lastIndexOf(","));
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 0:
+                    requestMembers();
+                    break;
+            }
+        }
     }
 
     @Override

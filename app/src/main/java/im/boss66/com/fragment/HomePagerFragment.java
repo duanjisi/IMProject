@@ -8,7 +8,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -45,24 +47,32 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
     private PopupWindow popupWindow;
     private ImageView ivAdd;
     private RelativeLayout rl_top_bar;
+    private Handler handler = new Handler();
+    private View view;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Session.getInstance().addObserver(this);
-        return inflater.inflate(R.layout.fragment_homepage, container, false);
+        if (view == null) {
+            view = inflater.inflate(R.layout.fragment_homepage, null);
+//            initRootView();
+            initViews(view);
+        }
+        return view;
+//        return inflater.inflate(R.layout.fragment_homepage, container, false);
     }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initViews(view);
-    }
+//    @Override
+//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        initViews(view);
+//    }
 
     private void initViews(View view) {
         rl_top_bar = (RelativeLayout) view.findViewById(R.id.rl_top_bar);
         ivAdd = (ImageView) view.findViewById(R.id.iv_add);
         ivAdd.setOnClickListener(this);
+
         listView = (ListView) view.findViewById(R.id.listView);
         adapter = new ConversationAdapter(getActivity());
         listView.setAdapter(adapter);
@@ -71,7 +81,8 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
     }
 
     private void initDatas() {
-        List<BaseConversation> list = ConversationHelper.getInstance().query();
+        ArrayList<BaseConversation> list = (ArrayList<BaseConversation>) ConversationHelper.getInstance().query();
+        Log.i("info", "======list.size():" + list.size());
         if (list != null && list.size() != 0) {
             adapter.initData(list);
         }
@@ -95,12 +106,20 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
     @Override
     public void onResume() {
         super.onResume();
+        Log.i("info", "===============HomePager中onResume()");
     }
 
 
     @Override
     public void onPause() {
+        Log.i("info", "===============HomePager中onPause()");
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ((ViewGroup) view.getParent()).removeView(view);
     }
 
     private class ItemClickListner implements AdapterView.OnItemClickListener {
@@ -113,11 +132,12 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
             if (entity.getNewest_msg_type().equals("group")) {
                 intent.putExtra("isgroup", true);
             } else {
-                intent.putExtra("isgroup", true);
+                intent.putExtra("isgroup", false);
             }
-            intent.putExtra("uid1", getArguments().getString("userid", ""));
-            intent.putExtra("uid2", entity.getUser_id());
+//            intent.putExtra("uid1", getArguments().getString("userid", ""));
+            intent.putExtra("toUid", entity.getConversation_id());
             intent.putExtra("title", entity.getUser_name());
+            intent.putExtra("toAvatar", entity.getAvatar());
             startActivity(intent);
         }
     }
@@ -127,13 +147,18 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
         SessionInfo sin = (SessionInfo) o;
         if (sin.getAction() == Session.ACTION_REFRSH_CONVERSATION_PAGE) {
             MycsLog.i("info", "===================update()");
-            freshPager();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    freshPager();
+                }
+            });
         }
     }
 
     private void freshPager() {
-        List<BaseConversation> list = ConversationHelper.getInstance().query();
-        MycsLog.i("info", "list:" + list + "list.size()" + "" + list.size());
+        ArrayList<BaseConversation> list = (ArrayList<BaseConversation>) ConversationHelper.getInstance().query();
+        Log.i("info", "list:" + list + "list.size()" + "" + list.size());
         if (list != null && list.size() != 0) {
             adapter.initData(list);
         }

@@ -41,6 +41,26 @@ public class PermissionUtil {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    //  聊天相机
+    public static final String[] PERMISSIONS_CHAT_CAMERA = {
+            Manifest.permission.CAMERA
+    };
+
+    // 聊天声音
+    public static final String[] PERMISSIONS_CHAT_AUDIO = {
+            Manifest.permission.RECORD_AUDIO
+    };
+
+    // 聊天相册
+    public static final String[] PERMISSIONS_CHAT_ALBUM = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    // 系统设置权限
+    public static final String[] PERMISSIONS_SYSTEM_SETTING = {
+            Manifest.permission.WRITE_SETTINGS
+    };
+
     // 录音需要权限
     public static final String[] PERMISSIONS_GROUP_RECORD_AUDIO = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -298,7 +318,7 @@ public class PermissionUtil {
         if (isOverMarshmallow()) {
             if (check(getContext(obj), permissions)) {
                 permissionListener.onRequestPermissionSuccess();
-            }else {
+            } else {
                 if (permissions.length > 0) {
                     if (obj instanceof Activity) {
                         ((Activity) obj).requestPermissions(permissions, requestCode);

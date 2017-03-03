@@ -98,7 +98,18 @@
                 <!--android:maxWidth="250dp"-->
                 <!--android:textColor="@color/color_hei"-->
                 <!--android:textSize="16.0sp" />-->
-                <pl.droidsonroids.gif.GifImageView
+
+                <!--<pl.droidsonroids.gif.GifImageView-->
+                <!--android:id="@+id/textView2"-->
+                <!--style="@style/B5_Font"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:focusable="true"-->
+                <!--android:maxWidth="250dp"-->
+                <!--android:textColor="@color/color_hei"-->
+                <!--android:textSize="16.0sp" />-->
+
+                <ImageView
                     android:id="@+id/textView2"
                     style="@style/B5_Font"
                     android:layout_width="wrap_content"

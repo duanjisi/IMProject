@@ -6,6 +6,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.MakeQRCodeUtil;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 
 /**
@@ -16,6 +18,8 @@ public class ChatGroupCodeActivity extends BaseActivity {
 
     private TextView tvBack, tvName;
     private ImageView ivMore, ivIcon, ivCode;
+    private int screenW;
+    private String groupid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +29,10 @@ public class ChatGroupCodeActivity extends BaseActivity {
     }
 
     private void initViews() {
+        groupid = getIntent().getExtras().getString("groupid", "");
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvName = (TextView) findViewById(R.id.tv_name);
-
+        screenW = UIUtils.getScreenWidth(context) * 3 / 5;
         ivMore = (ImageView) findViewById(R.id.iv_more);
         ivIcon = (ImageView) findViewById(R.id.iv_icon);
         ivCode = (ImageView) findViewById(R.id.iv_code);
@@ -45,5 +50,9 @@ public class ChatGroupCodeActivity extends BaseActivity {
                 finish();
             }
         });
+        if (!groupid.equals("")) {
+            MakeQRCodeUtil.createQRImage("add_group:" + groupid, screenW, screenW, ivCode);
+        }
     }
+
 }

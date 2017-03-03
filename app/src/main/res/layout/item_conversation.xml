@@ -23,12 +23,13 @@
 
         <TextView
             android:id="@+id/tv_notify"
-            android:layout_width="18.5dp"
-            android:layout_height="18.5dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="top|right"
             android:background="@drawable/bg_circle_notify"
             android:gravity="center"
-            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="14sp"
             android:visibility="gone" />
     </FrameLayout>
 

@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -30,6 +29,7 @@ import im.boss66.com.Utils.MakeQRCodeUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.book.PhoneContactsActivity;
+import im.boss66.com.activity.book.QureAccountActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.widget.RoundImageView;
 
@@ -39,11 +39,11 @@ import im.boss66.com.widget.RoundImageView;
 public class AddFriendActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView tvBack;
-    private EditText etAccount;
+    private TextView etAccount;
     private TextView tvNumber;
     private ImageView iv_code;
     private PopupWindow popupWindow;
-    private RelativeLayout rlScanning, rlContacts, rlTopBar;
+    private RelativeLayout rlScanning, rlContacts, rlTopBar, rlSearchBar;
     private AccountEntity account;
     private ImageLoader imageLoader;
     private int screenW;
@@ -59,15 +59,17 @@ public class AddFriendActivity extends BaseActivity implements View.OnClickListe
         account = App.getInstance().getAccount();
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         tvBack = (TextView) findViewById(R.id.tv_back);
-        etAccount = (EditText) findViewById(R.id.et_account);
+        etAccount = (TextView) findViewById(R.id.et_account);
         tvNumber = (TextView) findViewById(R.id.tv_my_account);
         iv_code = (ImageView) findViewById(R.id.iv_code);
         rlScanning = (RelativeLayout) findViewById(R.id.rl_scanning);
+        rlSearchBar = (RelativeLayout) findViewById(R.id.rl_00);
         rlContacts = (RelativeLayout) findViewById(R.id.rl_phone_contacts);
         rlTopBar = (RelativeLayout) findViewById(R.id.rl_top_bar);
         screenW = UIUtils.getScreenWidth(context) * 3 / 5;
 
         tvBack.setOnClickListener(this);
+        rlSearchBar.setOnClickListener(this);
         rlScanning.setOnClickListener(this);
         rlContacts.setOnClickListener(this);
         iv_code.setOnClickListener(this);
@@ -84,6 +86,10 @@ public class AddFriendActivity extends BaseActivity implements View.OnClickListe
             case R.id.rl_scanning:
                 Intent intent = new Intent(context, CaptureActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.rl_00:
+                Intent it = new Intent(context, QureAccountActivity.class);
+                startActivity(it);
                 break;
             case R.id.rl_phone_contacts:
                 openActivity(PhoneContactsActivity.class);

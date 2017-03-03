@@ -116,6 +116,7 @@
     <string name="replace_the_album_cover">更换相册封面</string>
     <string name="vacum_up">清空</string>
     <string name="message_list">消息列表</string>
+    <string name="delete">删除</string>
     <string name="take_a_photo">拍一张</string>
 
     <string name="font_size">字体大小</string>
@@ -207,6 +208,11 @@
     <string name="send_text">发送文字</string>
     <string name="send">发送</string>
     <string name="sure_delete">确定删除吗</string>
+    <string name="giving_video_permissions">需要视频权限</string>
+    <string name="giving_camera2_permissions">需要相机权限</string>
+    <string name="giving_album_permissions">需要相册权限</string>
+    <string name="giving_audio_permissions">需要声音权限</string>
+    <string name="giving_system_permissions">添加系统设置权限</string>
     <string name="giving_camera_permissions">请给予相机权限，否则无法正常在朋友圈发布相片或者视频.</string>
     <string name="if_exit_edit">退出此次编辑？</string>
     <string name="search_the_specified_content">搜索以下内容</string>

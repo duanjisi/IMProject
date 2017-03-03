@@ -8,6 +8,7 @@ import java.util.Map;
  */
 public class ConversationColumn extends DatabaseColumn {
     public static final String TABLE_NAME = "conversation";
+    public static final String CONVERSATION_ID = "conversation_id";
     public static final String USER_NAME = "user_name";
     public static final String USER_AVATAR = "avatar";
     public static final String UNREAD_COUNT = "unread_count";
@@ -19,13 +20,14 @@ public class ConversationColumn extends DatabaseColumn {
 
     static {
         mColumnMap.put(_ID, "integer primary key autoincrement");
-        mColumnMap.put(USER_ID, "text");
+        mColumnMap.put(CONVERSATION_ID, "text");
         mColumnMap.put(USER_NAME, "text");
         mColumnMap.put(USER_AVATAR, "text");
         mColumnMap.put(UNREAD_COUNT, "text");
         mColumnMap.put(MSG_TIME, "text");
         mColumnMap.put(MSG_TYPE, "text");
         mColumnMap.put(MSG_TXT, "text");
+        mColumnMap.put(USER_ID, "text");
     }
 
     @Override

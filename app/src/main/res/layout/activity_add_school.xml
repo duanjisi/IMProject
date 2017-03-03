@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/background_color"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/head_view" />
+
+
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_marginTop="20dp"
+        android:id="@+id/rl_university"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <TextView
+            android:layout_marginLeft="22dp"
+            android:text="大学"
+            android:textColor="@color/black"
+            android:textSize="17.6sp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/zf_album_arrow"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+        <View
+            style="@style/personal_data_view_style"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:background="@color/white"
+        android:id="@+id/rl_high_shcool"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <TextView
+            android:layout_marginLeft="22dp"
+            android:text="高中"
+            android:textColor="@color/black"
+            android:textSize="17.6sp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/zf_album_arrow"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+        <View
+            style="@style/personal_data_view_style"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:background="@color/white"
+        android:id="@+id/rl_big_middle_shcool"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <TextView
+            android:layout_marginLeft="22dp"
+            android:text="中专技校"
+            android:textColor="@color/black"
+            android:textSize="17.6sp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/zf_album_arrow"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+        <View
+            style="@style/personal_data_view_style"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:background="@color/white"
+        android:id="@+id/rl_middle_school"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <TextView
+            android:layout_marginLeft="22dp"
+            android:text="初中"
+            android:textColor="@color/black"
+            android:textSize="17.6sp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/zf_album_arrow"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+        <View
+            style="@style/personal_data_view_style"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:background="@color/white"
+        android:id="@+id/rl_small_school"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <TextView
+            android:layout_marginLeft="22dp"
+            android:text="小学"
+            android:textColor="@color/black"
+            android:textSize="17.6sp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/zf_album_arrow"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

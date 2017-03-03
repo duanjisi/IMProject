@@ -81,7 +81,7 @@ public abstract class BaseModelRequest<T> {
                     preRspPojo = JSON.parseObject(rspContent, PreRspPojo.class);
                     MycsLog.d("返回的code为" + preRspPojo.code);
                     switch (preRspPojo.code) {
-                        case 1://正常
+                        case 0://正常
                             final T retT;
 //                            jsonDao.save(switchJsonEntity(rspContent));
                             if (BaseModelRequest.this instanceof PageDataModel) {

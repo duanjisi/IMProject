@@ -49,6 +49,7 @@
     <application
         android:name="im.boss66.com.App"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -84,6 +85,14 @@
         <activity android:name=".activity.im.EmojiMakeActivity"></activity>
         <activity android:name=".activity.im.EmojiSelectWellActivity"></activity>
 
+        <!--个人聊天信息-->
+        <activity android:name=".activity.im.GroupAllMembersActivity"></activity>
+        <!--个人聊天信息-->
+        <activity android:name=".activity.im.ChatInformActivity"></activity>
+        <!--查询用户-->
+        <activity android:name=".activity.book.QureAccountActivity"></activity>
+        <!--群聊-->
+        <activity android:name=".activity.im.GroupChatActivity"></activity>
         <!--选择联系人(发起群聊)-->
         <activity android:name=".activity.book.SelectContactsActivity"></activity>
         <!--手机联系人-->
@@ -183,7 +192,9 @@
         <!-- 设置-通用 -->
         <activity android:name=".activity.personage.PersonalPhotoAlbumActivity"></activity>
         <!-- 个人资料 -->
-        <activity android:name=".activity.connection.PersonalDataActivity"></activity>
+        <activity android:name=".activity.connection.PersonalDataActivity"
+            android:windowSoftInputMode="stateHidden"
+            ></activity>
         <!-- 个人资料2 -->
         <activity android:name=".activity.connection.PersonalData2Activity"></activity>
         <!-- 添加人脉 -->
@@ -234,6 +245,19 @@
         <activity android:name=".activity.discover.RecordVideoActivity"></activity>
         <!-- 商会详情 -->
         <activity android:name=".activity.connection.ClubDetailActivity"></activity>
+        <!-- 发动态 -->
+        <activity android:name=".activity.connection.ConnectionSendMsgActivity"></activity>
+        <!-- 学校列表 -->
+        <activity android:name=".activity.connection.SchoolListActivity"></activity>
+        <!-- 添加学校-->
+        <activity android:name=".activity.connection.AddSchoolActivity"></activity>
+        <!-- 编辑学校-->
+        <activity android:name=".activity.connection.EditSchoolActivity"></activity>
+        <!-- 查找学校-->
+        <activity android:name=".activity.connection.SearchSchoolActivity"></activity>
+        <!-- 编辑姓名-->
+        <activity android:name=".activity.connection.EditNameActivity"></activity>
+
 
         <!-- 微信入口 -->
         <activity

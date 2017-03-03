@@ -40,6 +40,8 @@ public class HttpUrl {
     public static final String CONTACTS_URL = MAIN_URL + "ucenter/friends/index";
     //新朋友列表请求
     public static final String NEW_FRIENDS_URL = MAIN_URL + "ucenter/friendslog/index";
+    //查找用户
+    public static final String QURE_ACCOUNT = MAIN_URL + "ucenter/userinfo/findman";
     //精选表情首页数据请求
     public static final String EMO_WELL_URL = MAIN_URL + "api/v1/store";
     //表情包详细信息请求
@@ -71,7 +73,10 @@ public class HttpUrl {
     public static final String UPDATE_GROUP_INFORMS = BASE_IM_URL + "editgrp";
     //查询我的群
     public static final String QURE_MY_GROUP = BASE_IM_URL + "querymygrps";
-
+    //查询群成員
+    public static final String QURE_GROUP_MEMBERS = BASE_IM_URL + "grpinfo";
+    //踢出群成員
+    public static final String REMOVE_GROUP_MEMBERS = BASE_IM_URL + "delmembers";
 
     //附近的人
     public static final String PEOPLE_NEARBY = MAIN_URL + "ucenter/nearuser/index";
@@ -109,6 +114,9 @@ public class HttpUrl {
     public static final String FRIEND_CIRCLE_COMMET_DELETE = MAIN_URL + "api/v1/comment/delete";
     //获取某条朋友圈的评论列表
     public static final String FRIEND_CIRCLE_GET_COMMENT_LIST = MAIN_URL + "api/v1/comment";
+    //获取行业列表
+    public static final String CHOOSE_JOB_LIST = MAIN_URL + "ucenter/userinfo/update";
+
     //获取个人相册
     public static final String GET_PERSONAL_GALLERY = MAIN_URL + "api/v1/gallery";
     //获取某条朋友圈详情
