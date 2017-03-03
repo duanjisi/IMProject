@@ -19,6 +19,7 @@ import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.discover.CirclePresenter;
+import im.boss66.com.activity.discover.FriendSendNewMsgActivity;
 import im.boss66.com.adapter.FriendCircleAdapter;
 import im.boss66.com.widget.dialog.MyNewsPop;
 
@@ -34,6 +35,8 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     private LRecyclerViewAdapter mLRecyclerViewAdapter = null;
     private FriendCircleAdapter adapter;
     private CirclePresenter presenter;
+
+    private int SEND_TYPE_PHOTO_TX = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,17 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
 
         iv_headright_view.setVisibility(View.VISIBLE);
         iv_headright_view.setOnClickListener(this);
+        iv_headright_view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("sendType","text");
+                openActivityForResult(ConnectionSendMsgActivity.class,SEND_TYPE_PHOTO_TX, bundle);
+
+                return true;
+
+            }
+        });
         rl_top_bar = (RelativeLayout) findViewById(R.id.rl_top_bar);
 
         //rcv 设置
@@ -154,14 +168,15 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_headright_view:
-                if (myNewsPop == null) {
-                    showPop(rl_top_bar);
-                } else {
-                    if (!myNewsPop.isShowing()) {
-                        showPop(rl_top_bar);
-                    }
-
-                }
+//                if (myNewsPop == null) {
+//                    showPop(rl_top_bar);
+//                } else {
+//                    if (!myNewsPop.isShowing()) {
+//                        showPop(rl_top_bar);
+//                    }
+//
+//                }
+                //改为朋友圈的发消息先。
                 break;
 
             case R.id.tv_introduce: // 简介
@@ -201,6 +216,15 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         myNewsPop.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         myNewsPop.setAnimationStyle(R.style.PopupTitleBarAnim1);
         myNewsPop.showAsDropDown(parent);
+    }
+
+    public void openActivityForResult(Class<?> clazz,int requestCode,Bundle bundle){
+        Intent intent = new Intent(this, clazz);
+        if(intent!=null){
+            intent.putExtras(bundle);
+        }
+        startActivityForResult(intent,requestCode);
+
     }
 
 

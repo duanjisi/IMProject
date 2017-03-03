@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_people_data"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:background="@drawable/shape_cancle_edit"
+        android:layout_width="308dp"
+        android:layout_height="165dp">
+
+
+
+    </RelativeLayout>
+
+</LinearLayout>
+

@@ -5,234 +5,338 @@
     android:background="@color/background_color"
     android:orientation="vertical">
 
-        <include layout="@layout/head_view" />
+    <include layout="@layout/head_view" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="22dp"
-                android:text="1、基本资料"
-                android:textColor="@color/black"
-                android:textSize="19.8sp"
-                android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+
+
+            <RelativeLayout
+
+                android:id="@+id/rl_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="27.5dp"
-                android:orientation="vertical">
+                android:layout_height="45dp"
+                android:layout_marginTop="5dp"
+                >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        style="@style/personal_data_tv_style"
-                        android:text="姓名*" />
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:id="@+id/tv_name"
+                    style="@style/personal_data_tv_style"
+                    android:text="姓名*" />
 
-                    <EditText style="@style/personal_data_et_style"
-                        android:id="@+id/et_data1"
-                        />
-                </LinearLayout>
+
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/zf_album_arrow"
+                    android:layout_width="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="33dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_name2"
+                    style="@style/personal_data_tv_style2"
+                     />
 
                 <View
+                    android:layout_alignParentBottom="true"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="22dp"
-                    android:layout_marginTop="17.6dp"
                     android:background="@color/gray" />
 
-            </LinearLayout>
 
-            <LinearLayout
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_gravity="center"
+                android:id="@+id/rl_sex"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16.5dp"
-                android:orientation="vertical">
+                android:layout_height="45dp"
+                >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        style="@style/personal_data_tv_style"
-                        android:text="性别*" />
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_sex"
+                    style="@style/personal_data_tv_style"
+                    android:text="性别*" />
 
-                    <EditText style="@style/personal_data_et_style"
-                        android:id="@+id/et_data2"/>
-                </LinearLayout>
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/zf_album_arrow"
+                    android:layout_width="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="15dp" />
 
-                <View style="@style/personal_data_view_style" />
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="33dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_sex2"
+                    style="@style/personal_data_tv_style2"
+                    />
 
-            </LinearLayout>
-            <LinearLayout
+
+                <View
+                    android:layout_alignParentBottom="true"
+                    style="@style/personal_data_view_style"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_time"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16.5dp"
-                android:orientation="vertical">
+                android:layout_height="45dp"
+                >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_time"
+                    style="@style/personal_data_tv_style"
+                    android:text="出生年月*" />
 
-                    <TextView
-                        style="@style/personal_data_tv_style"
-                        android:text="出生年月*" />
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/zf_album_arrow"
+                    android:layout_width="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="15dp" />
 
-                    <EditText style="@style/personal_data_et_style"
-                        android:id="@+id/et_data3"
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="33dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_time2"
+                    style="@style/personal_data_tv_style2"
+                     />
+
+                <View
+                    style="@style/personal_data_view_style"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_location"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                >
+
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_location"
+                    style="@style/personal_data_tv_style"
+                    android:text="所在地*" />
+
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/zf_album_arrow"
+                    android:layout_width="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="15dp" />
+
+
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="33dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_location2"
+                    style="@style/personal_data_tv_style2"
+                     />
+
+                <View
+                    style="@style/personal_data_view_style"
+                    android:layout_alignParentBottom="true" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_school"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                >
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_school"
+                    style="@style/personal_data_tv_style"
+                    android:text="学校*" />
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/zf_album_arrow"
+                    android:layout_width="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="33dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_school2"
+                    style="@style/personal_data_tv_style2"
+                     />
+
+                <View
+                    style="@style/personal_data_view_style"
+                    android:layout_alignParentBottom="true" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_hometown"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                >
+
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_hometown"
+                    style="@style/personal_data_tv_style"
+                    android:text="家乡*" />
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/zf_album_arrow"
+                    android:layout_width="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="33dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_hometown2"
+                    style="@style/personal_data_tv_style2"
+                     />
+
+                <View
+                    style="@style/personal_data_view_style"
+                    android:layout_alignParentBottom="true" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+
+                android:id="@+id/rl_job"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                >
+
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_job"
+                    style="@style/personal_data_tv_style"
+                    android:text="工作*" />
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/zf_album_arrow"
+                    android:layout_width="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="33dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_job2"
+                    style="@style/personal_data_tv_style2"
                         />
-                </LinearLayout>
 
-                <View style="@style/personal_data_view_style" />
+                <View
+                    style="@style/personal_data_view_style"
+                    android:layout_alignParentBottom="true"/>
 
-            </LinearLayout>
-            <LinearLayout
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_like"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16.5dp"
-                android:orientation="vertical">
+                android:layout_height="45dp"
+                >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        style="@style/personal_data_tv_style"
-                        android:text="所在地*" />
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_like"
+                    style="@style/personal_data_tv_style"
+                    android:text="兴趣爱好*" />
+                <ImageView
+                    android:layout_centerVertical="true"
 
-                    <EditText style="@style/personal_data_et_style"
-                        android:id="@+id/et_data4"
-                        />
-                </LinearLayout>
+                    android:src="@drawable/zf_album_arrow"
+                    android:layout_width="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="15dp" />
 
-                <View style="@style/personal_data_view_style" />
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="33dp"
+                    android:layout_centerVertical="true"
+                    style="@style/personal_data_tv_style2"
+                     />
 
-            </LinearLayout>
+                <View
+                    style="@style/personal_data_view_style"
+                    android:layout_alignParentBottom="true" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16.5dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/personal_data_tv_style"
-                        android:text="家乡*" />
-
-                    <EditText style="@style/personal_data_et_style"
-                        android:id="@+id/et_data5"
-                        android:hint="请完善到县/区级单位"
-                        />
-                </LinearLayout>
-
-                <View style="@style/personal_data_view_style" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16.5dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/personal_data_tv_style"
-                        android:text="工作*" />
-
-                    <EditText style="@style/personal_data_et_style"
-                        android:id="@+id/et_data6"
-                        />
-                </LinearLayout>
-
-                <View style="@style/personal_data_view_style" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16.5dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/personal_data_tv_style"
-                        android:text="兴趣爱好*" />
-
-                    <EditText style="@style/personal_data_et_style"
-                        android:id="@+id/et_data7"
-                        />
-                </LinearLayout>
-
-                <View style="@style/personal_data_view_style" />
-
-            </LinearLayout>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_comfire"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_marginTop="33dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/shape_personal_data_button"
-                android:textSize="19.8dp"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:text="保存并继续完善"
                 android:layout_width="match_parent"
+                android:layout_height="51.7dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="22dp"
                 android:layout_marginRight="22dp"
-                android:layout_height="51.7dp" />
+                android:layout_marginTop="33dp"
+                android:background="@drawable/shape_personal_data_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="保存并继续完善"
+                android:textColor="@color/white"
+                android:textSize="19.8dp" />
+
             <TextView
-                android:layout_marginBottom="15dp"
-                android:layout_gravity="center_horizontal"
-                android:textSize="16.5sp"
-                android:layout_marginTop="16.5dp"
-                android:textColor="@color/text_color_gray_c"
-                android:text="注：标注*号的选项为必填选项"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="16.5dp"
+                android:text="注：标注*号的选项为必填选项"
+                android:textColor="@color/text_color_gray_c"
+                android:textSize="16.5sp" />
 
         </LinearLayout>
 
 
     </ScrollView>
-
-
-
 
 
 </LinearLayout>

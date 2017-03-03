@@ -114,6 +114,9 @@ public class HttpUrl {
     public static final String FRIEND_CIRCLE_COMMET_DELETE = MAIN_URL + "api/v1/comment/delete";
     //获取某条朋友圈的评论列表
     public static final String FRIEND_CIRCLE_GET_COMMENT_LIST = MAIN_URL + "api/v1/comment";
+    //获取行业列表
+    public static final String CHOOSE_JOB_LIST = MAIN_URL + "ucenter/userinfo/update";
+
     //获取个人相册
     public static final String GET_PERSONAL_GALLERY = MAIN_URL + "api/v1/gallery";
 }
