@@ -183,7 +183,6 @@
         <activity android:name=".activity.personage.PersonalPhotoAlbumActivity"></activity>
         <!-- 个人资料 -->
         <activity android:name=".activity.connection.PersonalDataActivity"
-            android:windowSoftInputMode="stateHidden"
             ></activity>
         <!-- 个人资料2 -->
         <activity android:name=".activity.connection.PersonalData2Activity"></activity>
@@ -235,9 +234,11 @@
         <!-- 编辑学校-->
         <activity android:name=".activity.connection.EditSchoolActivity"></activity>
         <!-- 查找学校-->
-        <activity android:name=".activity.connection.SearchSchoolActivity"></activity>
+        <activity android:name=".activity.connection.SearchSchoolActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
         <!-- 编辑姓名-->
-        <activity android:name=".activity.connection.EditNameActivity"></activity>
+        <activity android:name=".activity.connection.EditNameActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
 
 
         <!-- 微信入口 -->

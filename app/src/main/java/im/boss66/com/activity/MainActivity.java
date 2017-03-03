@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 import java.util.ArrayList;
