@@ -15,8 +15,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -34,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.App;
@@ -43,10 +42,12 @@ import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.ChatActivity;
+import im.boss66.com.activity.im.GroupChatActivity;
 import im.boss66.com.adapter.ABaseAdapter;
 import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.GroupEntity;
 import im.boss66.com.http.BaseModelRequest;
+import im.boss66.com.http.request.GroupAddMemsRequest;
 import im.boss66.com.http.request.GroupCreateRequest;
 import im.boss66.com.widget.EaseContactList;
 
@@ -76,6 +77,9 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     private String userid;
     private int mImageHeight = 0;
     private int ll_max_width = 0;
+    private boolean isAddMember;
+    private String user_ids;
+    private String groupid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,27 +90,30 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 
     private void initViews() {
 //        contactList = new ArrayList<EaseUser>();
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            isAddMember = bundle.getBoolean("isAddMember", false);
+            user_ids = bundle.getString("user_ids", "");
+            groupid = bundle.getString("groupid", "");
+        }
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         contactList = App.getInstance().getContacts();
         userid = App.getInstance().getUid();
         mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 7;
         ll_max_width = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 120));
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//        gallery = (Gallery) findViewById(R.id.gallery);
-//        adapter = new MyAdapter(context);
-//        gallery.setAdapter(adapter);
         linearLayout = (LinearLayout) findViewById(R.id.ll_image);
         iv_tag = (ImageView) findViewById(R.id.iv_tag);
 
         header = getLayoutInflater().inflate(R.layout.item_select_contacts, null);
-//        viewSearch = findViewById(R.id.search_bar_view);
-//        rlSearch = (LinearLayout) findViewById(R.id.rl_search);
         query = (EditText) findViewById(R.id.query);
-//        clearSearch = (ImageButton) findViewById(R.id.search_clear);
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvOption = (TextView) findViewById(R.id.tv_option);
         tvTitle = (TextView) findViewById(R.id.title);
 
+        if (isAddMember) {
+            tvTitle.setText("选择联系人");
+        }
         tvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,16 +124,13 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         tvOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                requestGroupCreate();
+                if (isAddMember) {
+                    addMemberRequest();
+                } else {
+                    requestGroupCreate();
+                }
             }
         });
-//        viewSearch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(context, BookSearchActivity.class);
-//                startActivity(intent);
-//            }
-//        });
         contactListLayout = (EaseContactList) findViewById(R.id.contact_list);
         listView = contactListLayout.getListView();
         rl_select_group = (RelativeLayout) header.findViewById(R.id.rl_select_group);
@@ -134,7 +138,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         rl_select_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                openActivity(GroupChatActivity.class);
             }
         });
         query.setOnKeyListener(this);
@@ -171,7 +175,19 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 //                hideSoftKeyboard();
 //            }
 //        });
-        contactListLayout.init(contactList, header, true);
+
+        if (isAddMember) {
+            for (int i = 0; i < contactList.size(); i++) {
+                EaseUser user = contactList.get(i);
+                initEntity(user);
+            }
+        }
+
+        if (isAddMember) {
+            contactListLayout.init(contactList, true);
+        } else {
+            contactListLayout.init(contactList, header, true);
+        }
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -180,11 +196,8 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
                 if (!isAdded) {
                     boolean checked = user.isChecked();
                     if (!checked) {
-//                        new loadDrawableTask(query, user.getAvatar()).execute();
-//                        adapter.addItem(user);
                         addView(user, position);
                     } else {
-//                        adapter.remove(user);
                         deleteView(user);
                     }
                     user.setChecked(!checked);
@@ -193,6 +206,17 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
                 tvOption.setText(getTips());
             }
         });
+    }
+
+    private void initEntity(EaseUser user) {
+        if (user_ids != null && !user_ids.equals("")) {
+            String[] ids = user_ids.split(",");
+            for (int i = 0; i < ids.length; i++) {
+                if (ids[i].equals(user.getUserid())) {
+                    user.setAdded(true);
+                }
+            }
+        }
     }
 
     @Override
@@ -224,6 +248,44 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         }
     }
 
+    private void addMemberRequest() {
+        String member_ids = getMemberIds();
+        Log.i("info", "member_ids:" + member_ids);
+        if (member_ids.equals("")) {
+            showToast("请选择群成员!", true);
+            return;
+        }
+        showLoadingDialog();
+        GroupAddMemsRequest request = new GroupAddMemsRequest(TAG, groupid, member_ids);
+        request.send(new BaseModelRequest.RequestCallback<String>() {
+
+            @Override
+            public void onSuccess(String pojo) {
+                onAddMember();
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                cancelLoadingDialog();
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void onAddMember() {
+        try {
+            Thread.sleep(1000);
+            cancelLoadingDialog();
+            showToast("添加成员成功!", true);
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void requestGroupCreate() {//建群请求
         String member_ids = userid + "," + getMemberIds();
         Log.i("info", "member_ids:" + member_ids);
@@ -236,7 +298,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
             return;
         }
         showLoadingDialog();
-        GroupCreateRequest request = new GroupCreateRequest(TAG, userid, member_ids, "");
+        GroupCreateRequest request = new GroupCreateRequest(TAG, userid, member_ids, "我的群");
         request.send(new BaseModelRequest.RequestCallback<GroupEntity>() {
             @Override
             public void onSuccess(GroupEntity pojo) {
@@ -257,6 +319,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
             Intent intent = new Intent(context, ChatActivity.class);
             intent.putExtra("title", groupEntity.getName());
             intent.putExtra("toUid", groupEntity.getGroupid());
+            intent.putExtra("toAvatar", groupEntity.getSnap());
             intent.putExtra("isgroup", true);
             startActivity(intent);
             finish();
@@ -382,22 +445,20 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     }
 
     private void addView(final EaseUser user, final int position) {
-        ViewTreeObserver vto = linearLayout.getViewTreeObserver();
-        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            public boolean onPreDraw() {
-//                int height = linearLayout.getMeasuredHeight();
-                int width = linearLayout.getMeasuredWidth();
-                if (width >= ll_max_width) {
-                    ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) linearLayout.getLayoutParams();
-                    params.width = ll_max_width;
-                    linearLayout.setLayoutParams(params);
-                }
-                UIUtils.hindView(iv_tag);
-                linearLayout.addView(insertImage(user, position));
-                return true;
-            }
-        });
-//        linearLayout.addView(insertImage(user, position));
+        UIUtils.hindView(iv_tag);
+//        ViewTreeObserver vto = linearLayout.getViewTreeObserver();
+//        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            public boolean onPreDraw() {
+//                int width = linearLayout.getMeasuredWidth();
+//                if (width >= ll_max_width) {
+//                    ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) linearLayout.getLayoutParams();
+//                    params.width = ll_max_width;
+//                    linearLayout.setLayoutParams(params);
+//                }
+//                return true;
+//            }
+//        });
+        linearLayout.addView(insertImage(user, position));
     }
 
     private void deleteView(EaseUser user) {
@@ -408,11 +469,12 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
                 String tag = (String) view.getTag();
                 if (tag.equals(user.getUserid())) {
                     linearLayout.removeView(view);
+                    if (linearLayout.getChildCount() == 0) {
+                        UIUtils.showView(iv_tag);
+                    }
                     break;
                 }
             }
-        } else {
-            UIUtils.showView(iv_tag);
         }
 //        else {
 //            Drawable drawable = getResources().getDrawable(R.drawable.ease_search_bar_icon_normal);
@@ -449,5 +511,25 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 //            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 //            query.setCompoundDrawables(drawable, null, null, null);
 //        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        reserverDatas();
+    }
+
+    private void reserverDatas() {
+        ArrayList<EaseUser> list = App.getInstance().getContacts();
+        for (EaseUser user : list) {
+
+            if (user.isAdded()) {
+                user.setAdded(false);
+            }
+
+            if (user.isChecked()) {
+                user.setChecked(false);
+            }
+        }
     }
 }

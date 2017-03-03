@@ -29,6 +29,7 @@ import im.boss66.com.activity.AddFriendActivity;
 import im.boss66.com.activity.book.BookSearchActivity;
 import im.boss66.com.activity.book.NewFriendsActivity;
 import im.boss66.com.activity.im.ChatActivity;
+import im.boss66.com.activity.im.GroupChatActivity;
 import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.BaseContact;
 import im.boss66.com.entity.ContactEntity;
@@ -116,7 +117,8 @@ public class ContactBooksFragment extends BaseFragment {
         rl_chat_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getActivity(), GroupChatActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -201,6 +203,8 @@ public class ContactBooksFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
                 intent.putExtra("title", user.getUsername());
                 intent.putExtra("toUid", user.getUserid());
+                intent.putExtra("toAvatar", user.getAvatar());
+                intent.putExtra("isgroup", false);
                 startActivity(intent);
             }
         });

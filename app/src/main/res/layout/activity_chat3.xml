@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <!--<include layout="@layout/zf_chat_title_bg" />-->
+    <RelativeLayout
+        android:id="@+id/rl_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_navigation_bar_height"
+        android:background="@color/top_bar_color">
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/hp_back"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="11dp"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:textSize="16.5sp" />
+
+        <TextView
+            android:id="@+id/tv_chat_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="聊天"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/iv_add_person"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="16dp"
+            android:paddingRight="11dp"
+            android:src="@drawable/hp_white_person" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_above="@+id/ll_bottom"
+        android:layout_weight="1.0"
+        android:background="@color/chat_color">
+
+        <im.boss66.com.xlistview.MsgListView
+            android:id="@+id/msg_listView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="@null"
+            android:listSelector="@android:color/transparent"
+            android:transcriptMode="normal" />
+
+        <!-- 录音显示UI层 -->
+
+        <FrameLayout
+            android:id="@+id/rcChat_popup"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <include
+                layout="@layout/voice_rcd_hint_window"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <include
+        android:id="@+id/ll_bottom"
+        layout="@layout/chat_input_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"></include>
+</LinearLayout>

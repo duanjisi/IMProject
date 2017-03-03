@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.File;
+
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.Utils.ImageLoaderUtils;
@@ -37,7 +40,7 @@ public class MyEmojiAdapter extends ABaseAdapter<EmoGroup> {
 
         if (entity != null) {
             holder.title.setText(entity.getGroup_name());
-            imageLoader.displayImage(entity.getGroup_icon(), holder.imageView, ImageLoaderUtils.getDisplayImageOptions());
+            imageLoader.displayImage(getPath(entity), holder.imageView, ImageLoaderUtils.getDisplayImageOptions());
             holder.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -46,6 +49,14 @@ public class MyEmojiAdapter extends ABaseAdapter<EmoGroup> {
             });
         }
         return convertView;
+    }
+
+    private String getPath(EmoGroup entity) {
+        String path = "file:/" + Constants.EMO_DIR_PATH +
+                entity.getCate_id() + File.separator +
+                entity.getGroup_id() + File.separator +
+                entity.getGroup_icon();
+        return path;
     }
 
     private class ViewHolder {

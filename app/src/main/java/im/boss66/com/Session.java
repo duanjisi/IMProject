@@ -11,6 +11,7 @@ public class Session extends Observable {
     public static final int ACTION_DELETE_CURRENT_EMOJI_GROUP = 1012;
     public static final int ACTION_APPLICATION_EXIT = 1013;//退出当前所有activity
     public static final int ACTION_REFRESH_VIEWS = 1014;//刷新视图
+    public static final int ACTION_SEND_IM_MESSAGE = 1015;//发送信息
 
     public Session() {
 
@@ -50,6 +51,14 @@ public class Session extends Observable {
         sin.setAction(ACTION_REFRESH_VIEWS);
         sin.setData(userid);
         sin.setTag(tag);
+        this.setChanged();
+        this.notifyObservers(sin);
+    }
+
+    public void sendImMessage(String msg) {
+        SessionInfo sin = new SessionInfo();
+        sin.setAction(ACTION_SEND_IM_MESSAGE);
+        sin.setData(msg);
         this.setChanged();
         this.notifyObservers(sin);
     }

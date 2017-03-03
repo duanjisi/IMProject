@@ -19,6 +19,7 @@ import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
+import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
@@ -37,6 +38,7 @@ import im.boss66.com.fragment.HomePagerFragment;
 import im.boss66.com.fragment.MineFragment;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.EmoCollectionsRequest;
+import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.services.ChatServices;
 import im.boss66.com.widget.dialog.PeopleDataDialog;
 
@@ -45,6 +47,7 @@ import im.boss66.com.widget.dialog.PeopleDataDialog;
  */
 public class MainActivity extends BaseActivity implements Observer {
     private final static String TAG = MainActivity.class.getSimpleName();
+    private PermissionListener permissionListener;
     private static final int VIEW_PAGER_PAGE_1 = 0;
     private static final int VIEW_PAGER_PAGE_2 = 1;
     private static final int VIEW_PAGER_PAGE_3 = 2;
@@ -101,6 +104,7 @@ public class MainActivity extends BaseActivity implements Observer {
 //        intent.putExtra("userid", account.getUser_id());
 //        startService(intent);
         ChatServices.startChatService(context);
+        getPermission(PermissionUtil.PERMISSIONS_SYSTEM_SETTING);
         requestLoveStore();
 //        loadGif();
     }
@@ -123,6 +127,7 @@ public class MainActivity extends BaseActivity implements Observer {
             public void onSuccess(BaseEmoCollection pojo) {
                 saveToDb(pojo);
             }
+
             @Override
             public void onFailure(String msg) {
                 showToast(msg, true);
@@ -445,6 +450,30 @@ public class MainActivity extends BaseActivity implements Observer {
         if (sin.getAction() == Session.ACTION_APPLICATION_EXIT) {
             finish();
         }
+    }
+
+    private void getPermission(String[] permissions) {
+        permissionListener = new PermissionListener() {
+            @Override
+            public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
+            }
+
+            @Override
+            public void onRequestPermissionSuccess() {
+
+            }
+
+            @Override
+            public void onRequestPermissionError() {
+                showToast(getString(R.string.giving_system_permissions), true);
+            }
+        };
+        PermissionUtil
+                .with(this)
+                .permissions(
+                        permissions//相机权限
+                ).request(permissionListener);
     }
 
     @Override

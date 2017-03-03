@@ -15,9 +15,11 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
@@ -81,7 +83,7 @@ public class DragListAdapter extends BaseAdapter {
         ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_emoji);
         EmoGroup entity = mDataList.get(position);
         titleTv.setText(entity.getGroup_name());
-        imageLoader.displayImage(entity.getGroup_icon(),
+        imageLoader.displayImage(getPath(entity),
                 imageView,
                 ImageLoaderUtils.getDisplayImageOptions());
         if (isChanged) {// �ж��Ƿ����˸ı�
@@ -127,6 +129,14 @@ public class DragListAdapter extends BaseAdapter {
             }
         }
         return convertView;
+    }
+
+    private String getPath(EmoGroup entity) {
+        String path = "file:/" + Constants.EMO_DIR_PATH +
+                entity.getCate_id() + File.separator +
+                entity.getGroup_id() + File.separator +
+                entity.getGroup_icon();
+        return path;
     }
 
     /**

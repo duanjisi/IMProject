@@ -43,15 +43,13 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
-import com.lidroid.xutils.http.client.multipart.content.StringBody;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONException;
@@ -72,9 +70,12 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.Utils.Base64Utils;
+import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
-import im.boss66.com.Utils.NetworkUtil;
+import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
+import im.boss66.com.Utils.PrefKey;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.Utils.SharePreferenceUtil;
 import im.boss66.com.Utils.SoundUtil;
 import im.boss66.com.Utils.TimeUtil;
@@ -85,10 +86,12 @@ import im.boss66.com.adapter.CellAdapter;
 import im.boss66.com.adapter.MessageAdapter;
 import im.boss66.com.db.MessageDB;
 import im.boss66.com.db.RecentDB;
+import im.boss66.com.db.dao.ConversationHelper;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
 import im.boss66.com.db.dao.EmoHelper;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.BaseConversation;
 import im.boss66.com.entity.CellEntity;
 import im.boss66.com.entity.EmoCate;
 import im.boss66.com.entity.EmoEntity;
@@ -98,6 +101,7 @@ import im.boss66.com.entity.RecentItem;
 import im.boss66.com.fragment.FaceFragment;
 import im.boss66.com.fragment.FaceLoveFragment;
 import im.boss66.com.http.HttpUrl;
+import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.services.ChatServices;
 import im.boss66.com.xlistview.MsgListView;
 
@@ -107,6 +111,11 @@ import im.boss66.com.xlistview.MsgListView;
 public class ChatActivity extends BaseActivity implements View.OnClickListener, ChatServices.receiveMessageCallback,
         View.OnTouchListener, MsgListView.IXListViewListener, FaceFragment.clickCallback, FaceLoveFragment.LoveCallback {
     private static final String TAG = ChatActivity.class.getSimpleName();
+    private PermissionListener permissionListener;
+    private final int OPEN_CAMERA = 1;//相机
+    private final int OPEN_ALBUM = 2;//相册
+    private final int RECORD_VIDEO = 3;//视频
+    private final int RECORD_AUDIO = 4;//声音
     private Map<String, EmoEntity> mEmoMap = new LinkedHashMap<String, EmoEntity>();
     private PopupWindow popupWindow;
     private static final int MESSAGE_TYPE_EMOTION = 0x011;
@@ -182,7 +191,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private String mMsgId;
     private RecentDB mRecentDB;
     private SoundUtil mSoundUtil;
-    private String userid, toUid, title;
+    private String userid, toUid, title, toAvatar;//toUid;单聊（个人用户id）,群聊(群id)
     private AccountEntity account;
     private boolean isGroupChat = false;
     private TextView tvBack, tvTitle;
@@ -197,6 +206,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private ImageLoader imageLoader;
     private boolean isSpeech = false;
     private LinearLayout ll_input;
+    private float mImageHeight;
     /**
      * 接收到数据，用来更新listView
      */
@@ -262,7 +272,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         // todo eric, why use the last one index + 2 can real scroll to the
         // bottom?
         if (mMsgListView != null) {
-            mMsgListView.setSelection(adapter.getCount() + 1);
+            mMsgListView.setSelection(adapter.getCount() - 1);
         }
     }
 
@@ -282,10 +292,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             userid = account.getUser_id();
             toUid = bundle.getString("toUid", "");
             title = bundle.getString("title", "");
+            toAvatar = bundle.getString("toAvatar", "");
             isGroupChat = bundle.getBoolean("isgroup", false);
             mMsgId = userid + "_" + toUid;
         }
         MSGPAGERNUM = 0;
+        mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 3;
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         mSpUtil = App.getInstance().getSpUtil();
         resources = getResources();
@@ -327,7 +339,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         ivMake.setOnClickListener(this);
         ivAddPerson.setOnClickListener(this);
         ivEditPic.setOnClickListener(this);
-
+        if (isGroupChat) {
+            ivAddPerson.setImageResource(R.drawable.hp_white_persons);
+        } else {
+            ivAddPerson.setImageResource(R.drawable.hp_white_person);
+        }
 //        tvPhoto.setOnClickListener(this);
 //        tvImgs.setOnClickListener(this);
 ////        tvImg.setOnClickListener(this);
@@ -367,7 +383,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mApplication = App.getInstance();
         mMsgDB = mApplication.getMessageDB();// 发送数据库
         mRecentDB = mApplication.getRecentDB();// 接收消息数据库
-        adapter = new MessageAdapter(this, initMsgData());
+        adapter = new MessageAdapter(context, initMsgData());
         mMsgListView = (MsgListView) findViewById(R.id.msg_listView);
         // 触摸ListView隐藏表情和输入法
         mMsgListView.setOnTouchListener(this);
@@ -494,10 +510,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     if (entity != null) {
                         Log.i("info", "========showCurrentEmo()");
                         if (popupWindow == null) {
-                            showCurrentEmo(entity, ll_input);
+//                            ll_input
+                            showCurrentEmo(entity, ibFace);
                         } else {
                             if (!popupWindow.isShowing()) {
-                                showCurrentEmo(entity, ll_input);
+                                showCurrentEmo(entity, ibFace);
                             }
                         }
                     }
@@ -733,8 +750,16 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 startActivityForResult(it0, 100);
                 break;
             case R.id.iv_add_person://聊天信息
-                Intent it3 = new Intent(context, ChatGroupInformActivity.class);
-                startActivity(it3);
+                Intent it3 = null;
+                if (isGroupChat) {
+                    it3 = new Intent(context, ChatGroupInformActivity.class);
+                    it3.putExtra("groupid", toUid);
+                } else {
+                    it3 = new Intent(context, ChatInformActivity.class);
+                }
+                if (it3 != null) {
+                    startActivity(it3);
+                }
                 break;
             default:
                 String tag = (String) view.getTag();
@@ -825,7 +850,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //            showToast("发送者未登录!", true);
 //            return;
 //        }
-        ChatServices.sendMessage(getString(MESSAGE_TYPE_EMOTION, faceCode));
+//        ChatServices.sendMessage(getString(MESSAGE_TYPE_EMOTION, faceCode));
+        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_EMOTION, faceCode));
+        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_EMOTION, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_EMOTION, mSpUtil.getUserId(),
@@ -865,10 +892,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private String getExtension() {
         JSONObject object = new JSONObject();
         try {
-            object.put("sender", userid);
+            object.put("sender", account.getUser_name());
+            object.put("senderID", userid);
             object.put("senderAvartar", account.getAvatar());
-            object.put("conversation", userid);
-            object.put("conversationAvartar", account.getAvatar());
+
+            object.put("conversation", title);
+            object.put("conversationAvartar", toAvatar);
             return Base64Utils.encodeBase64(object.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -885,7 +914,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         adapter.upDateMsg(item);
         mMsgListView.setSelection(adapter.getCount() - 1);
         mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
-        ChatServices.sendMessage(getString(MESSAGE_TYPE_IMG, photoPath));
+//        ChatServices.sendMessage(getString(MESSAGE_TYPE_IMG, photoPath));
+        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_IMG, photoPath));
+        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_IMG, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_IMG, mSpUtil.getUserId(),
@@ -908,7 +939,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //            showToast("发送者未登录!", true);
 //            return;
 //        }
-        ChatServices.sendMessage(getString(MESSAGE_TYPE_TXT, msg));
+//        ChatServices.sendMessage(getString(MESSAGE_TYPE_TXT, msg));
+        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_TXT, msg));
+        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_TXT, msg);
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_TXT, mSpUtil.getUserId(),
@@ -931,13 +964,69 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //            showToast("发送者未登录!", true);
 //            return;
 //        }
-        ChatServices.sendMessage(getString(MESSAGE_TYPE_AUDIO, photoPath));
+//        ChatServices.sendMessage(getString(MESSAGE_TYPE_AUDIO, photoPath));
+        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_AUDIO, photoPath));
+        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_AUDIO, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_AUDIO, mSpUtil.getUserId(),
                 defaultCount, defaulgUserName, photoPath, 0,
                 System.currentTimeMillis(), 0, "" + System.currentTimeMillis());
         mRecentDB.saveRecent(recentItem);
+    }
+
+    private void saveConversation(String name, String avatar, String userid, int type, String content) {
+        BaseConversation sation = new BaseConversation();
+        sation.setUser_name(name);
+        sation.setAvatar(avatar);
+        sation.setConversation_id(userid);
+        if (isGroupChat) {
+            sation.setNewest_msg_type("group");
+        } else {
+            sation.setNewest_msg_type("unicast");
+        }
+        sation.setNewest_msg_time("" + System.currentTimeMillis());
+        ConversationHelper.getInstance().save(sation);
+        String msg = "";
+        switch (type) {
+            case MESSAGE_TYPE_TXT:
+                msg = "我：" + content;
+                break;
+            case MESSAGE_TYPE_EMOTION:
+                if (isGroupChat) {
+                    msg = "我发了一条[表情]";
+                } else {
+                    msg = "[表情]";
+                }
+                break;
+            case MESSAGE_TYPE_IMG:
+                if (isGroupChat) {
+                    msg = "我发了一条[图片]";
+                } else {
+                    msg = "[图片]";
+                }
+                break;
+            case MESSAGE_TYPE_AUDIO:
+                if (isGroupChat) {
+                    msg = "我发了一条[声音]";
+                } else {
+                    msg = "[声音]";
+                }
+                break;
+            case MESSAGE_TYPE_VIDEO:
+                if (isGroupChat) {
+                    msg = "我发了一条[视频]";
+                } else {
+                    msg = "[视频]";
+                }
+                break;
+        }
+        String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + avatar;
+        PreferenceUtils.putString(this, noticeKey, msg);
+        String key = PrefKey.UN_READ_NEWS_KEY + "/" + avatar;
+        int num = PreferenceUtils.getInt(this, key, 0);
+        num++;
+        PreferenceUtils.putInt(this, key, num);
     }
 
     private void sendVideoMessage(String faceCode) {
@@ -956,7 +1045,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //            showToast("发送者未登录!", true);
 //            return;
 //        }
-        ChatServices.sendMessage(getString(MESSAGE_TYPE_VIDEO, faceCode));
+//        ChatServices.sendMessage(getString(MESSAGE_TYPE_VIDEO, faceCode));
+        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_VIDEO, faceCode));
+        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_VIDEO, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_VIDEO, mSpUtil.getUserId(),
@@ -1015,15 +1106,19 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        receiverMessage(msg);
 //    }
 
+
     @Override
-    public void onMessageReceive(MessageItem item) {
+    public void onMessageReceive(MessageItem item, String fromUid) {
         if (item != null) {
-            android.os.Message msg = new android.os.Message();
-            msg.what = NEW_MESSAGE;
-            msg.obj = item;
-            handler.sendMessage(msg);
+            if (fromUid.equals(toUid)) {//接受到的uiserid 与该聊天的对象id一样
+                android.os.Message msg = new android.os.Message();
+                msg.what = NEW_MESSAGE;
+                msg.obj = item;
+                handler.sendMessage(msg);
+            }
         }
     }
+
 //    @Override
 //    public void onMessageReceive(String msgType, String senderId,
 //                                 String senderName, String senderAvatar,
@@ -1526,14 +1621,17 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             CellEntity cell = (CellEntity) adapterView.getItemAtPosition(i);
             switch (cell.getResId()) {
                 case R.drawable.hp_ch_photos:
-                    takeImg();
+//                    takeImg();
+                    getPermission(PermissionUtil.PERMISSIONS_CHAT_ALBUM, OPEN_ALBUM);
                     break;
                 case R.drawable.hp_ch_camera:
-                    takePhoto();
+//                    takePhoto();
+                    getPermission(PermissionUtil.PERMISSIONS_CHAT_CAMERA, OPEN_CAMERA);
                     break;
                 case R.drawable.hp_ch_video:
-                    Intent intent = new Intent(context, ImageGridActivity.class);
-                    startActivityForResult(intent, 0);
+//                    Intent intent = new Intent(context, ImageGridActivity.class);
+//                    startActivityForResult(intent, 0);
+                    getPermission(PermissionUtil.PERMISSIONS_CHAT_CAMERA, RECORD_VIDEO);
                     break;
                 case R.drawable.hp_ch_collect:
 
@@ -1558,6 +1656,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                getPermission(PermissionUtil.PERMISSIONS_CHAT_AUDIO, RECORD_AUDIO);
                 if (!Environment.getExternalStorageDirectory().exists()) {
                     showToast("No SDCard", true);
                     return false;
@@ -1832,26 +1931,48 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private void showCurrentEmo(EmoEntity entity, View v) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.popwindows_item_emo, null);
-        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.FILL_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        popupWindow = new PopupWindow(view, (int) mImageHeight,
+                (int) mImageHeight, false);
 
         popupWindow.setAnimationStyle(R.style.PopupTitleBarAnim);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
-        popupWindow.setBackgroundDrawable(getDrawableFromRes(R.drawable.bg_popwindow));
-        SimpleDraweeView gif = (SimpleDraweeView) view.findViewById(R.id.gif);
-        String imageUrl = entity.getUrl();
-        if (NetworkUtil.networkAvailable(context) && !imageUrl.equals("")) {
-            Uri uri = Uri.parse(imageUrl);
-            //加载动态图片
-            DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).setAutoPlayAnimations(true).build();
-            gif.setController(controller);
+        popupWindow.setBackgroundDrawable(getDrawableFromRes(R.drawable.bg_pop));
+        ImageView gif = (ImageView) view.findViewById(R.id.gif);
+        File file = FileUtil.getFileByPath(getPath(entity));
+        if (file != null) {
+            Glide.with(context).load(FileUtil.getBytesFromFile(file)).crossFade().into(gif);
         }
+//        SimpleDraweeView gif = (SimpleDraweeView) view.findViewById(R.id.gif);
+//        String imageUrl = entity.getUrl();
+//        if (NetworkUtil.networkAvailable(context) && !imageUrl.equals("")) {
+//            Uri uri = Uri.parse(imageUrl);
+//            //加载动态图片
+//            DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).setAutoPlayAnimations(true).build();
+//            gif.setController(controller);
+//        }
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (popupWindow != null && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                }
+            }
+        }, 5000);
         int[] location = new int[2];
         v.getLocationOnScreen(location);
 //        popupWindow.showAtLocation(Parent, Gravity.NO_GRAVITY, location[0], location[1]);
-        popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWindow.getWidth() / 2, location[1] - popupWindow.getHeight());
+        popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWindow.getWidth() / 2, location[1] - popupWindow.getHeight() - 30);
+    }
+
+    private String getPath(EmoEntity entity) {
+        String path = Constants.EMO_DIR_PATH + File.separator +
+                entity.getEmo_cate_id() + File.separator +
+                entity.getEmo_group_id() + File.separator +
+                entity.getEmo_code() + "." +
+                entity.getEmo_format();
+        return path;
     }
 
     private Drawable getDrawableFromRes(int resId) {
@@ -1862,7 +1983,51 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onDestroy() {
-        Session.getInstance().refreshConversationPager();
         super.onDestroy();
+        Session.getInstance().refreshConversationPager();
+    }
+
+    private void getPermission(String[] permissions, final int cameraType) {
+        permissionListener = new PermissionListener() {
+            @Override
+            public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
+            }
+
+            @Override
+            public void onRequestPermissionSuccess() {
+                if (cameraType == RECORD_VIDEO) {
+                    Intent intent = new Intent(context, ImageGridActivity.class);
+                    startActivityForResult(intent, 0);
+                } else if (cameraType == OPEN_CAMERA) {
+                    takePhoto();
+                } else if (cameraType == OPEN_ALBUM) {
+                    takeImg();
+                }
+            }
+
+            @Override
+            public void onRequestPermissionError() {
+                switch (cameraType) {
+                    case RECORD_VIDEO:
+                        showToast(getString(R.string.giving_video_permissions), true);
+                        break;
+                    case OPEN_CAMERA:
+                        showToast(getString(R.string.giving_camera2_permissions), true);
+                        break;
+                    case OPEN_ALBUM:
+                        showToast(getString(R.string.giving_album_permissions), true);
+                        break;
+                    case RECORD_AUDIO:
+                        showToast(getString(R.string.giving_audio_permissions), true);
+                        break;
+                }
+            }
+        };
+        PermissionUtil
+                .with(this)
+                .permissions(
+                        permissions//相机权限
+                ).request(permissionListener);
     }
 }

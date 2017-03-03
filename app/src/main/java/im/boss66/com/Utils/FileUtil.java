@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ProviderInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -177,6 +176,40 @@ public final class FileUtil {
         return cacheFile;
     }
 
+    public static File getFileByPath(String path) {
+        File cacheFile = null;
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+//                File sdCardDir = Environment.getExternalStorageDirectory();
+//                File dir = new File(path);
+//                if (!dir.exists()) {
+//                    dir.mkdirs();
+//                }
+            cacheFile = new File(path);
+        }
+        return cacheFile;
+    }
+
+    public static byte[] getBytesFromFile(File f) {
+        if (f == null) {
+            return null;
+        }
+        try {
+            FileInputStream stream = new FileInputStream(f);
+            ByteArrayOutputStream out = new ByteArrayOutputStream(1000);
+            byte[] b = new byte[1000];
+            int n;
+            while ((n = stream.read(b)) != -1)
+                out.write(b, 0, n);
+            stream.close();
+            out.close();
+            return out.toByteArray();
+        } catch (IOException e) {
+
+        }
+        return null;
+    }
+
     public static String getFileName(String path) {
         int index = path.lastIndexOf("/");
         return path.substring(index + 1);
@@ -275,12 +308,10 @@ public final class FileUtil {
     }
 
 
-
     private static String getFilePath(String url) {
         int index = url.lastIndexOf('.');
         return url.substring(0, index);
     }
-
 
 
     /**
@@ -437,7 +468,7 @@ public final class FileUtil {
 
     }
 
-    public static void saveBitmap(Context context, Bitmap bmp){
+    public static void saveBitmap(Context context, Bitmap bmp) {
         // 首先保存图片
         File appDir = new File(Environment.getExternalStorageDirectory(),
                 "headicon");

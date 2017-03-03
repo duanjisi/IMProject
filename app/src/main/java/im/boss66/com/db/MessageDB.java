@@ -95,6 +95,13 @@ public class MessageDB {
         db.execSQL("update _" + id + " set isNew=0 where isNew=1");
     }
 
+    public void clearMsgDatas(String id) {
+        db.execSQL("CREATE table IF NOT EXISTS _"
+                + id
+                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER)");
+        db.execSQL("delete from " + "_" + id);
+    }
+
     public void close() {
         if (db != null)
             db.close();

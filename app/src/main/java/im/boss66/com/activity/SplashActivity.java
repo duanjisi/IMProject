@@ -30,6 +30,12 @@ public class SplashActivity extends BaseActivity {
         mFadeIn.setFillAfter(true);
         ivSplash.startAnimation(mFadeIn);
         setListener();
+//        if (App.getInstance().isLogin()) {
+//            openActivity(MainActivity.class);
+//        } else {
+//            openActivity(LoginActivity.class);
+//        }
+//        finish();
     }
 
     private void setListener() {

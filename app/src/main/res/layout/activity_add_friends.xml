@@ -50,7 +50,7 @@
             android:padding="8dp"
             android:src="@drawable/hp_search" />
 
-        <EditText
+        <TextView
             android:id="@+id/et_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
