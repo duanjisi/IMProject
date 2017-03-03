@@ -16,16 +16,20 @@ import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.VerifyApplyActivity;
+import im.boss66.com.entity.FriendState;
 import im.boss66.com.entity.NearByChildEntity;
 import im.boss66.com.entity.PersonEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.AddFriendRequest;
+import im.boss66.com.http.request.DeleteFriendRequest;
+import im.boss66.com.http.request.FriendShipRequest;
 import im.boss66.com.http.request.PersonInformRequest;
+import im.boss66.com.widget.ActionSheet;
 
 /**
  * 附近的人详细资料
  */
-public class PersonalNearbyDetailActivity extends BaseActivity implements View.OnClickListener {
+public class PersonalNearbyDetailActivity extends BaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener {
     private static final String TAG = PersonalNearbyDetailActivity.class.getSimpleName();
     private TextView tv_back, tv_name, tv_sex, tv_distance, tv_set_notes_labels,
             tv_area, tv_personalized_signature, tv_source;
@@ -33,6 +37,8 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
     private Button bt_greet, bt_complaint;
     private ImageLoader imageLoader;
     private LinearLayout ll_area, rl_privacy, rl_general;
+    private FriendState friendState;
+    private String classType;
     private String userid = "";
 
     @Override
@@ -49,16 +55,19 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 userid = bundle.getString("userid", "");
-                String classType = bundle.getString("classType");
+                classType = bundle.getString("classType");
                 if (!TextUtils.isEmpty(classType)) {
                     if ("SharkItOffActivity".equals(classType)) {
                         tv_source.setText("来自摇一摇");
                     } else if ("PeopleNearbyActivity".equals(classType)) {
                         tv_source.setText("附近的人");
-                    } else if ("CaptureActivity".equals(classType)) {
-//                        tv_source.setText("通过扫一扫添加");
-                        requestPersonInform();
+                    } else {
+                        requestFriendShip();
                     }
+//                    else if ("CaptureActivity".equals(classType)) {
+////                        tv_source.setText("通过扫一扫添加");
+//                        requestPersonInform();
+//                    }
                 }
                 NearByChildEntity item = (NearByChildEntity) bundle.getSerializable("people");
                 if (item != null) {
@@ -109,9 +118,32 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
         bt_complaint.setOnClickListener(this);
     }
 
-    private void requestPersonInform() {
+    private void requestFriendShip() {
         if (!userid.equals("")) {
             showLoadingDialog();
+            FriendShipRequest request = new FriendShipRequest(TAG, userid);
+            request.send(new BaseDataRequest.RequestCallback<FriendState>() {
+                @Override
+                public void onSuccess(FriendState pojo) {
+                    initDatas(pojo);
+                }
+
+                @Override
+                public void onFailure(String msg) {
+                    cancelLoadingDialog();
+                    showLoadingDialog();
+                }
+            });
+        }
+    }
+
+    private void initDatas(FriendState state) {
+        this.friendState = state;
+        requestPersonInform();
+    }
+
+    private void requestPersonInform() {
+        if (!userid.equals("")) {
             PersonInformRequest request = new PersonInformRequest(TAG, userid);
             request.send(new BaseDataRequest.RequestCallback<PersonEntity>() {
                 @Override
@@ -138,8 +170,19 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
             UIUtils.showView(rl_privacy);
             tv_area.setText(entity.getDistrict());
             tv_personalized_signature.setText(entity.getSignature());
-            tv_source.setText("通过扫一扫添加");
-            bt_greet.setText("添加到通讯录");
+            if (friendState.equals("1")) {
+                bt_greet.setText("发消息");
+            } else {
+                bt_greet.setText("添加到通讯录");
+            }
+
+            if ("CaptureActivity".equals(classType)) {
+                tv_source.setText("通过扫一扫添加");
+            } else if ("ChatGroupInformActivity".equals(classType)) {
+                tv_source.setText("群消息");
+            } else {
+                tv_source.setText("来源于~");
+            }
             imageLoader.displayImage(entity.getAvatar(), iv_head,
                     ImageLoaderUtils.getDisplayImageOptions());
         }
@@ -153,7 +196,7 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 finish();
                 break;
             case R.id.iv_set:
-
+                showActionSheet();
                 break;
             case R.id.iv_head://头像
                 break;
@@ -189,5 +232,39 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 cancelLoadingDialog();
             }
         });
+    }
+
+    private void deleteFriendRequest(String userid) {
+        showLoadingDialog();
+        DeleteFriendRequest request = new DeleteFriendRequest(TAG, userid);
+        request.send(new BaseDataRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String pojo) {
+                cancelLoadingDialog();
+                finish();
+                showToast("已删除该好友!", true);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, true);
+                cancelLoadingDialog();
+            }
+        });
+    }
+
+    private void showActionSheet() {
+        ActionSheet actionSheet = new ActionSheet(PersonalNearbyDetailActivity.this)
+                .builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true);
+        actionSheet.addSheetItem(getString(R.string.delete), ActionSheet.SheetItemColor.Black, PersonalNearbyDetailActivity.this);
+        actionSheet.show();
+    }
+
+
+    @Override
+    public void onClick(int which) {
+        deleteFriendRequest(userid);
     }
 }

@@ -28,6 +28,7 @@ public class NewFriendsActivity extends BaseActivity implements View.OnClickList
     private TextView tvBack, tvMore, tvAddFriend;
     private RelativeLayout rl_search;
     private ListView listView;
+    private TextView tv_search;
     private NewFriendsAdapter adapter;
 
     @Override
@@ -41,6 +42,7 @@ public class NewFriendsActivity extends BaseActivity implements View.OnClickList
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvMore = (TextView) findViewById(R.id.iv_more);
         tvAddFriend = (TextView) findViewById(R.id.tv_add_contacts);
+        tv_search = (TextView) findViewById(R.id.tv_search);
         rl_search = (RelativeLayout) findViewById(R.id.rl_tag);
         listView = (ListView) findViewById(R.id.listView);
         adapter = new NewFriendsAdapter(context);
@@ -50,6 +52,7 @@ public class NewFriendsActivity extends BaseActivity implements View.OnClickList
         tvBack.setOnClickListener(this);
         tvMore.setOnClickListener(this);
         tvAddFriend.setOnClickListener(this);
+        tv_search.setOnClickListener(this);
         rl_search.setOnClickListener(this);
         requestFriends();
     }
@@ -93,8 +96,10 @@ public class NewFriendsActivity extends BaseActivity implements View.OnClickList
             case R.id.tv_add_contacts:
                 openActivity(PhoneContactsActivity.class);
                 break;
+            case R.id.tv_search:
+                openActivity(QureAccountActivity.class);
+                break;
             case R.id.rl_tag:
-
                 break;
         }
     }

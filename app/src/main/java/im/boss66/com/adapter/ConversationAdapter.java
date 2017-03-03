@@ -1,6 +1,7 @@
 package im.boss66.com.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,7 +39,6 @@ public class ConversationAdapter extends ABaseAdapter<BaseConversation> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
         if (entity != null) {
             holder.name.setText(entity.getUser_name());
 //            holder.msg.setText(entity.getNewest_msg());
@@ -55,15 +55,10 @@ public class ConversationAdapter extends ABaseAdapter<BaseConversation> {
             } else {
                 UIUtils.hindView(holder.newsNum);
             }
-//            if (!num.equals("") && !num.equals("0")) {
-//                UIUtils.showView(holder.newsNum);
-//                holder.newsNum.setText(num);
-//            } else {
-//                UIUtils.hindView(holder.newsNum);
-//            }
             holder.time.setText(TimeUtil.getChatTime(Long.parseLong(entity.getNewest_msg_time())));
             imageLoader.displayImage(entity.getAvatar(), holder.imageView,
                     ImageLoaderUtils.getDisplayImageOptions());
+            Log.i("info", "================setConvertView()");
         }
         return convertView;
     }

@@ -5,9 +5,13 @@
     android:background="@drawable/bg_round_gary"
     android:orientation="vertical">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <!--<com.facebook.drawee.view.SimpleDraweeView-->
+    <!--android:id="@+id/gif"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+    <ImageView
         android:id="@+id/gif"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter" />
 </RelativeLayout>

@@ -18,17 +18,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.HttpHandler;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,11 +29,13 @@ import java.util.regex.Pattern;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.SoundUtil;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.activity.discover.VideoPlayerActivity;
 import im.boss66.com.db.dao.EmoHelper;
 import im.boss66.com.entity.EmoEntity;
@@ -49,8 +44,6 @@ import im.boss66.com.entity.MessageItem;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.EmoParseRequest;
 import im.boss66.com.xlistview.GifTextView;
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageView;
 
 /**
  * @author pangzf
@@ -80,7 +73,7 @@ public class MessageAdapter extends BaseAdapter {
 
     public static final int MESSAGE_TYPE_TIME_TITLE = 0x07;
     public static final int MESSAGE_TYPE_HISTORY_DIVIDER = 0x08;
-    private static final int VIEW_TYPE_COUNT = 9;
+    private static final int VIEW_TYPE_COUNT = 10;
     private Context mContext;
     private LayoutInflater mInflater;
     private List<MessageItem> mMsgList;
@@ -90,10 +83,12 @@ public class MessageAdapter extends BaseAdapter {
     private int widthScreen;
     private SoundUtil mSoundUtil = SoundUtil.getInstance();
     private Handler mHandler = new Handler();
+    private int mImageHeight;
 
     public MessageAdapter(Context context, List<MessageItem> msgList) {
         this.mContext = context;
         widthScreen = UIUtils.getScreenWidth(context);
+        mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 3;
         resources = context.getResources();
         mMsgList = msgList;
         mInflater = LayoutInflater.from(context);
@@ -290,16 +285,24 @@ public class MessageAdapter extends BaseAdapter {
 //        }
         String emo_code = mItem.getMessage();
         EmoEntity entity = EmoHelper.getInstance().queryByCode(emo_code);
+        Log.i("info", "==========emotion:  " + "EmoEntity:" + entity);
         if (entity != null) {
             String format = entity.getEmo_format();
+            Log.i("info", "==========emotion:  " + "format:" + format);
             if (format.equals("gif")) {
-                try {
-                    GifDrawable drawable = new GifDrawable(getPath(entity));
-                    holder.gifView.setImageDrawable(drawable);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.i("info", "============IOException:" + e.getMessage());
-                    holder.gifView.setImageResource(R.drawable.emo_default_img);
+//                try {
+//                    GifDrawable drawable = new GifDrawable(getPath(entity));
+//                    holder.gifView.setImageDrawable(drawable);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    Log.i("info", "============IOException:" + e.getMessage());
+//                    holder.gifView.setImageResource(R.drawable.emo_default_img);
+//                }
+                File file = FileUtil.getFileByPath(getPath(entity));
+                if (file != null) {
+                    Glide.with(mContext).load(FileUtil.getBytesFromFile(file)).
+                            override(mImageHeight, mImageHeight).placeholder(R.drawable.zf_default_message_image)
+                            .crossFade().into(holder.gifView);
                 }
             } else {
                 holder.gifView.setImageBitmap(FileUtils.getBitmapByPath(getPath(entity)));
@@ -355,54 +358,73 @@ public class MessageAdapter extends BaseAdapter {
             String emo_url = entity.getEmo_url();
             String name = FileUtils.getFileNameFromPath(emo_url);
             if (name.contains(".gif")) {
-                final String cachePath = Constants.EMO_DIR_PATH + "emotion" + File.separator + name;
-                File f = new File(cachePath);
-                if (f.exists()) {
-                    try {
-                        GifDrawable drawable = new GifDrawable(cachePath);
-                        holder.gifView.setImageDrawable(drawable);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    HttpUtils http = new HttpUtils();
-                    final HttpHandler handler = http.download(emo_url,
-                            cachePath,
-                            true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
-                            true, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
-                            new RequestCallBack<File>() {
-
-                                @Override
-                                public void onStart() {
-
-                                }
-
-                                @Override
-                                public void onLoading(long total, long current, boolean isUploading) {
-                                }
-
-                                @Override
-                                public void onSuccess(ResponseInfo<File> responseInfo) {
-                                    Log.i("info", "downloaded:" + responseInfo.result.getPath());
-                                    try {
-                                        GifDrawable drawable = new GifDrawable(cachePath);
-                                        holder.gifView.setImageDrawable(drawable);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(HttpException error, String msg) {
-                                    mHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            holder.gifView.setImageResource(R.drawable.emo_default_img);
-                                        }
-                                    });
-                                }
-                            });
-                }
+                Glide.with(mContext).load(entity.getEmo_url()).
+                        override(mImageHeight, mImageHeight).
+                        placeholder(R.drawable.zf_default_message_image).
+                        crossFade().into(holder.gifView);
+//                final String cachePath = Constants.EMO_DIR_PATH + "emotion" + File.separator + name;
+//                File f = new File(cachePath);
+//                if (f.exists()) {
+//                    try {
+//                        Log.i("info", "==========emotion:  " + "emotion:" + cachePath);
+//                        GifDrawable drawable = new GifDrawable(cachePath);
+//                        holder.gifView.setImageDrawable(drawable);
+//                    } catch (IOException e) {
+//                        Log.i("info", "==========emotion:IOException:" + e.getMessage());
+//                        e.printStackTrace();
+//                        mHandler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                holder.gifView.setImageResource(R.drawable.emo_default_img);
+//                            }
+//                        });
+//                    }
+//                } else {
+//                    HttpUtils http = new HttpUtils();
+//                    final HttpHandler handler = http.download(emo_url,
+//                            cachePath,
+//                            true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
+//                            true, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
+//                            new RequestCallBack<File>() {
+//                                @Override
+//                                public void onStart() {
+//
+//                                }
+//
+//                                @Override
+//                                public void onLoading(long total, long current, boolean isUploading) {
+//                                }
+//
+//                                @Override
+//                                public void onSuccess(ResponseInfo<File> responseInfo) {
+//                                    Log.i("info", "downloaded:" + responseInfo.result.getPath());
+//                                    try {
+//                                        Log.i("info", "==========emotion:  " + "emotion:net " + cachePath);
+//                                        GifDrawable drawable = new GifDrawable(cachePath);
+//                                        holder.gifView.setImageDrawable(drawable);
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                        Log.i("info", "==========emotion:IOException:" + e.getMessage());
+//                                        mHandler.post(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                holder.gifView.setImageResource(R.drawable.emo_default_img);
+//                                            }
+//                                        });
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onFailure(HttpException error, String msg) {
+//                                    mHandler.post(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            holder.gifView.setImageResource(R.drawable.emo_default_img);
+//                                        }
+//                                    });
+//                                }
+//                            });
+//                }
             } else {
                 imageLoader.displayImage(entity.getEmo_url(), holder.gifView, ImageLoaderUtils.getDisplayImageOptions());
             }
@@ -433,32 +455,34 @@ public class MessageAdapter extends BaseAdapter {
         // 图片文件
         if (imageUrl != null && !imageUrl.equals("")) {
             Log.i("info", "=====imageUrl:" + imageUrl);
+            scalLoadImage(holder, imageUrl);
 //            Bitmap bitmap = imageLoader.loadImageSync(imageUrl);
 //            Log.i("info", "=====bitmap:" + bitmap);
-            imageLoader.displayImage(imageUrl, holder.ivphoto, ImageLoaderUtils.getDisplayImageOptions(), new ImageLoadingListener() {
-                @Override
-                public void onLoadingStarted(String s, View view) {
 
-                }
+//            imageLoader.displayImage(imageUrl, holder.ivphoto, ImageLoaderUtils.getDisplayImageOptions(), new ImageLoadingListener() {
+//                @Override
+//                public void onLoadingStarted(String s, View view) {
+//                }
+//
+//                @Override
+//                public void onLoadingFailed(String s, View view, FailReason failReason) {
+//
+//                }
+//
+//                @Override
+//                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+//                    Log.i("info", "=====bitmap:" + bitmap);
+//                    if (bitmap != null) {
+//                        scalImage(holder, bitmap);
+//                    }
+//                }
+//
+//                @Override
+//                public void onLoadingCancelled(String s, View view) {
+//
+//                }
+//            });
 
-                @Override
-                public void onLoadingFailed(String s, View view, FailReason failReason) {
-
-                }
-
-                @Override
-                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                    Log.i("info", "=====bitmap:" + bitmap);
-                    if (bitmap != null) {
-                        scalImage(holder, bitmap);
-                    }
-                }
-
-                @Override
-                public void onLoadingCancelled(String s, View view) {
-
-                }
-            });
 //            imageLoader.displayImage(imageUrl, holder.ivphoto, ImageLoaderUtils.getDisplayScaleImageOptions());
 //            Bitmap bitmap = MessageBitmapCache.getInstance().get(
 //                    mItem.getMessage());
@@ -484,16 +508,57 @@ public class MessageAdapter extends BaseAdapter {
         holder.rlMessage.setVisibility(View.GONE);
     }
 
-    private void scalImage(ImageMessageHolder holder, Bitmap bitmap) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
+//    private void scalImage(ImageMessageHolder holder, Bitmap bitmap) {
+//        int width = bitmap.getWidth();
+//        int height = bitmap.getHeight();
+//        if (width > widthScreen / 2) {
+//            Log.i("info", "=====width:" + width + "\n" + "height:" + height);
+//            holder.ivphoto.getLayoutParams().width = width / 2;
+//            holder.ivphoto.getLayoutParams().height = height / 2;
+//        }
+//        holder.ivphoto.setImageBitmap(bitmap);
+//    }
+
+    private void scalLoadImage(ImageMessageHolder holder, String url) {
+        String[] size = getSize(url);
+        int width = Integer.parseInt(size[0]);
+        int height = Integer.parseInt(size[1]);
         if (width > widthScreen / 2) {
             Log.i("info", "=====width:" + width + "\n" + "height:" + height);
             holder.ivphoto.getLayoutParams().width = width / 2;
             holder.ivphoto.getLayoutParams().height = height / 2;
         }
-        holder.ivphoto.setImageBitmap(bitmap);
+        imageLoader.displayImage(url, holder.ivphoto, ImageLoaderUtils.getDisplayImageOptions());
     }
+
+    private String[] getSize(String url) {
+        String str = url.substring(url.indexOf("-"), url.length());
+        String size = str.substring(str.indexOf("-") + 1, str.indexOf("."));
+        return size.split("x");
+    }
+
+    private void scalLoadImageVideo(VideoMessageHolder holder, String url) {
+        String[] size = getSize(url);
+        int width = Integer.parseInt(size[0]);
+        int height = Integer.parseInt(size[1]);
+        if (width > widthScreen / 2) {
+            Log.i("info", "=====width:" + width + "\n" + "height:" + height);
+            holder.iv_cover.getLayoutParams().width = width / 2;
+            holder.iv_cover.getLayoutParams().height = height / 2;
+        }
+        imageLoader.displayImage(url, holder.iv_cover, ImageLoaderUtils.getDisplayImageOptions());
+    }
+
+//    private void scalImageVideo(VideoMessageHolder holder, Bitmap bitmap) {
+//        int width = bitmap.getWidth();
+//        int height = bitmap.getHeight();
+//        if (width > widthScreen / 2) {
+//            Log.i("info", "=====width:" + width + "\n" + "height:" + height);
+//            holder.iv_cover.getLayoutParams().width = width / 2;
+//            holder.iv_cover.getLayoutParams().height = height / 2;
+//        }
+//        holder.iv_cover.setImageBitmap(bitmap);
+//    }
 
     //    /**
 //     * @param holder
@@ -546,7 +611,33 @@ public class MessageAdapter extends BaseAdapter {
         String imageUrl = null;
         if (videoPath.contains(".mp4")) {
             imageUrl = videoPath.replace(".mp4", ".jpg");
-            imageLoader.displayImage(imageUrl, holder.iv_cover, ImageLoaderUtils.getDisplayImageOptions());
+//            imageLoader.displayImage(imageUrl, holder.iv_cover, ImageLoaderUtils.getDisplayImageOptions());
+            scalLoadImageVideo(holder, imageUrl);
+//            imageLoader.displayImage(imageUrl, holder.iv_cover, ImageLoaderUtils.getDisplayImageOptions(), new ImageLoadingListener() {
+//                @Override
+//                public void onLoadingStarted(String s, View view) {
+//
+//                }
+//
+//                @Override
+//                public void onLoadingFailed(String s, View view, FailReason failReason) {
+//
+//                }
+//
+//                @Override
+//                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+//                    Log.i("info", "=====bitmap:" + bitmap);
+//                    if (bitmap != null) {
+//                        scalImageVideo(holder, bitmap);
+//                    }
+//                }
+//
+//                @Override
+//                public void onLoadingCancelled(String s, View view) {
+//
+//                }
+//            });
+
         }
         final String cover = imageUrl;
         holder.iv_player.setOnClickListener(new View.OnClickListener() {
@@ -578,11 +669,21 @@ public class MessageAdapter extends BaseAdapter {
 //        holder.time.setText(TimeUtil.getChatTime(mItem.getDate()));
         holder.time.setText(TimeUtil.getChatTime(Long.parseLong(mItem.getTemp())));
         holder.time.setVisibility(View.VISIBLE);
+        holder.nick.setText(mItem.getNick());
 //        holder.head.setBackgroundResource(R.drawable.ic_launcher);
         holder.progressBar.setVisibility(View.GONE);
         holder.progressBar.setProgress(50);
 //        holder.time.setVisibility(View.VISIBLE);
         imageLoader.displayImage(mItem.getAvatar(), holder.head, ImageLoaderUtils.getDisplayImageOptions());
+        holder.head.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, PersonalNearbyDetailActivity.class);
+                intent.putExtra("classType", "ChatPanelPager");
+                intent.putExtra("userid", mItem.getUserid());
+                mContext.startActivity(intent);
+            }
+        });
         // holder.head.setBackgroundResource(PushApplication.heads[mItem
         // .getHeadImg()]);
     }
@@ -590,6 +691,7 @@ public class MessageAdapter extends BaseAdapter {
     private void fillBaseMessageholder(MessageHolderBase holder,
                                        View convertView) {
         holder.head = (ImageView) convertView.findViewById(R.id.icon);
+        holder.nick = (TextView) convertView.findViewById(R.id.tv_nick_name);
         holder.time = (TextView) convertView.findViewById(R.id.datetime);
         // holder.msg = (GifTextView) convertView.findViewById(R.id.textView2);
         holder.rlMessage = (RelativeLayout) convertView
@@ -614,7 +716,8 @@ public class MessageAdapter extends BaseAdapter {
                                           View convertView) {
         fillBaseMessageholder(holder, convertView);
 //        holder.gifView = (GifView) convertView.findViewById(R.id.textView2);
-        holder.gifView = (GifImageView) convertView.findViewById(R.id.textView2);
+//        holder.gifView = (GifImageView) convertView.findViewById(R.id.textView2);
+        holder.gifView = (ImageView) convertView.findViewById(R.id.textView2);
         holder.ivEmo = (ImageView) convertView.findViewById(R.id.iv_emo);
     }
 
@@ -649,6 +752,7 @@ public class MessageAdapter extends BaseAdapter {
     private static class MessageHolderBase {
         ImageView head;
         TextView time;
+        TextView nick;
         ImageView imageView;
         ProgressBar progressBar;
         RelativeLayout rlMessage;
@@ -667,7 +771,8 @@ public class MessageAdapter extends BaseAdapter {
          * 表情消息体
          */
 //        GifView gifView;
-        GifImageView gifView;
+//        GifImageView gifView;
+        ImageView gifView;
         ImageView ivEmo;
     }
 

@@ -48,6 +48,7 @@
     <application
         android:name="im.boss66.com.App"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -83,6 +84,14 @@
         <activity android:name=".activity.im.EmojiMakeActivity"></activity>
         <activity android:name=".activity.im.EmojiSelectWellActivity"></activity>
 
+        <!--个人聊天信息-->
+        <activity android:name=".activity.im.GroupAllMembersActivity"></activity>
+        <!--个人聊天信息-->
+        <activity android:name=".activity.im.ChatInformActivity"></activity>
+        <!--查询用户-->
+        <activity android:name=".activity.book.QureAccountActivity"></activity>
+        <!--群聊-->
+        <activity android:name=".activity.im.GroupChatActivity"></activity>
         <!--选择联系人(发起群聊)-->
         <activity android:name=".activity.book.SelectContactsActivity"></activity>
         <!--手机联系人-->

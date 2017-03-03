@@ -3,6 +3,7 @@ package im.boss66.com.activity.book;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -28,6 +29,7 @@ import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ContactUtils;
 import im.boss66.com.Utils.MycsLog;
+import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.PingYinUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
@@ -37,6 +39,7 @@ import im.boss66.com.entity.BasePhoneContact;
 import im.boss66.com.entity.PhoneContact;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.PhoneContactsRequest;
+import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.EaseContactList;
 
 /**
@@ -62,6 +65,7 @@ public class PhoneContactsActivity extends BaseActivity {
     protected FrameLayout contentContainer;
     private Map<String, EaseUser> contactsMap;
     private AccountEntity account;
+    private PermissionListener permissionListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,7 @@ public class PhoneContactsActivity extends BaseActivity {
     }
 
     private void initViews() {
+        getPermission();
         account = App.getInstance().getAccount();
         contactList = new ArrayList<EaseUser>();
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -191,12 +196,12 @@ public class PhoneContactsActivity extends BaseActivity {
                 String name = map.get(contact.getMobile_phone());
                 if (name != null && !name.equals("")) {
                     easeUser.setContactName(name);
-                    String firstChar = name.substring(0, 1);
-                    char[] mChar = firstChar.toCharArray();
-                    String word = String.valueOf(mChar[0]);
+                    String word = name.substring(0, 1);
+//                    char[] mChar = firstChar.toCharArray();
+//                    String word = String.valueOf(mChar[0]);
                     String letter;
                     if (isHanzi(word)) {
-                        letter = PingYinUtils.toPinYin(mChar[0]);
+                        letter = PingYinUtils.toPinYin(word);
                     } else if (isChar(word)) {
                         letter = word.toUpperCase();
                     } else {
@@ -229,5 +234,33 @@ public class PhoneContactsActivity extends BaseActivity {
                 inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    private void getPermission() {
+        permissionListener = new PermissionListener() {
+            @Override
+            public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
+            }
+
+            @Override
+            public void onRequestPermissionSuccess() {
+            }
+
+            @Override
+            public void onRequestPermissionError() {
+//                ToastUtil.showShort(PhoneContactsActivity.this, getString(R.string.giving_camera_permissions));
+            }
+        };
+        PermissionUtil
+                .with(this)
+                .permissions(
+                        PermissionUtil.PERMISSIONS_GROUP_CONTCATS //相机权限
+                ).request(permissionListener);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
     }
 }

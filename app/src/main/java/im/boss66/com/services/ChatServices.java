@@ -11,12 +11,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import de.tavendo.autobahn.WebSocket;
 import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketConnectionHandler;
 import im.boss66.com.App;
 import im.boss66.com.Session;
+import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.Base64Utils;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PrefKey;
@@ -30,7 +33,7 @@ import im.boss66.com.http.HttpUrl;
 /**
  * Created by Johnny on 2017/1/16.
  */
-public class ChatServices extends Service {
+public class ChatServices extends Service implements Observer {
     private static WebSocket mConnection = new WebSocketConnection();
     public static ArrayList<receiveMessageCallback> callbacks = new ArrayList<>();
     private String userid;
@@ -45,6 +48,7 @@ public class ChatServices extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Session.getInstance().addObserver(this);
         mMsgDB = App.getInstance().getMessageDB();// 发送数据库
         startConnection();
     }
@@ -66,7 +70,7 @@ public class ChatServices extends Service {
 //                              String senderName, String senderAvatar,
 //                              String message, String chatType,
 //                              String groupId, String temp);
-        void onMessageReceive(MessageItem item);
+        void onMessageReceive(MessageItem item, String fromUid);
 
         void onNotify(String title, String content);
 
@@ -111,7 +115,7 @@ public class ChatServices extends Service {
     }
 
 
-    public static void sendMessage(String msg) {
+    public void sendMessage(String msg) {
         if (mConnection != null && msg != null && !msg.equals("")) {
             mConnection.sendTextMessage(msg);
         }
@@ -121,7 +125,6 @@ public class ChatServices extends Service {
 //        for (int i = 0; i < callbacks.size(); i++)
 //            ((receiveMessageCallback) callbacks.get(i)).onMessageReceive(payload);
 //    }
-
 
     private void messageHandle(String str) {
         MycsLog.i("info", "====str:" + str);
@@ -135,17 +138,19 @@ public class ChatServices extends Service {
                 String senderAvartar = object.getString("senderAvartar");
                 String conversation = object.getString("conversation");
                 String conversationAvatar = object.getString("conversationAvartar");
-//                for (int i = 0; i < callbacks.size(); i++)
-//                    ((receiveMessageCallback) callbacks.get(i)).onMessageReceive(
-//                            datas[0], datas[1],
-//                            sender, senderAvartar,
-//                            datas[2], datas[3],
-//                            datas[4], datas[5]);
+
                 saveMessageItem(datas, sender, senderAvartar);
+
                 BaseConversation sation = new BaseConversation();
-                sation.setUser_name(conversation);
-                sation.setAvatar(conversationAvatar);
-                sation.setUser_id(datas[4]);
+                if (datas[3].equals("group")) {
+                    sation.setUser_name(conversation);
+                    sation.setAvatar(conversationAvatar);
+                    sation.setConversation_id(datas[4]);
+                } else {
+                    sation.setUser_name(sender);
+                    sation.setAvatar(senderAvartar);
+                    sation.setConversation_id(datas[1]);
+                }
                 sation.setNewest_msg_type(datas[3]);
                 sation.setNewest_msg_time(datas[5] + "000");
                 ConversationHelper.getInstance().save(sation);
@@ -161,7 +166,7 @@ public class ChatServices extends Service {
                     } else if (datas[0].equals("audio")) {
                         msg = "[声音]";
                     } else {
-                        msg = "";
+                        msg = sender + ":" + datas[2];
                     }
                 } else {
                     if (datas[0].equals("emotion")) {
@@ -173,7 +178,7 @@ public class ChatServices extends Service {
                     } else if (datas[0].equals("audio")) {
                         msg = sender + "发了一条 [声音]";
                     } else {
-                        msg = "";
+                        msg = sender + ":" + datas[2];
                     }
                 }
                 PreferenceUtils.putString(this, noticeKey, msg);
@@ -225,14 +230,27 @@ public class ChatServices extends Service {
             item = new MessageItem(MessageItem.MESSAGE_TYPE_AUDIO,
                     sender, 0,
                     datas[2], 0, true, 0,
-                    0, time,
+                    getDuration(datas[2]), time,
                     sender, datas[1],
                     senderAvartar);
         }
         MycsLog.i("info", "=====userid:" + userid);
-        mMsgDB.saveMsg(userid + "_" + datas[1], item);// 保存数据库
+        String fromid = "";
+        if (datas[3].equals("group")) {
+            fromid = datas[4];
+        } else {
+            fromid = datas[1];
+        }
+        mMsgDB.saveMsg(userid + "_" + fromid, item);// 保存数据库
         for (int i = 0; i < callbacks.size(); i++)
-            ((receiveMessageCallback) callbacks.get(i)).onMessageReceive(item);
+            ((receiveMessageCallback) callbacks.get(i)).onMessageReceive(item, fromid);
+    }
+
+    private int getDuration(String url) {
+        String str = url.substring(url.indexOf("-"), url.length());
+        String duration = str.substring(str.indexOf("-") + 1, str.indexOf("."));
+        Log.i("info", "=======duration:" + duration);
+        return Integer.parseInt(duration);
     }
 
     private void login() {
@@ -241,6 +259,17 @@ public class ChatServices extends Service {
 
     private void logout() {
         mConnection.sendTextMessage("logout_" + userid);
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        SessionInfo sin = (SessionInfo) data;
+        if (sin.getAction() == Session.ACTION_SEND_IM_MESSAGE) {
+            String msg = (String) sin.getData();
+            if (msg != null && !msg.equals("")) {
+                sendMessage(msg);
+            }
+        }
     }
 
     @Override

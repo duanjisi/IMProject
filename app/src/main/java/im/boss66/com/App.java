@@ -6,8 +6,6 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.media.MediaPlayer;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -57,7 +55,7 @@ public class App extends Application {
         mApplication = this;
         initFaceMap();
         initData();
-        Fresco.initialize(getApplicationContext());//注册，在setContentView之前。
+//        Fresco.initialize(getApplicationContext());//注册，在setContentView之前。
     }
 
     private void initData() {
@@ -343,7 +341,7 @@ public class App extends Application {
         mFaceMap.put("[表情三]", R.drawable.f109);
     }
 
-    public ArrayList<EaseUser> contactList;
+    private ArrayList<EaseUser> contactList;
 
     public ArrayList<EaseUser> getContacts() {
         if (contactList == null) {

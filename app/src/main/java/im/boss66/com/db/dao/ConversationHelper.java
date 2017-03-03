@@ -40,12 +40,13 @@ public class ConversationHelper extends ColumnHelper<BaseConversation> {
     @Override
     protected ContentValues getValues(BaseConversation bean) {
         ContentValues values = new ContentValues();
-        values.put(ConversationColumn.USER_ID, bean.getUser_id());
+        values.put(ConversationColumn.CONVERSATION_ID, bean.getConversation_id());
         values.put(ConversationColumn.USER_NAME, bean.getUser_name());
         values.put(ConversationColumn.AVATAR, bean.getAvatar());
         values.put(ConversationColumn.UNREAD_COUNT, bean.getUnread_msg_count());
         values.put(ConversationColumn.MSG_TIME, bean.getNewest_msg_time());
         values.put(ConversationColumn.MSG_TYPE, bean.getNewest_msg_type());
+        values.put(ConversationColumn.USER_ID, userId);
 //        values.put(ConversationColumn.MSG_TXT, bean.getNewest_msg());
         return values;
     }
@@ -54,7 +55,7 @@ public class ConversationHelper extends ColumnHelper<BaseConversation> {
     protected BaseConversation getBean(Cursor c) {
         BaseConversation entity = new BaseConversation();
         entity.setUser_name(getString(c, ConversationColumn.USER_NAME));
-        entity.setUser_id(getString(c, ConversationColumn.USER_ID));
+        entity.setConversation_id(getString(c, ConversationColumn.CONVERSATION_ID));
         entity.setAvatar(getString(c, ConversationColumn.AVATAR));
         entity.setUnread_msg_count(getString(c, ConversationColumn.UNREAD_COUNT));
 //        entity.setNewest_msg(getString(c, ConversationColumn.MSG_TXT));
@@ -70,9 +71,10 @@ public class ConversationHelper extends ColumnHelper<BaseConversation> {
 
     @Override
     public void save(BaseConversation entity) {
-        String[] args = new String[]{entity.getUser_name()};
+        String[] args = new String[]{entity.getUser_name(), userId};
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                getSelectSql(ConversationColumn.TABLE_NAME, new String[]{ConversationColumn.USER_NAME}), args);
+                getSelectSql(ConversationColumn.TABLE_NAME, new String[]{ConversationColumn.USER_NAME,
+                        ConversationColumn.USER_ID}), args);
         if (exist(c)) {
 //            c.moveToFirst();
 //            this.delete(entity.getUser_name());
@@ -97,7 +99,7 @@ public class ConversationHelper extends ColumnHelper<BaseConversation> {
             c.moveToLast();
             do {
                 bos.add(getBean(c));
-            } while (c.moveToPrevious());
+            } while (c.moveToNext());
         }
         c.close();
         return bos;
@@ -122,8 +124,8 @@ public class ConversationHelper extends ColumnHelper<BaseConversation> {
 
     @Override
     public void update(BaseConversation entity) {
-        String sql = ConversationColumn.USER_NAME + " = ? AND " + ConversationColumn.AVATAR + " = ?";
+        String sql = ConversationColumn.USER_NAME + " = ? AND " + ConversationColumn.AVATAR + " = ?" + " and " + ConversationColumn.USER_ID + " =?";
         DBHelper.getInstance(mContext).update(ConversationColumn.TABLE_NAME, getValues(entity),
-                sql, new String[]{entity.getUser_name() + "", entity.getAvatar() + ""});
+                sql, new String[]{entity.getUser_name(), entity.getAvatar(), userId});
     }
 }

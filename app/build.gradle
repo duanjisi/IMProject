@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 24
     buildToolsVersion '24.0.1'
+
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
 
@@ -82,6 +83,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.alibaba:fastjson:1.2.9'
     compile 'net.jodah:typetools:0.4.0'
+    compile 'com.facebook.fresco:fresco:0.9.0+'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile files('libs/autobahn.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
@@ -101,6 +103,5 @@ dependencies {
     compile files('libs/umeng_social_sdk.jar')
     compile files('libs/classes.jar')
     compile files('libs/android-async-http-1.4.5.jar')
-    compile files('libs/pinyin4j-2.5.0.jar')
     compile 'com.contrarywind:Android-PickerView:3.0.3'
 }

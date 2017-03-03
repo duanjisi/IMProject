@@ -40,6 +40,8 @@ public class HttpUrl {
     public static final String CONTACTS_URL = MAIN_URL + "ucenter/friends/index";
     //新朋友列表请求
     public static final String NEW_FRIENDS_URL = MAIN_URL + "ucenter/friendslog/index";
+    //查找用户
+    public static final String QURE_ACCOUNT = MAIN_URL + "ucenter/userinfo/findman";
     //精选表情首页数据请求
     public static final String EMO_WELL_URL = MAIN_URL + "api/v1/store";
     //表情包详细信息请求
@@ -71,7 +73,10 @@ public class HttpUrl {
     public static final String UPDATE_GROUP_INFORMS = BASE_IM_URL + "editgrp";
     //查询我的群
     public static final String QURE_MY_GROUP = BASE_IM_URL + "querymygrps";
-
+    //查询群成員
+    public static final String QURE_GROUP_MEMBERS = BASE_IM_URL + "grpinfo";
+    //踢出群成員
+    public static final String REMOVE_GROUP_MEMBERS = BASE_IM_URL + "delmembers";
 
     //附近的人
     public static final String PEOPLE_NEARBY = MAIN_URL + "ucenter/nearuser/index";
