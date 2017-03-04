@@ -44,6 +44,7 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
     private String groupid;
     private String MsgTab;
     private AccountEntity account;
+    private GroupInform groupInform;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +111,7 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
 
     private void bindDatas(GroupInform inform) {
         if (inform != null) {
+            this.groupInform = inform;
             tvMyNick.setText(account.getUser_name());
             tvGroupName.setText(inform.getName());
             tvGroupNotice.setText(inform.getNotice());
@@ -148,7 +150,12 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
                 showExitGroup();
                 break;
             case R.id.rl_name://群聊名称
-                openActivity(ChatGroupNameActivity.class);
+                if (groupInform != null) {
+                    Intent it = new Intent(context, ChatGroupNameActivity.class);
+                    it.putExtra("obj", groupInform);
+                    it.putExtra("isNotice", false);
+                    startActivityForResult(it, 100);
+                }
                 break;
             case R.id.rl_qr_code://群二维码
                 Intent intent = new Intent(context, ChatGroupCodeActivity.class);
@@ -157,7 +164,12 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
 //                openActivity(ChatGroupCodeActivity.class);
                 break;
             case R.id.rl_group_info://群聊公告
-
+                if (groupInform != null) {
+                    Intent it = new Intent(context, ChatGroupNameActivity.class);
+                    it.putExtra("obj", groupInform);
+                    it.putExtra("isNotice", true);
+                    startActivityForResult(it, 101);
+                }
                 break;
             case R.id.rl_group_nick://我在本群的昵称
                 showMotifyNickDialog();
@@ -289,6 +301,22 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
             switch (requestCode) {
                 case 0:
                     requestMembers();
+                    break;
+                case 100://更新名称
+                    if (data != null) {
+                        String name = data.getStringExtra("data");
+                        if (name != null && !name.equals("")) {
+                            tvGroupName.setText(name);
+                        }
+                    }
+                    break;
+                case 101://更新群公告
+                    if (data != null) {
+                        String name = data.getStringExtra("data");
+                        if (name != null && !name.equals("")) {
+                            tvGroupNotice.setText(name);
+                        }
+                    }
                     break;
             }
         }

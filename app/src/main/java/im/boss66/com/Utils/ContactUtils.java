@@ -18,14 +18,21 @@ public class ContactUtils {
         while (cursor.moveToNext()) {
             //读取通讯录的号码
             String number = cursor.getString(cursor
-                    .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)).trim();
             if (number != null && !number.equals("")) {
                 if (number.contains("+86")) {
-                    sb.append(number.substring(3, number.length()));
+                    String str = number.substring(3, number.length());
+                    if (UIUtils.isMobile(str)) {
+                        sb.append(str);
+                        sb.append(",");
+                    }
+//                    sb.append(number.substring(3, number.length()));
                 } else {
-                    sb.append(number);
+                    if (UIUtils.isMobile(number)) {
+                        sb.append(number);
+                        sb.append(",");
+                    }
                 }
-                sb.append(",");
             }
         }
         String string = sb.toString();

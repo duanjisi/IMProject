@@ -113,6 +113,7 @@ public class PersonalInputSmsActivity extends BaseActivity implements View.OnCli
                         showToast(message,true);
                         if (code == 1){
                             App.getInstance().getAccount().setMobile_phone(phone);
+
                             setResult(RESULT_OK);
                             finish();
                         }

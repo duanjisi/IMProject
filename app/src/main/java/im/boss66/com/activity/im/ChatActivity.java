@@ -1021,9 +1021,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 break;
         }
-        String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + avatar;
+        String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + userid;
         PreferenceUtils.putString(this, noticeKey, msg);
-        String key = PrefKey.UN_READ_NEWS_KEY + "/" + avatar;
+        String key = PrefKey.UN_READ_NEWS_KEY + "/" + userid;
         int num = PreferenceUtils.getInt(this, key, 0);
         num++;
         PreferenceUtils.putInt(this, key, num);
@@ -1176,8 +1176,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
 
     private void uploadImageAudioFile(final String path, final boolean isImage, final int voiceTime) {
-        String main = HttpUrl.UPLOAD_IMAGE_URL;
-//        showLoadingDialog();
+        String main = "";
+        if (isImage) {
+            main = HttpUrl.UPLOAD_IMAGE_URL;
+        } else {
+            main = HttpUrl.UPLOAD_AUDIO_URL;
+        }
         final HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         final com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         try {
@@ -1199,6 +1203,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     Log.i("info", "responseInfo:" + responseInfo.result);
 //                    cancelLoadingDialog();
                     String path = parsePath(responseInfo.result);
+                    Log.i("info", "=====path:" + path);
                     if (isImage) {
                         sendImageMessage(path);
                     } else {
@@ -1634,13 +1639,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     getPermission(PermissionUtil.PERMISSIONS_CHAT_CAMERA, RECORD_VIDEO);
                     break;
                 case R.drawable.hp_ch_collect:
-
+                    showToast("暂不支持!", true);
                     break;
                 case R.drawable.hp_ch_red:
-
+                    showToast("暂不支持!", true);
                     break;
                 case R.drawable.hp_ch_card:
-
+                    showToast("暂不支持!", true);
                     break;
             }
         }

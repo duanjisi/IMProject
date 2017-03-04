@@ -9,6 +9,7 @@ public class HttpUrl {
     public static final String BASE_IM_URL = "http://live.66boss.com:6060/";
     public static final String WS_URL = "ws://live.66boss.com:6060/entry";
 
+    public static final String UPLOAD_AUDIO_URL = BASE_URL + "upload/writev1?";
     public static final String UPLOAD_IMAGE_URL = BASE_URL + "upload/writev2?";
     public static final String UPLOAD_VIDEO_URL = BASE_URL + "upload/writev3?";
 
@@ -35,7 +36,7 @@ public class HttpUrl {
     //新朋友请求数
     public static final String NEW_FRIEND_NUM_URL = MAIN_URL + "ucenter/friendslog/count";
     //好友关系请求
-    public static final String FRIENDSHIP_URL = MAIN_URL + "ucenter/friends/isfriends";
+    public static final String FRIENDSHIP_URL = MAIN_URL + "ucenter/friends/isfriend";
     //通讯录请求
     public static final String CONTACTS_URL = MAIN_URL + "ucenter/friends/index";
     //新朋友列表请求

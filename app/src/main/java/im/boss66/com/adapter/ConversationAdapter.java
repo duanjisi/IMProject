@@ -44,8 +44,10 @@ public class ConversationAdapter extends ABaseAdapter<BaseConversation> {
 //            holder.msg.setText(entity.getNewest_msg());
 //            String num = entity.getUnread_msg_count();
             String avatar = entity.getAvatar();
-            String key = PrefKey.UN_READ_NEWS_KEY + "/" + avatar;
-            String newsKey = PrefKey.NEWS_NOTICE_KEY + "/" + avatar;
+
+            String key = PrefKey.UN_READ_NEWS_KEY + "/" + entity.getConversation_id();
+            String newsKey = PrefKey.NEWS_NOTICE_KEY + "/" + entity.getConversation_id();
+
             String msg = PreferenceUtils.getString(context, newsKey, "");
             holder.msg.setText(msg);
             int num = PreferenceUtils.getInt(context, key, 0);

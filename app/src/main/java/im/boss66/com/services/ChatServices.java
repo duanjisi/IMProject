@@ -140,21 +140,24 @@ public class ChatServices extends Service implements Observer {
                 String conversationAvatar = object.getString("conversationAvartar");
 
                 saveMessageItem(datas, sender, senderAvartar);
-
+                String fromid = "";
                 BaseConversation sation = new BaseConversation();
                 if (datas[3].equals("group")) {
                     sation.setUser_name(conversation);
                     sation.setAvatar(conversationAvatar);
                     sation.setConversation_id(datas[4]);
+                    fromid = datas[4];
                 } else {
                     sation.setUser_name(sender);
                     sation.setAvatar(senderAvartar);
                     sation.setConversation_id(datas[1]);
+                    fromid = datas[1];
                 }
                 sation.setNewest_msg_type(datas[3]);
                 sation.setNewest_msg_time(datas[5] + "000");
                 ConversationHelper.getInstance().save(sation);
-                String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + conversationAvatar;
+
+                String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + fromid;
                 String msg = "";
                 if (!datas[3].equals("group")) {
                     if (datas[0].equals("emotion")) {
@@ -182,7 +185,7 @@ public class ChatServices extends Service implements Observer {
                     }
                 }
                 PreferenceUtils.putString(this, noticeKey, msg);
-                String key = PrefKey.UN_READ_NEWS_KEY + "/" + conversationAvatar;
+                String key = PrefKey.UN_READ_NEWS_KEY + "/" + fromid;
                 int num = PreferenceUtils.getInt(this, key, 0);
                 num++;
                 PreferenceUtils.putInt(this, key, num);
@@ -247,6 +250,7 @@ public class ChatServices extends Service implements Observer {
     }
 
     private int getDuration(String url) {
+        Log.i("info", "===================url:" + url);
         String str = url.substring(url.indexOf("-"), url.length());
         String duration = str.substring(str.indexOf("-") + 1, str.indexOf("."));
         Log.i("info", "=======duration:" + duration);

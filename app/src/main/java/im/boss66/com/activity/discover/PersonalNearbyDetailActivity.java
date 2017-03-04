@@ -131,7 +131,7 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 @Override
                 public void onFailure(String msg) {
                     cancelLoadingDialog();
-                    showLoadingDialog();
+                    showToast(msg, true);
                 }
             });
         }

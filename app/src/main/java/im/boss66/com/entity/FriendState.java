@@ -7,7 +7,7 @@ package im.boss66.com.entity;
 public class FriendState {
     private String count = "";
     private String is_friend = "";
-
+    private String fid = "";
 
     public String getCount() {
         return count;
@@ -23,5 +23,13 @@ public class FriendState {
 
     public void setIs_friend(String is_friend) {
         this.is_friend = is_friend;
+    }
+
+    public String getFid() {
+        return fid;
+    }
+
+    public void setFid(String fid) {
+        this.fid = fid;
     }
 }

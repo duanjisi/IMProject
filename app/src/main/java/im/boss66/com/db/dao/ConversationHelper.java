@@ -93,13 +93,14 @@ public class ConversationHelper extends ColumnHelper<BaseConversation> {
     @Override
     public List<BaseConversation> query() {
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                "SELECT * FROM " + ConversationColumn.TABLE_NAME, null);
+                "SELECT * FROM " + ConversationColumn.TABLE_NAME + " WHERE " + ConversationColumn.USER_ID
+                        + " = ? ", new String[]{userId});
         List<BaseConversation> bos = new ArrayList<BaseConversation>();
         if (exist(c)) {
             c.moveToLast();
             do {
                 bos.add(getBean(c));
-            } while (c.moveToNext());
+            } while (c.moveToPrevious());
         }
         c.close();
         return bos;
