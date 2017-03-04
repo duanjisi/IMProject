@@ -16,6 +16,7 @@
 
 
         <TextView
+            android:id="@+id/tv_save_edit"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
             android:textSize="17.6dp"
