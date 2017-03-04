@@ -119,7 +119,9 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ((ViewGroup) view.getParent()).removeView(view);
+        if (view != null && view.getParent() != null) {
+            ((ViewGroup) view.getParent()).removeView(view);
+        }
     }
 
     private class ItemClickListner implements AdapterView.OnItemClickListener {

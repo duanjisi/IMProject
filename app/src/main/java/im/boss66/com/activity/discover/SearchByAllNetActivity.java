@@ -1,5 +1,6 @@
 package im.boss66.com.activity.discover;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -7,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -24,6 +26,9 @@ import java.util.List;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.im.EmojiGroupDetailsActivity;
+import im.boss66.com.adapter.EmoStoreAdapter;
+import im.boss66.com.adapter.SearchCircleAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.EmoStore;
 import im.boss66.com.entity.SearchCofriendEntity;
@@ -45,6 +50,8 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
     private EditText et_search;
     private TextView tv_close;
     private String access_token, keyword;
+    private EmoStoreAdapter storeAdapter;
+    private SearchCircleAdapter searchCircleAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +80,33 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
         tv_close.setOnClickListener(this);
         et_search.setOnEditorActionListener(this);
         et_search.addTextChangedListener(this);
+        searchCircleAdapter = new SearchCircleAdapter(this);
+        lv_friend.setAdapter(searchCircleAdapter);
+        storeAdapter = new EmoStoreAdapter(this);
+        lv_face.setAdapter(storeAdapter);
+        lv_face.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                EmoStore store = (EmoStore) adapterView.getItemAtPosition(i);
+                Intent intent = new Intent(SearchByAllNetActivity.this, EmojiGroupDetailsActivity.class);
+                intent.putExtra("packid", store.getGroup_id());
+                startActivity(intent);
+            }
+        });
+        lv_friend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                SearchCofriendEntity item = (SearchCofriendEntity) adapterView.getItemAtPosition(i);
+                Intent intent = new Intent(SearchByAllNetActivity.this, PhotoAlbumDetailActivity.class);
+                try {
+                    int feed = Integer.parseInt(item.getFeed_id());
+                    intent.putExtra("feedId", feed);
+                    startActivity(intent);
+                } catch (Exception e) {
+
+                }
+            }
+        });
     }
 
     @Override
@@ -91,12 +125,12 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
 
     private void searchBySever() {
         showLoadingDialog();
-            String url = HttpUrl.SEARCH_BY_ALL_NET + "?key=" + keyword;
-            HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
-            com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-            params.addBodyParameter("access_token", access_token);
-            httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
-                @Override
+        String url = HttpUrl.SEARCH_BY_ALL_NET + "?key=" + keyword;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 cancelLoadingDialog();
                 String result = responseInfo.result;
@@ -140,8 +174,11 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
             lv_friend.setVisibility(View.VISIBLE);
             tv_friend_title.setVisibility(View.VISIBLE);
             if (firendlist.size() > 3) {
+                List<SearchCofriendEntity> firend3list = firendlist.subList(0, 3);
+                searchCircleAdapter.setData(firend3list);
                 rl_friend_bottom.setVisibility(View.VISIBLE);
             } else {
+                searchCircleAdapter.setData(firendlist);
                 rl_friend_bottom.setVisibility(View.GONE);
             }
         } else {
@@ -158,8 +195,11 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
             tv_face_title.setVisibility(View.VISIBLE);
             v_line_face_top.setVisibility(View.VISIBLE);
             if (storelist.size() > 3) {
+                List<EmoStore> emoStore3 = storelist.subList(0, 3);
+                storeAdapter.setData(emoStore3);
                 rl_face_bottom.setVisibility(View.VISIBLE);
             } else {
+                storeAdapter.setData(storelist);
                 rl_face_bottom.setVisibility(View.GONE);
             }
         } else {

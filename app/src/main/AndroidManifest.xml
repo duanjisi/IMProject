@@ -224,6 +224,8 @@
         <activity android:name=".activity.discover.CommentActivity"></activity>
         <!-- 全网搜索 -->
         <activity android:name=".activity.discover.SearchByAllNetActivity"></activity>
+        <!-- 朋友圈发布限制条件 -->
+        <activity android:name=".activity.discover.FriendCircleWhoSeeActivity"></activity>
 
         <!-- 我的关注 -->
         <activity android:name=".activity.connection.MyFollowActivity"></activity>

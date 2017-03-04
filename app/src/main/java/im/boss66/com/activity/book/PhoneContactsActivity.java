@@ -29,6 +29,7 @@ import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ContactUtils;
 import im.boss66.com.Utils.MycsLog;
+import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.PingYinUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
@@ -189,29 +190,34 @@ public class PhoneContactsActivity extends BaseActivity {
             HashMap<String, String> map = ContactUtils.getContactMap(context);
             for (int i = 0; i < contacts.size(); i++) {
                 PhoneContact contact = contacts.get(i);
-                EaseUser easeUser = new EaseUser();
-                easeUser.setUserName(contact.getUser_name());
-                easeUser.setUserid(contact.getUser_id());
-                String name = map.get(contact.getMobile_phone());
-                if (name != null && !name.equals("")) {
-                    easeUser.setContactName(name);
-                    String word = name.substring(0, 1);
+                if (contact != null) {
+                    String c_userId = contact.getUser_id();
+                    if (c_userId != null && !c_userId.equals(account.getUser_id())) {
+                        EaseUser easeUser = new EaseUser();
+                        easeUser.setUserName(contact.getUser_name());
+                        easeUser.setUserid(c_userId);
+                        String name = map.get(contact.getMobile_phone());
+                        if (name != null && !name.equals("")) {
+                            easeUser.setContactName(name);
+                            String word = name.substring(0, 1);
 //                    char[] mChar = firstChar.toCharArray();
 //                    String word = String.valueOf(mChar[0]);
-                    String letter;
-                    if (isHanzi(word)) {
-                        letter = PingYinUtils.toPinYin(word);
-                    } else if (isChar(word)) {
-                        letter = word.toUpperCase();
-                    } else {
-                        letter = "#";
+                            String letter;
+                            if (isHanzi(word)) {
+                                letter = PingYinUtils.toPinYin(word);
+                            } else if (isChar(word)) {
+                                letter = word.toUpperCase();
+                            } else {
+                                letter = "#";
+                            }
+                            MycsLog.i("info", "letter:" + letter);
+                            easeUser.setInitialLetter(letter);
+                        }
+                        easeUser.setAvatar(contact.getAvatar());
+                        easeUser.setIs_friends(contact.getIs_friends());
+                        contactList.add(easeUser);
                     }
-                    MycsLog.i("info", "letter:" + letter);
-                    easeUser.setInitialLetter(letter);
                 }
-                easeUser.setAvatar(contact.getAvatar());
-                easeUser.setIs_friends(contact.getIs_friends());
-                contactList.add(easeUser);
             }
         }
         contactListLayout.init(contactList, R.layout.ease_row_phone_contact, null);

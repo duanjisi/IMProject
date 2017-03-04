@@ -106,6 +106,7 @@
                 android:layout_toLeftOf="@+id/iv_phone"
                 android:maxEms="10"
                 android:singleLine="true"
+                android:ellipsize="end"
                 android:text="公开"
                 android:textColor="@color/text_app_num_gray"
                 android:textSize="15.4sp" />
@@ -146,6 +147,18 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/hp_some_go" />
+
+            <TextView
+                android:id="@+id/tv_remind_people"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/iv_remind_who_see"
+                android:maxEms="10"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="@color/text_app_num_gray"
+                android:textSize="15.4sp" />
 
         </RelativeLayout>
 

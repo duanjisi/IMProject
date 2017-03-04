@@ -19,6 +19,7 @@ public class ContactUtils {
             //读取通讯录的号码
             String number = cursor.getString(cursor
                     .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            number = number.replace(" ", "");
             if (number != null && !number.equals("")) {
                 if (number.contains("+86")) {
                     sb.append(number.substring(3, number.length()));
@@ -46,7 +47,7 @@ public class ContactUtils {
                     .getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             //读取通讯录的号码
             String number = cursor.getString(cursor
-                    .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)).trim();
             if (number != null && !number.equals("")) {
                 if (number.contains("+86")) {
                     map.put(number.substring(3, number.length()), name);
