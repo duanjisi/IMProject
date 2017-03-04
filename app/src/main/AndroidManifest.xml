@@ -85,6 +85,8 @@
         <activity android:name=".activity.im.EmojiMakeActivity"></activity>
         <activity android:name=".activity.im.EmojiSelectWellActivity"></activity>
 
+        <!--群聊名称-->
+        <activity android:name=".activity.im.ChatGroupNameActivity"></activity>
         <!--个人聊天信息-->
         <activity android:name=".activity.im.GroupAllMembersActivity"></activity>
         <!--个人聊天信息-->
@@ -193,7 +195,6 @@
         <activity android:name=".activity.personage.PersonalPhotoAlbumActivity"></activity>
         <!-- 个人资料 -->
         <activity android:name=".activity.connection.PersonalDataActivity"
-            android:windowSoftInputMode="stateHidden"
             ></activity>
         <!-- 个人资料2 -->
         <activity android:name=".activity.connection.PersonalData2Activity"></activity>

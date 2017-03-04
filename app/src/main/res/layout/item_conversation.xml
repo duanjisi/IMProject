@@ -29,7 +29,7 @@
             android:background="@drawable/bg_circle_notify"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="14sp"
+            android:textSize="11sp"
             android:visibility="gone" />
     </FrameLayout>
 
@@ -40,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/fl"
         android:layout_marginLeft="11dp"
+        android:layout_marginTop="6dp"
         android:layout_toRightOf="@+id/fl"
         android:text="test_1"
         android:textColor="@color/black"
@@ -54,7 +55,7 @@
         android:layout_below="@+id/tv_name"
         android:layout_toLeftOf="@+id/tv_time"
         android:ellipsize="end"
-        android:gravity="center_vertical"
+        android:gravity="bottom"
         android:singleLine="true"
         android:text="三等分三大件发送旅客定界符四颗流弹就风口浪尖四大皆空拉夫桑"
         android:textColor="@color/text_color_gray_6"

@@ -33,18 +33,19 @@ import im.boss66.com.entity.JobEntity;
 import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.ChooseJobRequest;
+import im.boss66.com.widget.dialog.ChooseYourLikeDialog;
 
 /**
  * 完善资料
  * Created by admin on 2017/2/20.
  */
-public class PersonalDataActivity extends ABaseActivity implements View.OnClickListener {
+public class PersonalDataActivity extends ABaseActivity implements View.OnClickListener, ChooseYourLikeDialog.IFinishCallBack {
 
     private final static String TAG = PersonalDataActivity.class.getSimpleName();
 
-    private TextView tv_comfire, tv_sex2, tv_time2, tv_location2, tv_hometown2, tv_job2, tv_like,tv_name2;
+    private TextView tv_comfire, tv_sex2, tv_time2, tv_location2, tv_hometown2, tv_job2, tv_like, tv_name2, tv_like2;
 
-
+    private  TextView tv_school3,tv_hometown3; //有数据了隐藏掉
 
 
     private LocalAddressEntity jsonDate;
@@ -99,8 +100,8 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
             try {
-                long millionSecnds = sdf.parse(str).getTime();
-                tv_time2.setText(str);
+                long millionSecnds = sdf.parse(str).getTime(); //时间戳
+                tv_time2.setText(s1 + " " + s2 + " " + s3);
             } catch (ParseException e) {
                 e.printStackTrace();
 
@@ -122,6 +123,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             }
         }
     };
+    private ChooseYourLikeDialog chooseYourLikeDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,11 +213,12 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                 //返回的分别是三个级别的选中位置
                 if (flag == 4 || flag == 5) {
                     String tx = list.get(options1).getPickerViewText()
-                            + "-" + list2.get(options1).get(option2).getRegion_name()
-                            + "-" + list3.get(options1).get(option2).get(options3).getPickerViewText();
+                            + " " + list2.get(options1).get(option2).getRegion_name()
+                            + " " + list3.get(options1).get(option2).get(options3).getPickerViewText();
                     if (flag == 4) {
                         tv_location2.setText(tx);
                     } else if (flag == 5) {
+                        tv_hometown3.setVisibility(View.GONE);
                         tv_hometown2.setText(tx);
                     }
                 }
@@ -271,13 +274,16 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
         tv_job2 = (TextView) findViewById(R.id.tv_job2);
         tv_like = (TextView) findViewById(R.id.tv_like);
         tv_name2 = (TextView) findViewById(R.id.tv_name2);
+        tv_like2 = (TextView) findViewById(R.id.tv_like2);
+        tv_school3 = (TextView) findViewById(R.id.tv_school3);
+        tv_hometown3 = (TextView) findViewById(R.id.tv_hometown3);
 
 
         rl_sex = (RelativeLayout) findViewById(R.id.rl_sex);
         rl_time = (RelativeLayout) findViewById(R.id.rl_time);
         rl_location = (RelativeLayout) findViewById(R.id.rl_location);
         rl_hometown = (RelativeLayout) findViewById(R.id.rl_hometown);
-        rl_job = (RelativeLayout) findViewById(R.id.rl_hometown);
+        rl_job = (RelativeLayout) findViewById(R.id.rl_job);
         rl_like = (RelativeLayout) findViewById(R.id.rl_like);
         rl_school = (RelativeLayout) findViewById(R.id.rl_school);
         rl_name = (RelativeLayout) findViewById(R.id.rl_name);
@@ -345,6 +351,15 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                 }
                 break;
             case R.id.rl_like:
+                if (chooseYourLikeDialog == null) {
+                    chooseYourLikeDialog = new ChooseYourLikeDialog(this);
+                    chooseYourLikeDialog.setCallBack(this);
+                    chooseYourLikeDialog.show();
+                } else if (!chooseYourLikeDialog.isShowing()) {
+                    chooseYourLikeDialog.show();
+                }
+
+
                 break;
             case R.id.rl_school:
                 Intent intent = new Intent(this, SchoolListActivity.class);
@@ -352,7 +367,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                 break;
             case R.id.rl_name:
                 Intent intent1 = new Intent(this, EditNameActivity.class);
-                startActivityForResult(intent1,1);
+                startActivityForResult(intent1, 1);
 
                 break;
 
@@ -362,7 +377,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==1&&data!=null){
+        if (requestCode == 1 && data != null) {
             String name = data.getStringExtra("name");
             tv_name2.setText(name);
 
@@ -376,7 +391,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String entry) {
-//                Log.i("liw",entry);
+                Log.i("liw", entry);
 //                handler.obtainMessage(1).sendToTarget();
                 //TODO 加上工作的数据
 
@@ -392,6 +407,23 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void showLike(ArrayList<String> str,ArrayList<Integer> integers) { //保存接口回调,integers为兴趣id集合
+
+        String s = "";
+        for (int i = 0; i < str.size(); i++) {
+            String s1 = str.get(i);
+            s = s + s1 + " ";
+        }
+        tv_like2.setText(s);
+
+    }
 
     public class Sex implements IPickerViewData {
         @Override

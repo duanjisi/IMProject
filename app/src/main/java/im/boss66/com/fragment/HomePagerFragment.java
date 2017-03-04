@@ -128,7 +128,7 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             BaseConversation entity = (BaseConversation) adapterView.getItemAtPosition(i);
-            String key = PrefKey.UN_READ_NEWS_KEY + "/" + entity.getAvatar();
+            String key = PrefKey.UN_READ_NEWS_KEY + "/" + entity.getConversation_id();
             PreferenceUtils.putInt(getActivity(), key, 0);
             Intent intent = new Intent(getActivity(), ChatActivity.class);
             if (entity.getNewest_msg_type().equals("group")) {

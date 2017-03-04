@@ -18,15 +18,23 @@ public class ContactUtils {
         while (cursor.moveToNext()) {
             //读取通讯录的号码
             String number = cursor.getString(cursor
+                    .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)).trim();
                     .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             number = number.replace(" ", "");
             if (number != null && !number.equals("")) {
                 if (number.contains("+86")) {
-                    sb.append(number.substring(3, number.length()));
+                    String str = number.substring(3, number.length());
+                    if (UIUtils.isMobile(str)) {
+                        sb.append(str);
+                        sb.append(",");
+                    }
+//                    sb.append(number.substring(3, number.length()));
                 } else {
-                    sb.append(number);
+                    if (UIUtils.isMobile(number)) {
+                        sb.append(number);
+                        sb.append(",");
+                    }
                 }
-                sb.append(",");
             }
         }
         String string = sb.toString();
@@ -47,7 +55,7 @@ public class ContactUtils {
                     .getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             //读取通讯录的号码
             String number = cursor.getString(cursor
-                    .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)).trim();
+                    .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             if (number != null && !number.equals("")) {
                 if (number.contains("+86")) {
                     map.put(number.substring(3, number.length()), name);

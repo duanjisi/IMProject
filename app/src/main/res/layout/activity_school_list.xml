@@ -45,4 +45,20 @@
             />
     </RelativeLayout>
 
+    <ImageView
+        android:layout_marginTop="189.2dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/school"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="27.5dp"
+        android:text="填写学校信息，让更多人找到你"
+        android:textSize="15.4dp"
+        android:textColor="@color/text_color_gray_c"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
