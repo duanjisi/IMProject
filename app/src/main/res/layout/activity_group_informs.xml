@@ -55,7 +55,7 @@
                 android:adjustViewBounds="true"
                 android:horizontalSpacing="10dp"
                 android:numColumns="5"
-                android:verticalSpacing="28dp"></im.boss66.com.widget.MyGridView>
+                android:verticalSpacing="32dp"></im.boss66.com.widget.MyGridView>
 
             <RelativeLayout
                 android:id="@+id/rl_members"
