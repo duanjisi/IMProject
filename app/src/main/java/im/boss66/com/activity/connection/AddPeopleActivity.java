@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.bigkoo.pickerview.OptionsPickerView;
 import com.bumptech.glide.Glide;
 
 import java.io.BufferedReader;
@@ -40,7 +39,7 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
     private TextView tv_location;
     private TextView tv_cancle_search;
     private LocalAddressEntity jsonDate;
-    private OptionsPickerView pvOptions;
+//    private OptionsPickerView pvOptions;
 
     private ArrayList<LocalAddressEntity.ThreeChild> list = new ArrayList<>(); //1级
     private ArrayList<ArrayList<LocalAddressEntity.FourChild>> list2 = new ArrayList<>(); //2级
@@ -83,18 +82,18 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
             list3.add(list3_1);
         }
 
-
-        pvOptions = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
-            @Override
-            public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                //返回的分别是三个级别的选中位置
-                String tx = list.get(options1).getPickerViewText()
-                        + list2.get(options1).get(option2).getRegion_name()
-                        + list3.get(options1).get(option2).get(options3).getPickerViewText();
-                tv_location.setText(tx);
-
-            }
-        })
+//
+//        pvOptions = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
+//            @Override
+//            public void onOptionsSelect(int options1, int option2, int options3, View v) {
+//                //返回的分别是三个级别的选中位置
+//                String tx = list.get(options1).getPickerViewText()
+//                        + list2.get(options1).get(option2).getRegion_name()
+//                        + list3.get(options1).get(option2).get(options3).getPickerViewText();
+//                tv_location.setText(tx);
+//
+//            }
+//        })
                 /*.setSubmitText("确定")
                 .setCancelText("取消")
                 .setTitleText("城市选择")
@@ -111,14 +110,14 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
                 .setOutSideCancelable(false)//点击外部dismiss, default true*/
                 /*.setTitleBgColor(0xFF333333)//标题背景颜色 Night mode
                 .setBgColor(0xFF000000)//滚轮背景颜色 Night mode*/
-                .setSubmitColor(Color.RED)
-                .setCancelColor(Color.GRAY)
-                .setSubCalSize(18)
-                .setContentTextSize(20)
-                .setSelectOptions(0, 0, 0)  //设置默认选中项
-                .build();
-
-        pvOptions.setPicker(list, list2, list3);
+//                .setSubmitColor(Color.RED)
+//                .setCancelColor(Color.GRAY)
+//                .setSubCalSize(18)
+//                .setContentTextSize(20)
+//                .setSelectOptions(0, 0, 0)  //设置默认选中项
+//                .build();
+//
+//        pvOptions.setPicker(list, list2, list3);
 
     }
 
@@ -169,7 +168,7 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.tv_location:
-                pvOptions.show();
+//                pvOptions.show();
                 break;
             case R.id.tv_cancle_search:
 

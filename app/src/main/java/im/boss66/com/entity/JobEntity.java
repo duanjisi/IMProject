@@ -1,6 +1,5 @@
 package im.boss66.com.entity;
 
-import com.bigkoo.pickerview.model.IPickerViewData;
 
 import java.util.List;
 
@@ -75,7 +74,7 @@ public class JobEntity {
         this.result = result;
     }
 
-    public static class ResultBean implements IPickerViewData {
+    public static class ResultBean  {
         /**
          * id : 1
          * name : 互联网/电子商务
@@ -100,10 +99,6 @@ public class JobEntity {
             this.name = name;
         }
 
-        @Override
-        public String getPickerViewText() {
-            return name;
-        }
     }
 
     @Override

@@ -1,6 +1,5 @@
 package im.boss66.com.entity;
 
-import com.bigkoo.pickerview.model.IPickerViewData;
 
 import java.io.Serializable;
 import java.util.List;
@@ -34,7 +33,7 @@ public class LocalAddressEntity {
         private List<ThreeChild> list;
     }
 
-    public static class ThreeChild implements Serializable,IPickerViewData {
+    public static class ThreeChild implements Serializable {
         private String region_id;
         private String region_name;
         private List<FourChild> list;
@@ -63,13 +62,9 @@ public class LocalAddressEntity {
             this.list = list;
         }
 
-        @Override
-        public String getPickerViewText() {
-            return region_name;
-        }
     }
 
-    public static class FourChild implements Serializable,IPickerViewData {
+    public static class FourChild implements Serializable {
         public String getRegion_id() {
             return region_id;
         }
@@ -98,13 +93,9 @@ public class LocalAddressEntity {
         private String region_name;
         private List<LastChild> list;
 
-        @Override
-        public String getPickerViewText() {
-            return region_name;
-        }
     }
 
-    public static class LastChild implements Serializable,IPickerViewData{
+    public static class LastChild implements Serializable{
         public String getRegion_id() {
             return region_id;
         }
@@ -124,10 +115,7 @@ public class LocalAddressEntity {
         private String region_id;
         private String region_name;
 
-        @Override
-        public String getPickerViewText() {
-            return region_name;
-        }
+
     }
 
 }
