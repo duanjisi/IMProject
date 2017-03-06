@@ -1,6 +1,7 @@
 package im.boss66.com.widget;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
@@ -22,6 +23,7 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.CircleMovementMethod;
 import im.boss66.com.Utils.SpannableClickable;
 import im.boss66.com.Utils.UrlUtils;
+import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.entity.FriendCircleCommentEntity;
 
 /**
@@ -169,7 +171,10 @@ public class CommentListView extends LinearLayout {
         subjectSpanText.setSpan(new SpannableClickable(itemColor) {
                                     @Override
                                     public void onClick(View widget) {
-                                        Toast.makeText(getContext(), textStr + " &id = " + id, Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(getContext(), PersonalNearbyDetailActivity.class);
+                                        intent.putExtra("classType", "QureAccountActivity");
+                                        intent.putExtra("userid", id);
+                                        getContext().startActivity(intent);
                                     }
                                 }, 0, subjectSpanText.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

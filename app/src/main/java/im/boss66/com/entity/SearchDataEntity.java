@@ -12,11 +12,11 @@ public class SearchDataEntity {
     public SearchCofriend cofriend;
 
     public class SearchUser {
-        public List<ContactEntity> getList() {
+        public List<UserInform> getList() {
             return list;
         }
 
-        public void setList(List<ContactEntity> list) {
+        public void setList(List<UserInform> list) {
             this.list = list;
         }
 
@@ -28,7 +28,7 @@ public class SearchDataEntity {
             this.more = more;
         }
 
-        private List<ContactEntity> list = new ArrayList<>();
+        private List<UserInform> list = new ArrayList<>();
         private String more;
     }
 
@@ -51,6 +51,15 @@ public class SearchDataEntity {
 
         private List<EmoStore> list = new ArrayList<>();
         private String more;
+
+        public String getMoe() {
+            return moe;
+        }
+
+        public void setMoe(String moe) {
+            this.moe = moe;
+        }
+
         private String moe;
     }
 

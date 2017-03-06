@@ -22,6 +22,7 @@ import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.Utils.UrlUtils;
 import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.activity.discover.ImagePagerActivity;
+import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.activity.discover.VideoPlayerActivity;
 import im.boss66.com.activity.discover.WebViewActivity;
 import im.boss66.com.adapter.ViewHolder.CircleViewHolder;
@@ -149,9 +150,11 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                 holder.praiseListView.setOnItemClickListener(new PraiseListView.OnItemClickListener() {
                     @Override
                     public void onClick(int position) {
-                        String userName = praise_list.get(position).getUser_name();
                         String userId = praise_list.get(position).getUser_id();
-                        Toast.makeText(context, userName + " &id = " + userId, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
+                        intent.putExtra("classType", "QureAccountActivity");
+                        intent.putExtra("userid", userId);
+                        context.startActivity(intent);
                     }
                 });
                 holder.praiseListView.setDatas(praise_list);
@@ -288,8 +291,8 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                     ((VideoViewHolder) holder).iv_video_bg.setLayoutParams(params);
 
                     FrameLayout.LayoutParams params_p = (FrameLayout.LayoutParams) ((VideoViewHolder) holder).iv_video_play.getLayoutParams();
-                    params_p.width = sceenW/8;
-                    params_p.height = sceenW/8;
+                    params_p.width = sceenW / 8;
+                    params_p.height = sceenW / 8;
                     ((VideoViewHolder) holder).iv_video_play.setLayoutParams(params_p);
 
                     Glide.with(context).load(urlimg).into(((VideoViewHolder) holder).iv_video_bg);

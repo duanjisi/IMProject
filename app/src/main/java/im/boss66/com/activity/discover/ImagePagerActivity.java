@@ -35,6 +35,7 @@ import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.widget.ActionSheet;
+import im.boss66.com.widget.HackyViewPager;
 import im.boss66.com.widget.photoview.PhotoView;
 import im.boss66.com.widget.photoview.PhotoViewAttacher;
 
@@ -57,8 +58,8 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
     private boolean isDelete = false;
     private ImageAdapter mAdapter;
     private RelativeLayout rl_title;
-    private TextView tv_back, tv_right;
-    private ViewPager viewPager;
+    private TextView tv_back, tv_right, tv_indicator;
+    private HackyViewPager viewPager;
 
     public static void startImagePagerActivity(Context context, List<String> imgUrls, int position, ImageSize imageSize, boolean isDelete) {
         Intent intent = new Intent(context, ImagePagerActivity.class);
@@ -73,7 +74,8 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_circle_imagepager);
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        tv_indicator = (TextView) findViewById(R.id.tv_indicator);
+        viewPager = (HackyViewPager) findViewById(R.id.pager);
         guideGroup = (LinearLayout) findViewById(R.id.guideGroup);
         rl_title = (RelativeLayout) findViewById(R.id.rl_title);
         tv_back = (TextView) findViewById(R.id.tv_back);
@@ -82,7 +84,7 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putStringArrayList("lits",imgUrls);
+                bundle.putStringArrayList("lits", imgUrls);
                 setResult(RESULT_OK);
                 finish();
             }
@@ -111,6 +113,8 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
                 for (int i = 0; i < guideViewList.size(); i++) {
                     guideViewList.get(i).setSelected(i == position ? true : false);
                 }
+                int curpos = position + 1;
+                tv_indicator.setText(curpos + "/" + mAdapter.getCount());
             }
 
             @Override
@@ -131,8 +135,16 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
             imgUrls = intent.getStringArrayListExtra(INTENT_IMGURLS);
             imageSize = (ImageSize) intent.getSerializableExtra(INTENT_IMAGESIZE);
             this.isDelete = intent.getBooleanExtra("isdelete", false);
-            if (isDelete){
+            if (isDelete) {
                 rl_title.setVisibility(View.VISIBLE);
+            }
+            if (imgUrls != null) {
+                if (imgUrls.size() <= 1) {
+                    tv_indicator.setVisibility(View.GONE);
+                } else {
+                    tv_indicator.setVisibility(View.VISIBLE);
+                    tv_indicator.setText("1/" + imgUrls.size());
+                }
             }
         }
     }
@@ -352,15 +364,15 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
     public void onClick(int which) {
         if (isDelete) {
             int page = viewPager.getCurrentItem();
-            if (imgUrls != null){
-                if (imgUrls.size() > 1){
-                    if (imgUrls.size() > page){
+            if (imgUrls != null) {
+                if (imgUrls.size() > 1) {
+                    if (imgUrls.size() > page) {
                         imgUrls.remove(page);
                         mAdapter.notifyDataSetChanged();
                     }
-                }else {
+                } else {
                     Bundle bundle = new Bundle();
-                    bundle.putStringArrayList("lits",null);
+                    bundle.putStringArrayList("lits", null);
                     setResult(RESULT_OK);
                     finish();
                 }

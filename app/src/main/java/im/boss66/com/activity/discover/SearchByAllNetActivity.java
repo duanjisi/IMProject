@@ -1,6 +1,7 @@
 package im.boss66.com.activity.discover;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -15,8 +16,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
@@ -29,11 +34,13 @@ import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.EmojiGroupDetailsActivity;
 import im.boss66.com.adapter.EmoStoreAdapter;
 import im.boss66.com.adapter.SearchCircleAdapter;
+import im.boss66.com.adapter.UserAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.EmoStore;
 import im.boss66.com.entity.SearchCofriendEntity;
 import im.boss66.com.entity.SearchDataEntity;
 import im.boss66.com.entity.SearchFriendorFaceEntity;
+import im.boss66.com.entity.UserInform;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.widget.MyListView;
 
@@ -42,16 +49,18 @@ import im.boss66.com.widget.MyListView;
  */
 public class SearchByAllNetActivity extends BaseActivity implements View.OnClickListener, TextView.OnEditorActionListener, TextWatcher {
 
-    private MyListView lv_friend, lv_face;
-    private TextView tv_friend_title, tv_face_title;
+    private MyListView lv_friend, lv_face, lv_people;
+    private TextView tv_friend_title, tv_face_title, tv_circle_more, tv_face_more, tv_people_title;
     private ScrollView sv_content;
-    private View v_line_friend_top, v_line_face_top;
-    private RelativeLayout rl_friend_bottom, rl_face_bottom, rl_default;
+    private View v_line_friend_top, v_line_face_top, v_line_people_top;
+    private RelativeLayout rl_friend_bottom, rl_face_bottom, rl_default, rl_people_bottom;
     private EditText et_search;
     private TextView tv_close;
     private String access_token, keyword;
     private EmoStoreAdapter storeAdapter;
     private SearchCircleAdapter searchCircleAdapter;
+    private String circleMoreUrl, faceMoreUrl, peopleMoreUrl;
+    private UserAdapter userAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +73,13 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
         AccountEntity sAccount = App.getInstance().getAccount();
         access_token = sAccount.getAccess_token();
 
+        lv_people = (MyListView) findViewById(R.id.lv_people);
+        tv_people_title = (TextView) findViewById(R.id.tv_people_title);
+        v_line_people_top = findViewById(R.id.v_line_people_top);
+        rl_people_bottom = (RelativeLayout) findViewById(R.id.rl_people_bottom);
+
+        tv_circle_more = (TextView) findViewById(R.id.tv_circle_more);
+        tv_face_more = (TextView) findViewById(R.id.tv_face_more);
         rl_default = (RelativeLayout) findViewById(R.id.rl_default);
         lv_face = (MyListView) findViewById(R.id.lv_face);
         lv_friend = (MyListView) findViewById(R.id.lv_friend);
@@ -80,10 +96,27 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
         tv_close.setOnClickListener(this);
         et_search.setOnEditorActionListener(this);
         et_search.addTextChangedListener(this);
+        tv_circle_more.setOnClickListener(this);
+        tv_face_more.setOnClickListener(this);
+        rl_people_bottom.setOnClickListener(this);
         searchCircleAdapter = new SearchCircleAdapter(this);
         lv_friend.setAdapter(searchCircleAdapter);
         storeAdapter = new EmoStoreAdapter(this);
         lv_face.setAdapter(storeAdapter);
+        userAdapter = new UserAdapter(context);
+        lv_people.setAdapter(userAdapter);
+        lv_people.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                UserInform inform = (UserInform) adapterView.getItemAtPosition(i);
+                if (inform != null) {
+                    Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
+                    intent.putExtra("classType", "QureAccountActivity");
+                    intent.putExtra("userid", inform.getUser_id());
+                    startActivity(intent);
+                }
+            }
+        });
         lv_face.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -120,6 +153,24 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
                     finish();
                 }
                 break;
+            case R.id.tv_circle_more://查看更多朋友圈
+                Bundle bundle = new Bundle();
+                bundle.putString("url", circleMoreUrl);
+                bundle.putInt("type", 1);
+                openActivity(SearchLookMoreActivity.class, bundle);
+                break;
+            case R.id.tv_face_more://查看更多表情
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("url", faceMoreUrl);
+                bundle1.putInt("type", 2);
+                openActivity(SearchLookMoreActivity.class, bundle1);
+                break;
+            case R.id.rl_people_bottom://查看更联系人
+                Bundle bundle2 = new Bundle();
+                bundle2.putString("url", peopleMoreUrl);
+                bundle2.putInt("type", 3);
+                openActivity(SearchLookMoreActivity.class, bundle2);
+                break;
         }
     }
 
@@ -127,7 +178,7 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
         showLoadingDialog();
         String url = HttpUrl.SEARCH_BY_ALL_NET + "?key=" + keyword;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
-        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        RequestParams params = new RequestParams();
         params.addBodyParameter("access_token", access_token);
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
@@ -163,10 +214,49 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
     }
 
     private void showData(SearchDataEntity searchData) {
+        List<UserInform> userList = null;
+        SearchDataEntity.SearchUser user = searchData.user;
+        if (user != null) {
+            peopleMoreUrl = user.getMore();
+            userList = user.getList();
+            if (userList != null && userList.size() > 0) {
+                sv_content.setVisibility(View.VISIBLE);
+                rl_default.setVisibility(View.GONE);
+                v_line_people_top.setVisibility(View.VISIBLE);
+                lv_people.setVisibility(View.VISIBLE);
+                tv_people_title.setVisibility(View.VISIBLE);
+                if (userList.size() > 3) {
+                    List<UserInform> user3list = userList.subList(0, 3);
+                    userAdapter.setData(user3list);
+                    rl_people_bottom.setVisibility(View.VISIBLE);
+                } else {
+                    userAdapter.setData(userList);
+                    rl_people_bottom.setVisibility(View.GONE);
+                }
+            } else {
+                sv_content.setVisibility(View.GONE);
+                v_line_people_top.setVisibility(View.GONE);
+                lv_people.setVisibility(View.GONE);
+                tv_people_title.setVisibility(View.GONE);
+                rl_people_bottom.setVisibility(View.GONE);
+            }
+        }
+        List<EmoStore> storelist = null;
         SearchDataEntity.SearchStore store = searchData.store;
-        List<EmoStore> storelist = store.getList();
+        if (store != null) {
+            if (!TextUtils.isEmpty(store.getMore())) {
+                faceMoreUrl = store.getMore();
+            } else {
+                faceMoreUrl = store.getMoe();
+            }
+            storelist = store.getList();
+        }
         SearchDataEntity.SearchCofriend cofirend = searchData.cofriend;
-        List<SearchCofriendEntity> firendlist = cofirend.getList();
+        List<SearchCofriendEntity> firendlist = null;
+        if (cofirend != null) {
+            circleMoreUrl = cofirend.getMore();
+            firendlist = cofirend.getList();
+        }
         if (firendlist != null && firendlist.size() > 0) {
             sv_content.setVisibility(View.VISIBLE);
             rl_default.setVisibility(View.GONE);

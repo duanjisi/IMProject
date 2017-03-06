@@ -194,8 +194,7 @@
         <!-- 设置-通用 -->
         <activity android:name=".activity.personage.PersonalPhotoAlbumActivity"></activity>
         <!-- 个人资料 -->
-        <activity android:name=".activity.connection.PersonalDataActivity"
-            ></activity>
+        <activity android:name=".activity.connection.PersonalDataActivity"></activity>
         <!-- 个人资料2 -->
         <activity android:name=".activity.connection.PersonalData2Activity"></activity>
         <!-- 添加人脉 -->
@@ -227,6 +226,8 @@
         <activity android:name=".activity.discover.SearchByAllNetActivity"></activity>
         <!-- 朋友圈发布限制条件 -->
         <activity android:name=".activity.discover.FriendCircleWhoSeeActivity"></activity>
+        <!-- 全网搜索 -->
+        <activity android:name=".activity.discover.SearchLookMoreActivity"></activity>
 
         <!-- 我的关注 -->
         <activity android:name=".activity.connection.MyFollowActivity"></activity>
