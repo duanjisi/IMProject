@@ -1,9 +1,11 @@
 package im.boss66.com.entity;
 
+import java.io.Serializable;
+
 /**
  * 朋友圈评论
  */
-public class FriendCircleCommentEntity {
+public class FriendCircleCommentEntity implements Serializable{
 
     private String comm_id;//评论ID
     private String feed_id;//朋友圈ID

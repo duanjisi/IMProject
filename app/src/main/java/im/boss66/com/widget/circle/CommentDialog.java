@@ -14,8 +14,6 @@ import android.widget.TextView;
 import im.boss66.com.R;
 import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.entity.FriendCircleCommentEntity;
-import im.boss66.com.entity.FriendCircleItem;
-import im.boss66.com.entity.FriendCircleTestData;
 
 /**
  * 朋友圈评论dialog

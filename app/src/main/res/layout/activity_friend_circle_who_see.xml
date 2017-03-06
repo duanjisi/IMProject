@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_14"
+            android:paddingTop="@dimen/dp_10">
+
+            <TextView
+                android:id="@+id/tv_all_gou"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="✔"
+                android:textColor="@color/btn_green_light" />
+
+            <TextView
+                android:id="@+id/tv_all_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_toRightOf="@+id/tv_all_gou"
+                android:text="@string/open_see"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_all_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_all_title"
+                android:layout_below="@+id/tv_all_title"
+                android:text="@string/all_can_see"
+                android:textColor="@color/text_color_gray_9" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:background="@color/text_color_gray_c" />
+
+        <RelativeLayout
+            android:id="@+id/rl_privacy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_14"
+            android:paddingTop="@dimen/dp_10">
+
+            <TextView
+                android:id="@+id/tv_privacy_gou"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="✔"
+                android:textColor="@color/btn_green_light"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/tv_privacy_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_toRightOf="@+id/tv_privacy_gou"
+                android:text="@string/privacy_see"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_privacy_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_privacy_title"
+                android:layout_below="@+id/tv_privacy_title"
+                android:text="@string/only_the_visible"
+                android:textColor="@color/text_color_gray_9" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:background="@color/text_color_gray_c" />
+
+        <RelativeLayout
+            android:id="@+id/rl_part_see"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_14"
+            android:paddingRight="@dimen/dp_14"
+            android:paddingTop="@dimen/dp_10">
+
+            <TextView
+                android:id="@+id/tv_part_see_gou"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="✔"
+                android:textColor="@color/btn_green_light"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/tv_part_see_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_toRightOf="@+id/tv_part_see_gou"
+                android:text="@string/part_of_the_visible"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_part_see_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_part_see_title"
+                android:layout_below="@+id/tv_part_see_title"
+                android:text="@string/selected_friends_see"
+                android:textColor="@color/text_color_gray_9" />
+
+            <ImageView
+                android:id="@+id/iv_part_see"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/hp_some_down" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_part_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/dp_40"
+                android:background="@color/text_color_gray_c" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_60"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_part"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/address_book_to_choose"
+                    android:textColor="@color/main_color_blue" />
+
+                <TextView
+                    android:id="@+id/tv_user_part"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_part"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/btn_green_light"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:background="@color/text_color_gray_c" />
+
+        <RelativeLayout
+            android:id="@+id/rl_part_no_see"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_14"
+            android:paddingRight="@dimen/dp_14"
+            android:paddingTop="@dimen/dp_10">
+
+            <TextView
+                android:id="@+id/tv_part_no_gou"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="✔"
+                android:textColor="@color/btn_green_light"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/tv_part_no_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_toRightOf="@+id/tv_part_no_gou"
+                android:text="@string/no_give_anyone_see"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_part_no_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_part_no_title"
+                android:layout_below="@+id/tv_part_no_title"
+                android:text="@string/selected_friends_no_see"
+                android:textColor="@color/text_color_gray_9" />
+
+            <ImageView
+                android:id="@+id/iv_part_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/hp_some_down" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_part_no_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/dp_40"
+                android:background="@color/text_color_gray_c" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_60"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_part_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/address_book_to_choose"
+                    android:textColor="@color/main_color_blue" />
+
+                <TextView
+                    android:id="@+id/tv_user_part_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_part_no"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/actionsheet_red"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

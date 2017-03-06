@@ -5,11 +5,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -28,28 +26,26 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
-import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.discover.CircleMessageListActivity;
+import im.boss66.com.activity.discover.PhotoAlbumDetailActivity;
+import im.boss66.com.activity.discover.PhotoAlbumLookPicActivity;
 import im.boss66.com.activity.discover.ReplaceAlbumCoverActivity;
 import im.boss66.com.adapter.PersonalPhotoAlbumAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.FriendCircle;
 import im.boss66.com.entity.FriendCircleEntity;
-import im.boss66.com.entity.FriendCircleTestData;
-import im.boss66.com.entity.PersonalPhotoAlbumItem;
+import im.boss66.com.entity.PhotoInfo;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.widget.ActionSheet;
 
@@ -71,6 +67,9 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
     private String access_token;
     private int page;
     private List<FriendCircle> allList;
+    private AccountEntity sAccount;
+    private boolean isJumpLookPic;
+    private App mApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +79,12 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
     }
 
     private void initView() {
+        mApplication = App.getInstance();
         allList = new ArrayList<>();
-        AccountEntity sAccount = App.getInstance().getAccount();
-        access_token = sAccount.getAccess_token();
+        if (mApplication != null) {
+            sAccount = mApplication.getAccount();
+            access_token = sAccount.getAccess_token();
+        }
         imageLoader = ImageLoaderUtils.createImageLoader(this);
         tv_signature = (TextView) findViewById(R.id.tv_signature);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -137,10 +139,45 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                             if (list != null) {
                                 int size = list.size();
                                 int curPos = position - 2;
-                                if (curPos >= 0 && curPos < size){
+                                if (curPos >= 0 && curPos < size) {
                                     FriendCircle item = list.get(curPos);
-                                    if (item != null){
-
+                                    Bundle bundle = new Bundle();
+                                    if (item != null) {
+                                        List<PhotoInfo> files = item.getFiles();
+                                        if (files != null && files.size() > 0) {
+                                            int feedType = item.getFeed_type();
+                                            String file = files.get(0).file_url;
+                                            if (feedType == 1) {
+                                                if (TextUtils.isEmpty(file)) {
+                                                    isJumpLookPic = false;
+                                                } else if (!file.contains(".jpg") && !file.contains(".png")) {
+                                                    isJumpLookPic = false;
+                                                } else {
+                                                    isJumpLookPic = true;
+                                                }
+                                            } else if (feedType == 2) {
+                                                if (TextUtils.isEmpty(file)) {
+                                                    isJumpLookPic = false;
+                                                } else if (!file.contains(".mp4")) {
+                                                    isJumpLookPic = false;
+                                                } else {
+                                                    isJumpLookPic = true;
+                                                }
+                                            } else {
+                                                isJumpLookPic = false;
+                                            }
+                                        }
+                                        if (isJumpLookPic) {
+                                            bundle.putInt("feedId", item.getFeed_id());
+                                            openActvityForResult(PhotoAlbumLookPicActivity.class, 101, bundle);
+                                        } else {
+                                            String username = sAccount.getUser_name();
+                                            if (!TextUtils.isEmpty(username)) {
+                                                bundle.putString("username", username);
+                                                bundle.putInt("feedId", item.getFeed_id());
+                                                openActvityForResult(PhotoAlbumDetailActivity.class, 101, bundle);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -251,6 +288,7 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
             @Override
             public void onFailure(HttpException e, String s) {
                 cancelLoadingDialog();
+                showToast("获取数据失败", false);
             }
         });
     }

@@ -52,6 +52,7 @@ import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.book.SelectContactsActivity;
 import im.boss66.com.entity.PhotoInfo;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
@@ -64,11 +65,11 @@ import im.boss66.com.widget.MultiImageView;
  */
 public class FriendSendNewMsgActivity extends BaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener {
 
-    private RelativeLayout rl_video;
+    private RelativeLayout rl_video, rl_who_can_see, rl_remind_who_see;
     private ImageView iv_video_bg, iv_video_play, iv_video_add;
     private MultiImageView multiImagView;
     private EditText et_tx;
-    private TextView tv_back, tv_title, tv_right;
+    private TextView tv_back, tv_title, tv_right, tv_remind_people, tv_people;
     private String SEND_TYPE_TEXT = "text";
     private String SEND_TYPE_PHOTO = "photo";
     private String SEND_TYPE_VIDEO = "video";
@@ -80,6 +81,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
     private final int OPEN_ALBUM = 2;//相册
     private final int RECORD_VIDEO = 3;//视频
     private final int EDIT_PHOTO = 4;//查看相片
+    private final int SELECT_PERSON = 5;//选择联系人
     private List<String> imgList;
     private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
     private Uri imageUri;
@@ -88,6 +90,9 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
     private PermissionListener permissionListener;
     private String videoPath;
     private Dialog dialog;
+    private String selectMember, remindMember;
+    private int whoCanSee;
+    private boolean isSelectCanSee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +105,10 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         imgList = new ArrayList<>();
         access_token = App.getInstance().getAccount().getAccess_token();
         sceenW = UIUtils.getScreenWidth(this);
+        tv_people = (TextView) findViewById(R.id.tv_people);
+        tv_remind_people = (TextView) findViewById(R.id.tv_remind_people);
+        rl_remind_who_see = (RelativeLayout) findViewById(R.id.rl_remind_who_see);
+        rl_who_can_see = (RelativeLayout) findViewById(R.id.rl_who_can_see);
         iv_video_add = (ImageView) findViewById(R.id.iv_video_add);
         rl_video = (RelativeLayout) findViewById(R.id.rl_video);
         iv_video_bg = (ImageView) findViewById(R.id.iv_video_bg);
@@ -114,6 +123,8 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         tv_back.setOnClickListener(this);
         tv_right.setOnClickListener(this);
         tv_right.setVisibility(View.VISIBLE);
+        rl_remind_who_see.setOnClickListener(this);
+        rl_who_can_see.setOnClickListener(this);
 
         LinearLayout.LayoutParams params_add = (LinearLayout.LayoutParams) iv_video_add.getLayoutParams();
         params_add.width = (int) (sceenW / 3 * 0.8);
@@ -231,7 +242,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                 lists.add(item);
             }
             multiImagView.setList(lists);
-        }else {
+        } else {
             multiImagView.setVisibility(View.GONE);
             iv_video_add.setVisibility(View.VISIBLE);
         }
@@ -249,7 +260,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
             case R.id.iv_video_add:
                 if (SEND_TYPE_PHOTO.equals(sendType)) {
                     showActionSheet();
-                }else {
+                } else {
                     Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                     //mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                     mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 15);
@@ -258,15 +269,28 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                 }
                 break;
             case R.id.bt_close:
-                if (dialog != null && dialog.isShowing()){
+                if (dialog != null && dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 break;
             case R.id.bt_ok:
-                if (dialog != null && dialog.isShowing()){
+                if (dialog != null && dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 finish();
+                break;
+            case R.id.rl_remind_who_see://提醒谁看
+                isSelectCanSee = false;
+                Bundle bundle = new Bundle();
+                bundle.putString("classType", "FriendCircleWhoSeeActivity");
+                bundle.putString("user_ids",remindMember);
+                openActvityForResult(SelectContactsActivity.class, SELECT_PERSON, bundle);
+                break;
+            case R.id.rl_who_can_see://谁可以看
+                isSelectCanSee = true;
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("classType", "FriendSendNewMsgActivity");
+                openActvityForResult(FriendCircleWhoSeeActivity.class, SELECT_PERSON, bundle1);
                 break;
         }
     }
@@ -278,6 +302,19 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);
+        switch (whoCanSee) {
+            case 0:
+                who_see_ext = "all";
+                break;
+            case 1:
+                who_see_ext = "myself";
+                break;
+            case 2:
+            case 3:
+                who_see_ext = selectMember;
+                break;
+        }
+        who_see = String.valueOf(whoCanSee);
         params.addBodyParameter("who_see", who_see);
         params.addBodyParameter("who_see_ext", who_see_ext);
         if (SEND_TYPE_PHOTO.equals(sendType) && imgList != null) {
@@ -293,6 +330,9 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         }
         if (!TextUtils.isEmpty(content)) {
             params.addBodyParameter("content", content);
+        }
+        if (!TextUtils.isEmpty(remindMember)) {
+            params.addBodyParameter("remind_user", remindMember);
         }
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
@@ -408,18 +448,49 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                     e.printStackTrace();
                 }
             }
-        } else if (requestCode == EDIT_PHOTO && resultCode == RESULT_OK ) {
-            if (data != null){
+        } else if (requestCode == EDIT_PHOTO && resultCode == RESULT_OK) {
+            if (data != null) {
                 ArrayList<String> list = data.getStringArrayListExtra("lits");
                 if (list != null) {
                     imgList = list;
-                }else {
+                } else {
                     imgList.clear();
                 }
-            }else {
+            } else {
                 imgList.clear();
             }
             showImg();
+        } else if (requestCode == SELECT_PERSON && resultCode == RESULT_OK && data != null) {
+            String memberUserNames = data.getStringExtra("memberUserNames");
+            if (isSelectCanSee) {
+                selectMember = data.getStringExtra("member_id");
+                whoCanSee = data.getIntExtra("whoCanSee", 0);
+                if (!TextUtils.isEmpty(memberUserNames)) {
+                    showWhoCanSee(memberUserNames);
+                }
+            } else {
+                remindMember = data.getStringExtra("member_id");
+                if (!TextUtils.isEmpty(memberUserNames)) {
+                    tv_remind_people.setText(memberUserNames);
+                }
+            }
+        }
+    }
+
+    private void showWhoCanSee(String name) {
+        switch (whoCanSee) {
+            case 0:
+                tv_people.setText("公开");
+                break;
+            case 1:
+                tv_people.setText("私密");
+                break;
+            case 2:
+                tv_people.setText(name);
+                break;
+            case 3:
+                tv_people.setText("除去 " + name);
+                break;
         }
     }
 
@@ -548,7 +619,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             showDialog();
             return false;
-        }else {
+        } else {
             return super.onKeyDown(keyCode, event);
         }
     }

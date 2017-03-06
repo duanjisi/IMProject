@@ -227,7 +227,7 @@ public final class TimeUtil {
                 result = "昨天 " + getHourAndMin(timesamp);
                 break;
             default:
-                result = getTime(timesamp);
+                result = getChinaTime(timesamp);
                 break;
         }
 
@@ -267,6 +267,11 @@ public final class TimeUtil {
         }
 
         return result;
+    }
+
+    public static String getChinaTime(long time) {
+        SimpleDateFormat format = new SimpleDateFormat("yy年MM月dd日 HH:mm");
+        return format.format(new Date(time));
     }
 
 }

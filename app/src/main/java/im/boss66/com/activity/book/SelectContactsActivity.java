@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.util.Log;
@@ -80,6 +81,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     private boolean isAddMember;
     private String user_ids;
     private String groupid;
+    private String classType, memberUserNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 //        contactList = new ArrayList<EaseUser>();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
+            classType = bundle.getString("classType");
             isAddMember = bundle.getBoolean("isAddMember", false);
             user_ids = bundle.getString("user_ids", "");
             groupid = bundle.getString("groupid", "");
@@ -124,10 +127,19 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         tvOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isAddMember) {
-                    addMemberRequest();
+                if (!TextUtils.isEmpty(classType) && "FriendCircleWhoSeeActivity".equals(classType)) {
+                    String member_ids = getMemberIds();
+                    Intent intent = new Intent();
+                    intent.putExtra("member_id", member_ids);
+                    intent.putExtra("memberUserNames",memberUserNames);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 } else {
-                    requestGroupCreate();
+                    if (isAddMember) {
+                        addMemberRequest();
+                    } else {
+                        requestGroupCreate();
+                    }
                 }
             }
         });
@@ -328,14 +340,26 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 
     private String getMemberIds() {
         StringBuilder sb = new StringBuilder();
+        StringBuilder sb_name = new StringBuilder();
         for (int i = 0; i < contactList.size(); i++) {
             EaseUser user = contactList.get(i);
             if (user.isChecked()) {
-                sb.append(user.getUserid() + ",");
+                String userid = user.getUserid();
+                sb.append(userid + ",");
+                String name = user.getUsername();
+                if (!TextUtils.isEmpty(name)) {
+                    sb_name.append(name + ",");
+                } else {
+                    sb_name.append(userid + ",");
+                }
             }
         }
 
         String str = sb.toString();
+        memberUserNames = sb_name.toString();
+        if (!TextUtils.isEmpty(memberUserNames)) {
+            memberUserNames = memberUserNames.substring(0, memberUserNames.lastIndexOf(","));
+        }
         if (!str.contains(",")) {
             return "";
         } else {

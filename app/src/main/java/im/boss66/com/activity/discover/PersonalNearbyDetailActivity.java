@@ -11,11 +11,14 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.im.ChatActivity;
 import im.boss66.com.activity.im.VerifyApplyActivity;
+import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.FriendState;
 import im.boss66.com.entity.NearByChildEntity;
 import im.boss66.com.entity.PersonEntity;
@@ -39,7 +42,7 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
     private LinearLayout ll_area, rl_privacy, rl_general;
     private FriendState friendState;
     private String classType;
-    private String userid = "";
+    private String userid = "", toAvatar, userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +53,17 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
     }
 
     private void initData() {
+        AccountEntity sAccount = App.getInstance().getAccount();
+        String curUserid = sAccount.getUser_id();
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 userid = bundle.getString("userid", "");
+                if (userid != null && curUserid != null && curUserid.equals(userid)) {
+                    iv_set.setVisibility(View.GONE);
+                    bt_greet.setText("发消息");
+                }
                 classType = bundle.getString("classType");
                 if (!TextUtils.isEmpty(classType)) {
                     if ("SharkItOffActivity".equals(classType)) {
@@ -71,14 +80,16 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 }
                 NearByChildEntity item = (NearByChildEntity) bundle.getSerializable("people");
                 if (item != null) {
-                    tv_name.setText("" + item.getUser_name());
+                    userName = item.getUser_name();
+                    tv_name.setText("" + userName);
                     int sex = item.getSex();
                     if (sex == 1) {
                         tv_sex.setText("" + "男");
                     } else if (sex == 2) {
                         tv_sex.setText("" + "女");
                     }
-                    imageLoader.displayImage(item.getAvatar(), iv_head,
+                    toAvatar = item.getAvatar();
+                    imageLoader.displayImage(toAvatar, iv_head,
                             ImageLoaderUtils.getDisplayImageOptions());
                     int dis = item.getDistance();
                     tv_distance.setText("" + dis + "米以内");
@@ -163,7 +174,8 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
 
     private void bindDatas(PersonEntity entity) {
         if (entity != null) {
-            tv_name.setText(entity.getUser_name());
+            userName = entity.getUser_name();
+            tv_name.setText("" + userName);
             tv_sex.setText(entity.getSex());
             UIUtils.hindView(tv_distance);
             UIUtils.hindView(bt_complaint);
@@ -183,7 +195,8 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
             } else {
                 tv_source.setText("来源于~");
             }
-            imageLoader.displayImage(entity.getAvatar(), iv_head,
+            toAvatar = entity.getAvatar();
+            imageLoader.displayImage(toAvatar, iv_head,
                     ImageLoaderUtils.getDisplayImageOptions());
         }
     }
@@ -207,6 +220,13 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 if (str.equals("添加到通讯录")) {
                     Intent intent = new Intent(context, VerifyApplyActivity.class);
                     intent.putExtra("userid", userid);
+                    startActivity(intent);
+                } else if ("发消息".equals(str)) {
+                    Intent intent = new Intent(this, ChatActivity.class);
+                    intent.putExtra("title", userName);
+                    intent.putExtra("toUid", userid);
+                    intent.putExtra("toAvatar", toAvatar);
+                    intent.putExtra("isgroup", false);
                     startActivity(intent);
                 }
                 break;

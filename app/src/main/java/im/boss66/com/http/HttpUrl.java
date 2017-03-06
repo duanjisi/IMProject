@@ -136,4 +136,10 @@ public class HttpUrl {
 
 
 
+    //获取某条朋友圈详情
+    public static final String GET_FRIEND_CIRCLE_DETAIL = MAIN_URL + "api/v1/cofriends/view";
+    //全网搜索(添加好友、朋友圈、表情)不包含人脉
+    public static final String SEARCH_BY_ALL_NET = MAIN_URL + "api/v1/search";
+    //修改用户名(姓名)
+    public static final String CHANGE_USER_NAME = MAIN_URL + "ucenter/userinfo/updateuname";
 }
