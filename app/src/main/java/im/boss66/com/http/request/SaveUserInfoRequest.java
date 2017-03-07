@@ -1,5 +1,7 @@
 package im.boss66.com.http.request;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +16,7 @@ public class SaveUserInfoRequest extends BaseDataRequest<String> {
 
     public SaveUserInfoRequest(String tag, Object... params) {
         super(tag, params);
+        Log.i("liwya",params.length+"");
     }
 
     @Override

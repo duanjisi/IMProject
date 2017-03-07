@@ -4,16 +4,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 
+import im.boss66.com.App;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 import im.boss66.com.adapter.MySchoolAdapter;
-import im.boss66.com.entity.MySchool;
+import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.RecycleViewItemListener;
 
 /**
@@ -21,32 +26,47 @@ import im.boss66.com.listener.RecycleViewItemListener;
  * Created by liw on 2017/2/22.
  */
 public class SchoolClubActivity extends ABaseActivity implements View.OnClickListener {
+    private static  final String TAG = SchoolClubActivity.class.getSimpleName();
     protected RecyclerView rcv_club;
     protected MySchoolAdapter adapter;
-    protected List<MySchool> list;
+    private int school_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_club);
-        initlist();
+        Intent intent = getIntent();
+        if(intent!=null){
+            school_id = intent.getIntExtra("school_id", -1);
+        }
         initViews();
+        initData();
     }
 
-    private void initlist() {
+    private void initData() {
+        String url = HttpUrl.SCHOOL_CLUB_LIST;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        url = url+"?id=" + school_id;
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>(){
 
-        list = new ArrayList<>();
-        MySchool mySchool1 = new MySchool();
-        MySchool mySchool2 = new MySchool();
-        mySchool1.setSchoolinfo("11111111");
-        mySchool1.setSchoolname("北京大学");
-        mySchool1.setImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1487667055622&di=12bb18bc7c3c34d7b8f189f09857a5a7&imgtype=0&src=http%3A%2F%2Fwww.hhxx.com.cn%2Fuploads%2Fallimg%2F1609%2F276-160Z5150T4410.jpg");
-        mySchool2.setSchoolname("清华大学");
-        mySchool2.setSchoolinfo("22222222");
-        mySchool2.setImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1487667055622&di=12bb18bc7c3c34d7b8f189f09857a5a7&imgtype=0&src=http%3A%2F%2Fwww.hhxx.com.cn%2Fuploads%2Fallimg%2F1609%2F276-160Z5150T4410.jpg");
-        list.add(mySchool1);
-        list.add(mySchool2);
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                showToast(e.getMessage(), false);
+            }
+        });
     }
+
+
 
     private void initViews() {
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
@@ -57,8 +77,6 @@ public class SchoolClubActivity extends ABaseActivity implements View.OnClickLis
         rcv_club = (RecyclerView) findViewById(R.id.rcv_club);
 
         adapter = new MySchoolAdapter(this);
-        adapter.setDatas(list); //后期在子类添加数据，刷新页面
-
         adapter.setItemListener(new RecycleViewItemListener() {
             @Override
             public void onItemClick(int postion) {

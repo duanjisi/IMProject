@@ -3,7 +3,6 @@ package im.boss66.com.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import im.boss66.com.R;
-import im.boss66.com.entity.MySchool;
+import im.boss66.com.entity.MyInfo;
 
 /**
  * Created by liw on 2017/2/20.
@@ -36,10 +35,10 @@ public class MySchoolAdapter extends BaseRecycleViewAdapter{
     public void onBindItemHolder(RecyclerView.ViewHolder holder, int position) {
         final MySchoolholder holder1  = (MySchoolholder) holder;
 
-        MySchool item = (MySchool)datas.get(position);
-        holder1.tv_school_name.setText(item.getSchoolname());
-        holder1.tv_school_info.setText(item.getSchoolinfo());
-        Glide.with(context).load(item.getImg()).into(holder1.img_school);
+        MyInfo.ResultBean.SchoolListBean item = (MyInfo.ResultBean.SchoolListBean) datas.get(position);
+        holder1.tv_school_name.setText(item.getName());
+        holder1.tv_school_info.setText(item.getBrief_desc());
+        Glide.with(context).load(item.getBanner()).into(holder1.img_school);
         holder1.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

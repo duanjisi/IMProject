@@ -25,6 +25,9 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_marginRight="10dp"
         android:id="@+id/tv_school_info"
         android:layout_toRightOf="@id/img_school"
         android:layout_marginLeft="11dp"

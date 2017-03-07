@@ -37,6 +37,9 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     private CirclePresenter presenter;
 
     private int SEND_TYPE_PHOTO_TX = 101;
+    private String title; //标题
+    private int school_id; //学校id
+    private int hometown_id; //家乡id
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,17 +56,21 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         Intent intent = getIntent();
         if (intent != null) {
             isSchool = intent.getBooleanExtra("isSchool", false);
+            title = intent.getStringExtra("name");
+            if(isSchool){
+                school_id = intent.getIntExtra("school_id", -1);
+
+            }else {
+                hometown_id = intent.getIntExtra("hometown_id", -1);
+            }
 
         }
+
     }
 
     private void initViews() {
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
-        if (isSchool) {
-            tv_headcenter_view.setText("北京大学");
-        } else {
-            tv_headcenter_view.setText("广州 天河区");
-        }
+        tv_headcenter_view.setText(title);
 
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headlift_view.setOnClickListener(this);
@@ -181,10 +188,21 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
 
             case R.id.tv_introduce: // 简介
                 Intent intent = new Intent(this, IntroduceActivity.class);
+                intent.putExtra("title",title);
+                if(isSchool){
+                    intent.putExtra("school_id",school_id);
+                }else{
+                    intent.putExtra("hometown_id",hometown_id);
+                }
                 startActivity(intent);
                 break;
             case R.id.tv_famous_person: // 名人
                 Intent intent1 = new Intent(this, FamousPersonActivity.class);
+                if(isSchool){
+                    intent1.putExtra("school_id",school_id);
+                }else{
+                    intent1.putExtra("hometown_id",hometown_id);
+                }
                 startActivity(intent1);
 
                 break;
@@ -192,8 +210,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 Intent intent2 = null;
                 if(isSchool){
                     intent2 =new Intent(this,SchoolClubActivity.class);
+                    intent2.putExtra("school_id",school_id);
                 }else {
                     intent2 =new Intent(this,BusinessClubActivity.class);
+                    intent2.putExtra("hometown_id",hometown_id);
                 }
                 startActivity(intent2);
                 break;

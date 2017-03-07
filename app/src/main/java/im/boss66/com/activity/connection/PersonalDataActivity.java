@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
@@ -32,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 import im.boss66.com.entity.JobEntity;
@@ -152,7 +155,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             try {
                 //时间戳
                 millionSecnds = sdf.parse(str).getTime();
-                tv_time2.setText(s1 + " " + s2 + " " + s3);
+                tv_time2.setText(s1 + s2  + s3);
             } catch (ParseException e) {
                 e.printStackTrace();
 
@@ -168,8 +171,13 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             switch (msg.what) {
                 case 1:
                     showAddressSelection2();
-
-
+                    break;
+                case 2: //更新成功
+                    finish();
+                    SharedPreferencesMgr.setBoolean("setSuccess",true);
+                    break;
+                case 3: //更新失败
+                    showToast("更新失败",false);
                     break;
             }
         }
@@ -356,20 +364,27 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
     }
 
     private void saveInfo() {
-        SaveUserInfoRequest request = new SaveUserInfoRequest(TAG,sexType+"",millionSecnds+"",
-                province_id+"",city_id+"",county_id+"",province_id2+"",city_id2+"",county_id2+""
-        +jobName+youLike);
+        SaveUserInfoRequest request = new SaveUserInfoRequest(TAG,String.valueOf(sexType),String.valueOf(millionSecnds/1000),
+                province_id,city_id,county_id,province_id2,city_id2,county_id2
+        ,jobName,youLike);
        request.send(new BaseDataRequest.RequestCallback<String>() {
            @Override
            public void onSuccess(String str) {
-               Log.i("liwya",str+1111111);
-
+               Log.i("liwya",str);
+               try {
+                   JSONObject jsonObject = new JSONObject(str);
+                   if(jsonObject.getInt("code")==1){
+                       handler.obtainMessage(2).sendToTarget();
+                   }
+               } catch (JSONException e) {
+                   e.printStackTrace();
+                   handler.obtainMessage(3).sendToTarget();
+               }
            }
 
            @Override
            public void onFailure(String msg) {
-               Log.i("liwya",msg+22222222);
-
+               showToast(msg,false);
            }
        });
 
@@ -490,7 +505,6 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
         districtList = cityList.get(pCurrent).getList();
         mCurrentCityName = mCitisDatasMap.get(mCurrentProviceName)[pCurrent];
         if(flag==4){
-
             city_id = mCitisDatasMap2.get(mCurrentProviceName)[pCurrent];
         }else if(flag==5){
             city_id2 = mCitisDatasMap2.get(mCurrentProviceName)[pCurrent];
@@ -607,14 +621,19 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 
     @Override
     public void showLike(ArrayList<String> str, ArrayList<Integer> integers) { //保存接口回调,integers为兴趣id集合
-
         youLike = "";
-        for (int i = 0; i < str.size(); i++) {
-            String s1 = str.get(i);
-            youLike = youLike + s1 + "|";
+        if(str.size()==0){
+            youLike = "";
+        }else{
+            for (int i = 0; i < str.size(); i++) {
+                String s1 = str.get(i);
+                youLike = youLike + s1 + "|";
+            }
+            youLike = youLike.substring(0, youLike.length()-1);
         }
-        youLike = youLike.substring(0, youLike.length()-1);
         tv_like2.setText(youLike);
+
+
     }
 
     @Override
@@ -625,7 +644,13 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             updateAreas();
         } else if (wheel == mViewDistrict) {
             mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[newValue];
-            county_id = mDistrictDatasMap2.get(mCurrentCityName)[newValue];
+            if(flag==4){
+
+                county_id = mDistrictDatasMap2.get(mCurrentCityName)[newValue];
+            }else if(flag==5){
+                county_id2= mDistrictDatasMap2.get(mCurrentCityName)[newValue];
+
+            }
         } else if (wheel == id_sex) {
             int currentItem = id_sex.getCurrentItem();
             if (isJob) {

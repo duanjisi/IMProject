@@ -132,16 +132,28 @@ public class HttpUrl {
     //保存用户信息
     public static final String SAVE_USER_INFO = MAIN_URL + "ucenter/userinfo/update";
 
-
-
-
-
     //获取某条朋友圈详情
     public static final String GET_FRIEND_CIRCLE_DETAIL = MAIN_URL + "api/v1/cofriends/view";
     //全网搜索(添加好友、朋友圈、表情)不包含人脉
     public static final String SEARCH_BY_ALL_NET = MAIN_URL + "api/v1/search";
     //修改用户名(姓名)
     public static final String CHANGE_USER_NAME = MAIN_URL + "ucenter/userinfo/updateuname";
+    //人脉首页
+    public static final String CONNECTION_MY_INFO = MAIN_URL + "api/v1/contacts";
+    //学校简介
+    public static final String SCHOOL_INFO =MAIN_URL+"web/school";
+    //家乡简介
+    public static final String HOMETOWN_INFO = MAIN_URL+"web/hometown";
+    //社团列表
+    public static final String SCHOOL_CLUB_LIST = MAIN_URL+"api/v1/school/league";
+    //商会列表
+    public static final String HOMETOWN_CLUB_LIST =MAIN_URL+"api/v1/hometown/cofc";
+    //学校名人
+    public static final String SCHOOL_FAMOUS_PEOPLE =MAIN_URL+"api/v1/school/celebrity";
+    //商会名人
+    public static final String BUSINESS_FAMOUS_PEOPLE =MAIN_URL+"api/v1/hometown/celebrity";
+
+
     //获取消息列表
     public static final String GET_CIRCLE_MSG_LIST = MAIN_URL + "api/v1/message";
     //清空消息列表
