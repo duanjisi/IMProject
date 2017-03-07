@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:hyman="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:background="@color/background_color"
     android:layout_height="match_parent">
@@ -55,18 +54,8 @@
 
         </RelativeLayout>
 
-
-
     </RelativeLayout>
-    <TextView
-        android:clickable="true"
-        android:id="@+id/tv_location"
-        android:textSize="15.4sp"
-        android:layout_marginLeft="40dp"
-        android:textColor="@color/black"
-        android:text="省/市/区县"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
     <View
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"

@@ -16,7 +16,6 @@ public class SaveUserInfoRequest extends BaseDataRequest<String> {
 
     public SaveUserInfoRequest(String tag, Object... params) {
         super(tag, params);
-        Log.i("liwya",params.length+"");
     }
 
     @Override

@@ -196,7 +196,6 @@
         <!-- 个人资料 -->
         <activity android:name=".activity.connection.PersonalDataActivity"></activity>
         <!-- 个人资料2 -->
-        <activity android:name=".activity.connection.PersonalData2Activity"></activity>
         <!-- 添加人脉 -->
         <activity android:name=".activity.connection.AddPeopleActivity"></activity>
         <!-- 人脉中心 -->
@@ -242,9 +241,7 @@
         <!-- 名人 -->
         <activity android:name=".activity.connection.FamousPersonActivity"></activity>
         <!-- 社团 -->
-        <activity android:name=".activity.connection.SchoolClubActivity"></activity>
         <!-- 商会 -->
-        <activity android:name=".activity.connection.BusinessClubActivity"></activity>
         <!-- 视频录制 -->
         <activity android:name=".activity.discover.RecordVideoActivity"></activity>
         <!-- 商会详情 -->
@@ -261,6 +258,8 @@
         <activity android:name=".activity.connection.SearchSchoolActivity"></activity>
         <!-- 编辑姓名-->
         <activity android:name=".activity.connection.EditNameActivity"></activity>
+        <!--社团和商会页-->
+        <activity android:name=".activity.connection.ClubActivity"></activity>
 
 
         <!-- 微信入口 -->

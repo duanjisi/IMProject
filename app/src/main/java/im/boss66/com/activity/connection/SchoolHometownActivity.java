@@ -115,13 +115,8 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         tv_news.setOnClickListener(this);
 
 
-
-        // 回调接口和adapter设置
-//        presenter = new CirclePresenter(this);
-//        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
         adapter = new FriendCircleAdapter(this);
-//        adapter.setCirclePresenter(presenter);
-//        adapter.setDatas(list);
+
         mLRecyclerViewAdapter = new LRecyclerViewAdapter(adapter);
 
 
@@ -137,36 +132,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         //rcv设置adapter以及刷新
         rcv_news.setAdapter(mLRecyclerViewAdapter);
         rcv_news.setLoadMoreEnabled(true);
-//        rcv_news.setOnRefreshListener(new OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        rcv_news.refreshComplete(15);
-//                        ToastUtil.showShort(SchoolHometownActivity.this, "刷新完成");
-//                        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
-//                        adapter.setDatas(list);
-//                        adapter.notifyDataSetChanged();
-//                    }
-//                }, 1000);
-//            }
-//        });
-//        rcv_news.setOnLoadMoreListener(new OnLoadMoreListener() {
-//            @Override
-//            public void onLoadMore() {
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        rcv_news.setNoMore(true);
-//                        ToastUtil.showShort(SchoolHometownActivity.this, "加载更多");
-//                        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
-//                        adapter.getDatas().addAll(list);
-//                        adapter.notifyDataSetChanged();
-//                    }
-//                }, 1000);
-//            }
-//        });
+
 
 
     }
@@ -207,17 +173,17 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
 
                 break;
             case R.id.tv_club: // 社团 或 商会
-                Intent intent2 = null;
+                Intent intent2 = new Intent(this,ClubActivity.class);
                 if(isSchool){
-                    intent2 =new Intent(this,SchoolClubActivity.class);
                     intent2.putExtra("school_id",school_id);
-                }else {
-                    intent2 =new Intent(this,BusinessClubActivity.class);
+                }else{
                     intent2.putExtra("hometown_id",hometown_id);
                 }
+
                 startActivity(intent2);
                 break;
             case R.id.tv_news: // 动态
+
 
                 break;
             case R.id.tv_headlift_view:

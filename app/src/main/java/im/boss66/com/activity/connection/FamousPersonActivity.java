@@ -2,19 +2,28 @@ package im.boss66.com.activity.connection;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import java.util.List;
+
 import im.boss66.com.App;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
+import im.boss66.com.adapter.FamousPeopleAdapter;
+import im.boss66.com.entity.FamousPeopleEntity;
 import im.boss66.com.http.HttpUrl;
 
 /**
@@ -25,6 +34,24 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
 
     private int id;
     private String url;
+    private RecyclerView rcv_famous_people;
+    private FamousPeopleAdapter adapter;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:
+                    result = famousPeopleEntity.getResult();
+                    adapter.setDatas(result);
+                    adapter.notifyDataSetChanged();
+                    break;
+
+            }
+        }
+    };
+    private FamousPeopleEntity famousPeopleEntity;
+    private List<FamousPeopleEntity.ResultBean> result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +68,10 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
                 url = HttpUrl.BUSINESS_FAMOUS_PEOPLE;
 
             }
-            initViews();
-            initData();
+
         }
+        initViews();
+        initData();
     }
 
     private void initData() {
@@ -57,8 +85,8 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String result = responseInfo.result;
-                Log.i("liwya",result);
-
+                famousPeopleEntity = JSON.parseObject(result, FamousPeopleEntity.class);
+                handler.obtainMessage(1).sendToTarget();
             }
 
             @Override
@@ -73,6 +101,11 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
         tv_headcenter_view.setText("名人");
         tv_headlift_view.setOnClickListener(this);
+
+        rcv_famous_people = (RecyclerView) findViewById(R.id.rcv_famous_people);
+        adapter = new FamousPeopleAdapter(this);
+        rcv_famous_people.setLayoutManager(new LinearLayoutManager(this));
+        rcv_famous_people.setAdapter(adapter);
     }
 
     @Override

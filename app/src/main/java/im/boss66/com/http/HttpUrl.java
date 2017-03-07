@@ -152,12 +152,12 @@ public class HttpUrl {
     public static final String SCHOOL_FAMOUS_PEOPLE =MAIN_URL+"api/v1/school/celebrity";
     //商会名人
     public static final String BUSINESS_FAMOUS_PEOPLE =MAIN_URL+"api/v1/hometown/celebrity";
-
-
     //获取消息列表
     public static final String GET_CIRCLE_MSG_LIST = MAIN_URL + "api/v1/message";
     //清空消息列表
     public static final String CLEAR_CIRCLE_MSG_LIST = MAIN_URL + "api/v1/message/flushall";
     //获取最新朋友圈消息通知
     public static final String GET_CIRCLE_NEWEST_MSG = MAIN_URL + "api/v1/message/getnewest";
+    //商会详情页
+    public static final String CLUB_DETATIL =MAIN_URL+"hometown/cofc";
 }
