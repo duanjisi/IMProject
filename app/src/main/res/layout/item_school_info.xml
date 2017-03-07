@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16.5dp"
+        android:text="大学"
+        android:textSize="17.6sp"
+        android:textColor="@color/text_color_gray_9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/ll_school"
+        android:layout_marginLeft="100dp"
+        android:orientation="vertical"
+        android:layout_marginTop="11dp"
+        android:layout_marginBottom="11dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_school_name"
+            android:text="广州大学"
+            android:textSize="15.4dp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_school_department"
+            android:visibility="gone"
+            android:layout_marginTop="5dp"
+            android:text="软件工程系"
+            android:textSize="15.4dp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_school_time"
+            android:layout_marginTop="5dp"
+            android:text="2011入学"
+            android:textSize="15.4dp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16.5dp"
+        android:src="@drawable/arrow_normal"
+        android:layout_width="15dp"
+        android:layout_height="15dp" />
+    <View
+        android:background="@color/line_school"
+        android:layout_below="@id/ll_school"
+        android:layout_width="match_parent"
+        android:layout_height="0.55dp"/>
+
+</RelativeLayout>

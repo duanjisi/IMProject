@@ -340,7 +340,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="保存并继续完善"
+                android:text="保存资料"
                 android:textColor="@color/white"
                 android:textSize="19.8dp" />
 

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import im.boss66.com.Utils.SharePreferenceUtil;
+import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.config.LoginStatus;
 import im.boss66.com.db.MessageDB;
 import im.boss66.com.db.RecentDB;
@@ -70,6 +71,8 @@ public class App extends Application {
         mRecentDB = new RecentDB(this);
 //        mMediaPlayer = MediaPlayer.create(this, R.raw.office);
 //        mNotificationManager = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
+        SharedPreferencesMgr.init(this, "liw");
+
     }
 
     public synchronized UserDB getUserDB() {

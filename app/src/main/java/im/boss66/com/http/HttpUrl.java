@@ -121,6 +121,21 @@ public class HttpUrl {
     public static final String CHOOSE_LIKE_LIST = MAIN_URL + "api/v1/interest";
     //获取个人相册
     public static final String GET_PERSONAL_GALLERY = MAIN_URL + "api/v1/gallery";
+    //保存学校信息
+    public static final String SAVE_SCHOOL_INFO = MAIN_URL + "api/v1/userschool/create";
+    //获取学校列表
+    public static final String GET_SCHOOL_LIST = MAIN_URL + "api/v1/userschool";
+    //编辑学校信息
+    public static final String EDIT_SCHOOL_INFO = MAIN_URL + "api/v1/userschool/update";
+    //删除学校信息
+    public static final String DELETE_SCHOOL_INFO = MAIN_URL + "api/v1/userschool/delete";
+    //保存用户信息
+    public static final String SAVE_USER_INFO = MAIN_URL + "ucenter/userinfo/update";
+
+
+
+
+
     //获取某条朋友圈详情
     public static final String GET_FRIEND_CIRCLE_DETAIL = MAIN_URL + "api/v1/cofriends/view";
     //全网搜索(添加好友、朋友圈、表情)不包含人脉
