@@ -1,15 +1,24 @@
 package im.boss66.com.activity.im;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.book.SelectContactsActivity;
+import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.widget.EaseSwitchButton;
 
 /**
@@ -18,9 +27,10 @@ import im.boss66.com.widget.EaseSwitchButton;
 public class ChatInformActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView tvBack, tvName;
-    private ImageView ivIcon;
+    private ImageView ivIcon, iv_add;
     private RelativeLayout rl_chat_file, rl_chat_bg, rl_chat_records, rl_clear_records, rl_complain;
     private EaseSwitchButton switchTop, switchDisturb;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +40,7 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initViews() {
+        iv_add = (ImageView) findViewById(R.id.iv_add);
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvName = (TextView) findViewById(R.id.tv_name);
         ivIcon = (ImageView) findViewById(R.id.iv_icon);
@@ -49,6 +60,29 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
         rl_chat_records.setOnClickListener(this);
         rl_clear_records.setOnClickListener(this);
         rl_complain.setOnClickListener(this);
+        switchDisturb.setOnClickListener(this);
+        iv_add.setOnClickListener(this);
+
+        boolean isopen = PreferenceUtils.getBoolean(this, uid, true);
+        if (isopen) {
+            switchDisturb.openSwitch();
+        } else {
+            switchDisturb.closeSwitch();
+        }
+        Intent intent = getIntent();
+        if (intent != null) {
+            uid = intent.getStringExtra("uid");
+            String head = intent.getStringExtra("head");
+            if (!TextUtils.isEmpty(head)) {
+                ImageLoader imageLoader = ImageLoaderUtils.createImageLoader(this);
+                imageLoader.displayImage(head, ivIcon,
+                        ImageLoaderUtils.getDisplayImageOptions());
+            }
+            String name = intent.getStringExtra("name");
+            if (!TextUtils.isEmpty(name)) {
+                tvName.setText(name);
+            }
+        }
     }
 
     @Override
@@ -76,6 +110,24 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
 
             case R.id.rl_bottom://投诉
 
+                break;
+            case R.id.switch_btn:
+                boolean isOpen;
+                if (switchDisturb.isSwitchOpen()) {
+                    switchDisturb.closeSwitch();
+                    isOpen = false;
+                } else {
+                    switchDisturb.openSwitch();
+                    isOpen = true;
+                }
+                PreferenceUtils.putBoolean(this, uid, isOpen);
+                break;
+            case R.id.iv_add:
+                Intent intent = new Intent(context, SelectContactsActivity.class);
+                intent.putExtra("isAddMember", false);
+                intent.putExtra("isCreateGroup", true);
+                intent.putExtra("user_ids", uid);
+                startActivityForResult(intent, 0);
                 break;
         }
     }

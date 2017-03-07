@@ -9,8 +9,8 @@
         android:id="@+id/tv_top"
         android:layout_width="match_parent"
         android:layout_height="50dip"
-        android:gravity="center"
         android:background="@color/top_bar_color"
+        android:gravity="center"
         android:text="发现"
         android:textColor="@color/white"
         android:textSize="17.5sp" />
@@ -23,65 +23,66 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/line_color_gray_d1"
             android:layout_marginTop="22dp"
+            android:background="@color/line_color_gray_d1"
             android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/rl_friends"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/personal_bt_selector"
-                android:layout_marginTop="1px"
                 android:layout_marginBottom="1px"
-                android:paddingRight="16.5dp"
+                android:layout_marginTop="1px"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/iv_friend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="17.6dp"
-                    android:src="@drawable/hp_circle_friends"/>
+                    android:src="@drawable/hp_circle_friends" />
 
                 <TextView
                     android:id="@+id/tv_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/iv_friend"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:layout_toRightOf="@+id/iv_friend"
+                    android:text="朋友圈"
                     android:textColor="@color/black"
-                    android:text="朋友圈"/>
+                    android:textSize="17.5sp" />
 
                 <TextView
                     android:id="@+id/tv_friends_no_read"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:gravity="center"
                     android:layout_toRightOf="@+id/tv_text"
+                    android:background="@drawable/hp_big_chat"
+                    android:gravity="center"
                     android:text="88"
-                    android:textSize="12sp"
                     android:textColor="@color/white"
-                    android:background="@drawable/hp_big_chat"/>
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/hp_some_go"/>
+                    android:background="@drawable/hp_some_go" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
-                android:background="@color/background_color"/>
+                android:background="@color/background_color" />
 
             <RelativeLayout
                 android:id="@+id/rl_richScan"
@@ -89,220 +90,221 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1px"
                 android:background="@drawable/personal_bt_selector"
-                android:paddingRight="16.5dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/iv_richScan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="17.6dp"
-                    android:src="@drawable/hp_gr_scan"/>
+                    android:src="@drawable/hp_gr_scan" />
 
                 <TextView
                     android:id="@+id/tv_richScan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/iv_richScan"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:layout_toRightOf="@+id/iv_richScan"
+                    android:text="扫一扫"
                     android:textColor="@color/black"
-                    android:text="扫一扫"/>
+                    android:textSize="17.5sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/hp_some_go"/>
+                    android:background="@drawable/hp_some_go" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="17dp"
                 android:layout_height="1px"
-                android:background="@color/white"/>
+                android:background="@color/white" />
 
             <RelativeLayout
                 android:id="@+id/rl_shark_it_off"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/personal_bt_selector"
                 android:layout_marginBottom="1px"
-                android:paddingRight="16.5dp"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/iv_shark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="17.6dp"
-                    android:src="@drawable/hp_shake_phone"/>
+                    android:src="@drawable/hp_shake_phone" />
 
                 <TextView
                     android:id="@+id/tv_shark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/iv_shark"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:layout_toRightOf="@+id/iv_shark"
+                    android:text="摇一摇"
                     android:textColor="@color/black"
-                    android:text="摇一摇"/>
+                    android:textSize="17.5sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/hp_some_go"/>
+                    android:background="@drawable/hp_some_go" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
-                android:background="@color/background_color"/>
+                android:background="@color/background_color" />
 
             <RelativeLayout
                 android:id="@+id/rl_people_nearby"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1px"
                 android:layout_marginBottom="1px"
+                android:layout_marginTop="1px"
                 android:background="@drawable/personal_bt_selector"
-                android:paddingRight="16.5dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/iv_people_nearby"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="17.6dp"
-                    android:src="@drawable/hp_personal"/>
+                    android:src="@drawable/hp_personal" />
 
                 <TextView
                     android:id="@+id/tv_people_nearby"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/iv_people_nearby"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:layout_toRightOf="@+id/iv_people_nearby"
+                    android:text="附近的人"
                     android:textColor="@color/black"
-                    android:text="附近的人"/>
+                    android:textSize="17.5sp" />
 
                 <TextView
                     android:id="@+id/tv_nearby_no_read"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:gravity="center"
                     android:layout_toRightOf="@+id/tv_people_nearby"
+                    android:background="@drawable/hp_big_chat"
+                    android:gravity="center"
                     android:text="88"
-                    android:textSize="12sp"
                     android:textColor="@color/white"
-                    android:background="@drawable/hp_big_chat"/>
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/hp_some_go"/>
+                    android:background="@drawable/hp_some_go" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
-                android:background="@color/background_color"/>
+                android:background="@color/background_color" />
 
             <RelativeLayout
                 android:id="@+id/rl_shopping"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/personal_bt_selector"
                 android:layout_marginTop="1px"
-                android:paddingRight="16.5dp"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/iv_shopping"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="17.6dp"
-                    android:src="@drawable/hp_shopping"/>
+                    android:src="@drawable/hp_shopping" />
 
                 <TextView
                     android:id="@+id/tv_shopping"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/iv_shopping"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:layout_toRightOf="@+id/iv_shopping"
+                    android:text="购物"
                     android:textColor="@color/black"
-                    android:text="购物"/>
+                    android:textSize="17.5sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/hp_some_go"/>
+                    android:background="@drawable/hp_some_go" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="17dp"
                 android:layout_height="1px"
-                android:background="@color/white"/>
+                android:background="@color/white" />
 
             <RelativeLayout
                 android:id="@+id/rl_game"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/personal_bt_selector"
                 android:layout_marginBottom="1px"
-                android:paddingRight="16.5dp"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/iv_game"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="17.6dp"
-                    android:src="@drawable/hp_games"/>
+                    android:src="@drawable/hp_games" />
 
                 <TextView
                     android:id="@+id/tv_game"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/iv_game"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:layout_toRightOf="@+id/iv_game"
+                    android:text="游戏"
                     android:textColor="@color/black"
-                    android:text="游戏"/>
+                    android:textSize="17.5sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/hp_some_go"/>
+                    android:background="@drawable/hp_some_go" />
 
             </RelativeLayout>
 

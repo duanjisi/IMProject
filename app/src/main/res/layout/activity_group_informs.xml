@@ -307,6 +307,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48.5dip"
                 android:layout_below="@+id/rl_set_top"
+                android:visibility="gone"
                 android:background="@color/white">
 
                 <LinearLayout
@@ -405,7 +406,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="31dp"
-                    android:text="保存到通讯录"
+                    android:text="显示群成员昵称"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -433,6 +434,7 @@
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/rl_group1"
                 android:layout_marginTop="32dp"
+                android:visibility="gone"
                 android:background="@drawable/bg_long_item">
 
                 <LinearLayout
@@ -465,6 +467,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/rl_chat_file"
+                android:visibility="gone"
                 android:background="@drawable/bg_long_item">
 
                 <LinearLayout
@@ -498,6 +501,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/rl_chat_content"
+                android:visibility="gone"
                 android:background="@drawable/bg_long_item">
 
                 <LinearLayout
@@ -531,6 +535,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/rl_chat_bg"
+                android:visibility="gone"
                 android:background="@drawable/bg_long_item">
 
                 <LinearLayout

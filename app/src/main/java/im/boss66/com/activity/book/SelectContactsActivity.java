@@ -78,10 +78,11 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     private String userid;
     private int mImageHeight = 0;
     private int ll_max_width = 0;
-    private boolean isAddMember;
+    private boolean isAddMember, isCreateGroup;
     private String user_ids;
     private String groupid;
     private String classType, memberUserNames;
+    private List<String> userIdList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +99,10 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
             isAddMember = bundle.getBoolean("isAddMember", false);
             user_ids = bundle.getString("user_ids", "");
             groupid = bundle.getString("groupid", "");
+            isCreateGroup = bundle.getBoolean("isCreateGroup", false);
+            if (isCreateGroup) {
+                userIdList = new ArrayList<>();
+            }
         }
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         contactList = App.getInstance().getContacts();
@@ -114,7 +119,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         tvOption = (TextView) findViewById(R.id.tv_option);
         tvTitle = (TextView) findViewById(R.id.title);
 
-        if (isAddMember) {
+        if (isAddMember || isCreateGroup) {
             tvTitle.setText("选择联系人");
         }
         tvBack.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +136,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
                     String member_ids = getMemberIds();
                     Intent intent = new Intent();
                     intent.putExtra("member_id", member_ids);
-                    intent.putExtra("memberUserNames",memberUserNames);
+                    intent.putExtra("memberUserNames", memberUserNames);
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
@@ -188,14 +193,14 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 //            }
 //        });
 
-        if (isAddMember) {
+        if (isAddMember || isCreateGroup) {
             for (int i = 0; i < contactList.size(); i++) {
                 EaseUser user = contactList.get(i);
                 initEntity(user);
             }
         }
 
-        if (isAddMember) {
+        if (isAddMember || isCreateGroup) {
             contactListLayout.init(contactList, true);
         } else {
             contactListLayout.init(contactList, header, true);
@@ -297,9 +302,16 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         }
     }
 
-
     private void requestGroupCreate() {//建群请求
-        String member_ids = userid + "," + getMemberIds();
+        String member_ids = null;
+        if (isCreateGroup){
+            member_ids = user_ids;
+            for (String id:userIdList){
+                member_ids = member_ids + "," + id;
+            }
+        }else {
+            member_ids = userid + "," + getMemberIds();
+        }
         Log.i("info", "member_ids:" + member_ids);
         if (member_ids.equals("")) {
             showToast("请选择群成员!", true);
@@ -469,6 +481,10 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     }
 
     private void addView(final EaseUser user, final int position) {
+        String uid = user.getUserid();
+        if (isCreateGroup) {
+            userIdList.add(uid);
+        }
         UIUtils.hindView(iv_tag);
 //        ViewTreeObserver vto = linearLayout.getViewTreeObserver();
 //        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -486,6 +502,10 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     }
 
     private void deleteView(EaseUser user) {
+        String uid = user.getUserid();
+        if (isCreateGroup && userIdList.contains(uid)) {
+            userIdList.remove(uid);
+        }
         int count = linearLayout.getChildCount();
         if (count != 0) {
             for (int i = 0; i < count; i++) {

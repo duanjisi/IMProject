@@ -127,4 +127,10 @@ public class HttpUrl {
     public static final String SEARCH_BY_ALL_NET = MAIN_URL + "api/v1/search";
     //修改用户名(姓名)
     public static final String CHANGE_USER_NAME = MAIN_URL + "ucenter/userinfo/updateuname";
+    //获取消息列表
+    public static final String GET_CIRCLE_MSG_LIST = MAIN_URL + "api/v1/message";
+    //清空消息列表
+    public static final String CLEAR_CIRCLE_MSG_LIST = MAIN_URL + "api/v1/message/flushall";
+    //获取最新朋友圈消息通知
+    public static final String GET_CIRCLE_NEWEST_MSG = MAIN_URL + "api/v1/message/getnewest";
 }

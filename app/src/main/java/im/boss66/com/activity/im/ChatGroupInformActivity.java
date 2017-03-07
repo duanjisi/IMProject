@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.CommonDialogUtils;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.book.SelectContactsActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
@@ -26,6 +27,7 @@ import im.boss66.com.entity.GroupInform;
 import im.boss66.com.entity.MemberEntity;
 import im.boss66.com.http.BaseModelRequest;
 import im.boss66.com.http.request.GroupMembersRequest;
+import im.boss66.com.widget.EaseSwitchButton;
 import im.boss66.com.widget.MyGridView;
 
 /**
@@ -45,6 +47,7 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
     private String MsgTab;
     private AccountEntity account;
     private GroupInform groupInform;
+    private EaseSwitchButton switchDisturb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,7 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
         rlFile = (RelativeLayout) findViewById(R.id.rl_chat_file);
         rlClearRecords = (RelativeLayout) findViewById(R.id.rl_chat_clear);
         gridView = (MyGridView) findViewById(R.id.gridView);
+        switchDisturb = (EaseSwitchButton) findViewById(R.id.switch_btn);
         adapter = new MemberAdapter(context);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new ItemClickListener());
@@ -88,6 +92,13 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
         rlFile.setOnClickListener(this);
         rlClearRecords.setOnClickListener(this);
         btnExit.setOnClickListener(this);
+        switchDisturb.setOnClickListener(this);
+        boolean isopen = PreferenceUtils.getBoolean(this, groupid, true);
+        if (isopen) {
+            switchDisturb.openSwitch();
+        } else {
+            switchDisturb.closeSwitch();
+        }
         requestMembers();
     }
 
@@ -185,6 +196,17 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.rl_chat_clear://清空聊天记录
                 showClearRecordsDialog();
+                break;
+            case R.id.switch_btn:
+                boolean isOpen;
+                if (switchDisturb.isSwitchOpen()) {
+                    switchDisturb.closeSwitch();
+                    isOpen = false;
+                } else {
+                    switchDisturb.openSwitch();
+                    isOpen = true;
+                }
+                PreferenceUtils.putBoolean(this, groupid, isOpen);
                 break;
         }
     }
