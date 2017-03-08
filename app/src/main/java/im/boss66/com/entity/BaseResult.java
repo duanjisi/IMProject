@@ -10,8 +10,10 @@ import com.alibaba.fastjson.JSON;
 public class BaseResult {
     private String name;
     private String version;
-
     private String message;
+    private int code;
+    private int status;
+    private String type;
 
     public int getCode() {
         return code;
@@ -25,9 +27,9 @@ public class BaseResult {
         return message;
     }
 
-    private int code;
-    private int status;
-    private String type;
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public static BaseResult parse(String json) {
         BaseResult res = new BaseResult();

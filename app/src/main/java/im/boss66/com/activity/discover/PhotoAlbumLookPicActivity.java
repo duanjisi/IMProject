@@ -632,4 +632,43 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
             getServerCommentList();
         }
     }
+
+    private void getCommunityDetail() {
+        showLoadingDialog();
+        String main = HttpUrl.COMMUNITY_GET_DETAIL + "?feed_id=" + feedId;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+                    PhotoAlbumDetailEntity data = JSON.parseObject(result, PhotoAlbumDetailEntity.class);
+                    if (data != null) {
+                        String msg = data.getMessage();
+                        int code = data.getCode();
+                        if (code == 1) {
+                            friendCircle = data.getResult();
+                            if (friendCircle != null) {
+                                int feedType = friendCircle.getFeed_type();
+                                showSigleTxData(friendCircle, feedType);
+                            }
+                        } else {
+                            showToast(msg, false);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
+                showToast("获取失败", false);
+            }
+        });
+    }
+
+
 }

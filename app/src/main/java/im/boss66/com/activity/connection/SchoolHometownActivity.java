@@ -101,7 +101,6 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     private boolean isSchool; // 是否是学校
     private LRecyclerView rcv_news;
     private LRecyclerViewAdapter mLRecyclerViewAdapter = null;
-    private FriendCircleAdapter adapter;
     private CirclePresenter presenter;
 
     private int SEND_TYPE_PHOTO_TX = 101;

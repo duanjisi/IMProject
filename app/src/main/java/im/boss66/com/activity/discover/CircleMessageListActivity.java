@@ -88,6 +88,7 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
                         CircleMsgListEntity.CircleMsgItem item = (CircleMsgListEntity.CircleMsgItem) adapter.getDatas().get(position);
                         Bundle bundle = new Bundle();
                         bundle.putInt("feedId", item.getFeed_id());
+                        bundle.putString("classType",classType);
                         openActivity(PhotoAlbumDetailActivity.class, bundle);
                     }
 
@@ -220,7 +221,11 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
 
     @Override
     public void onClick(int which) {
-        clearMsg();
+        if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+            clearcommunityMsg();
+        } else {
+            clearMsg();
+        }
     }
 
     private void getcommunityServerData() {

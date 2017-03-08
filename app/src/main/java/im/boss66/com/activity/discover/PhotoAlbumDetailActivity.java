@@ -41,7 +41,9 @@ import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.ActionItem;
+import im.boss66.com.entity.BaseResult;
 import im.boss66.com.entity.CircleCommentListEntity;
+import im.boss66.com.entity.CirclePraiseListEntity;
 import im.boss66.com.entity.FriendCircle;
 import im.boss66.com.entity.FriendCircleCommentEntity;
 import im.boss66.com.entity.FriendCirclePraiseEntity;
@@ -51,6 +53,7 @@ import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.CircleCommentCreateRequest;
 import im.boss66.com.http.request.CircleCommentDeleteRequest;
+import im.boss66.com.http.request.CommunityCreateCommentRequest;
 import im.boss66.com.http.request.DoPraiseRequest;
 import im.boss66.com.widget.ActionSheet;
 import im.boss66.com.widget.CommentListView;
@@ -94,6 +97,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
     private boolean isReply = false;
     private String commentFromId, commentPid;
     private List<PhotoInfo> files;
+    private String classType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,8 +116,9 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
+                classType = bundle.getString("classType");
                 feedId = bundle.getInt("feedId");
-                String classType = bundle.getString("classType");
+                classType = bundle.getString("classType");
                 if (!TextUtils.isEmpty(classType) && "PhotoAlbumLookPicActivity".equals(classType)) {
                     friendCircle = (FriendCircle) bundle.getSerializable("data");
                     if (friendCircle != null) {
@@ -124,7 +129,11 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                         }
                     }
                 } else {
-                    getAlbumDetail();
+                    if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+                        getCommunityDetail();
+                    } else {
+                        getAlbumDetail();
+                    }
                 }
             }
         }
@@ -221,7 +230,12 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
         } else if (feedType == 3) {
 
         }
-        String feedName = item.getFeed_username();
+        String feedName;
+        if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+            feedName = item.getUser_name();
+        } else {
+            feedName = item.getFeed_username();
+        }
         tv_name.setText("" + feedName);
         String head = item.getFeed_avatar();
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv_head.getLayoutParams();
@@ -328,14 +342,22 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                         feed_uid = "0";
                     }
                     bt_send.setText("");
-                    createComment(content, pid, feed_uid);
+                    if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+                        createCommunityComment(content, pid, feed_uid);
+                    } else {
+                        createComment(content, pid, feed_uid);
+                    }
                 }
                 break;
             case R.id.bt_close://删除朋友圈item
                 if (dialog != null && dialog.isShowing()) {
                     dialog.dismiss();
                 }
-                deleteFriendCircleItem(feedId);
+                if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+                    deleteCommunityItem(feedId);
+                } else {
+                    deleteFriendCircleItem(feedId);
+                }
                 break;
             case R.id.bt_ok:
                 if (dialog != null && dialog.isShowing()) {
@@ -396,15 +418,15 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
     @Override
     public void onClick(int which) {
-        deleteComment(commonId);
+        if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+            deleteCommunityComment(commonId);
+        } else {
+            deleteComment(commonId);
+        }
     }
 
     private class PopupItemClickListener implements SnsPopupWindow.OnItemClickListener {
-        private int mFavorId;
-        //动态在列表中的位置
-        private int mCirclePosition;
         private long mLasttime = 0;
-        private FriendCircle mCircleItem;
 
         public PopupItemClickListener() {
         }
@@ -416,7 +438,11 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                     if (System.currentTimeMillis() - mLasttime < 700)//防止快速点击操作
                         return;
                     mLasttime = System.currentTimeMillis();
-                    doPraise();
+                    if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+                        doCommunityPraise(feedId, isPrase);
+                    } else {
+                        doPraise();
+                    }
                     break;
                 case 1://发布评论
                     et_send.requestFocus();
@@ -474,7 +500,6 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String pojo) {
-                Log.i("dopraise", pojo);
                 if (!TextUtils.isEmpty(pojo)) {
                     try {
                         JSONObject obj = new JSONObject(pojo);
@@ -511,9 +536,9 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
             if (isAdd) {
                 FriendCirclePraiseEntity item = new FriendCirclePraiseEntity();
                 item.setUser_id(userId);
-                if (!TextUtils.isEmpty(userName)){
+                if (!TextUtils.isEmpty(userName)) {
                     item.setUser_name(userName);
-                }else {
+                } else {
                     item.setUser_name(userId);
                 }
                 praiseList.add(item);
@@ -678,4 +703,222 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
             }
         });
     }
+
+    /* 帖子详情 */
+    private void getCommunityDetail() {
+        showLoadingDialog();
+        String main = HttpUrl.COMMUNITY_GET_DETAIL + "?feed_id=" + feedId;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+                    BaseResult result1 = JSON.parseObject(result, BaseResult.class);
+                    if (result1 != null) {
+                        int code = result1.getCode();
+                        String errorMsg = result1.getMessage();
+                        if (code == 1) {
+                            PhotoAlbumDetailEntity data = JSON.parseObject(result, PhotoAlbumDetailEntity.class);
+                            if (data != null) {
+                                String msg = data.getMessage();
+                                int code1 = data.getCode();
+                                if (code1 == 1) {
+                                    friendCircle = data.getResult();
+                                    if (friendCircle != null) {
+                                        feedId = friendCircle.getFeed_id();
+                                        int feedType = friendCircle.getFeed_type();
+                                        if (feedType == 1) {
+                                            rl_text.setVisibility(View.VISIBLE);
+                                            showSigleTxData(friendCircle);
+                                        }
+                                    }
+                                } else {
+                                    showToast(msg, false);
+                                }
+                            }
+                        } else {
+                            showToast(errorMsg, false);
+                            finish();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
+                showToast("获取失败", false);
+            }
+        });
+    }
+
+    //删除帖子item
+    private void deleteCommunityItem(int id) {
+        showLoadingDialog();
+        String main = HttpUrl.DELETE_COMMUNITY + "?feed_id=" + id;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        JSONObject obj = new JSONObject(result);
+                        if (obj != null) {
+                            int code = obj.getInt("code");
+                            String msg = obj.getString("message");
+                            if (code == 1) {
+                                showToast("删除成功", false);
+                            } else {
+                                showToast(msg, false);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
+                showToast("删除失败", false);
+            }
+        });
+    }
+
+    //点or取消赞
+    private void doCommunityPraise(final int id, final int isPraise) {
+        String url = HttpUrl.COMMUNITY_DO_PRAISE + "?feed_id=" + id + "&type=" + isPraise;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+                    BaseResult data = JSON.parseObject(result, BaseResult.class);
+                    if (data != null) {
+                        int code = data.getCode();
+                        String msg = data.getMessage();
+                        if (code == 1) {
+                            if (isPrase == 0) {
+                                isPrase = 1;
+                                editPraseList(false);
+                            } else {
+                                isPrase = 0;
+                                editPraseList(true);
+                            }
+                        } else {
+                            showToast(msg, false);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                showToast(e.getMessage(), false);
+            }
+        });
+    }
+
+    //发表评论
+    private void createCommunityComment(String content, String pid, String uid_to) {
+        CommunityCreateCommentRequest request = new CommunityCreateCommentRequest(TAG, String.valueOf(feedId), content, pid, uid_to);
+        request.send(new BaseDataRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String pojo) {
+                if (!TextUtils.isEmpty(pojo)) {
+                    try {
+                        JSONObject obj = new JSONObject(pojo);
+                        if (obj != null) {
+                            int code = obj.getInt("code");
+                            String msg = obj.getString("message");
+                            if (code == 1) {
+                                getCommunityCommentList(feedId);
+                            } else {
+                                showToast(msg, false);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, false);
+            }
+        });
+    }
+
+    //获取评论列表
+    private void getCommunityCommentList(int feedId) {
+        String main = HttpUrl.GET_COMMUNITY_COMMENT_LIST + "?feed_id=" + feedId;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+                    CircleCommentListEntity entity = JSON.parseObject(result, CircleCommentListEntity.class);
+                    if (entity != null) {
+                        List<FriendCircleCommentEntity> list = entity.getResult();
+                        if (list != null) {
+                            friendCircle.setComment_list(list);
+                            commentView.setDatas(list);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                showToast(s, false);
+            }
+        });
+    }
+
+    private void deleteCommunityComment(String comm_id) {
+        String url = HttpUrl.COMMUNITY_DELETE_COMMENT + "?comm_id=" + comm_id;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+                    BaseResult data = JSON.parseObject(result, BaseResult.class);
+                    if (data != null) {
+                        int code = data.getCode();
+                        String msg = data.getMessage();
+                        if (code == 1) {
+                            getCommunityCommentList(feedId);
+                        } else {
+                            showToast(msg, false);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                showToast(e.getMessage(), false);
+            }
+        });
+    }
+
 }
