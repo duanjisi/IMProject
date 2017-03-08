@@ -101,6 +101,10 @@ public class CircleMsgListEntity {
             this.msg_content = msg_content;
         }
 
+        public String getFeed_content() {
+            return feed_content;
+        }
+
         int msg_id;
         String msg_content;
         String user_id;
@@ -109,5 +113,6 @@ public class CircleMsgListEntity {
         int feed_id;
         String feed_file;
         String add_time;
+        String feed_content;
     }
 }

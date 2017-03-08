@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -44,10 +43,9 @@ import im.boss66.com.widget.circle.CommentDialog;
 import im.boss66.com.widget.circle.GlideCircleTransform;
 
 /**
- * 朋友圈
+ * 社群列表
  */
-public class FriendCircleAdapter extends BaseRecycleViewAdapter {
-
+public class CommunityListAdapter extends BaseRecycleViewAdapter {
     public static final int HEADVIEW_SIZE = 0;
     private CirclePresenter presenter;
     private Context context;
@@ -61,7 +59,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
         this.presenter = presenter;
     }
 
-    public FriendCircleAdapter(Context context) {
+    public CommunityListAdapter(Context context) {
         this.context = context;
         sceenW = UIUtils.getScreenWidth(context);
     }
@@ -103,8 +101,8 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
         final List<FriendCirclePraiseEntity> praise_list = entity.getPraise_list();//点赞列表
         final List<FriendCircleCommentEntity> comment_list = entity.getComment_list();//评论列表
         final int feed_id = entity.getFeed_id();
-        String name = entity.getFeed_username();
-        String headImg = entity.getFeed_avatar();
+        String name = entity.getUser_name();
+        String headImg = entity.getAvatar();
         String content = entity.getContent();
         String createTime = entity.getAdd_time();
         boolean hasFavort = entity.hasFavort();
@@ -378,5 +376,4 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
     public void getCurUserId(String uid) {
         this.curUserid = uid;
     }
-
 }

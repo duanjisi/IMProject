@@ -63,6 +63,10 @@ public class CircleMessageListAdapter extends BaseRecycleViewAdapter {
                 imageLoader.displayImage(circleMsg, holderView.iv_content,
                         ImageLoaderUtils.getDisplayImageOptions());
             } else {
+                String circletx = item.getFeed_content();
+                if (!TextUtils.isEmpty(circletx)) {
+                    holderView.tv_circle_msg.setText(circletx);
+                }
                 holderView.iv_video_play.setVisibility(View.GONE);
             }
         }

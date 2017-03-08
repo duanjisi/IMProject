@@ -141,18 +141,17 @@ public class HttpUrl {
     //人脉首页
     public static final String CONNECTION_MY_INFO = MAIN_URL + "api/v1/contacts";
     //学校简介
-    public static final String SCHOOL_INFO =MAIN_URL+"web/school";
+    public static final String SCHOOL_INFO = MAIN_URL + "web/school";
     //家乡简介
-    public static final String HOMETOWN_INFO = MAIN_URL+"web/hometown";
+    public static final String HOMETOWN_INFO = MAIN_URL + "web/hometown";
     //社团列表
-    public static final String SCHOOL_CLUB_LIST = MAIN_URL+"api/v1/school/league";
+    public static final String SCHOOL_CLUB_LIST = MAIN_URL + "api/v1/school/league";
     //商会列表
-    public static final String HOMETOWN_CLUB_LIST =MAIN_URL+"api/v1/hometown/cofc";
+    public static final String HOMETOWN_CLUB_LIST = MAIN_URL + "api/v1/hometown/cofc";
     //学校名人
-    public static final String SCHOOL_FAMOUS_PEOPLE =MAIN_URL+"api/v1/school/celebrity";
+    public static final String SCHOOL_FAMOUS_PEOPLE = MAIN_URL + "api/v1/school/celebrity";
     //商会名人
-    public static final String BUSINESS_FAMOUS_PEOPLE =MAIN_URL+"api/v1/hometown/celebrity";
-
+    public static final String BUSINESS_FAMOUS_PEOPLE = MAIN_URL + "api/v1/hometown/celebrity";
 
     //获取消息列表
     public static final String GET_CIRCLE_MSG_LIST = MAIN_URL + "api/v1/message";
@@ -160,4 +159,24 @@ public class HttpUrl {
     public static final String CLEAR_CIRCLE_MSG_LIST = MAIN_URL + "api/v1/message/flushall";
     //获取最新朋友圈消息通知
     public static final String GET_CIRCLE_NEWEST_MSG = MAIN_URL + "api/v1/message/getnewest";
+    //获取获取帖子列表
+    public static final String GET_COMMUNITY_LIST = MAIN_URL + "api/v1/contactsfeed";
+    //删除帖子
+    public static final String DELETE_COMMUNITY = MAIN_URL + "api/v1/contactsfeed/delete";
+    //获取帖子的赞列表
+    public static final String GET_COMMUNITY_PRAISE_LIST = MAIN_URL + "api/v1/contactspraise";
+    //帖子-赞/取消赞
+    public static final String COMMUNITY_DO_PRAISE = MAIN_URL + "api/v1/contactspraise/create";
+    //获取帖子评论列表
+    public static final String GET_COMMUNITY_COMMENT_LIST = MAIN_URL + "api/v1/contactscomment";
+    //帖子-发表/回复评论
+    public static final String COMMUNITY_CREATE_COMMENT = MAIN_URL + "api/v1/contactscomment/create";
+    //帖子-删除评论
+    public static final String COMMUNITY_DELETE_COMMENT = MAIN_URL + "api/v1/contactscomment/delete";
+    //帖子-发布帖子
+    public static final String COMMUNITY_CREATE = MAIN_URL + "api/v1/contactsfeed/create";
+    //帖子-获取我的消息列表
+    public static final String COMMUNITY_GET_MY_MSG = MAIN_URL + "api/v1/contactsmsg";
+    //帖子-获取我的消息列表
+    public static final String COMMUNITY_CLEAR_MY_MSG = MAIN_URL + "api/v1/contactsmsg/flushall";
 }

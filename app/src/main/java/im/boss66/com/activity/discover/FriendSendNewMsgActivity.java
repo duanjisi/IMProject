@@ -65,6 +65,7 @@ import im.boss66.com.widget.MultiImageView;
  */
 public class FriendSendNewMsgActivity extends BaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener {
 
+    private LinearLayout ll_remind;
     private RelativeLayout rl_video, rl_who_can_see, rl_remind_who_see;
     private ImageView iv_video_bg, iv_video_play, iv_video_add;
     private MultiImageView multiImagView;
@@ -93,6 +94,8 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
     private String selectMember, remindMember;
     private int whoCanSee;
     private boolean isSelectCanSee;
+    private String classType, feedType, id_value;
+    private int id_value_ext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +108,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         imgList = new ArrayList<>();
         access_token = App.getInstance().getAccount().getAccess_token();
         sceenW = UIUtils.getScreenWidth(this);
+        ll_remind = (LinearLayout) findViewById(R.id.ll_remind);
         tv_people = (TextView) findViewById(R.id.tv_people);
         tv_remind_people = (TextView) findViewById(R.id.tv_remind_people);
         rl_remind_who_see = (RelativeLayout) findViewById(R.id.rl_remind_who_see);
@@ -177,6 +181,13 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
+                id_value = bundle.getString("id_value");
+                id_value_ext = bundle.getInt("id_value_ext");
+                feedType = bundle.getString("feedType");
+                classType = bundle.getString("classType");
+                if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+                    ll_remind.setVisibility(View.GONE);
+                }
                 sendType = bundle.getString("sendType");
                 if (!TextUtils.isEmpty(sendType)) {
                     if (SEND_TYPE_TEXT.equals(sendType)) {
@@ -283,7 +294,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                 isSelectCanSee = false;
                 Bundle bundle = new Bundle();
                 bundle.putString("classType", "FriendCircleWhoSeeActivity");
-                bundle.putString("user_ids",remindMember);
+                bundle.putString("user_ids", remindMember);
                 openActvityForResult(SelectContactsActivity.class, SELECT_PERSON, bundle);
                 break;
             case R.id.rl_who_can_see://谁可以看
@@ -298,25 +309,36 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
     private void sendPhotoText() {
         String content = et_tx.getText().toString().trim();
         showLoadingDialog();
-        String url = HttpUrl.CREATE_CIRCLE_PHOTO_TX;
+        String url;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);
-        switch (whoCanSee) {
-            case 0:
-                who_see_ext = "all";
-                break;
-            case 1:
-                who_see_ext = "myself";
-                break;
-            case 2:
-            case 3:
-                who_see_ext = selectMember;
-                break;
+        if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+            url = HttpUrl.COMMUNITY_CREATE;
+            params.addBodyParameter("feed_type", feedType);
+            params.addBodyParameter("id_value", id_value);
+            params.addBodyParameter("id_value_ext", String.valueOf(id_value_ext));
+        } else {
+            url = HttpUrl.CREATE_CIRCLE_PHOTO_TX;
+            switch (whoCanSee) {
+                case 0:
+                    who_see_ext = "all";
+                    break;
+                case 1:
+                    who_see_ext = "myself";
+                    break;
+                case 2:
+                case 3:
+                    who_see_ext = selectMember;
+                    break;
+            }
+            who_see = String.valueOf(whoCanSee);
+            params.addBodyParameter("who_see", who_see);
+            params.addBodyParameter("who_see_ext", who_see_ext);
+            if (!TextUtils.isEmpty(remindMember)) {
+                params.addBodyParameter("remind_user", remindMember);
+            }
         }
-        who_see = String.valueOf(whoCanSee);
-        params.addBodyParameter("who_see", who_see);
-        params.addBodyParameter("who_see_ext", who_see_ext);
         if (SEND_TYPE_PHOTO.equals(sendType) && imgList != null) {
             for (int i = 0; i < imgList.size(); i++) {
                 String path = imgList.get(i);
@@ -324,16 +346,18 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                 params.addBodyParameter("files" + "[" + i + "]", file);
             }
         } else if (SEND_TYPE_VIDEO.equals(sendType) && !TextUtils.isEmpty(videoPath)) {
-            url = HttpUrl.CREATE_CIRCLE_VIDEO_TX;
+            if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+                url = HttpUrl.COMMUNITY_CREATE;
+            } else {
+                url = HttpUrl.CREATE_CIRCLE_VIDEO_TX;
+            }
             File file = new File(videoPath);
             params.addBodyParameter("files", file);
         }
         if (!TextUtils.isEmpty(content)) {
             params.addBodyParameter("content", content);
         }
-        if (!TextUtils.isEmpty(remindMember)) {
-            params.addBodyParameter("remind_user", remindMember);
-        }
+
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {

@@ -54,9 +54,6 @@ public class SchoolClubActivity extends ABaseActivity implements View.OnClickLis
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String result = responseInfo.result;
-
-
-
             }
 
             @Override

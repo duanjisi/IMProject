@@ -1,5 +1,6 @@
 package im.boss66.com.activity.discover;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -43,6 +44,7 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
     private int page = 0;
     private CircleMessageListAdapter adapter;
     private List<CircleMsgListEntity.CircleMsgItem> allList;
+    private String classType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,13 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
     }
 
     private void initView() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                classType = bundle.getString("classType");
+            }
+        }
         AccountEntity sAccount = App.getInstance().getAccount();
         access_token = sAccount.getAccess_token();
         tv_back = (TextView) findViewById(R.id.tv_back);
@@ -89,10 +98,18 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
         rv_content.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                getServerData();
+                if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+                    getcommunityServerData();
+                } else {
+                    getServerData();
+                }
             }
         });
-        getServerData();
+        if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+            getcommunityServerData();
+        } else {
+            getServerData();
+        }
     }
 
     @Override
@@ -161,6 +178,7 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
                 String result = responseInfo.result;
                 if (!TextUtils.isEmpty(result)) {
                     try {
@@ -185,7 +203,8 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onFailure(HttpException e, String s) {
-
+                showToast(e.getMessage(), false);
+                cancelLoadingDialog();
             }
         });
     }
@@ -202,6 +221,77 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
     @Override
     public void onClick(int which) {
         clearMsg();
+    }
+
+    private void getcommunityServerData() {
+        showLoadingDialog();
+        String url = HttpUrl.COMMUNITY_GET_MY_MSG;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        url = url + "?page=" + page + "&size=" + 20;
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                if (result != null) {
+                    CircleMsgListEntity data = JSON.parseObject(result, CircleMsgListEntity.class);
+                    if (data != null) {
+                        List<CircleMsgListEntity.CircleMsgItem> list = data.getResult();
+                        if (list != null && list.size() > 0) {
+                            showData(list);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
+                showToast(e.getMessage(), false);
+            }
+        });
+    }
+
+    private void clearcommunityMsg() {
+        showLoadingDialog();
+        String url = HttpUrl.COMMUNITY_CLEAR_MY_MSG;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        JSONObject obj = new JSONObject(result);
+                        if (obj != null) {
+                            int code = obj.getInt("code");
+                            String msg = obj.getString("message");
+                            if (code == 1) {
+                                allList.clear();
+                                adapter.setDatas(allList);
+                                tv_right.setEnabled(false);
+                            } else {
+                                showToast(msg, false);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        showToast(e.getMessage(), false);
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                showToast(e.getMessage(), false);
+                cancelLoadingDialog();
+            }
+        });
     }
 
 }

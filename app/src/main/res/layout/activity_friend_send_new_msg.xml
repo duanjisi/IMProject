@@ -28,8 +28,8 @@
             android:id="@+id/multiImagView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dp_10"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:padding="@dimen/dp_10" />
 
         <RelativeLayout
             android:id="@+id/rl_video"
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_video_play"/>
+                android:src="@drawable/ic_video_play" />
 
         </RelativeLayout>
 
@@ -56,116 +56,124 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/dp_10"
-            android:visibility="gone"
-            android:src="@drawable/hp_add_photos"/>
+            android:src="@drawable/hp_add_photos"
+            android:visibility="gone" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_18"
-            android:background="@color/background_color" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/alertdialog_line" />
-
-        <RelativeLayout
-            android:id="@+id/rl_who_can_see"
+        <LinearLayout
+            android:id="@+id/ll_remind"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:background="@drawable/personal_bt_selector"
-            android:paddingBottom="10dp"
-            android:paddingLeft="16.5dp"
-            android:paddingRight="16.5dp"
-            android:paddingTop="10dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_18"
+                android:background="@color/background_color" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/alertdialog_line" />
+
+            <RelativeLayout
+                android:id="@+id/rl_who_can_see"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16.5dp"
-                android:layout_toRightOf="@+id/iv_photo"
-                android:text="@string/who_can_see"
-                android:textColor="@color/black"
-                android:textSize="17.5sp" />
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
 
-            <ImageView
-                android:id="@+id/iv_phone"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_photo"
+                    android:text="@string/who_can_see"
+                    android:textColor="@color/black"
+                    android:textSize="17.5sp" />
+
+                <ImageView
+                    android:id="@+id/iv_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
+
+                <TextView
+                    android:id="@+id/tv_people"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/iv_phone"
+                    android:ellipsize="end"
+                    android:maxEms="10"
+                    android:singleLine="true"
+                    android:text="公开"
+                    android:textColor="@color/text_app_num_gray"
+                    android:textSize="15.4sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/dp_14"
+                android:background="@color/alertdialog_line" />
+
+            <RelativeLayout
+                android:id="@+id/rl_remind_who_see"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/hp_some_go" />
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
 
-            <TextView
-                android:id="@+id/tv_people"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/iv_phone"
-                android:maxEms="10"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:text="公开"
-                android:textColor="@color/text_app_num_gray"
-                android:textSize="15.4sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.5dp"
+                    android:layout_toRightOf="@+id/iv_photo"
+                    android:text="@string/remind_who_see"
+                    android:textColor="@color/black"
+                    android:textSize="17.5sp" />
 
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/iv_remind_who_see"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/hp_some_go" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginLeft="@dimen/dp_14"
-            android:background="@color/alertdialog_line" />
+                <TextView
+                    android:id="@+id/tv_remind_people"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/iv_remind_who_see"
+                    android:ellipsize="end"
+                    android:maxEms="10"
+                    android:singleLine="true"
+                    android:textColor="@color/text_app_num_gray"
+                    android:textSize="15.4sp" />
 
-        <RelativeLayout
-            android:id="@+id/rl_remind_who_see"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:background="@drawable/personal_bt_selector"
-            android:paddingBottom="10dp"
-            android:paddingLeft="16.5dp"
-            android:paddingRight="16.5dp"
-            android:paddingTop="10dp">
+            </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16.5dp"
-                android:layout_toRightOf="@+id/iv_photo"
-                android:text="@string/remind_who_see"
-                android:textColor="@color/black"
-                android:textSize="17.5sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/alertdialog_line" />
 
-            <ImageView
-                android:id="@+id/iv_remind_who_see"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/hp_some_go" />
-
-            <TextView
-                android:id="@+id/tv_remind_people"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/iv_remind_who_see"
-                android:maxEms="10"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:textColor="@color/text_app_num_gray"
-                android:textSize="15.4sp" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/alertdialog_line" />
+        </LinearLayout>
 
     </LinearLayout>
 
