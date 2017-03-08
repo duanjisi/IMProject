@@ -57,10 +57,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         if (intent != null) {
             isSchool = intent.getBooleanExtra("isSchool", false);
             title = intent.getStringExtra("name");
-            if(isSchool){
+            if (isSchool) {
                 school_id = intent.getIntExtra("school_id", -1);
 
-            }else {
+            } else {
                 hometown_id = intent.getIntExtra("hometown_id", -1);
             }
 
@@ -82,8 +82,8 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             @Override
             public boolean onLongClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putString("sendType","text");
-                openActivityForResult(ConnectionSendMsgActivity.class,SEND_TYPE_PHOTO_TX, bundle);
+                bundle.putString("sendType", "text");
+                openActivityForResult(ConnectionSendMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
 
                 return true;
 
@@ -105,7 +105,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         TextView tv_famous_person = (TextView) header.findViewById(R.id.tv_famous_person);
         TextView tv_club = (TextView) header.findViewById(R.id.tv_club);
 
-        if(!isSchool){
+        if (!isSchool) {
             tv_club.setText("商会");
         }
         TextView tv_news = (TextView) header.findViewById(R.id.tv_news);
@@ -120,10 +120,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         mLRecyclerViewAdapter = new LRecyclerViewAdapter(adapter);
 
 
-
         //头部view设置，加入到adapter中
-        RelativeLayout.LayoutParams linearParams =(RelativeLayout.LayoutParams) iv_bg.getLayoutParams(); //取控件textView当前的布局参数
-        linearParams.height = UIUtils.getScreenWidth(context)/3*2;;
+        RelativeLayout.LayoutParams linearParams = (RelativeLayout.LayoutParams) iv_bg.getLayoutParams(); //取控件textView当前的布局参数
+        linearParams.height = UIUtils.getScreenWidth(context) / 3 * 2;
+        ;
         iv_bg.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
 
 
@@ -132,7 +132,6 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         //rcv设置adapter以及刷新
         rcv_news.setAdapter(mLRecyclerViewAdapter);
         rcv_news.setLoadMoreEnabled(true);
-
 
 
     }
@@ -154,43 +153,48 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
 
             case R.id.tv_introduce: // 简介
                 Intent intent = new Intent(this, IntroduceActivity.class);
-                intent.putExtra("title",title);
-                if(isSchool){
-                    intent.putExtra("school_id",school_id);
-                }else{
-                    intent.putExtra("hometown_id",hometown_id);
+                intent.putExtra("title", title);
+                if (isSchool) {
+                    intent.putExtra("school_id", school_id);
+                } else {
+                    intent.putExtra("hometown_id", hometown_id);
                 }
                 startActivity(intent);
                 break;
             case R.id.tv_famous_person: // 名人
                 Intent intent1 = new Intent(this, FamousPersonActivity.class);
-                if(isSchool){
-                    intent1.putExtra("school_id",school_id);
-                }else{
-                    intent1.putExtra("hometown_id",hometown_id);
+                if (isSchool) {
+                    intent1.putExtra("school_id", school_id);
+                } else {
+                    intent1.putExtra("hometown_id", hometown_id);
                 }
                 startActivity(intent1);
 
                 break;
             case R.id.tv_club: // 社团 或 商会
-                Intent intent2 = new Intent(this,ClubActivity.class);
-                if(isSchool){
-                    intent2.putExtra("school_id",school_id);
-                }else{
-                    intent2.putExtra("hometown_id",hometown_id);
+                Intent intent2 = new Intent(this, ClubActivity.class);
+                if (isSchool) {
+                    intent2.putExtra("school_id", school_id);
+                } else {
+                    intent2.putExtra("hometown_id", hometown_id);
                 }
 
                 startActivity(intent2);
                 break;
             case R.id.tv_news: // 动态
-
+                Intent intent3 = new Intent(this, NewsActivity.class);
+                intent3.putExtra("name", title);
+                if (isSchool) {
+                    intent3.putExtra("school_id", school_id);
+                } else {
+                    intent3.putExtra("hometown_id", hometown_id);
+                }
+                startActivity(intent3);
 
                 break;
             case R.id.tv_headlift_view:
                 finish();
                 break;
-
-
 
 
         }
@@ -204,12 +208,12 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         myNewsPop.showAsDropDown(parent);
     }
 
-    public void openActivityForResult(Class<?> clazz,int requestCode,Bundle bundle){
+    public void openActivityForResult(Class<?> clazz, int requestCode, Bundle bundle) {
         Intent intent = new Intent(this, clazz);
-        if(intent!=null){
+        if (intent != null) {
             intent.putExtras(bundle);
         }
-        startActivityForResult(intent,requestCode);
+        startActivityForResult(intent, requestCode);
 
     }
 

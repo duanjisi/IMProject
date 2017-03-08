@@ -2,15 +2,27 @@ package im.boss66.com.activity.connection;
 
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 import im.boss66.com.adapter.PeopleSearchAdapter;
+import im.boss66.com.fragment.CountrymanFragment;
+import im.boss66.com.fragment.CustomAddFragment;
+import im.boss66.com.fragment.MyCountrymanFragment;
+import im.boss66.com.fragment.MySchoolmateFragment;
+import im.boss66.com.fragment.SchoolmateFragment;
+import im.boss66.com.widget.ViewpagerIndicatorOver;
 
 /**
  * 添加人脉
@@ -18,19 +30,41 @@ import im.boss66.com.adapter.PeopleSearchAdapter;
  */
 public class AddPeopleActivity extends ABaseActivity implements View.OnClickListener {
 
-    private TextView tv_cancle_search;
 
-    private RecyclerView rcv_search;
-    private PeopleSearchAdapter adapter;
+//    private PeopleSearchAdapter adapter;
 
+    private ViewpagerIndicatorOver vp_indicator; //指示器
+    private ViewPager vp_search_people;
+
+    private List<String> titles;
+    private List<Fragment> fragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_people);
-
         initViews();
 
+        initIndicator();
+
+    }
+
+    private void initIndicator() {
+        //Viewpager指示器的相关设置
+        titles = Arrays.asList("同学","同乡","自定义");
+        vp_indicator.setTabItemTitle(titles);
+        vp_indicator.setVisiableTabCount(3);
+        vp_indicator.setColorTabNormal(0xFF000000);
+        vp_indicator.setColorTabSelected(0xFFFD2741);
+        vp_indicator.setWidthIndicatorLine(0.5f);
+        vp_indicator.setLineBold(5);
+
+        fragments = new ArrayList<>();
+        fragments.add(new SchoolmateFragment());
+        fragments.add(new CountrymanFragment());
+        fragments.add(new CustomAddFragment());
+        vp_indicator.setViewPager(vp_search_people,0);
+        vp_indicator.setViewPagerAdapter(getSupportFragmentManager(),fragments);
     }
 
 
@@ -42,13 +76,8 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
         tv_headlift_view.setOnClickListener(this);
 
 
-        tv_cancle_search = (TextView) findViewById(R.id.tv_cancle_search);
-        tv_cancle_search.setOnClickListener(this);
-
-        rcv_search = (RecyclerView) findViewById(R.id.rcv_search);
-        rcv_search.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new PeopleSearchAdapter(this);
-        rcv_search.setAdapter(adapter);
+        vp_indicator = (ViewpagerIndicatorOver) findViewById(R.id.vp_indicator);
+        vp_search_people = (ViewPager) findViewById(R.id.vp_search_people);
 
     }
 
@@ -57,10 +86,6 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
         switch (view.getId()) {
             case R.id.tv_headlift_view:
                 finish();
-                break;
-
-            case R.id.tv_cancle_search:
-
                 break;
 
         }

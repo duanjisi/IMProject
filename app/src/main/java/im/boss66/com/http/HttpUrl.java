@@ -141,17 +141,17 @@ public class HttpUrl {
     //人脉首页
     public static final String CONNECTION_MY_INFO = MAIN_URL + "api/v1/contacts";
     //学校简介
-    public static final String SCHOOL_INFO =MAIN_URL+"web/school";
+    public static final String SCHOOL_INFO = MAIN_URL + "web/school";
     //家乡简介
-    public static final String HOMETOWN_INFO = MAIN_URL+"web/hometown";
+    public static final String HOMETOWN_INFO = MAIN_URL + "web/hometown";
     //社团列表
-    public static final String SCHOOL_CLUB_LIST = MAIN_URL+"api/v1/school/league";
+    public static final String SCHOOL_CLUB_LIST = MAIN_URL + "api/v1/school/league";
     //商会列表
-    public static final String HOMETOWN_CLUB_LIST =MAIN_URL+"api/v1/hometown/cofc";
+    public static final String HOMETOWN_CLUB_LIST = MAIN_URL + "api/v1/hometown/cofc";
     //学校名人
-    public static final String SCHOOL_FAMOUS_PEOPLE =MAIN_URL+"api/v1/school/celebrity";
+    public static final String SCHOOL_FAMOUS_PEOPLE = MAIN_URL + "api/v1/school/celebrity";
     //商会名人
-    public static final String BUSINESS_FAMOUS_PEOPLE =MAIN_URL+"api/v1/hometown/celebrity";
+    public static final String BUSINESS_FAMOUS_PEOPLE = MAIN_URL + "api/v1/hometown/celebrity";
     //获取消息列表
     public static final String GET_CIRCLE_MSG_LIST = MAIN_URL + "api/v1/message";
     //清空消息列表
@@ -159,5 +159,9 @@ public class HttpUrl {
     //获取最新朋友圈消息通知
     public static final String GET_CIRCLE_NEWEST_MSG = MAIN_URL + "api/v1/message/getnewest";
     //商会详情页
-    public static final String CLUB_DETATIL =MAIN_URL+"hometown/cofc";
+    public static final String CLUB_DETATIL = MAIN_URL + "hometown/cofc";
+    //学校动态
+    public static final String SCHOOL_NEWS = MAIN_URL + "api/v1/school/message";
+    //家乡动态
+    public static final String HOMETOWN_NEWS = MAIN_URL+"api/v1/hometown/message";
 }

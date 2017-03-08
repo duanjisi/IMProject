@@ -260,6 +260,10 @@
         <activity android:name=".activity.connection.EditNameActivity"></activity>
         <!--社团和商会页-->
         <activity android:name=".activity.connection.ClubActivity"></activity>
+        <!--家乡和校园动态-->
+        <activity android:name=".activity.connection.NewsActivity"></activity>
+
+
 
 
         <!-- 微信入口 -->
