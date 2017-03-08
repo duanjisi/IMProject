@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.media.MediaPlayer;
+import android.support.multidex.MultiDex;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -52,6 +54,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        MultiDex.install(this);
         mApplication = this;
         initFaceMap();
         initData();
@@ -72,6 +75,12 @@ public class App extends Application {
 //        mNotificationManager = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
         SharedPreferencesMgr.init(this, "liw");
 
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     public synchronized UserDB getUserDB() {
