@@ -1,14 +1,17 @@
 package im.boss66.com.activity.im;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.AddFriendRequest;
+
 /**
  * Created by Johnny on 2017/2/21.
  * 添加好友验证申请
@@ -68,8 +71,8 @@ public class VerifyApplyActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onSuccess(String pojo) {
                 cancelLoadingDialog();
-                finish();
                 showToast("已发送!", true);
+                finish();
             }
 
             @Override

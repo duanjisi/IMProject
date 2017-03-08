@@ -33,33 +33,35 @@
             android:textSize="18sp" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_01"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_below="@+id/rl_top_bar"
-        android:layout_marginLeft="11dp"
-        android:layout_marginRight="11dp"
-        android:layout_marginTop="11dp"
-        android:background="@drawable/chat_bottombar_bg">
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/rl_01"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="32dp"-->
+    <!--android:layout_below="@+id/rl_top_bar"-->
+    <!--android:layout_marginLeft="11dp"-->
+    <!--android:layout_marginRight="11dp"-->
+    <!--android:layout_marginTop="11dp"-->
+    <!--android:background="@drawable/chat_bottombar_bg">-->
 
-        <TextView
-            android:id="@+id/tv_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:drawableLeft="@drawable/hp_search_gnm"
-            android:drawablePadding="8dp"
-            android:text="搜索"
-            android:textColor="@color/bottom_text_color_default" />
-    </RelativeLayout>
-
+    <!--<TextView-->
+    <!--android:id="@+id/tv_search"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:drawableLeft="@drawable/hp_search_gnm"-->
+    <!--android:drawablePadding="8dp"-->
+    <!--android:text="搜索"-->
+    <!--android:textColor="@color/bottom_text_color_default" />-->
+    <!--</RelativeLayout>-->
+    <include
+        android:id="@+id/search_bar_view"
+        layout="@layout/search_top_bar" />
+    <!--android:background="@android:color/darker_gray"-->
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/darker_gray"
+        android:background="@color/white"
         android:scrollbars="none">
 
         <LinearLayout
@@ -76,5 +78,6 @@
         android:id="@+id/pager"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
         android:layout_weight="1"></android.support.v4.view.ViewPager>
 </LinearLayout>

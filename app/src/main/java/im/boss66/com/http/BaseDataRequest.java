@@ -2,23 +2,31 @@
  * Summary: App网络请求数据上传基础模型
  */
 package im.boss66.com.http;
+
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+
 import com.alibaba.fastjson.JSON;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+
 import net.jodah.typetools.TypeResolver;
+
 import java.io.IOException;
 import java.util.Map;
+
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.db.dao.JsonDao;
 import im.boss66.com.entity.JsonEntity;
+
 public abstract class BaseDataRequest<T> {
     private static String TAG = "BaseDataModel";
     private final Class<T> mGenericPojoClazz;
@@ -103,9 +111,9 @@ public abstract class BaseDataRequest<T> {
                                 }
                             });
                             break;
-//                        case 403://token无效，注销当前登录
-//                            deviceOutLine();
-//                            break;
+                        case 403://token无效，注销当前登录
+                            deviceOutLine();
+                            break;
                         case 10011:
                             //新增错误返回码：10011，通知移动端最近登录设备改变取消用户登录状态
                             MycsLog.d("收到了退出消息");
@@ -138,12 +146,12 @@ public abstract class BaseDataRequest<T> {
     /**
      * 本地数据库请求（获取JSON文本）
      */
-//    private void deviceOutLine() {
-////        logoutRequest();
-//        Intent intent = new Intent();
-//        intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-//        App.getInstance().sendBroadcast(intent);
-//    }
+    private void deviceOutLine() {
+//        logoutRequest();
+        Intent intent = new Intent();
+        intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+        App.getInstance().sendBroadcast(intent);
+    }
 
     private String dbRequest() {
         Map<String, String> map = getParams();

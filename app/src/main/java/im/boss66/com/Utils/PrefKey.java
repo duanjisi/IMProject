@@ -10,4 +10,5 @@ public class PrefKey {
     public static final String UN_READ_NEWS_KEY = MAIN_KEY + ".unread.news";
     public static final String NEWS_NOTICE_KEY = MAIN_KEY + ".news.notice";
     public static final String EMOJI_DOWNLOAD_KEY = MAIN_KEY + ".emoji.download";
+    public static final String CHAT_GROUP_INFORMS_FIRST = MAIN_KEY + ".chat.group.informs.setfirst";
 }

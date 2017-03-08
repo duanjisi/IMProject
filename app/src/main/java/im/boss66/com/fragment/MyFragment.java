@@ -1,27 +1,45 @@
 package im.boss66.com.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
 import im.boss66.com.R;
-import im.boss66.com.adapter.FaceAdapter;
-import im.boss66.com.db.dao.EmoHelper;
+import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.activity.im.EmojiEditActivity;
+import im.boss66.com.adapter.EmojiAdapter;
+import im.boss66.com.entity.BaseEditEmo;
+import im.boss66.com.entity.BaseEmo;
 import im.boss66.com.entity.EmoEntity;
+import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.request.EditEmosAllRequest;
+import im.boss66.com.http.request.EditEmosCateRequest;
+import im.boss66.com.http.request.EmosSearchRequest;
 import im.boss66.com.widget.MyGridView;
 
 public class MyFragment extends BaseFragment {
     private static final String TAG = MyFragment.class.getSimpleName();
-    private String title;
+    private String title, cateid;
     private View view;
+    private RelativeLayout rlNotify;
+    private Button btnRefresh;
     private MyGridView gridView;
-    private FaceAdapter adapter;
-    private ArrayList<EmoEntity> emos;
+    private EmojiAdapter adapter;
+
+
+    public void setCateid(String cateid) {
+        this.cateid = cateid;
+    }
 
     /**
      * 设置布局显示目标最大化
@@ -53,22 +71,54 @@ public class MyFragment extends BaseFragment {
 //        loadingLayout.setGravity(Gravity.CENTER);
 //        rootView = loadingLayout;
 //    }
-    public static MyFragment newInstance(String title) {
+    public static MyFragment newInstance(String title, String cateid) {
         MyFragment fragment = new MyFragment();
         Bundle args = new Bundle();
-        args.putString("groupId", title);
+        args.putString("title", title);
+        args.putString("cateid", cateid);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void search(String key) {
+        showLoadingDialog();
+        EmosSearchRequest request = new EmosSearchRequest(TAG, key, cateid, "1", "20");
+        request.send(new BaseDataRequest.RequestCallback<BaseEmo>() {
+            @Override
+            public void onSuccess(BaseEmo pojo) {
+                cancelLoadingDialog();
+                bindDatas(pojo);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                cancelLoadingDialog();
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void bindDatas(BaseEmo baseEmo) {
+        if (baseEmo != null) {
+            ArrayList<EmoEntity> list = baseEmo.getResult();
+            if (list != null && list.size() != 0) {
+                adapter.initData(list);
+            }
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 这里我只是简单的用num区别标签，其实具体应用中可以使用真实的fragment对象来作为叶片
-        title = getArguments() != null ? getArguments().getString("groupId") : "";
-        emos = (ArrayList<EmoEntity>) EmoHelper.getInstance().queryByGroupId(title);
-        Log.i("info", "====title" + title);
-        Log.i("info", "====emos.size()" + emos.size());
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            title = bundle.getString("title", "");
+            cateid = bundle.getString("cateid", "");
+            Log.i("info", "=======title:" + title + "\n" + "cateid:" + cateid);
+        }
+//        title = getArguments() != null ? getArguments().getString("title") : "";
+//        cateid = getArguments() != null ? getArguments().getString("cateid") : "";
     }
 
     /**
@@ -87,12 +137,68 @@ public class MyFragment extends BaseFragment {
     }
 
     private void initViews(View view) {
-//        ArrayList<EmoEntity> emos = (ArrayList<EmoEntity>) EmoHelper.getInstance().queryByGroupId(title);
         gridView = (MyGridView) view.findViewById(R.id.listView);
-        adapter = new FaceAdapter(getActivity());
+        rlNotify = (RelativeLayout) view.findViewById(R.id.rl_notify);
+        btnRefresh = (Button) view.findViewById(R.id.btn_refresh);
+        adapter = new EmojiAdapter(getActivity());
         gridView.setAdapter(adapter);
-        if (emos != null && emos.size() != 0) {
-            adapter.initData(emos);
+        gridView.setOnItemClickListener(new ItemClickListener());
+        requestEmos();
+    }
+
+    private void requestEmos() {
+        if (TextUtils.isEmpty(title)) {
+            return;
+        }
+        BaseDataRequest request;
+        if (title.equals("全部")) {
+            request = new EditEmosAllRequest(TAG, "1", "20");
+        } else {
+            request = new EditEmosCateRequest(TAG, cateid, "1", "20");
+        }
+        showLoadingDialog();
+        request.send(new BaseDataRequest.RequestCallback<BaseEditEmo>() {
+            @Override
+            public void onSuccess(BaseEditEmo pojo) {
+                cancelLoadingDialog();
+                bindDatas(pojo);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                cancelLoadingDialog();
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void bindDatas(BaseEditEmo baseEditEmo) {
+        if (baseEditEmo != null) {
+            ArrayList<EmoEntity> jokes = baseEditEmo.getEmo();
+            if (jokes != null && jokes.size() != 0) {
+                UIUtils.hindView(rlNotify);
+                UIUtils.showView(gridView);
+                adapter.initData(jokes);
+            } else {
+                UIUtils.hindView(gridView);
+                UIUtils.showView(rlNotify);
+            }
+        }
+    }
+
+    private class ItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            EmoEntity entity = (EmoEntity) adapterView.getItemAtPosition(i);
+//            intent.putExtra("camera_path", "http://pic6.huitu.com/res/20130116/84481_20130116142820494200_1.jpg");
+            String fromat = entity.getEmo_format();
+            if (!fromat.equals("gif")) {
+                Intent intent = new Intent(getActivity(), EmojiEditActivity.class);
+                intent.putExtra("camera_path", entity.getEmo_url());
+                startActivity(intent);
+            } else {
+                showToast("暂不支持gif图编辑", true);
+            }
         }
     }
 

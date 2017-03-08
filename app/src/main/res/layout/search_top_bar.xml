@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="4dp"
-        android:background="@drawable/chat_input"
+        android:background="@drawable/chat_bottombar_bg"
         android:visibility="visible">
 
         <TextView
@@ -40,9 +40,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:drawablePadding="6dp"
+            android:drawableLeft="@drawable/ease_search_bar_icon_normal"
+            android:drawablePadding="3dp"
+            android:gravity="center_vertical"
             android:text="搜索"
-            android:textColor="@color/black"
+            android:textColor="@color/gray_normal"
             android:textSize="16sp" />
     </RelativeLayout>
 
@@ -50,7 +52,7 @@
         android:id="@+id/rl_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/query"
@@ -58,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="4dp"
-            android:background="@drawable/chat_input"
+            android:background="@drawable/chat_bottombar_bg"
             android:drawableLeft="@drawable/ease_search_bar_icon_normal"
             android:focusable="true"
             android:focusableInTouchMode="true"

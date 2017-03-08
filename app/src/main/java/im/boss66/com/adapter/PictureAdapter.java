@@ -1,7 +1,6 @@
 package im.boss66.com.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.db.dao.EmoLoveHelper;
+import im.boss66.com.entity.EmoLove;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.EmoCollectionDeleteRequest;
 
@@ -29,7 +29,7 @@ public class PictureAdapter extends BasePicAdapter {
     private ImageLoader imageLoader;
     private Context context;
     private float mImageHeight;
-    private ArrayList<String> images;
+    private ArrayList<EmoLove> images;
     private boolean isAddPager = false;
 
 //    private boolean isFirst = false;
@@ -51,7 +51,7 @@ public class PictureAdapter extends BasePicAdapter {
         }
     }
 
-    public void addDatas(ArrayList<String> items) {
+    public void addDatas(ArrayList<EmoLove> items) {
         int totals = images.size() - 1;
         int count = 6 - totals;
         if (count > 0) {
@@ -65,14 +65,17 @@ public class PictureAdapter extends BasePicAdapter {
         }
     }
 
-    public void initData(ArrayList<String> list) {
+    public void initData(ArrayList<EmoLove> list) {
         images.clear();
         images.addAll(list);
-        images.add("lastItem");
+        EmoLove love = new EmoLove();
+        love.setEmo_url("lastItem");
+//        images.add("lastItem");
+        images.add(love);
         notifyDataSetChanged();
     }
 
-    public void initFaceData(ArrayList<String> list) {
+    public void initFaceData(ArrayList<EmoLove> list) {
         images.clear();
 //        if (isFirst) {
 //            images.add("firstItem");
@@ -81,8 +84,8 @@ public class PictureAdapter extends BasePicAdapter {
         notifyDataSetChanged();
     }
 
-    private ArrayList<String> getBefore(ArrayList<String> items, int count) {
-        ArrayList<String> list = new ArrayList<>();
+    private ArrayList<EmoLove> getBefore(ArrayList<EmoLove> items, int count) {
+        ArrayList<EmoLove> list = new ArrayList<>();
         if (count < items.size() || count == items.size()) {
             for (int i = 0; i < count; i++) {
                 list.add(items.get(i));
@@ -95,7 +98,7 @@ public class PictureAdapter extends BasePicAdapter {
         return list;
     }
 
-    public void addItem(String entity) {
+    public void addItem(EmoLove entity) {
         int totals = images.size() - 1;
         int count = 6 - totals;
         if (count > 0) {
@@ -109,7 +112,7 @@ public class PictureAdapter extends BasePicAdapter {
         }
     }
 
-    public void addDatas2(ArrayList<String> items) {
+    public void addDatas2(ArrayList<EmoLove> items) {
         int totals = images.size() - 1;
         int count = 9 - totals;
         if (count > 0) {
@@ -136,7 +139,7 @@ public class PictureAdapter extends BasePicAdapter {
 //        }
 //    }
 
-    public void addItem2(String entity) {
+    public void addItem2(EmoLove entity) {
         int totals = images.size() - 1;
         if (!images.contains(entity)) {
             addItem(entity, totals);
@@ -146,7 +149,7 @@ public class PictureAdapter extends BasePicAdapter {
         }
     }
 
-    public void addItem(String entity, int index) {
+    public void addItem(EmoLove entity, int index) {
         if (entity != null) {
             images.add(index, entity);
             notifyDataSetChanged();
@@ -198,7 +201,8 @@ public class PictureAdapter extends BasePicAdapter {
         convertView.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, GridView.LayoutParams.MATCH_PARENT));
         convertView.getLayoutParams().width = (int) mImageHeight;
         convertView.getLayoutParams().height = (int) mImageHeight;
-        final String imageUrl = images.get(position);
+        final EmoLove love = images.get(position);
+        String imageUrl = love.getEmo_url();
         if (imageUrl != null && !imageUrl.equals("")) {
             if (!imageUrl.equals("lastItem")) {
                 Log.i("info", "============aaaaaaaa");
@@ -215,7 +219,7 @@ public class PictureAdapter extends BasePicAdapter {
                             @Override
                             public void onClick(View v) {
 //                                removeItem(imageUrl);
-                                reuqestDeleteEmoLove(imageUrl);
+                                reuqestDeleteEmoLove(love);
                             }
                         });
                     }
@@ -229,35 +233,50 @@ public class PictureAdapter extends BasePicAdapter {
         return convertView;
     }
 
-    private void removeItem(String url) {
-        Iterator<String> stringIterator = images.iterator();
+    private void removeItem(EmoLove love) {
+        Iterator<EmoLove> stringIterator = images.iterator();
         while (stringIterator.hasNext()) {
-            String s = stringIterator.next();
-            if (s.equals(url)) {
-                EmoLoveHelper.getInstance().delete(url);
+            EmoLove s = stringIterator.next();
+            if (s.getCollect_id().equals(love.getCollect_id())) {
+                EmoLoveHelper.getInstance().delete(love);
                 stringIterator.remove();
             }
         }
-        if (!images.contains("lastItem")) {
-            images.add("lastItem");
+//        if (!images.contains("lastItem")) {
+//            images.add("lastItem");
+//        }
+
+        EmoLove emo = new EmoLove();
+        emo.setEmo_url("lastItem");
+        if (!isContain(emo)) {
+            images.add(emo);
         }
         notifyDataSetChanged();
     }
 
-    private void reuqestDeleteEmoLove(final String url) {
-        String collectid = EmoLoveHelper.getInstance().qureEmoByUrl(url);
-        if (TextUtils.isEmpty(collectid)) {
-            return;
+    private boolean isContain(EmoLove love) {
+        boolean flag = false;
+        for (EmoLove e : images) {
+            if (e.getEmo_url().equals(love.getEmo_url())) {
+                flag = true;
+            }
         }
+        return flag;
+    }
+
+    private void reuqestDeleteEmoLove(final EmoLove love) {
+//        String collectid = EmoLoveHelper.getInstance().qureEmoByUrl(url);
+//        if (TextUtils.isEmpty(collectid)) {
+//            return;
+//        }
         showLoadingDialog();
-        EmoCollectionDeleteRequest request = new EmoCollectionDeleteRequest(TAG, collectid);
+        EmoCollectionDeleteRequest request = new EmoCollectionDeleteRequest(TAG, love.getCollect_id());
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String pojo) {
                 cancelLoadingDialog();
-                removeItem(url);
+                removeItem(love);
             }
-
             @Override
             public void onFailure(String msg) {
                 cancelLoadingDialog();
@@ -279,17 +298,17 @@ public class PictureAdapter extends BasePicAdapter {
     public String[] getImages() {
         String[] strings = new String[images.size() - 1];
         for (int i = 0; i < strings.length; i++) {
-            strings[i] = images.get(i);
+            strings[i] = images.get(i).getEmo_url();
         }
         return strings;
     }
 
-    public ArrayList<String> getList() {
-        ArrayList<String> item = new ArrayList<>();
+    public ArrayList<EmoLove> getList() {
+        ArrayList<EmoLove> item = new ArrayList<>();
         for (int i = 0; i < images.size(); i++) {
-            String str = images.get(i);
-            if (!str.equals("lastItem")) {
-                item.add(str);
+            EmoLove love = images.get(i);
+            if (!love.getEmo_url().equals("lastItem")) {
+                item.add(love);
             }
         }
         return item;

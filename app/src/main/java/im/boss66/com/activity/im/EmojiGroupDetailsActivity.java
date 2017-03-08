@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -208,6 +209,7 @@ public class EmojiGroupDetailsActivity extends BaseActivity implements View.OnCl
     public void download(final EmojiInform entity) {
 //        final EmoBagEntity entity = adapter.getData().get(position);
         String dowloadUrl = entity.getUrl();
+        Log.i("info", "========dowloadUrl:" + dowloadUrl);
         final String fileName = FileUtils.getFileNameFromPath(dowloadUrl);
         final File file = new File(Constants.EMO_DIR_PATH, fileName);
         if (file.exists()) {
@@ -215,7 +217,7 @@ public class EmojiGroupDetailsActivity extends BaseActivity implements View.OnCl
         }
         http = new HttpUtils();
         sHandler = http.download(dowloadUrl, file.getPath().toString(), true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
-                true, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
+                false, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
                 new RequestCallBack<File>() {
                     @Override
                     public void onStart() {
@@ -239,10 +241,13 @@ public class EmojiGroupDetailsActivity extends BaseActivity implements View.OnCl
 
                     @Override
                     public void onSuccess(ResponseInfo<File> responseInfo) {
+                        Log.i("info", "============下载完成");
+                        Log.i("info", "========file.getPath:" + file.getPath());
                         ZipExtractorTask task = new ZipExtractorTask(file.getPath(), Constants.EMO_DIR_PATH,
                                 EmojiGroupDetailsActivity.this, true, new ZipExtractorTask.Callback() {
                             @Override
                             public void onPreExecute() {
+                                Log.i("info", "============开始解压");
                                 if (tv_download != null) {
                                     progressBar.setVisibility(View.GONE);
                                     tv_download.setVisibility(View.VISIBLE);
@@ -255,6 +260,7 @@ public class EmojiGroupDetailsActivity extends BaseActivity implements View.OnCl
                             @Override
                             public void onComplete() {//解压完成，删除压缩包文件
                                 FileUtil.deleteFile(file.getPath().toString());
+                                Log.i("info", "============解压完成");
                                 String filepath = Constants.EMO_DIR_PATH + File.separator + fileName.replace(".zip", ".json");
                                 EmoDbTask dbTask = new EmoDbTask(filepath, new EmoDbTask.dbTaskCallback() {//解析.json文件。保持db数据
                                     @Override

@@ -82,8 +82,9 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
     private class ItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String string = (String) parent.getItemAtPosition(position);
-            if (string.equals("lastItem")) {
+//            String string = (String) parent.getItemAtPosition(position);
+            EmoLove love = (EmoLove) parent.getItemAtPosition(position);
+            if (love.getEmo_url().equals("lastItem")) {
                 MultiImageSelector.create(context).
                         showCamera(true).
                         count(1)
@@ -158,14 +159,14 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
 
     private void requestAddStore(final String imageUrl) {
         EmoCollectionAddRequest request = new EmoCollectionAddRequest(TAG, imageUrl, "", "");
-        request.send(new BaseDataRequest.RequestCallback<String>() {
+        request.send(new BaseDataRequest.RequestCallback<EmoLove>() {
             @Override
-            public void onSuccess(String pojo) {
+            public void onSuccess(EmoLove love) {
                 cancelLoadingDialog();
-                EmoLove love = new EmoLove();
-                love.setEmo_url(imageUrl);
+//                EmoLove love = new EmoLove();
+//                love.setEmo_url(imageUrl);
                 EmoLoveHelper.getInstance().save(love);
-                adapter.addItem2(imageUrl);
+                adapter.addItem2(love);
                 showToast("添加成功!", true);
             }
 

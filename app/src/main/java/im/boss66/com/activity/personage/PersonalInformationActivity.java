@@ -2,33 +2,19 @@ package im.boss66.com.activity.personage;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
-import java.io.File;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
-import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
-import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.entity.AccountEntity;
-import im.boss66.com.http.HttpUrl;
-import im.boss66.com.widget.CircleImageView;
 
 /**
  * 个人信息
@@ -145,7 +131,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                 break;
             case R.id.rl_area://地区
                 isFirst = true;
-                openActivity(PersonalAreaProvinceActivity.class);
+//                openActivity(PersonalAreaProvinceActivity.class);
                 break;
             case R.id.rl_signature://个性签名
                 Bundle bundle2 = new Bundle();

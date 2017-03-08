@@ -17,6 +17,7 @@ import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.widget.DialogFactory;
 
@@ -34,6 +35,7 @@ public class BaseActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        App.getInstance().addTempActivity(this);
 //        AppManager.getInstance().push(this);
 //        overridePendingTransition(R.anim.slide_right_in,R.anim.slide_right_out);
         context = this;

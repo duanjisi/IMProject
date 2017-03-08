@@ -77,9 +77,9 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
 
     @Override
     public void save(EmoLove entity) {
-        String[] args = new String[]{entity.getEmo_url(), userId};
+        String[] args = new String[]{entity.getCollect_id(), userId};
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                getSelectSql(EmoLoveColumn.TABLE_NAME, new String[]{EmoLoveColumn.EMO_LOVE_URL, EmoLoveColumn.USER_ID}), args);
+                getSelectSql(EmoLoveColumn.TABLE_NAME, new String[]{EmoLoveColumn.EMO_LOVE_COLL_ID, EmoLoveColumn.USER_ID}), args);
         if (exist(c)) {
             this.update(entity);
         } else {
@@ -108,16 +108,16 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
         return bos;
     }
 
-    public ArrayList<String> qureList() {
+    public ArrayList<EmoLove> qureList() {
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
                 "SELECT * FROM " + EmoLoveColumn.TABLE_NAME +
                         " WHERE " + EmoLoveColumn.USER_ID
                         + " = ? ", new String[]{userId});
-        ArrayList<String> bos = new ArrayList<String>();
+        ArrayList<EmoLove> bos = new ArrayList<EmoLove>();
         if (exist(c)) {
             c.moveToLast();
             do {
-                bos.add(getBean(c).getEmo_url());
+                bos.add(getBean(c));
             } while (c.moveToPrevious());
         }
         c.close();
@@ -151,6 +151,12 @@ public class EmoLoveHelper extends ColumnHelper<EmoLove> {
         DBHelper.getInstance(mContext).delete(EmoLoveColumn.TABLE_NAME, EmoLoveColumn.EMO_LOVE_URL + " = ?" +
                         " and " + EmoLoveColumn.USER_ID + " =?",
                 new String[]{str, userId});
+    }
+
+    public void delete(EmoLove love) {//删除某一组
+        DBHelper.getInstance(mContext).delete(EmoLoveColumn.TABLE_NAME, EmoLoveColumn.EMO_LOVE_COLL_ID + " = ?" +
+                        " and " + EmoLoveColumn.USER_ID + " =?",
+                new String[]{love.getCollect_id(), userId});
     }
 
     /**

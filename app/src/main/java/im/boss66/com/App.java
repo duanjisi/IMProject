@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.media.MediaPlayer;
+import android.support.multidex.MultiDex;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,7 +21,6 @@ import im.boss66.com.db.RecentDB;
 import im.boss66.com.db.UserDB;
 import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.AccountEntity;
-import im.boss66.com.entity.LocalAddressEntity;
 
 public class App extends Application {
     public final static String API_KEY = "fiWrR2Ki8NkR6r5GHdM2lY7j";
@@ -44,7 +45,7 @@ public class App extends Application {
     //    private Gson mGson;
     private AccountEntity sAccount;
     private List<Activity> tempActivityList;
-    private LocalAddressEntity.SecondChild localAddress;
+//    private LocalAddressEntity.SecondChild localAddress;
 
     public synchronized static App getInstance() {
         return mApplication;
@@ -53,6 +54,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        MultiDex.install(this);
         mApplication = this;
         initFaceMap();
         initData();
@@ -73,6 +75,12 @@ public class App extends Application {
 //        mNotificationManager = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
         SharedPreferencesMgr.init(this, "liw");
 
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     public synchronized UserDB getUserDB() {
@@ -368,12 +376,19 @@ public class App extends Application {
         return tempActivityList;
     }
 
-    public LocalAddressEntity.SecondChild getLocalAddress() {
-        return localAddress;
+    //遍历所有Activity并finish
+    public void exit() {
+        for (Activity activity : tempActivityList) {
+            activity.finish();
+        }
+        System.exit(0);
     }
-
-    public void setLocalAddress(LocalAddressEntity.SecondChild localAddress) {
-        this.localAddress = localAddress;
-    }
+//    public LocalAddressEntity.SecondChild getLocalAddress() {
+//        return localAddress;
+//    }
+//
+//    public void setLocalAddress(LocalAddressEntity.SecondChild localAddress) {
+//        this.localAddress = localAddress;
+//    }
 
 }

@@ -28,6 +28,7 @@ import im.boss66.com.activity.im.EmojiAddActivity;
 import im.boss66.com.adapter.FacePageAdeapter;
 import im.boss66.com.adapter.PictureAdapter;
 import im.boss66.com.db.dao.EmoLoveHelper;
+import im.boss66.com.entity.EmoLove;
 
 /**
  * Created by Johnny on 2017/2/10.
@@ -37,7 +38,7 @@ public class FaceLoveFragment extends BaseFragment {
     private String title;
     private View view;
     private ImageView[] imageViews;
-    private ArrayList<String> emos = new ArrayList<>();
+    private ArrayList<EmoLove> emos = new ArrayList<>();
     private ViewPager viewPager;
     private LinearLayout linearLayout;
     private int pagers = 1;
@@ -60,11 +61,18 @@ public class FaceLoveFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_pager_list2, null);
-            initViews(view);
-        }
-        return view;
+//        if (view == null) {
+//            view = inflater.inflate(R.layout.fragment_pager_list2, null);
+//            initViews(view);
+//        }
+//        return view;
+        return inflater.inflate(R.layout.fragment_pager_list2, null);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initViews(view);
     }
 
     private void initViews(View view) {
@@ -76,8 +84,10 @@ public class FaceLoveFragment extends BaseFragment {
     private void initData() {
         emos.clear();
         linearLayout.removeAllViews();
-        ArrayList<String> list = (ArrayList<String>) EmoLoveHelper.getInstance().qureList();
-        emos.add("firstItem");
+        ArrayList<EmoLove> list = (ArrayList<EmoLove>) EmoLoveHelper.getInstance().qureList();
+        EmoLove love = new EmoLove();
+        love.setEmo_url("firstItem");
+        emos.add(love);
         emos.addAll(list);
         Log.i("info", "====size:" + emos.size());
         size = emos.size();
@@ -136,18 +146,17 @@ public class FaceLoveFragment extends BaseFragment {
     private class ItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            String string = (String) adapterView.getItemAtPosition(i);
-            if (string.equals("firstItem")) {
+            EmoLove love = (EmoLove) adapterView.getItemAtPosition(i);
+            if (love.getEmo_url().equals("firstItem")) {
                 Intent intent = new Intent(getActivity(), EmojiAddActivity.class);
                 startActivityForResult(intent, 101);
             } else {
                 if (callback != null) {
-                    callback.onItemLoveClick(string);
+                    callback.onItemLoveClick(love.getEmo_url());
                 }
             }
         }
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -168,8 +177,8 @@ public class FaceLoveFragment extends BaseFragment {
         void onItemLoveClick(String image);
     }
 
-    private ArrayList<String> getList(int start, int end) {
-        ArrayList<String> list = new ArrayList<>();
+    private ArrayList<EmoLove> getList(int start, int end) {
+        ArrayList<EmoLove> list = new ArrayList<>();
         for (int i = start; i < end; i++) {
             list.add(emos.get(i));
         }

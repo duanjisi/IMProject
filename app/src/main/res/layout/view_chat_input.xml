@@ -147,7 +147,7 @@
                 android:text="发送"
                 android:textColor="@color/white"
                 android:textSize="16.5sp"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </LinearLayout>
     </RelativeLayout>
 

@@ -15,6 +15,10 @@ android {
         }
     }
 
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
     defaultConfig {
         applicationId "im.boss66.com"
         minSdkVersion 16
@@ -25,7 +29,7 @@ android {
         ndk {
             //abiFilters "armeabi"
             //设置支持的SO库架构
-            abiFilters 'armeabi','x86'
+            abiFilters 'armeabi'
             moduleName "app"
         }
     }

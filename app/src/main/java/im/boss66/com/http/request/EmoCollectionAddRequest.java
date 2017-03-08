@@ -3,13 +3,14 @@ package im.boss66.com.http.request;
 import java.util.HashMap;
 import java.util.Map;
 
+import im.boss66.com.entity.EmoLove;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
 
 /**
  * Created by Johnny on 2017/2/20.
  */
-public class EmoCollectionAddRequest extends BaseDataRequest<String> {
+public class EmoCollectionAddRequest extends BaseDataRequest<EmoLove> {
 
     public EmoCollectionAddRequest(String tag, Object... params) {
         super(tag, params);
@@ -17,7 +18,7 @@ public class EmoCollectionAddRequest extends BaseDataRequest<String> {
 
     @Override
     protected boolean isParse() {
-        return false;
+        return true;
     }
 
     @Override

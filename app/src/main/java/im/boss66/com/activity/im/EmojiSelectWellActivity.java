@@ -3,6 +3,7 @@ package im.boss66.com.activity.im;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
@@ -129,7 +130,9 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
         final EmoBagEntity entity = adapter.getData().get(position);
 //        String path = this.getFilesDir().getAbsolutePath();
         String dowloadUrl = entity.getDownload();
+        Log.i("info", "========dowloadUrl:" + dowloadUrl);
         final String fileName = FileUtils.getFileNameFromPath(dowloadUrl);
+        Log.i("info", "========fileName:" + fileName);
         final File file = new File(Constants.EMO_DIR_PATH, fileName);
         if (file.exists()) {
             file.delete();
@@ -152,8 +155,9 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
         }
         final ProgressBar progressBar = item;
         final TextView tv_download = textView;
+        Log.i("info", "========file.getPath().toString():" + file.getPath().toString());
         sHandler = http.download(dowloadUrl, file.getPath().toString(), true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
-                true, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
+                false, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
                 new RequestCallBack<File>() {
                     @Override
                     public void onStart() {
@@ -211,6 +215,8 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
 //                            tv_download.setTextColor(resources.getColor(R.color.btn_green_noraml));
 //                            tv_download.setBackgroundResource(R.drawable.bg_frame_emo_default);
 //                        }
+                        Log.i("info", "============下载完成");
+                        Log.i("info", "========file.getPath:" + file.getPath());
                         ZipExtractorTask task = new ZipExtractorTask(file.getPath(), Constants.EMO_DIR_PATH,
                                 EmojiSelectWellActivity.this, true, new ZipExtractorTask.Callback() {
                             @Override
