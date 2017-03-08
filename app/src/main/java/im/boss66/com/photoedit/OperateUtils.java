@@ -21,13 +21,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import im.boss66.com.R;
 import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.util.Utils;
 
 /**
  * 添加文字图片工具类
@@ -42,6 +50,18 @@ public class OperateUtils {
     public static final int LEFTBOTTOM = 3;
     public static final int RIGHTBOTTOM = 4;
     public static final int CENTER = 5;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+
+
+            }
+        }
+    };
 
     public OperateUtils(Activity activity) {
         this.activity = activity;
@@ -65,7 +85,14 @@ public class OperateUtils {
         opt.inPreferredConfig = Bitmap.Config.RGB_565;
         opt.inPurgeable = true;
         opt.inInputShareable = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(filePath, opt);
+//        Bitmap bitmap = BitmapFactory.decodeFile(filePath, opt);
+
+//        InputStream inputStream = getImageStream(filePath);
+//        Log.i("info", "======inputStream:" + inputStream);
+//        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+        Bitmap bitmap = Utils.returnBitmap(filePath);
+        Log.i("info", "======bitmap:" + bitmap);
+
         int layoutHeight = contentView.getHeight();
         float scale = 0f;
         int bitmapHeight = bitmap.getHeight();
@@ -85,6 +112,26 @@ public class OperateUtils {
             resizeBmp = bitmap;
         }
         return resizeBmp;
+    }
+
+    /**
+     * 从网络上获取图片,并返回输入流
+     *
+     * @param path 图片的完整地址
+     * @return InputStream
+     * @throws Exception
+     */
+    public InputStream getImageStream(String path) throws Exception {
+        Log.i("info", "================getImageStream()");
+        URL url = new URL(path);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setReadTimeout(10 * 1000);
+        conn.setConnectTimeout(10 * 1000);
+        conn.setRequestMethod("GET");
+        if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            return conn.getInputStream();
+        }
+        return null;
     }
 
     /**

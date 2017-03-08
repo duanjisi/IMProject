@@ -1,16 +1,20 @@
 package im.boss66.com.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-
 import com.facebook.drawee.backends.pipeline.Fresco;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -57,6 +61,11 @@ public class MainActivity extends BaseActivity implements Observer {
     private AccountEntity account;
     private RadioGroup mRadioGroup;
     private ArrayList<Fragment> mFragments = new ArrayList<Fragment>();
+    private HomePagerFragment homePagerFragment;
+    private ContactBooksFragment contactBooksFragment;
+    private ContactsFragment contactsFragment;
+    private DiscoverFragment discoverFragment;
+    private MineFragment mineFragment;
     private ViewPager mViewPager;
     private RadioButton rbHomePager, rbBooks, rbContacts, rbDiscover, rbMine;
     //    private ImageView ivSearch, ivAdd;
@@ -64,8 +73,7 @@ public class MainActivity extends BaseActivity implements Observer {
 //    private String userid, uid;
 
     private PeopleDataDialog peopleDataDialog;
-//    private SimpleDraweeView simpleDrawee00, simpleDrawee01;
-
+    //    private SimpleDraweeView simpleDrawee00, simpleDrawee01;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +99,7 @@ public class MainActivity extends BaseActivity implements Observer {
         rbMine = (RadioButton) findViewById(R.id.rb_mine);
         rbContacts = (RadioButton) findViewById(R.id.rb_contact);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
+
         mRadioGroup.setOnCheckedChangeListener(new CheckListener());
         addData();
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -100,13 +109,26 @@ public class MainActivity extends BaseActivity implements Observer {
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(new MyPageChangeListener());
         mViewPager.setCurrentItem(VIEW_PAGER_PAGE_1);
-//        Intent intent = new Intent(context, ChatServices.class);
-//        intent.putExtra("userid", account.getUser_id());
-//        startService(intent);
+        Intent intent = new Intent(context, ChatServices.class);
+        intent.putExtra("userid", account.getUser_id());
+        startService(intent);
         ChatServices.startChatService(context);
         getPermission(PermissionUtil.PERMISSIONS_SYSTEM_SETTING);
         requestLoveStore();
 //        loadGif();
+    }
+
+    public InputStream getImageStream(String path) throws Exception {
+        Log.i("info", "================getImageStream()");
+        URL url = new URL(path);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setReadTimeout(10 * 1000);
+        conn.setConnectTimeout(10 * 1000);
+        conn.setRequestMethod("GET");
+        if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            return conn.getInputStream();
+        }
+        return null;
     }
 
 
@@ -333,15 +355,30 @@ public class MainActivity extends BaseActivity implements Observer {
     }
 
     private void addData() {
-        Fragment fragment = new HomePagerFragment();
+//        Fragment fragment = new HomePagerFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putString("userid", account.getUser_id());
+//        fragment.setArguments(bundle);
+//        mFragments.add(fragment);
+//        mFragments.add(new ContactBooksFragment());
+//        mFragments.add(new ContactsFragment());
+//        mFragments.add(new DiscoverFragment());
+//        mFragments.add(new MineFragment());
+
+        homePagerFragment = new HomePagerFragment();
         Bundle bundle = new Bundle();
         bundle.putString("userid", account.getUser_id());
-        fragment.setArguments(bundle);
-        mFragments.add(fragment);
-        mFragments.add(new ContactBooksFragment());
-        mFragments.add(new ContactsFragment());
-        mFragments.add(new DiscoverFragment());
-        mFragments.add(new MineFragment());
+        homePagerFragment.setArguments(bundle);
+        contactBooksFragment = new ContactBooksFragment();
+        contactsFragment = new ContactsFragment();
+        discoverFragment = new DiscoverFragment();
+        mineFragment = new MineFragment();
+
+        mFragments.add(homePagerFragment);
+        mFragments.add(contactBooksFragment);
+        mFragments.add(contactsFragment);
+        mFragments.add(discoverFragment);
+        mFragments.add(mineFragment);
     }
 
 
@@ -479,5 +516,14 @@ public class MainActivity extends BaseActivity implements Observer {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mFragments != null) {
+            mFragments.clear();
+            mFragments = null;
+        }
+        homePagerFragment = null;
+        contactsFragment = null;
+        contactBooksFragment = null;
+        discoverFragment = null;
+        mineFragment = null;
     }
 }

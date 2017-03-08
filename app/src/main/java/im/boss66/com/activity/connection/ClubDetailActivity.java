@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.OptionsPickerView;
+//import com.bigkoo.pickerview.OptionsPickerView;
 
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
@@ -16,7 +16,7 @@ public class ClubDetailActivity extends ABaseActivity implements View.OnClickLis
 
     private TextView tv_location;
 
-    private OptionsPickerView pvOptions; // 三级联动
+//    private OptionsPickerView pvOptions; // 三级联动
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

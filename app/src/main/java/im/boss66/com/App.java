@@ -18,7 +18,6 @@ import im.boss66.com.db.RecentDB;
 import im.boss66.com.db.UserDB;
 import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.AccountEntity;
-import im.boss66.com.entity.LocalAddressEntity;
 
 public class App extends Application {
     public final static String API_KEY = "fiWrR2Ki8NkR6r5GHdM2lY7j";
@@ -43,7 +42,7 @@ public class App extends Application {
     //    private Gson mGson;
     private AccountEntity sAccount;
     private List<Activity> tempActivityList;
-    private LocalAddressEntity.SecondChild localAddress;
+//    private LocalAddressEntity.SecondChild localAddress;
 
     public synchronized static App getInstance() {
         return mApplication;
@@ -365,12 +364,19 @@ public class App extends Application {
         return tempActivityList;
     }
 
-    public LocalAddressEntity.SecondChild getLocalAddress() {
-        return localAddress;
+    //遍历所有Activity并finish
+    public void exit() {
+        for (Activity activity : tempActivityList) {
+            activity.finish();
+        }
+        System.exit(0);
     }
-
-    public void setLocalAddress(LocalAddressEntity.SecondChild localAddress) {
-        this.localAddress = localAddress;
-    }
+//    public LocalAddressEntity.SecondChild getLocalAddress() {
+//        return localAddress;
+//    }
+//
+//    public void setLocalAddress(LocalAddressEntity.SecondChild localAddress) {
+//        this.localAddress = localAddress;
+//    }
 
 }

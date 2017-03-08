@@ -142,6 +142,7 @@
         android:layout_above="@id/bottom_layout"
         android:background="@color/background_color" />
 
+
     <!--<com.facebook.drawee.view.SimpleDraweeView-->
     <!--android:id="@+id/iv_gif_00"-->
     <!--android:layout_width="80dp"-->

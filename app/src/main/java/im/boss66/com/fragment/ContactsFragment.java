@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +12,12 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import im.boss66.com.R;
-import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.connection.SchoolHometownActivity;
-import im.boss66.com.adapter.MyHometownAdapter;
 import im.boss66.com.adapter.MySchoolAdapter;
 import im.boss66.com.entity.MySchool;
 import im.boss66.com.listener.RecycleViewItemListener;
@@ -106,8 +103,6 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         tv_hometown_info = (TextView) view.findViewById(R.id.tv_hometown_info);
         rl_my_hometown = (RelativeLayout) view.findViewById(R.id.rl_my_hometown);
         rl_my_hometown.setOnClickListener(this);
-
-
     }
 
 

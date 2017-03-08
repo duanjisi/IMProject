@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,6 +36,7 @@ import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.SoundUtil;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.activity.discover.ImagePagerActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.activity.discover.VideoPlayerActivity;
 import im.boss66.com.db.dao.EmoHelper;
@@ -87,7 +89,7 @@ public class MessageAdapter extends BaseAdapter {
 
     public MessageAdapter(Context context, List<MessageItem> msgList) {
         this.mContext = context;
-        widthScreen = UIUtils.getScreenWidth(context);
+        widthScreen = UIUtils.getScreenWidth(context) / 2;
         mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 3;
         resources = context.getResources();
         mMsgList = msgList;
@@ -252,7 +254,7 @@ public class MessageAdapter extends BaseAdapter {
             if (msgType == MessageItem.MESSAGE_TYPE_EMOTION) {
                 handleEmotionMessage((EmotionMessageHolder) holder, mItem, parent);
             } else if (msgType == MessageItem.MESSAGE_TYPE_IMG) {
-                handleImageMessage((ImageMessageHolder) holder, mItem, parent);
+                handleImageMessage((ImageMessageHolder) holder, mItem, parent, position);
             } else if (msgType == MessageItem.MESSAGE_TYPE_TXT) {
                 handleTextMessage((TextMessageHolder) holder, mItem, parent);
             } else if (msgType == MessageItem.MESSAGE_TYPE_AUDIO) {
@@ -449,13 +451,26 @@ public class MessageAdapter extends BaseAdapter {
      * @Description 处理图片消息
      */
     private void handleImageMessage(final ImageMessageHolder holder,
-                                    final MessageItem mItem, final View parent) {
+                                    final MessageItem mItem, final View parent, final int position) {
         handleBaseMessage(holder, mItem);
         String imageUrl = mItem.getMessage();
         // 图片文件
         if (imageUrl != null && !imageUrl.equals("")) {
             Log.i("info", "=====imageUrl:" + imageUrl);
             scalLoadImage(holder, imageUrl);
+            holder.ivphoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ImagePagerActivity.ImageSize imageSize = new ImagePagerActivity.ImageSize(view.getMeasuredWidth(), view.getMeasuredHeight());
+                    List<String> photoUrls = new ArrayList<String>();
+                    for (MessageItem item : mMsgList) {
+                        if (item.getMsgType() == MessageItem.MESSAGE_TYPE_IMG) {
+                            photoUrls.add(item.getMessage());
+                        }
+                    }
+                    ImagePagerActivity.startImagePagerActivity(mContext, photoUrls, position, imageSize, false);
+                }
+            });
 //            Bitmap bitmap = imageLoader.loadImageSync(imageUrl);
 //            Log.i("info", "=====bitmap:" + bitmap);
 
@@ -523,12 +538,24 @@ public class MessageAdapter extends BaseAdapter {
         String[] size = getSize(url);
         int width = Integer.parseInt(size[0]);
         int height = Integer.parseInt(size[1]);
-        if (width > widthScreen / 2) {
-            Log.i("info", "=====width:" + width + "\n" + "height:" + height);
-            holder.ivphoto.getLayoutParams().width = width / 2;
-            holder.ivphoto.getLayoutParams().height = height / 2;
-        }
+//        if (width > widthScreen / 2) {
+//            Log.i("info", "=====width:" + width + "\n" + "height:" + height);
+//            holder.ivphoto.getLayoutParams().width = width / 2;
+//            holder.ivphoto.getLayoutParams().height = height / 2;
+//        }
+        scaleSize(holder.ivphoto, width, height);
         imageLoader.displayImage(url, holder.ivphoto, ImageLoaderUtils.getDisplayImageOptions());
+    }
+
+    private void scaleSize(ImageView iv, int w, int h) {
+        int width = w;
+        int height = h;
+        while (width > widthScreen) {
+            width = width / 2;
+            height = height / 2;
+        }
+        iv.getLayoutParams().width = width;
+        iv.getLayoutParams().height = height;
     }
 
     private String[] getSize(String url) {
@@ -541,11 +568,12 @@ public class MessageAdapter extends BaseAdapter {
         String[] size = getSize(url);
         int width = Integer.parseInt(size[0]);
         int height = Integer.parseInt(size[1]);
-        if (width > widthScreen / 2) {
-            Log.i("info", "=====width:" + width + "\n" + "height:" + height);
-            holder.iv_cover.getLayoutParams().width = width / 2;
-            holder.iv_cover.getLayoutParams().height = height / 2;
-        }
+//        if (width > widthScreen / 2) {
+//            Log.i("info", "=====width:" + width + "\n" + "height:" + height);
+//            holder.iv_cover.getLayoutParams().width = width / 2;
+//            holder.iv_cover.getLayoutParams().height = height / 2;
+//        }
+        scaleSize(holder.iv_cover, width, height);
         imageLoader.displayImage(url, holder.iv_cover, ImageLoaderUtils.getDisplayImageOptions());
     }
 

@@ -1,6 +1,7 @@
 package im.boss66.com.activity.personage;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -8,9 +9,8 @@ import android.widget.TextView;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Session;
-import im.boss66.com.activity.LoginActivity;
+import im.boss66.com.activity.SplashActivity;
 import im.boss66.com.activity.base.BaseActivity;
-import im.boss66.com.services.ChatServices;
 import im.boss66.com.widget.ActionSheet;
 
 /**
@@ -20,6 +20,7 @@ public class PersonalSetActivity extends BaseActivity implements View.OnClickLis
 
     private TextView tv_back, tv_title, tv_exit_login;
     private RelativeLayout rl_safe, rl_new_alerts, rl_privacy, rl_general, rl_help_feedback, rl_about;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,10 +92,23 @@ public class PersonalSetActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onClick(int which) {//退出登录
+        Session.getInstance().stopChatService();
         App.getInstance().logout();
-        ChatServices.stopChatService(context);
-        Session.getInstance().exitActivitys();
-        openActivity(LoginActivity.class);
-        finish();
+//        ChatServices.stopChatService(context);
+
+//        Session.getInstance().exitActivitys();
+//        Intent intent = new Intent();
+//        intent.setClass(PersonalSetActivity.this, LoginActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        startActivity(intent);
+//        finish();
+//        ChatServices.stopChatService(context);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                openActivity(SplashActivity.class);
+                App.getInstance().exit();
+            }
+        }, 100);
     }
 }

@@ -41,6 +41,7 @@ public class FaceFragment extends BaseFragment {
     private LinearLayout linearLayout;
     private int pagers = 1;
     private int size = 0;
+
     public static FaceFragment newInstance(String title) {
         FaceFragment fragment = new FaceFragment();
         Bundle args = new Bundle();
@@ -67,11 +68,18 @@ public class FaceFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_pager_list2, null);
-            initViews(view);
-        }
-        return view;
+//        if (view == null) {
+//            view = inflater.inflate(R.layout.fragment_pager_list2, null);
+//            initViews(view);
+//        }
+//        return view;
+        return inflater.inflate(R.layout.fragment_pager_list2, null);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initViews(view);
     }
 
     private void initViews(View view) {

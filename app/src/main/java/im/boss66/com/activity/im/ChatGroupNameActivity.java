@@ -75,9 +75,9 @@ public class ChatGroupNameActivity extends BaseActivity implements View.OnClickL
             showLoadingDialog();
             UpdateGroupInformRequest request;
             if (isNotice) {
-                request = new UpdateGroupInformRequest(TAG, string, inform.getName());
+                request = new UpdateGroupInformRequest(TAG, inform.getGroupid(), string, inform.getName());
             } else {
-                request = new UpdateGroupInformRequest(TAG, inform.getNotice(), string);
+                request = new UpdateGroupInformRequest(TAG, inform.getGroupid(), inform.getNotice(), string);
             }
             request.send(new BaseModelRequest.RequestCallback<String>() {
                 @Override

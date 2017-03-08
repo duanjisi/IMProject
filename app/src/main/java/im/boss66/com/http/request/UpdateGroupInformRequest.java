@@ -22,9 +22,11 @@ public class UpdateGroupInformRequest extends BaseModelRequest<String> {
 
     @Override
     protected Map<String, String> getParams() {
-        String notice = (String) mParams[0];
-        String name = (String) mParams[1];
+        String groupid = (String) mParams[0];
+        String notice = (String) mParams[1];
+        String name = (String) mParams[2];
         Map<String, String> map = new HashMap<String, String>();
+        map.put("groupid", groupid);
         map.put("notice", notice);
         map.put("name", name);
         return map;
