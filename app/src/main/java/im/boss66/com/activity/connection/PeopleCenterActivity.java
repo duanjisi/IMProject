@@ -1,29 +1,35 @@
 package im.boss66.com.activity.connection;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
+import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.github.jdsjlzx.recyclerview.LRecyclerView;
+import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
 
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
+import im.boss66.com.entity.FriendCircle;
 
 /**
  * 人脉中心
  * Created by liw on 2017/2/21.
  */
 public class PeopleCenterActivity extends ABaseActivity implements View.OnClickListener {
-    private TextView tv_name;
-    private TextView tv_change_info;
-    private TextView tv_collage;
-    private TextView tv_location;
+    private LRecyclerView rcv_news;
+    private LRecyclerViewAdapter mLRecyclerViewAdapter = null;
 
-    private TextView tv_my_follow;
-    private TextView tv_my_information;
-
-    private ImageView img_headimg;
-
+    private LinearLayout ll_edit_text;
+    private EditText et_send;
+    private Button bt_send;
 
 
     @Override
@@ -36,42 +42,34 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
     protected void initViews() {
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
-        iv_headright_view = (ImageView) findViewById(R.id.iv_headright_view);
         tv_headlift_view.setOnClickListener(this);
         tv_headcenter_view.setText("人脉中心");
 
-        tv_name = (TextView) findViewById(R.id.tv_name);
-        tv_change_info = (TextView) findViewById(R.id.tv_change_info);
-        tv_collage = (TextView) findViewById(R.id.tv_collage);
-        tv_location = (TextView) findViewById(R.id.tv_location);
-        tv_my_follow = (TextView) findViewById(R.id.tv_my_follow);
-        tv_my_information = (TextView) findViewById(R.id.tv_my_information);
+        ll_edit_text = (LinearLayout) findViewById(R.id.ll_edit_text);
 
-        img_headimg = (ImageView) findViewById(R.id.img_headimg);
+        et_send = (EditText) findViewById(R.id.et_send);
+        bt_send = (Button) findViewById(R.id.bt_send);
+        bt_send.setOnClickListener(this);
 
-        tv_my_follow.setOnClickListener(this);
-        tv_my_information.setOnClickListener(this);
-        tv_change_info.setOnClickListener(this);
+        //rcv 设置
+        rcv_news = (LRecyclerView) findViewById(R.id.rcv_news);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(OrientationHelper.VERTICAL);
+        rcv_news.setLayoutManager(layoutManager);
+
+        ((DefaultItemAnimator) rcv_news.getItemAnimator()).setSupportsChangeAnimations(false);
+
+
     }
 
     @Override
     public void onClick(View view) {
-        Intent intent = null;
         switch (view.getId()){
             case R.id.tv_headlift_view:
                 finish();
                 break;
-            case R.id.tv_my_follow:
-//                intent = new Intent(this, MyFollowActivity.class);
-//                startActivity(intent);
-                break;
-            case R.id.tv_my_information:
-                intent = new Intent(this, MyMessageActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.tv_change_info:
-                showToast("修改资料",false);
-                break;
+
+
         }
     }
 }

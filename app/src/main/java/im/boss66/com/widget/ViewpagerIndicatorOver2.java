@@ -20,7 +20,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import java.util.List;
 
 import im.boss66.com.R;
@@ -32,7 +31,7 @@ import im.boss66.com.R;
  * Created by Administrator on 2017/1/6.
  */
 
-public class ViewpagerIndicatorOver extends LinearLayout {
+public class ViewpagerIndicatorOver2 extends LinearLayout {
     /**
      * 画笔
      */
@@ -83,11 +82,11 @@ public class ViewpagerIndicatorOver extends LinearLayout {
     private int COLOR_TEXT_HIGHLIFHT = 0xFF49C4E6;
     private int COLOR_INDICATOR_LINE = 0xFFFD2741;
 
-    public ViewpagerIndicatorOver(Context context) {
+    public ViewpagerIndicatorOver2(Context context) {
         this(context, null);
     }
 
-    public ViewpagerIndicatorOver(Context context, AttributeSet attrs) {
+    public ViewpagerIndicatorOver2(Context context, AttributeSet attrs) {
         super(context, attrs);
         //可见tab数量
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ViewpagerIndicatorOver);
@@ -105,7 +104,7 @@ public class ViewpagerIndicatorOver extends LinearLayout {
         mPaint.setStyle(Paint.Style.FILL);
     }
 
-    public ViewpagerIndicatorOver(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ViewpagerIndicatorOver2(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -297,6 +296,9 @@ public class ViewpagerIndicatorOver extends LinearLayout {
                     mListenr.onPageSelected(position);
                 }
                 highLightText(position);
+
+                listener.setText(position);
+
             }
 
             @Override
@@ -370,4 +372,13 @@ public class ViewpagerIndicatorOver extends LinearLayout {
         }
     }
 
+    public interface ICallBack {
+        void setText(int position);
+    }
+
+    private ICallBack listener;
+
+    public void setListener(ICallBack listener) {
+        this.listener = listener;
+    }
 }

@@ -6,34 +6,4 @@
     android:layout_height="match_parent">
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="13dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="13.2dp"
-        android:layout_marginTop="13dp"
-        android:background="@drawable/shape_edittext"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
-
-        <ImageView
-            android:id="@+id/img_search"
-            android:layout_width="14.3dp"
-            android:layout_height="14.3dp"
-            android:layout_margin="8.8dp"
-            android:src="@drawable/search_gray" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="3dp"
-            android:layout_toRightOf="@id/img_search"
-            android:background="@null"
-            android:clickable="true"
-            android:hint="搜索"
-            android:textColorHint="@color/text_color_gray_6" />
-
-    </RelativeLayout>
 </LinearLayout>

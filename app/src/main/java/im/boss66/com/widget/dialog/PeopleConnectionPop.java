@@ -21,6 +21,7 @@ public class PeopleConnectionPop extends BasePopuWindow implements View.OnClickL
     public PeopleConnectionPop(Context context) {
         super(context);
         this.context = context;
+
     }
 
     @Override
