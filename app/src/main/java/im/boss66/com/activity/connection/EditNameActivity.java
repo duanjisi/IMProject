@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ public class EditNameActivity extends BaseActivity implements View.OnClickListen
 
     private void initViews() {
         et_name = (EditText) findViewById(R.id.et_name);
+
         tv_headright_view = (TextView) findViewById(R.id.tv_headright_view);
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headlift_view.setOnClickListener(this);

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -210,6 +211,7 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
 
             case R.id.rl_school:
                 Intent intent = new Intent(this, SearchSchoolActivity.class);
+                intent.putExtra("schoolType",schoolType);
 
                 startActivityForResult(intent, 1);
                 break;
@@ -269,8 +271,7 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
 
     private void showAddressSelection() {
         if (dialog2 == null) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    this);
+            dialog2 = new Dialog(context, R.style.Dialog_full);
             View view_dialog = View.inflate(this,
                     R.layout.dialog_single_select, null);
 
@@ -307,10 +308,18 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
                     dialog2.dismiss();
                 }
             });
-            dialogBuilder.setView(view_dialog);
-            dialog2 = dialogBuilder.create();
+            dialog2.setContentView(view_dialog);
             Window dialogWindow = dialog2.getWindow();
-            dialogWindow.setGravity( Gravity.BOTTOM);
+
+            dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
+            dialogWindow.setBackgroundDrawableResource(android.R.color.transparent); //加上可以在底部对其屏幕底部
+
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.gravity = Gravity.BOTTOM;
+            dialogWindow.setAttributes(lp);
+            dialog2.setCanceledOnTouchOutside(true);
         }
         dialog2.show();
         id_sex.setViewAdapter(new ArrayWheelAdapter<>(this,years));

@@ -187,4 +187,6 @@ public class HttpUrl {
     public static final String SCHOOL_NEWS = MAIN_URL + "api/v1/school/message";
     //家乡动态
     public static final String HOMETOWN_NEWS = MAIN_URL+"api/v1/hometown/message";
+    //搜索学校
+    public static final String SEARCH_SCHOOL = MAIN_URL+"api/v1/search/school";
 }

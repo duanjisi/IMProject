@@ -257,7 +257,8 @@
         <!-- 查找学校-->
         <activity android:name=".activity.connection.SearchSchoolActivity"></activity>
         <!-- 编辑姓名-->
-        <activity android:name=".activity.connection.EditNameActivity"></activity>
+        <activity android:name=".activity.connection.EditNameActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
         <!--社团和商会页-->
         <activity android:name=".activity.connection.ClubActivity"></activity>
         <!--家乡和校园动态-->
