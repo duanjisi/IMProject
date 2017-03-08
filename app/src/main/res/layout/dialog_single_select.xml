@@ -1,34 +1,51 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#E9E9E9"
-    android:orientation="vertical"
-    android:paddingTop="20dip" >
+     >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="20dip"
-        android:text="请选择"
-        android:textColor="#000000"
-        android:textSize="20sp" />
+    <RelativeLayout
+        android:background="@color/line_color_gray_d2"
+        android:id="@+id/rl_top"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:clickable="true"
+            android:textSize="18sp"
+            android:id="@+id/btn_confirm2"
+            android:layout_width="wrap_content"
+            android:background="@null"
+            android:layout_height="wrap_content"
+            android:text="完成"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/bottom_text_color_checked" />
+
+        <TextView
+            android:clickable="true"
+            android:textSize="18sp"
+            android:id="@+id/btn_cancle2"
+            android:layout_width="wrap_content"
+            android:background="@null"
+            android:layout_height="wrap_content"
+            android:text="取消"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/bottom_text_color_checked" />
+
+    </RelativeLayout>
+
 
     <im.boss66.com.widget.wheel.WheelView
+        android:layout_below="@id/rl_top"
         android:id="@+id/id_sex"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
     </im.boss66.com.widget.wheel.WheelView>
 
-    <Button
-        android:id="@+id/btn_confirm2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:gravity="center"
-        android:text="确定"
-        android:textColor="#000000" />
 
-</LinearLayout>
+
+</RelativeLayout>

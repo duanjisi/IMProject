@@ -153,6 +153,7 @@ public class HttpUrl {
     //商会名人
     public static final String BUSINESS_FAMOUS_PEOPLE = MAIN_URL + "api/v1/hometown/celebrity";
 
+    public static final String BUSINESS_FAMOUS_PEOPLE = MAIN_URL + "api/v1/hometown/celebrity";
     //获取消息列表
     public static final String GET_CIRCLE_MSG_LIST = MAIN_URL + "api/v1/message";
     //清空消息列表
@@ -179,4 +180,10 @@ public class HttpUrl {
     public static final String COMMUNITY_GET_MY_MSG = MAIN_URL + "api/v1/contactsmsg";
     //帖子-获取我的消息列表
     public static final String COMMUNITY_CLEAR_MY_MSG = MAIN_URL + "api/v1/contactsmsg/flushall";
+    //商会详情页
+    public static final String CLUB_DETATIL = MAIN_URL + "hometown/cofc";
+    //学校动态
+    public static final String SCHOOL_NEWS = MAIN_URL + "api/v1/school/message";
+    //家乡动态
+    public static final String HOMETOWN_NEWS = MAIN_URL+"api/v1/hometown/message";
 }

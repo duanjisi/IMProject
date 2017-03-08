@@ -165,12 +165,10 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String str) {
-                Log.i("liwya",str);
                 myInfo = JSON.parseObject(str, MyInfo.class);
                 hometown_list = myInfo.getResult().getHometown_list();
                 school_list = myInfo.getResult().getSchool_list();
                 handler.obtainMessage(1).sendToTarget();
-
 
             }
 

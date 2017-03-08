@@ -16,7 +16,6 @@
         android:id="@+id/tv_school_name"
         android:textSize="16.5dp"
         android:textColor="@color/black"
-        android:textStyle="bold"
         android:text="天津大学"
         android:layout_toRightOf="@id/img_school"
         android:layout_marginLeft="11dp"

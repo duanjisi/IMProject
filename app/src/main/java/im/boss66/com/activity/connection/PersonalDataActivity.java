@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
@@ -88,8 +89,10 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 
     private WheelView id_sex;
 
-    private Button mBtnConfirm;
-    private Button mBtnConfirm2; //性别选择btn
+    private TextView mBtnConfirm;
+    private TextView mBtnConfirm2; //性别选择tv
+    private TextView btn_cancle;
+    private TextView btn_cancle2;
     /**
      * 所有省
      */
@@ -358,6 +361,12 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             case R.id.btn_confirm2:
                 showSelectedResult2();
                 break;
+            case R.id.btn_cancle:
+                dialog.dismiss();
+                break;
+            case R.id.btn_cancle2:
+                dialog2.dismiss();
+                break;
 
         }
 
@@ -370,7 +379,6 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
        request.send(new BaseDataRequest.RequestCallback<String>() {
            @Override
            public void onSuccess(String str) {
-               Log.i("liwya",str);
                try {
                    JSONObject jsonObject = new JSONObject(str);
                    if(jsonObject.getInt("code")==1){
@@ -399,7 +407,8 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     R.layout.dialog_single_select, null);
 
             id_sex = (WheelView) view_dialog.findViewById(R.id.id_sex);
-            mBtnConfirm2 = (Button) view_dialog.findViewById(R.id.btn_confirm2);
+            mBtnConfirm2 = (TextView) view_dialog.findViewById(R.id.btn_confirm2);
+            btn_cancle2 = (TextView) view_dialog.findViewById(R.id.btn_cancle2);
 
             // 设置可见条目数量
             id_sex.setVisibleItems(7);
@@ -409,6 +418,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 
             // 添加onclick事件
             mBtnConfirm2.setOnClickListener(this);
+            btn_cancle2.setOnClickListener(this);
             dialogBuilder.setView(view_dialog);
             dialog2 = dialogBuilder.create();
             Window dialogWindow = dialog2.getWindow();
@@ -444,7 +454,9 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             mViewCity = (WheelView) view_dialog.findViewById(R.id.id_city);
             // 区或县
             mViewDistrict = (WheelView) view_dialog.findViewById(R.id.id_district);
-            mBtnConfirm = (Button) view_dialog.findViewById(R.id.btn_confirm);
+            mBtnConfirm = (TextView) view_dialog.findViewById(R.id.btn_confirm);
+            btn_cancle = (TextView) view_dialog.findViewById(R.id.btn_cancle);
+            btn_cancle.setOnClickListener(this);
             // 设置可见条目数量
             mViewProvince.setVisibleItems(7);
             mViewCity.setVisibleItems(7);
@@ -459,8 +471,13 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             mBtnConfirm.setOnClickListener(this);
             dialogBuilder.setView(view_dialog);
             dialog = dialogBuilder.create();
+
             Window dialogWindow = dialog.getWindow();
-            dialogWindow.setGravity(Gravity.BOTTOM);
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.gravity = Gravity.BOTTOM;
+            dialogWindow.setAttributes(lp);
         }
         dialog.show();
         setUpData();

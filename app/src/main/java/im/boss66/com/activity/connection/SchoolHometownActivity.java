@@ -101,6 +101,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     private boolean isSchool; // 是否是学校
     private LRecyclerView rcv_news;
     private LRecyclerViewAdapter mLRecyclerViewAdapter = null;
+    private FriendCircleAdapter adapter;
     private CirclePresenter presenter;
 
     private int SEND_TYPE_PHOTO_TX = 101;
@@ -135,6 +136,8 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_hometown);
+
+
         initArgument();
         initViews();
     }
@@ -312,17 +315,23 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
 
                 break;
             case R.id.tv_club: // 社团 或 商会
-                Intent intent2 = null;
+                Intent intent2 = new Intent(this, ClubActivity.class);
                 if (isSchool) {
-                    intent2 = new Intent(this, SchoolClubActivity.class);
                     intent2.putExtra("school_id", school_id);
                 } else {
-                    intent2 = new Intent(this, BusinessClubActivity.class);
                     intent2.putExtra("hometown_id", hometown_id);
                 }
                 startActivity(intent2);
                 break;
             case R.id.tv_news: // 动态
+                Intent intent3 = new Intent(this, NewsActivity.class);
+                intent3.putExtra("name", title);
+                if (isSchool) {
+                    intent3.putExtra("school_id", school_id);
+                } else {
+                    intent3.putExtra("hometown_id", hometown_id);
+                }
+                startActivity(intent3);
 
                 break;
             case R.id.tv_headlift_view:

@@ -424,9 +424,9 @@ public class MainActivity extends BaseActivity implements Observer {
                 case R.id.rb_contact:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_3);
                     //设置成功不弹窗
-                    if(SharedPreferencesMgr.getBoolean("setSuccess",false)){
-                        return;
-                    }
+//                    if(SharedPreferencesMgr.getBoolean("setSuccess",false)){
+//                        return;
+//                    }
                     if (peopleDataDialog == null) {
                         peopleDataDialog = new PeopleDataDialog(MainActivity.this);
                         peopleDataDialog.show();

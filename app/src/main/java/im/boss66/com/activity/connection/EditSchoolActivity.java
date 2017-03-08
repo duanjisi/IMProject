@@ -70,7 +70,8 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
 
     private Dialog dialog2;
     private WheelView id_sex;
-    private Button mBtnConfirm2;
+    private TextView mBtnConfirm2;
+    private TextView btn_cancle2;
     private String year;
     private String majorInfo; //学院
     private SaveSchoolEntity saveSchoolEntity;
@@ -274,7 +275,8 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
                     R.layout.dialog_single_select, null);
 
             id_sex = (WheelView) view_dialog.findViewById(R.id.id_sex);
-            mBtnConfirm2  = (Button) view_dialog.findViewById(R.id.btn_confirm2);
+            mBtnConfirm2  = (TextView) view_dialog.findViewById(R.id.btn_confirm2);
+            btn_cancle2  = (TextView) view_dialog.findViewById(R.id.btn_cancle2);
 
             // 设置可见条目数量
             id_sex.setVisibleItems(7);
@@ -297,6 +299,12 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
                     tv_year.setText(year);
                     tv_year.setTextColor(Color.BLACK);
 
+                }
+            });
+            btn_cancle2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog2.dismiss();
                 }
             });
             dialogBuilder.setView(view_dialog);

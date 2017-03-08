@@ -159,7 +159,6 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String result = responseInfo.result;
-                Log.i("liwya",result);
                 try {
                     JSONObject jsonObject = new JSONObject(result);
                     if(jsonObject.getInt("code")==1){
