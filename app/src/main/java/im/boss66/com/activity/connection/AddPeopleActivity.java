@@ -4,9 +4,9 @@ package im.boss66.com.activity.connection;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -16,13 +16,12 @@ import java.util.List;
 
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
-import im.boss66.com.adapter.PeopleSearchAdapter;
 import im.boss66.com.fragment.CountrymanFragment;
 import im.boss66.com.fragment.CustomAddFragment;
-import im.boss66.com.fragment.MyCountrymanFragment;
-import im.boss66.com.fragment.MySchoolmateFragment;
 import im.boss66.com.fragment.SchoolmateFragment;
 import im.boss66.com.widget.ViewpagerIndicatorOver;
+import im.boss66.com.widget.ViewpagerIndicatorOver2;
+import im.boss66.com.widget.dialog.SearchPop;
 
 /**
  * 添加人脉
@@ -33,11 +32,16 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
 
 //    private PeopleSearchAdapter adapter;
 
-    private ViewpagerIndicatorOver vp_indicator; //指示器
+    private ViewpagerIndicatorOver2 vp_indicator; //指示器
     private ViewPager vp_search_people;
 
     private List<String> titles;
     private List<Fragment> fragments;
+
+    private TextView tv_search;
+
+    private RelativeLayout rl_search, rl_top_bar;
+    private SearchPop searchPop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,22 +55,35 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
 
     private void initIndicator() {
         //Viewpager指示器的相关设置
-        titles = Arrays.asList("同学","同乡","自定义");
+        titles = Arrays.asList("同学", "同乡", "自定义");
         vp_indicator.setTabItemTitle(titles);
         vp_indicator.setVisiableTabCount(3);
         vp_indicator.setColorTabNormal(0xFF000000);
         vp_indicator.setColorTabSelected(0xFFFD2741);
         vp_indicator.setWidthIndicatorLine(0.5f);
         vp_indicator.setLineBold(5);
+        vp_indicator.setListener(new ViewpagerIndicatorOver2.ICallBack() {
+            @Override
+            public void setText(int position) {
+                if (position == 2) {
+                    tv_search.setText("搜索兴趣爱好");
+
+                } else {
+                    tv_search.setText("搜索人脉");
+
+                }
+
+            }
+        });
 
         fragments = new ArrayList<>();
         fragments.add(new SchoolmateFragment());
         fragments.add(new CountrymanFragment());
         fragments.add(new CustomAddFragment());
-        vp_indicator.setViewPager(vp_search_people,0);
-        vp_indicator.setViewPagerAdapter(getSupportFragmentManager(),fragments);
-    }
+        vp_indicator.setViewPager(vp_search_people, 0);
+        vp_indicator.setViewPagerAdapter(getSupportFragmentManager(), fragments);
 
+    }
 
 
     private void initViews() {
@@ -75,10 +92,23 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headlift_view.setOnClickListener(this);
 
+        tv_search = (TextView) findViewById(R.id.tv_search);
 
-        vp_indicator = (ViewpagerIndicatorOver) findViewById(R.id.vp_indicator);
+        rl_search = (RelativeLayout) findViewById(R.id.rl_search);
+        rl_top_bar = (RelativeLayout) findViewById(R.id.rl_top_bar); //顶部view
+
+        rl_search.setOnClickListener(this);
+        vp_indicator = (ViewpagerIndicatorOver2) findViewById(R.id.vp_indicator);
         vp_search_people = (ViewPager) findViewById(R.id.vp_search_people);
-
+        searchPop = new SearchPop(getApplicationContext());
+        searchPop.setListener(new SearchPop.ICallBack() {
+            @Override
+            public void setVisible() {
+                rl_top_bar.setVisibility(View.VISIBLE);
+                vp_indicator.setVisibility(View.VISIBLE);
+                rl_search.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override
@@ -87,8 +117,19 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
             case R.id.tv_headlift_view:
                 finish();
                 break;
+            case R.id.rl_search:
+                rl_top_bar.setVisibility(View.GONE);
+                vp_indicator.setVisibility(View.GONE);
+                rl_search.setVisibility(View.INVISIBLE);
+                searchPop.showAtLocation(vp_search_people, Gravity.NO_GRAVITY,0,0);
+                break;
 
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

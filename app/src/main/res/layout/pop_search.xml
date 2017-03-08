@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:paddingTop="25dp"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:gravity="center"
+        android:id="@+id/pop_layout"
+        android:layout_width="match_parent"
+        android:background="@color/top_bar_color"
+        android:layout_height="50dp">
+        <RelativeLayout
+            android:id="@+id/rl_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="13.2dp"
+            android:background="@drawable/shape_edittext2"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <ImageView
+                android:id="@+id/img_search"
+                android:layout_width="14.3dp"
+                android:layout_height="14.3dp"
+                android:layout_margin="8.8dp"
+                android:src="@drawable/search_gray" />
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:layout_toRightOf="@id/img_search"
+                android:background="@null"
+                android:hint="搜索人脉"
+                android:textColorHint="@color/text_color_gray_6" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
