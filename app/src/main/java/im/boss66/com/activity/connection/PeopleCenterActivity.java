@@ -69,7 +69,6 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 finish();
                 break;
 
-
         }
     }
 }
