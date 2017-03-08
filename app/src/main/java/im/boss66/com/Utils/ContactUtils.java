@@ -19,6 +19,7 @@ public class ContactUtils {
             //读取通讯录的号码
             String number = cursor.getString(cursor
                     .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)).trim();
+            number = number.replace(" ", "");
             if (number != null && !number.equals("")) {
                 if (number.contains("+86")) {
                     String str = number.substring(3, number.length());

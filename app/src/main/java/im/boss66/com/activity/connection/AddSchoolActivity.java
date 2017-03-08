@@ -45,26 +45,31 @@ public class AddSchoolActivity extends ABaseActivity implements View.OnClickList
             case R.id.rl_university:
                 Intent intent = new Intent(this, EditSchoolActivity.class);
                 intent.putExtra("isUniversity",true);
+                intent.putExtra("schoolType",5);
                 startActivity(intent);
                 break;
             case R.id.rl_high_shcool:
                 Intent intent1 = new Intent(this, EditSchoolActivity.class);
                 intent1.putExtra("isUniversity",false);
+                intent1.putExtra("schoolType",3);
                 startActivity(intent1);
                 break;
             case R.id.rl_big_middle_shcool:
                 Intent intent2 = new Intent(this, EditSchoolActivity.class);
                 intent2.putExtra("isUniversity",false);
+                intent2.putExtra("schoolType",4);
                 startActivity(intent2);
                 break;
             case R.id.rl_middle_school:
                 Intent intent3 = new Intent(this, EditSchoolActivity.class);
                 intent3.putExtra("isUniversity",false);
+                intent3.putExtra("schoolType",2);
                 startActivity(intent3);
                 break;
             case R.id.rl_small_school:
                 Intent intent4 = new Intent(this, EditSchoolActivity.class);
                 intent4.putExtra("isUniversity",false);
+                intent4.putExtra("schoolType",1);
                 startActivity(intent4);
                 break;
 

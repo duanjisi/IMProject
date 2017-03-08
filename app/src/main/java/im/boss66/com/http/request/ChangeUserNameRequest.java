@@ -30,6 +30,6 @@ public class ChangeUserNameRequest extends BaseDataRequest<String>{
 
     @Override
     protected String getApiPath() {
-        return HttpUrl.CHANE_NAME_SEX_AREA;
+        return HttpUrl.CHANGE_USER_NAME;
     }
 }

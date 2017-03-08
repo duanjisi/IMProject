@@ -20,6 +20,8 @@ public class CancelEditDialog extends BaseDialog implements View.OnClickListener
         super(context);
         cancle = (TextView) dialog.findViewById(R.id.cancel);
         ok = (TextView) dialog.findViewById(R.id.ok);
+
+
         cancle.setOnClickListener(this);
         ok.setOnClickListener(this);
     }

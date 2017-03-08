@@ -136,6 +136,8 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     private final int RECORD_VIDEO = 3;//视频
     private PermissionListener permissionListener;
     private int cameraType;//1:相机 2：相册 3：视频
+    private boolean isReply;
+    private String commentFromId, commentPid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,14 +185,12 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         });
         tv_back.setOnClickListener(this);
         presenter = new CirclePresenter(this);
-        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
         adapter = new FriendCircleAdapter(this);
         AccountEntity sAccount = App.getInstance().getAccount();
         String uid = sAccount.getUser_id();
         access_token = sAccount.getAccess_token();
         adapter.getCurUserId(uid);
         adapter.setCirclePresenter(presenter);
-        //adapter.setDatas(list);
         mLRecyclerViewAdapter = new LRecyclerViewAdapter(adapter);
 
         View header = LayoutInflater.from(this).inflate(R.layout.item_friend_circle_head,
@@ -202,6 +202,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         iv_new = (ImageView) header.findViewById(R.id.iv_new);
         tv_new_count = (TextView) header.findViewById(R.id.tv_new_count);
         v_new = header.findViewById(R.id.v_new);
+        ll_new.setOnClickListener(this);
         iv_bg.setOnClickListener(this);
         iv_head.setOnClickListener(this);
         String headicon = sAccount.getAvatar();
@@ -256,6 +257,23 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 }, 1000);
             }
         });
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                String newCount = bundle.getString("newCount");
+                String newIcon = bundle.getString("newIcon");
+                if (!TextUtils.isEmpty(newCount)) {
+                    ll_new.setVisibility(View.VISIBLE);
+                    tv_new_count.setText(newCount + "条新消息");
+                }
+                if (!TextUtils.isEmpty(newIcon)) {
+                    ll_new.setVisibility(View.VISIBLE);
+                    imageLoader.displayImage(newIcon, iv_new,
+                            ImageLoaderUtils.getDisplayImageOptions());
+                }
+            }
+        }
         getFriendCircleList();
     }
 
@@ -294,8 +312,13 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     updateEditTextBodyVisible(View.GONE, null);
                     FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
                     if (item != null) {
-                        String feed_uid = item.getFeed_uid();
-                        createComment(content, "0", feed_uid);
+                        String feed_uid = "0";
+                        String pid = "0";
+                        if (isReply) {
+                            pid = commentPid;
+                            feed_uid = commentFromId;
+                        }
+                        createComment(content, pid, feed_uid);
                     }
                 }
                 break;
@@ -350,6 +373,10 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             Log.i("评论--键盘--", visibility + ":" + commentConfig.toString());
             feedId = commentConfig.feedid;
             curPostion = commentConfig.circlePosition;
+            commentId = commentConfig.commentId;
+            isReply = commentConfig.isReply;
+            commentFromId = commentConfig.commentFromId;
+            commentPid = commentConfig.pid;
         }
         if (View.VISIBLE == visibility) {
             et_send.requestFocus();
@@ -401,6 +428,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 } else if (actionSheetType == 2) {
                     openActivity(ReplaceAlbumCoverActivity.class);
                 } else if (actionSheetType == 3) {
+                    ll_new.setVisibility(View.GONE);
                     openActivity(CircleMessageListActivity.class);
                 } else if (actionSheetType == 4) {
                     deleteComment(commentId);
@@ -453,7 +481,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                         } else {
                             showToast(data.getMessage(), false);
                         }
-                    }else {
+                    } else {
                         showToast("没有更多数据了", false);
                     }
                 }

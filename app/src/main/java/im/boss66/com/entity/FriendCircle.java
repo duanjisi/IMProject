@@ -1,11 +1,12 @@
 package im.boss66.com.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by GMARUnity on 2017/2/27.
  */
-public class FriendCircle {
+public class FriendCircle implements Serializable {
 
     private int did;
     private String user_id; //用户ID(当前用户ID)
@@ -29,6 +30,24 @@ public class FriendCircle {
     private boolean isParent = false;
     private String timeMonth;
     private String timeDay;
+    private String user_name;
+    private String avatar;
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     public String getTimeMonth() {
         return timeMonth;

@@ -234,6 +234,7 @@ public class ChooseYourLikeDialog extends BaseDialog implements View.OnClickList
                 integers.add(datas.get(i).getTag_id());
             }
         }
+
         iFinishCallBack.showLike(strs,integers);
 
 

@@ -1,15 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/background_color"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
-    <include layout="@layout/head_view" />
+    <include
+        android:id="@+id/title"
+        layout="@layout/head_view" />
 
     <com.github.jdsjlzx.recyclerview.LRecyclerView
         android:id="@+id/rcv_news"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/title"
         android:clipToPadding="false" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background_color"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dp_6"
+        android:paddingLeft="@dimen/dp_14"
+        android:paddingRight="@dimen/dp_14"
+        android:paddingTop="@dimen/dp_6"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/et_send"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@drawable/bg_round_white"
+            android:hint="评论"
+            android:paddingLeft="@dimen/dp_10"
+            android:textColorHint="@color/hint_text_color" />
+
+        <Button
+            android:id="@+id/bt_send"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="发送"
+            android:textColor="@color/semi_transparent" />
+
+    </LinearLayout>
+
+</RelativeLayout>

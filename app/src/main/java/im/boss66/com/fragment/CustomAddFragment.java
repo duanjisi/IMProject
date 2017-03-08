@@ -16,7 +16,6 @@ import im.boss66.com.Utils.ToastUtil;
  * Created by liw on 2017/2/21.
  */
 public class CustomAddFragment extends BaseFragment implements View.OnClickListener {
-    private TextView tv_create;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -30,20 +29,12 @@ public class CustomAddFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void initViews(View view) {
-        tv_create = (TextView) view.findViewById(R.id.tv_create);
-        tv_create.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG ); //下划线
-        tv_create.getPaint().setAntiAlias(true);//抗锯齿
-
-        tv_create.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
 
         switch (view.getId()){
-            case R.id.tv_create:
-                ToastUtil.show(getActivity(),"创建", Toast.LENGTH_SHORT);
-                break;
 
         }
     }

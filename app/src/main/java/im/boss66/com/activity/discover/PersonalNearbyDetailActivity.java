@@ -54,6 +54,8 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
     }
 
     private void initData() {
+        AccountEntity sAccount = App.getInstance().getAccount();
+        String curUserid = sAccount.getUser_id();
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();

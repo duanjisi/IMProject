@@ -123,6 +123,7 @@
     <color name="dialog_cancle">#157EFB</color>
     <color name="dialog_confirm">#FD2741</color>
     <color name="text_bg">#eaeaea</color>
+    <color name="province_line_border">#C7C7C7</color>
 
 
 </resources>

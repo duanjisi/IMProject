@@ -8,12 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.R;
 import im.boss66.com.adapter.MySchoolAdapter;
-import im.boss66.com.entity.MySchool;
+import im.boss66.com.entity.MyInfo;
 import im.boss66.com.listener.RecycleViewItemListener;
 
 /**
@@ -22,7 +21,7 @@ import im.boss66.com.listener.RecycleViewItemListener;
 public abstract class ClubBaseFragment extends BaseFragment {
     protected RecyclerView rcv_club;
     protected MySchoolAdapter adapter;
-    protected List<MySchool> list;
+    protected List<MyInfo> list;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

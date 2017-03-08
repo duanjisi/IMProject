@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <!-- 录音 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--<uses-permission android:name="android.permission.WRITE_CONTACTS" />-->
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -275,7 +276,6 @@
         <!-- 个人资料 -->
         <activity android:name=".activity.connection.PersonalDataActivity"></activity>
         <!-- 个人资料2 -->
-        <activity android:name=".activity.connection.PersonalData2Activity"></activity>
         <!-- 添加人脉 -->
         <activity android:name=".activity.connection.AddPeopleActivity"></activity>
         <!-- 人脉中心 -->
@@ -295,6 +295,19 @@
         <activity android:name=".activity.personage.VerifyOldPhoneActivity"></activity>
         <!-- 朋友圈发消息 -->
         <activity android:name=".activity.discover.FriendSendNewMsgActivity"></activity>
+        <!-- 相册详情 -->
+        <activity android:name=".activity.discover.PhotoAlbumDetailActivity"></activity>
+        <!-- 相册详情 -->
+        <activity android:name=".activity.discover.PhotoAlbumLookPicActivity"></activity>
+        <!-- 相册评论 -->
+        <activity android:name=".activity.discover.CommentActivity"></activity>
+        <!-- 全网搜索 -->
+        <activity android:name=".activity.discover.SearchByAllNetActivity"></activity>
+        <!-- 朋友圈发布限制条件 -->
+        <activity android:name=".activity.discover.FriendCircleWhoSeeActivity"></activity>
+        <!-- 全网搜索 -->
+        <activity android:name=".activity.discover.SearchLookMoreActivity"></activity>
+
         <!-- 我的关注 -->
         <activity android:name=".activity.connection.MyFollowActivity"></activity>
         <!-- 我的消息 -->
@@ -308,9 +321,7 @@
         <!-- 名人 -->
         <activity android:name=".activity.connection.FamousPersonActivity"></activity>
         <!-- 社团 -->
-        <activity android:name=".activity.connection.SchoolClubActivity"></activity>
         <!-- 商会 -->
-        <activity android:name=".activity.connection.BusinessClubActivity"></activity>
         <!-- 视频录制 -->
         <activity android:name=".activity.discover.RecordVideoActivity"></activity>
         <!-- 商会详情 -->
@@ -327,6 +338,12 @@
         <activity android:name=".activity.connection.SearchSchoolActivity"></activity>
         <!-- 编辑姓名-->
         <activity android:name=".activity.connection.EditNameActivity"></activity>
+        <!--社团和商会页-->
+        <activity android:name=".activity.connection.ClubActivity"></activity>
+        <!--家乡和校园动态-->
+        <activity android:name=".activity.connection.NewsActivity"></activity>
+
+
 
 
         <!-- 微信入口 -->

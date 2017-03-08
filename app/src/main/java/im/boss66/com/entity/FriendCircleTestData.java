@@ -176,41 +176,41 @@ public class FriendCircleTestData {
         return circleDatas;
     }
 
-    public static List<PersonalPhotoAlbumItem> createPhotoAlbum() {
-        List<PersonalPhotoAlbumItem> list = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            PersonalPhotoAlbumItem item = new PersonalPhotoAlbumItem();
-            List<PhotoAlbumChildItem> photoAlbumChildList = new ArrayList<>();
-            item.setTime("" + (2017 - i));
-            int type = getRandomNum(12) % 4;
-            for (int j = 0; j < type; j++) {
-                PhotoAlbumChildItem child = new PhotoAlbumChildItem();
-                child.setContent(getContent());
-                child.setCreateTime("" + (8 - i) + "月" + (25 - i) + "日");
-
-                int contentType = getRandomNum(12) % 4;
-                if (type == 0) {
-                    child.setContenType("1");// 链接
-                    child.setLinkImg("http://pics.sc.chinaz.com/Files/pic/icons128/2264/%E8%85%BE%E8%AE%AFQQ%E5%9B%BE%E6%A0%87%E4%B8%8B%E8%BD%BD1.png");
-                    child.setLinkTitle("百度一下，你就知道");
-                    child.setVideoUrl("http://baidu.com");
-                } else if (type == 1) {
-                    child.setContenType("2");// 图片
-                    child.setPhotos(createPhotos());
-                } else {
-                    child.setContenType("3");// 视频
-                    String videoUrl = "http://162.250.97.90/file/PLAY/61180.mp4";
-                    String videoImgUrl = "http://img.68mtv.com//upload/music/201702/03/1486105642.jpg";
-                    child.setVideoUrl(videoUrl);
-                    child.setVideoImgUrl(videoImgUrl);
-                }
-
-                photoAlbumChildList.add(child);
-            }
-            item.setList(photoAlbumChildList);
-        }
-        return list;
-    }
+//    public static List<PersonalPhotoAlbumItem> createPhotoAlbum() {
+//        List<PersonalPhotoAlbumItem> list = new ArrayList<>();
+//        for (int i = 0; i < 3; i++) {
+//            PersonalPhotoAlbumItem item = new PersonalPhotoAlbumItem();
+//            List<PhotoAlbumChildItem> photoAlbumChildList = new ArrayList<>();
+//            item.setTime("" + (2017 - i));
+//            int type = getRandomNum(12) % 4;
+//            for (int j = 0; j < type; j++) {
+//                PhotoAlbumChildItem child = new PhotoAlbumChildItem();
+//                child.setContent(getContent());
+//                child.setCreateTime("" + (8 - i) + "月" + (25 - i) + "日");
+//
+//                int contentType = getRandomNum(12) % 4;
+//                if (type == 0) {
+//                    child.setContenType("1");// 链接
+//                    child.setLinkImg("http://pics.sc.chinaz.com/Files/pic/icons128/2264/%E8%85%BE%E8%AE%AFQQ%E5%9B%BE%E6%A0%87%E4%B8%8B%E8%BD%BD1.png");
+//                    child.setLinkTitle("百度一下，你就知道");
+//                    child.setVideoUrl("http://baidu.com");
+//                } else if (type == 1) {
+//                    child.setContenType("2");// 图片
+//                    child.setPhotos(createPhotos());
+//                } else {
+//                    child.setContenType("3");// 视频
+//                    String videoUrl = "http://162.250.97.90/file/PLAY/61180.mp4";
+//                    String videoImgUrl = "http://img.68mtv.com//upload/music/201702/03/1486105642.jpg";
+//                    child.setVideoUrl(videoUrl);
+//                    child.setVideoImgUrl(videoImgUrl);
+//                }
+//
+//                photoAlbumChildList.add(child);
+//            }
+//            item.setList(photoAlbumChildList);
+//        }
+//        return list;
+//    }
 
     public static User getUser() {
         return users.get(getRandomNum(users.size()));

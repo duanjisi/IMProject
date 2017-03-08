@@ -1,9 +1,11 @@
 package im.boss66.com.entity;
 
+import java.io.Serializable;
+
 /**
  * 朋友圈点赞实体类
  */
-public class FriendCirclePraiseEntity {
+public class FriendCirclePraiseEntity implements Serializable {
 
     public String getUser_id() {
         return user_id;

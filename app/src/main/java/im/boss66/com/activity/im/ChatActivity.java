@@ -785,6 +785,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     it3.putExtra("groupid", toUid);
                 } else {
                     it3 = new Intent(context, ChatInformActivity.class);
+                    it3.putExtra("uid", toUid);
+                    it3.putExtra("head",toAvatar);
+                    it3.putExtra("name",title);
                 }
                 if (it3 != null) {
 //                    startActivity(it3);

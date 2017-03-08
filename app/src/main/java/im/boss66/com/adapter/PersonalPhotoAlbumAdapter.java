@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,11 +20,7 @@ import java.util.List;
 import im.boss66.com.R;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
-import im.boss66.com.activity.discover.VideoPlayerActivity;
 import im.boss66.com.activity.discover.WebViewActivity;
-import im.boss66.com.adapter.ViewHolder.ImageViewHolder;
-import im.boss66.com.adapter.ViewHolder.URLViewHolder;
-import im.boss66.com.adapter.ViewHolder.VideoViewHolder;
 import im.boss66.com.entity.FriendCircle;
 import im.boss66.com.entity.PhotoInfo;
 import im.boss66.com.widget.MultiImageView;
@@ -195,23 +190,6 @@ public class PersonalPhotoAlbumAdapter extends BaseRecycleViewAdapter {
 
                     String urlimg = item.getFiles().get(0).file_thumb;
                     Glide.with(context).load(urlimg).into(((VideoHolder) holder).iv_video_bg);
-//                    ((VideoHolder) holder).iv_video_bg.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            List<PhotoInfo> files = item.getFiles();
-//                            if (files != null && files.size() > 0) {
-//                                String url = files.get(0).file_url;
-//                                String url_img = files.get(0).file_thumb;
-//                                if (!TextUtils.isEmpty(url) && url.contains(".mp4")) {
-//                                    Intent intent = new Intent(context, VideoPlayerActivity.class);
-//                                    intent.putExtra("url", url);
-//                                    intent.putExtra("imgurl", url_img);
-//                                    intent.putExtra("isDelete", true);
-//                                    context.startActivity(intent);
-//                                }
-//                            }
-//                        }
-//                    });
 
                     ((VideoHolder) holder).tv_content.setText("" + content);
                     ((VideoHolder) holder).tv_month.setText("" + curMonth);

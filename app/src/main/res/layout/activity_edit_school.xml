@@ -53,7 +53,7 @@
         <TextView
             android:layout_marginLeft="22dp"
             android:text="学校"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color_gray_c"
             android:textSize="17.6sp"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
@@ -77,6 +77,8 @@
 
     </RelativeLayout>
     <RelativeLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:id="@+id/rl_school_department"
         android:background="@color/white"
         android:layout_width="match_parent"
@@ -84,18 +86,22 @@
         <TextView
             android:layout_marginLeft="22dp"
             android:text="院系"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color_gray_c"
             android:textSize="17.6sp"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <TextView
+        <EditText
+            android:textCursorDrawable="@null"
+            android:gravity="center_vertical|right"
+            android:background="@null"
             android:id="@+id/tv_school_department"
             android:layout_marginRight="15dp"
             android:layout_alignParentRight="true"
-            android:text="请选择"
-            android:textColor="@color/text_color_gray_c"
+            android:hint="请填写"
+            android:textColorHint="@color/text_color_gray_c"
+            android:textColor="@color/black"
             android:textSize="17.6sp"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
@@ -116,7 +122,7 @@
         <TextView
             android:layout_marginLeft="22dp"
             android:text="入学时间"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color_gray_c"
             android:textSize="17.6sp"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"

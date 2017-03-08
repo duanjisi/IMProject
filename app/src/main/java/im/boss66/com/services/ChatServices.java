@@ -3,6 +3,9 @@ package im.boss66.com.services;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -154,6 +157,9 @@ public class ChatServices extends Service implements Observer {
                     sation.setConversation_id(datas[1]);
                     fromid = datas[1];
                 }
+                if (PreferenceUtils.getBoolean(this, fromid, true)) {
+                    startAlarm(this);
+                }
                 sation.setNewest_msg_type(datas[3]);
                 sation.setNewest_msg_time(datas[5] + "000");
                 ConversationHelper.getInstance().save(sation);
@@ -289,4 +295,13 @@ public class ChatServices extends Service implements Observer {
         }
         Log.i("info", "========ChatServices中onDestroy()");
     }
+
+    //提示音
+    private void startAlarm(Context context) {
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        if (notification == null) return;
+        Ringtone r = RingtoneManager.getRingtone(context, notification);
+        r.play();
+    }
+
 }

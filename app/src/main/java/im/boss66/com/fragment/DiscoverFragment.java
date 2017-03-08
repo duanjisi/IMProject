@@ -3,25 +3,43 @@ package im.boss66.com.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.discover.FriendCircleActivity;
 import im.boss66.com.activity.discover.PeopleNearbyActivity;
 import im.boss66.com.activity.discover.SharkItOffActivity;
+import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.BaseResult;
+import im.boss66.com.entity.CircleNewest;
+import im.boss66.com.entity.CircleNewestEntity;
+import im.boss66.com.http.HttpUrl;
 
 /**
  * 发现的主界面
  */
 public class DiscoverFragment extends BaseFragment implements View.OnClickListener {
 
-    private RelativeLayout rl_friends,rl_richScan,rl_shark_it_off,rl_people_nearby,rl_shopping,rl_game;
-    private TextView tv_friends_no_read,tv_nearby_no_read;
+    private RelativeLayout rl_friends, rl_richScan, rl_shark_it_off, rl_people_nearby, rl_shopping, rl_game;
+    private TextView tv_friends_no_read, tv_nearby_no_read;
+    private String access_token;
+    private boolean isLoad = false;
+    private String newCount,newIcon;
 
     @Nullable
     @Override
@@ -54,20 +72,32 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.rl_friends:
-                openActivity(FriendCircleActivity.class,null);
+                Bundle bundle1 = new Bundle();
+                if (!TextUtils.isEmpty(newCount)) {
+                    bundle1.putString("newCount", newCount);
+                }
+                if (!TextUtils.isEmpty(newIcon)){
+                    bundle1.putString("newIcon", newIcon);
+                }
+                openActivity(FriendCircleActivity.class, bundle1);
+                newCount = "";
+                newIcon = "";
+                if (tv_friends_no_read.getVisibility() == View.VISIBLE) {
+                    tv_friends_no_read.setVisibility(View.GONE);
+                }
                 break;
             case R.id.rl_richScan:
                 Bundle bundle = new Bundle();
-                bundle.putString("classType","DiscoverFragment");
-                openActivity(CaptureActivity.class,bundle);
+                bundle.putString("classType", "DiscoverFragment");
+                openActivity(CaptureActivity.class, bundle);
                 break;
             case R.id.rl_shark_it_off:
-                openActivity(SharkItOffActivity.class,null);
+                openActivity(SharkItOffActivity.class, null);
                 break;
             case R.id.rl_people_nearby:
-                openActivity(PeopleNearbyActivity.class,null);
+                openActivity(PeopleNearbyActivity.class, null);
                 break;
             case R.id.rl_shopping:
                 break;
@@ -82,6 +112,70 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
             intent.putExtras(bundle);
         }
         startActivity(intent);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && !isLoad) {
+            getServerNew();
+        }
+    }
+
+    private void getServerNew() {
+        isLoad = true;
+        AccountEntity sAccount = App.getInstance().getAccount();
+        access_token = sAccount.getAccess_token();
+        String url = HttpUrl.GET_CIRCLE_NEWEST_MSG;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                isLoad = false;
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+                    BaseResult res = BaseResult.parse(result);
+                    if (res != null) {
+                        if (res.getCode() == 1) {
+                            try {
+                                CircleNewestEntity data = JSON.parseObject(result, CircleNewestEntity.class);
+                                if (data != null) {
+                                    showData(data);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                isLoad = false;
+            }
+        });
+    }
+
+    private void showData(CircleNewestEntity data) {
+        CircleNewest result = data.getResult();
+        if (result != null) {
+            newCount = result.getCount();
+            CircleNewest.CircleNewestUser frist_user = result.getFrist_user();
+            if (frist_user != null){
+                newIcon = frist_user.getAvatar();
+            }
+            if (tv_friends_no_read != null) {
+                if (!TextUtils.isEmpty(newCount) && !"0".equals(newCount)) {
+                    tv_friends_no_read.setVisibility(View.VISIBLE);
+                    tv_friends_no_read.setText(newCount);
+                } else {
+                    tv_friends_no_read.setVisibility(View.GONE);
+                }
+            }
+        }
     }
 
 }

@@ -28,7 +28,8 @@ import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.AddFriendActivity;
 import im.boss66.com.activity.book.BookSearchActivity;
 import im.boss66.com.activity.book.NewFriendsActivity;
-import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
+import im.boss66.com.activity.discover.SearchByAllNetActivity;
+import im.boss66.com.activity.im.ChatActivity;
 import im.boss66.com.activity.im.GroupChatActivity;
 import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.BaseContact;
@@ -96,7 +97,8 @@ public class ContactBooksFragment extends BaseFragment {
         viewSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), BookSearchActivity.class);
+                //Intent intent = new Intent(getActivity(), BookSearchActivity.class);
+                Intent intent = new Intent(getActivity(), SearchByAllNetActivity.class);
                 startActivity(intent);
             }
         });
@@ -200,15 +202,11 @@ public class ContactBooksFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EaseUser user = (EaseUser) listView.getItemAtPosition(position);
-//                Intent intent = new Intent(getActivity(), ChatActivity.class);
-//                intent.putExtra("title", user.getUsername());
-//                intent.putExtra("toUid", user.getUserid());
-//                intent.putExtra("toAvatar", user.getAvatar());
-//                intent.putExtra("isgroup", false);
-//                startActivity(intent);
-                Intent intent = new Intent(getActivity(), PersonalNearbyDetailActivity.class);
-                intent.putExtra("classType", "ContactBooksFragment");
-                intent.putExtra("userid", user.getUserid());
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                intent.putExtra("title", user.getUsername());
+                intent.putExtra("toUid", user.getUserid());
+                intent.putExtra("toAvatar", user.getAvatar());
+                intent.putExtra("isgroup", false);
                 startActivity(intent);
             }
         });

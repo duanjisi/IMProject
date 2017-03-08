@@ -215,4 +215,15 @@
     <string name="giving_system_permissions">添加系统设置权限</string>
     <string name="giving_camera_permissions">请给予相机权限，否则无法正常在朋友圈发布相片或者视频.</string>
     <string name="if_exit_edit">退出此次编辑？</string>
+    <string name="search_the_specified_content">搜索以下内容</string>
+
+    <string name="open_see">公开</string>
+    <string name="privacy_see">私密</string>
+    <string name="part_of_the_visible">部分可见</string>
+    <string name="no_give_anyone_see">不给谁看</string>
+    <string name="all_can_see">所有朋友可见</string>
+    <string name="only_the_visible">仅自己可见</string>
+    <string name="selected_friends_see">选中的朋友可见</string>
+    <string name="selected_friends_no_see">选中的朋友不可见</string>
+    <string name="address_book_to_choose">从通讯录选择</string>
 </resources>
