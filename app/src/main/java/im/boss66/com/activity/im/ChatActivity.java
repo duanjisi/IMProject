@@ -1,6 +1,9 @@
 package im.boss66.com.activity.im;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -18,6 +21,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -30,10 +34,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -60,6 +67,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -69,6 +78,7 @@ import im.boss66.com.Code;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Session;
+import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.Base64Utils;
 import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
@@ -112,6 +122,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         View.OnTouchListener, MsgListView.IXListViewListener, FaceFragment.clickCallback, FaceLoveFragment.LoveCallback {
     private static final String TAG = ChatActivity.class.getSimpleName();
     private PermissionListener permissionListener;
+    private LocalBroadcastReceiver mLocalBroadcastReceiver;
     private final int OPEN_CAMERA = 1;//相机
     private final int OPEN_ALBUM = 2;//相册
     private final int RECORD_VIDEO = 3;//视频
@@ -207,6 +218,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private boolean isSpeech = false;
     private LinearLayout ll_input;
     private float mImageHeight;
+    private ImageView ivTips;
     /**
      * 接收到数据，用来更新listView
      */
@@ -280,6 +292,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(ChatActivity.this);//注册，在setContentView之前。
+//        Session.getInstance().addObserver(this);
         setContentView(R.layout.activity_chat);
         initViews();
     }
@@ -333,8 +346,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         ivMake = (ImageView) findViewById(R.id.iv_add_pic);
         ivAddPerson = (ImageView) findViewById(R.id.iv_add_person);
         ivEditPic = (ImageView) findViewById(R.id.iv_edit_pic);
+        ivTips = (ImageView) findViewById(R.id.iv_icon);
         ll_input = (LinearLayout) findViewById(R.id.ll_chatmain_input);
-
+        ivEditPic.setTag(false);
         ivSelect.setOnClickListener(this);
         ivMake.setOnClickListener(this);
         ivAddPerson.setOnClickListener(this);
@@ -378,6 +392,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mBtnSend.setEnabled(true);
         mBtnSend.setOnClickListener(this);
         mBtnAffix.setOnClickListener(this);
+
+        mLocalBroadcastReceiver = new LocalBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.Action.EMOJI_EDITED_SEND);
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(mLocalBroadcastReceiver, filter);
 
         // 消息
         mApplication = App.getInstance();
@@ -509,14 +529,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     EmoEntity entity = mEmoMap.get(key);
                     if (entity != null) {
                         Log.i("info", "========showCurrentEmo()");
-                        if (popupWindow == null) {
-//                            ll_input
-                            showCurrentEmo(entity, ibFace);
-                        } else {
-                            if (!popupWindow.isShowing()) {
-                                showCurrentEmo(entity, ibFace);
-                            }
-                        }
+                        showCurrentEmo(entity, ibFace);
+//                        if (popupWindow == null) {
+////                            ll_input
+//                            showCurrentEmo(entity, ibFace);
+//                        } else {
+//                            if (!popupWindow.isShowing()) {
+//                                showCurrentEmo(entity, ibFace);
+//                            }
+//                        }
                     }
                 }
             }
@@ -684,33 +705,22 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             }
             case R.id.ib_chat_face://表情
-                UIUtils.hindView(ll_other);
-                isOther = false;
-//                if (!isFaceShow) {
-//                    mInputMethodManager.hideSoftInputFromWindow(
-//                            mEtMsg.getWindowToken(), 0);
-//                    try {
-//                        Thread.sleep(80);// 解决此时会黑一下屏幕的问题
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                    viewFace.setVisibility(View.VISIBLE);
-//                    viewFace.findViewById(R.id.tv_edit).setVisibility(View.GONE);
-//                    isFaceShow = true;
-//                } else {
-//                    viewFace.setVisibility(View.GONE);
-//                    isFaceShow = false;
-//                }
-                mInputMethodManager.hideSoftInputFromWindow(
-                        mEtMsg.getWindowToken(), 0);
-                try {
-                    Thread.sleep(80);// 解决此时会黑一下屏幕的问题
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (viewFace.getVisibility() != View.VISIBLE) {
+                    ivEditPic.setImageResource(R.drawable.hp_sm_picture);
+                    ivEditPic.setTag(false);
+                    UIUtils.hindView(ll_other);
+                    isOther = false;
+                    mInputMethodManager.hideSoftInputFromWindow(
+                            mEtMsg.getWindowToken(), 0);
+                    try {
+                        Thread.sleep(80);// 解决此时会黑一下屏幕的问题
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    viewFace.setVisibility(View.VISIBLE);
+                    viewFace.findViewById(R.id.tv_edit).setVisibility(View.GONE);
+                    isFaceShow = true;
                 }
-                viewFace.setVisibility(View.VISIBLE);
-                viewFace.findViewById(R.id.tv_edit).setVisibility(View.GONE);
-                isFaceShow = true;
                 break;
             case R.id.btn_chat_affix:
                 UIUtils.hindView(viewFace);
@@ -740,14 +750,33 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 startActivity(it2);
                 break;
             case R.id.iv_edit_pic://编辑表情
-                viewFace.findViewById(R.id.tv_edit).setVisibility(View.VISIBLE);
-                viewFace.findViewById(R.id.tv_edit).setOnClickListener(this);
+                boolean isEdit = (boolean) ivEditPic.getTag();
+                if (!isEdit) {
+                    viewFace.findViewById(R.id.tv_edit).setVisibility(View.VISIBLE);
+                    viewFace.findViewById(R.id.tv_edit).setOnClickListener(this);
+                    ivEditPic.setImageResource(R.drawable.hp_sm_picture_on);
+                } else {
+                    viewFace.findViewById(R.id.tv_edit).setVisibility(View.GONE);
+                    ivEditPic.setImageResource(R.drawable.hp_sm_picture);
+                }
+                ivEditPic.setTag(!isEdit);
                 break;
             case R.id.tv_edit://编辑
-//                showToast("编辑表情", true);
-                Intent it0 = new Intent(context, EmojiEditActivity.class);
-//                it0.putExtra("camera_path", imagePath);
-                startActivityForResult(it0, 100);
+                if (editUrl.equals("")) {
+                    if (!emoCode.equals("")) {
+                        Intent it0 = new Intent(context, EmojiEditActivity.class);
+                        it0.putExtra("emoCode", emoCode);
+                        it0.putExtra("fromChat", true);
+                        startActivity(it0);
+                    } else {
+                        showToast("请选择所编辑的图片", true);
+                    }
+                } else {
+                    Intent it0 = new Intent(context, EmojiEditActivity.class);
+                    it0.putExtra("camera_path", editUrl);
+                    it0.putExtra("fromChat", true);
+                    startActivity(it0);
+                }
                 break;
             case R.id.iv_add_person://聊天信息
                 Intent it3 = null;
@@ -761,7 +790,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     it3.putExtra("name",title);
                 }
                 if (it3 != null) {
-                    startActivity(it3);
+//                    startActivity(it3);
+                    startActivityForResult(it3, 100);
                 }
                 break;
             default:
@@ -1386,7 +1416,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private ArrayList<Fragment> fragments = new ArrayList<>();
-    //    private ArrayList<Fragment> fragments;
     private MyFragmentPageAdapter mAdapter;
 
     private void initCatePager(String cateId) {
@@ -1396,7 +1425,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         ArrayList<EmoGroup> groups = (ArrayList<EmoGroup>) EmoGroupHelper.getInstance().queryByCateId(cateId);
         Log.i("info", "====cateId:" + cateId);
         Log.i("info", "====groups.size():" + groups.size());
-
         FaceLoveFragment frag = FaceLoveFragment.newInstance();
         frag.setLoveCallback(this);
         fragments.add(frag);
@@ -1416,20 +1444,38 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
+    private String editUrl;
+    private String emoCode;
+
     @Override
     public void onItemClick(EmoEntity entity) {//点击表情，发送表情
         showToast("emoji_id:" + entity.getEmo_id(), true);
-        String code = entity.getEmo_code();
-        if (!code.equals("")) {
-            sendEmotionMessage(code);
+        boolean isEdit = (boolean) ivEditPic.getTag();
+        if (!isEdit) {
+            String code = entity.getEmo_code();
+            if (!code.equals("")) {
+                sendEmotionMessage(code);
+            }
+        } else {
+            String formart = entity.getEmo_format();
+            if (!formart.equals("gif")) {
+                editUrl = entity.getUrl();
+                emoCode = entity.getEmo_code();
+            } else {
+                showToast("不支持gif编辑", true);
+            }
         }
     }
 
     @Override
     public void onItemLoveClick(String image) {
-//        showToast("image:" + image, true);
-        if (image != null && !image.equals("")) {
-            sendImageMessage(image);
+        boolean isEdit = (boolean) ivEditPic.getTag();
+        if (!isEdit) {
+            if (image != null && !image.equals("")) {
+                sendImageMessage(image);
+            }
+        } else {
+            editUrl = image;
         }
     }
 
@@ -1473,9 +1519,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             params.gravity = Gravity.CENTER;
             textView.setLayoutParams(params);
             if (i == groups.size() + 1) {
-                textView.setImageResource(R.drawable.hp_ch_setup);
+//                textView.setImageResource(R.drawable.hp_ch_setup);
+                textView.setImageResource(R.drawable.hp_sm_setup);
             } else if (i == 0) {
-                textView.setImageResource(R.drawable.love);
+//                textView.setImageResource(R.drawable.love);
+                textView.setImageResource(R.drawable.hp_o_love);
             } else {
                 EmoGroup group = groups.get(i - 1);
                 Log.i("info", "=====group:" + group);
@@ -1937,41 +1985,59 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void showCurrentEmo(EmoEntity entity, View v) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.popwindows_item_emo, null);
-        popupWindow = new PopupWindow(view, (int) mImageHeight,
-                (int) mImageHeight, false);
+//        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+//        View view = inflater.inflate(R.layout.popwindows_item_emo, null);
+//        popupWindow = new PopupWindow(view, (int) mImageHeight,
+//                (int) mImageHeight, false);
+//
+//        popupWindow.setAnimationStyle(R.style.PopupTitleBarAnim);
+//        popupWindow.setOutsideTouchable(true);
+//        popupWindow.setTouchable(true);
+//        popupWindow.setFocusable(true);
+//        popupWindow.setBackgroundDrawable(getDrawableFromRes(R.drawable.bg_pop));
+//        ImageView gif = (ImageView) view.findViewById(R.id.gif);
+//        File file = FileUtil.getFileByPath(getPath(entity));
+//        if (file != null) {
+//            Glide.with(context).load(FileUtil.getBytesFromFile(file)).crossFade().into(gif);
+//        }
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (popupWindow != null && popupWindow.isShowing()) {
+//                    popupWindow.dismiss();
+//                }
+//            }
+//        }, 5000);
+//        int[] location = new int[2];
+//        v.getLocationOnScreen(location);
+//        popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWindow.getWidth() / 2, location[1] - popupWindow.getHeight() - 30);
 
-        popupWindow.setAnimationStyle(R.style.PopupTitleBarAnim);
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setTouchable(true);
-        popupWindow.setFocusable(true);
-        popupWindow.setBackgroundDrawable(getDrawableFromRes(R.drawable.bg_pop));
-        ImageView gif = (ImageView) view.findViewById(R.id.gif);
         File file = FileUtil.getFileByPath(getPath(entity));
         if (file != null) {
-            Glide.with(context).load(FileUtil.getBytesFromFile(file)).crossFade().into(gif);
+            Glide.with(context).load(FileUtil.getBytesFromFile(file)).crossFade().into(ivTips);
         }
-//        SimpleDraweeView gif = (SimpleDraweeView) view.findViewById(R.id.gif);
-//        String imageUrl = entity.getUrl();
-//        if (NetworkUtil.networkAvailable(context) && !imageUrl.equals("")) {
-//            Uri uri = Uri.parse(imageUrl);
-//            //加载动态图片
-//            DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).setAutoPlayAnimations(true).build();
-//            gif.setController(controller);
-//        }
+        final Animation mFadeIn = AnimationUtils.loadAnimation(context, R.anim.push_top_in);
+        final Animation mFadeOut = AnimationUtils.loadAnimation(context, R.anim.push_top_out);
+
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) ivTips.getLayoutParams();
+        params.width = (int) mImageHeight;
+        params.height = (int) mImageHeight;
+        ivTips.setLayoutParams(params);
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                ivTips.setVisibility(View.VISIBLE);
+                ivTips.startAnimation(mFadeIn);
+            }
+        });
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (popupWindow != null && popupWindow.isShowing()) {
-                    popupWindow.dismiss();
-                }
+                ivTips.setVisibility(View.GONE);
+                ivTips.startAnimation(mFadeOut);
             }
         }, 5000);
-        int[] location = new int[2];
-        v.getLocationOnScreen(location);
-//        popupWindow.showAtLocation(Parent, Gravity.NO_GRAVITY, location[0], location[1]);
-        popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWindow.getWidth() / 2, location[1] - popupWindow.getHeight() - 30);
     }
 
     private String getPath(EmoEntity entity) {
@@ -1992,6 +2058,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LocalBroadcastManager.getInstance(this).
+                unregisterReceiver(mLocalBroadcastReceiver);
         Session.getInstance().refreshConversationPager();
     }
 
@@ -2038,4 +2106,28 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                         permissions//相机权限
                 ).request(permissionListener);
     }
+
+    private class LocalBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (Constants.Action.EMOJI_EDITED_SEND.equals(action)) {
+                String path = intent.getStringExtra("imagePath");
+                if (path != null && !path.equals("")) {
+                    uploadImageAudioFile(path, true, 0);
+                }
+            }
+        }
+    }
+
+//    @Override
+//    public void update(Observable observable, Object o) {
+//        SessionInfo sin = (SessionInfo) o;
+//        if (sin.getAction() == Session.ACTION_PREV_CLOSE_ACTIVITY) {
+//            String path = (String) sin.getData();
+//            if (path != null && !path.equals("")) {
+//                uploadImageAudioFile(path, true, 0);
+//            }
+//        }
+//    }
 }

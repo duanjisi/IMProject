@@ -78,6 +78,15 @@ public class HttpUrl {
     public static final String QURE_GROUP_MEMBERS = BASE_IM_URL + "grpinfo";
     //踢出群成員
     public static final String REMOVE_GROUP_MEMBERS = BASE_IM_URL + "delmembers";
+    //获取所有分类
+    public static final String ALL_CATEGROIES = MAIN_URL + "api/v1/emo/cates";
+    //获取所有表情
+    public static final String EMOS_ALL = MAIN_URL + "api/v1/emo";
+    //按分类获取表情
+    public static final String EMOS_BY_CATE = MAIN_URL + "api/v1/emo/cate";
+    //表情搜索
+    public static final String EMOS_SEARCH = MAIN_URL + "api/v1/search/emo";
+
 
     //附近的人
     public static final String PEOPLE_NEARBY = MAIN_URL + "ucenter/nearuser/index";
@@ -192,4 +201,6 @@ public class HttpUrl {
     public static final String SCHOOL_NEWS = MAIN_URL + "api/v1/school/message";
     //家乡动态
     public static final String HOMETOWN_NEWS = MAIN_URL+"api/v1/hometown/message";
+    //搜索学校
+    public static final String SEARCH_SCHOOL = MAIN_URL+"api/v1/search/school";
 }

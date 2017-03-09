@@ -50,7 +50,7 @@
         android:id="@+id/rl_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <EditText
             android:id="@+id/query"
@@ -67,6 +67,7 @@
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
             android:singleLine="true"
+            android:textColorHint="@color/gray_normal"
             android:textSize="16sp" />
 
         <ImageButton

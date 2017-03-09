@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import im.boss66.com.R;
 import im.boss66.com.listener.CommunityMsgListener;
@@ -28,6 +32,7 @@ public class SearchPop extends BasePopuWindow implements View.OnClickListener {
     protected View getRootView(LayoutInflater inflater) {
         view = inflater.inflate(R.layout.pop_search, null);
         et_search = (EditText) view.findViewById(R.id.et_search);
+
         return view;
     }
 

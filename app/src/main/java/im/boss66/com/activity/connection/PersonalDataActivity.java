@@ -9,10 +9,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
@@ -158,7 +160,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             try {
                 //时间戳
                 millionSecnds = sdf.parse(str).getTime();
-                tv_time2.setText(s1 + s2  + s3);
+                tv_time2.setText(s1 + s2 + s3);
             } catch (ParseException e) {
                 e.printStackTrace();
 
@@ -177,10 +179,10 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     break;
                 case 2: //更新成功
                     finish();
-                    SharedPreferencesMgr.setBoolean("setSuccess",true);
+                    SharedPreferencesMgr.setBoolean("setSuccess", true);
                     break;
                 case 3: //更新失败
-                    showToast("更新失败",false);
+                    showToast("更新失败", false);
                     break;
             }
         }
@@ -373,36 +375,35 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
     }
 
     private void saveInfo() {
-        SaveUserInfoRequest request = new SaveUserInfoRequest(TAG,String.valueOf(sexType),String.valueOf(millionSecnds/1000),
-                province_id,city_id,county_id,province_id2,city_id2,county_id2
-        ,jobName,youLike);
-       request.send(new BaseDataRequest.RequestCallback<String>() {
-           @Override
-           public void onSuccess(String str) {
-               try {
-                   JSONObject jsonObject = new JSONObject(str);
-                   if(jsonObject.getInt("code")==1){
-                       handler.obtainMessage(2).sendToTarget();
-                   }
-               } catch (JSONException e) {
-                   e.printStackTrace();
-                   handler.obtainMessage(3).sendToTarget();
-               }
-           }
+        SaveUserInfoRequest request = new SaveUserInfoRequest(TAG, String.valueOf(sexType), String.valueOf(millionSecnds / 1000),
+                province_id, city_id, county_id, province_id2, city_id2, county_id2
+                , jobName, youLike);
+        request.send(new BaseDataRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String str) {
+                try {
+                    JSONObject jsonObject = new JSONObject(str);
+                    if (jsonObject.getInt("code") == 1) {
+                        handler.obtainMessage(2).sendToTarget();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    handler.obtainMessage(3).sendToTarget();
+                }
+            }
 
-           @Override
-           public void onFailure(String msg) {
-               showToast(msg,false);
-           }
-       });
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, false);
+            }
+        });
 
 
     }
 
     private void showAddressSelection2() {
         if (dialog2 == null) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    this);
+            dialog2 = new Dialog(context, R.style.Dialog_full);
             View view_dialog = View.inflate(this,
                     R.layout.dialog_single_select, null);
 
@@ -419,10 +420,17 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             // 添加onclick事件
             mBtnConfirm2.setOnClickListener(this);
             btn_cancle2.setOnClickListener(this);
-            dialogBuilder.setView(view_dialog);
-            dialog2 = dialogBuilder.create();
+            dialog2.setContentView(view_dialog);
             Window dialogWindow = dialog2.getWindow();
-            dialogWindow.setGravity(Gravity.BOTTOM);
+
+            dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
+            dialogWindow.setBackgroundDrawableResource(android.R.color.transparent); //加上可以在底部对其屏幕底部
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.gravity = Gravity.BOTTOM;
+            dialogWindow.setAttributes(lp);
+            dialog2.setCanceledOnTouchOutside(true);
         }
         dialog2.show();
         setUpData2();
@@ -443,8 +451,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 
     private void showAddressSelection() {
         if (dialog == null) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    this);
+            dialog = new Dialog(context, R.style.Dialog_full);
             View view_dialog = View.inflate(this,
                     R.layout.dialog_shipping_address_select, null);
             // 省
@@ -469,15 +476,17 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             mViewDistrict.addChangingListener(this);
             // 添加onclick事件
             mBtnConfirm.setOnClickListener(this);
-            dialogBuilder.setView(view_dialog);
-            dialog = dialogBuilder.create();
+            dialog.setContentView(view_dialog);
 
             Window dialogWindow = dialog.getWindow();
+            dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
+            dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
             lp.width = WindowManager.LayoutParams.MATCH_PARENT;
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             lp.gravity = Gravity.BOTTOM;
             dialogWindow.setAttributes(lp);
+            dialog.setCanceledOnTouchOutside(true);
         }
         dialog.show();
         setUpData();
@@ -499,9 +508,9 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
         int pCurrent = mViewProvince.getCurrentItem();
         cityList = list1.get(pCurrent).getList();
         mCurrentProviceName = mProvinceDatas[pCurrent];
-        if(flag==4){
+        if (flag == 4) {
             province_id = mProvinceDatas2[pCurrent];
-        }else if(flag==5){
+        } else if (flag == 5) {
             province_id2 = mProvinceDatas2[pCurrent];
 
         }
@@ -521,9 +530,9 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
         int pCurrent = mViewCity.getCurrentItem();
         districtList = cityList.get(pCurrent).getList();
         mCurrentCityName = mCitisDatasMap.get(mCurrentProviceName)[pCurrent];
-        if(flag==4){
+        if (flag == 4) {
             city_id = mCitisDatasMap2.get(mCurrentProviceName)[pCurrent];
-        }else if(flag==5){
+        } else if (flag == 5) {
             city_id2 = mCitisDatasMap2.get(mCurrentProviceName)[pCurrent];
         }
         String[] areas = mDistrictDatasMap.get(mCurrentCityName);
@@ -534,9 +543,9 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                 this, areas));
         mViewDistrict.setCurrentItem(0);
         mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[0];
-        if(flag==4){
+        if (flag == 4) {
             county_id = mDistrictDatasMap2.get(mCurrentCityName)[0];
-        }else if(flag==5){
+        } else if (flag == 5) {
             county_id2 = mDistrictDatasMap2.get(mCurrentCityName)[0];
         }
 
@@ -639,14 +648,14 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
     @Override
     public void showLike(ArrayList<String> str, ArrayList<Integer> integers) { //保存接口回调,integers为兴趣id集合
         youLike = "";
-        if(str.size()==0){
+        if (str.size() == 0) {
             youLike = "";
-        }else{
+        } else {
             for (int i = 0; i < str.size(); i++) {
                 String s1 = str.get(i);
                 youLike = youLike + s1 + "|";
             }
-            youLike = youLike.substring(0, youLike.length()-1);
+            youLike = youLike.substring(0, youLike.length() - 1);
         }
         tv_like2.setText(youLike);
 
@@ -661,11 +670,11 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             updateAreas();
         } else if (wheel == mViewDistrict) {
             mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[newValue];
-            if(flag==4){
+            if (flag == 4) {
 
                 county_id = mDistrictDatasMap2.get(mCurrentCityName)[newValue];
-            }else if(flag==5){
-                county_id2= mDistrictDatasMap2.get(mCurrentCityName)[newValue];
+            } else if (flag == 5) {
+                county_id2 = mDistrictDatasMap2.get(mCurrentCityName)[newValue];
 
             }
         } else if (wheel == id_sex) {

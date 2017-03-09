@@ -50,6 +50,7 @@ public class ChatServices extends Service implements Observer {
 
     @Override
     public void onCreate() {
+        Log.i("info", "========ChatServices中onCreate()");
         super.onCreate();
         Session.getInstance().addObserver(this);
         mMsgDB = App.getInstance().getMessageDB();// 发送数据库
@@ -82,7 +83,7 @@ public class ChatServices extends Service implements Observer {
 
     public static void stopChatService(Context context) {
         Intent iService = new Intent(context, ChatServices.class);
-        iService.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        iService.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.stopService(iService);
     }
 
@@ -279,6 +280,9 @@ public class ChatServices extends Service implements Observer {
             if (msg != null && !msg.equals("")) {
                 sendMessage(msg);
             }
+        } else if (sin.getAction() == Session.ACTION_STOP_CHAT_SERVICE) {
+//            stopSelf();
+            stopChatService(this);
         }
     }
 

@@ -11,14 +11,14 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Session;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.ChatActivity;
 import im.boss66.com.activity.im.VerifyApplyActivity;
-import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.db.dao.ConversationHelper;
 import im.boss66.com.entity.FriendState;
 import im.boss66.com.entity.NearByChildEntity;
 import im.boss66.com.entity.PersonEntity;
@@ -41,8 +41,9 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
     private ImageLoader imageLoader;
     private LinearLayout ll_area, rl_privacy, rl_general;
     private FriendState friendState;
+    private PersonEntity person;
     private String classType;
-    private String userid = "", toAvatar, userName;
+    private String userid = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +61,6 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 userid = bundle.getString("userid", "");
-                if (userid != null && curUserid != null && curUserid.equals(userid)) {
-                    iv_set.setVisibility(View.GONE);
-                    bt_greet.setText("发消息");
-                }
                 classType = bundle.getString("classType");
                 if (!TextUtils.isEmpty(classType)) {
                     if ("SharkItOffActivity".equals(classType)) {
@@ -80,16 +77,14 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 }
                 NearByChildEntity item = (NearByChildEntity) bundle.getSerializable("people");
                 if (item != null) {
-                    userName = item.getUser_name();
-                    tv_name.setText("" + userName);
+                    tv_name.setText("" + item.getUser_name());
                     int sex = item.getSex();
                     if (sex == 1) {
                         tv_sex.setText("" + "男");
                     } else if (sex == 2) {
                         tv_sex.setText("" + "女");
                     }
-                    toAvatar = item.getAvatar();
-                    imageLoader.displayImage(toAvatar, iv_head,
+                    imageLoader.displayImage(item.getAvatar(), iv_head,
                             ImageLoaderUtils.getDisplayImageOptions());
                     int dis = item.getDistance();
                     tv_distance.setText("" + dis + "米以内");
@@ -118,9 +113,7 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
         bt_greet = (Button) findViewById(R.id.bt_greet);
         bt_complaint = (Button) findViewById(R.id.bt_complaint);
 
-        iv_set.setImageResource(R.drawable.hp_chat_more);
         tv_back.setOnClickListener(this);
-        iv_set.setVisibility(View.VISIBLE);
         iv_set.setOnClickListener(this);
 
         iv_head.setOnClickListener(this);
@@ -174,15 +167,17 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
 
     private void bindDatas(PersonEntity entity) {
         if (entity != null) {
-            userName = entity.getUser_name();
-            tv_name.setText("" + userName);
+            this.person = entity;
+            tv_name.setText(entity.getUser_name());
             tv_sex.setText(entity.getSex());
             UIUtils.hindView(tv_distance);
             UIUtils.hindView(bt_complaint);
             UIUtils.showView(rl_privacy);
             tv_area.setText(entity.getDistrict());
             tv_personalized_signature.setText(entity.getSignature());
-            if (friendState.equals("1")) {
+            if (friendState.getIs_friend().equals("1")) {
+                iv_set.setImageResource(R.drawable.hp_chat_more);
+                iv_set.setVisibility(View.VISIBLE);
                 bt_greet.setText("发消息");
             } else {
                 bt_greet.setText("添加到通讯录");
@@ -192,11 +187,12 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 tv_source.setText("通过扫一扫添加");
             } else if ("ChatGroupInformActivity".equals(classType)) {
                 tv_source.setText("群消息");
+            } else if ("ContactBooksFragment".equals(classType)) {
+                tv_source.setText("通讯录");
             } else {
                 tv_source.setText("来源于~");
             }
-            toAvatar = entity.getAvatar();
-            imageLoader.displayImage(toAvatar, iv_head,
+            imageLoader.displayImage(entity.getAvatar(), iv_head,
                     ImageLoaderUtils.getDisplayImageOptions());
         }
     }
@@ -221,13 +217,16 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                     Intent intent = new Intent(context, VerifyApplyActivity.class);
                     intent.putExtra("userid", userid);
                     startActivity(intent);
-                } else if ("发消息".equals(str)) {
-                    Intent intent = new Intent(this, ChatActivity.class);
-                    intent.putExtra("title", userName);
-                    intent.putExtra("toUid", userid);
-                    intent.putExtra("toAvatar", toAvatar);
-                    intent.putExtra("isgroup", false);
-                    startActivity(intent);
+                } else if (str.equals("发消息")) {
+                    if (person != null) {
+                        Intent intent = new Intent(context, ChatActivity.class);
+                        intent.putExtra("title", person.getUser_name());
+                        intent.putExtra("toUid", person.getUser_id());
+                        intent.putExtra("toAvatar", person.getAvatar());
+                        intent.putExtra("isgroup", false);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
                 break;
             case R.id.bt_complaint://投诉
@@ -254,23 +253,29 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
         });
     }
 
-    private void deleteFriendRequest(String userid) {
-        showLoadingDialog();
-        DeleteFriendRequest request = new DeleteFriendRequest(TAG, userid);
-        request.send(new BaseDataRequest.RequestCallback<String>() {
-            @Override
-            public void onSuccess(String pojo) {
-                cancelLoadingDialog();
-                finish();
-                showToast("已删除该好友!", true);
-            }
+    private void deleteFriendRequest() {
+        if (friendState != null) {
+            showLoadingDialog();
+            DeleteFriendRequest request = new DeleteFriendRequest(TAG, friendState.getFid());
+            request.send(new BaseDataRequest.RequestCallback<String>() {
+                @Override
+                public void onSuccess(String pojo) {
+                    cancelLoadingDialog();
+                    if (person != null) {
+                        ConversationHelper.getInstance().deleteByConversationId(person.getUser_id());
+                        Session.getInstance().refreshConversationPager();
+                    }
+                    showToast("已删除该好友!", true);
+                    finish();
+                }
 
-            @Override
-            public void onFailure(String msg) {
-                showToast(msg, true);
-                cancelLoadingDialog();
-            }
-        });
+                @Override
+                public void onFailure(String msg) {
+                    showToast(msg, true);
+                    cancelLoadingDialog();
+                }
+            });
+        }
     }
 
     private void showActionSheet() {
@@ -285,6 +290,6 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
 
     @Override
     public void onClick(int which) {
-        deleteFriendRequest(userid);
+        deleteFriendRequest();
     }
 }

@@ -74,6 +74,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
         </FrameLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="11dp"
+            android:background="@drawable/bg_pop"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
     </FrameLayout>
 
     <!--android:background="@drawable/bottombar_bg"-->
@@ -157,7 +169,6 @@
                 android:paddingLeft="10.0dip"
                 android:paddingRight="14.0dip"
                 android:paddingTop="4.0dip"
-                android:text="asdas"
                 android:textSize="16.0sp"
                 android:visibility="visible" />
 

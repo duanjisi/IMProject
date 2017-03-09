@@ -71,9 +71,9 @@ public class ConversationHelper extends ColumnHelper<BaseConversation> {
 
     @Override
     public void save(BaseConversation entity) {
-        String[] args = new String[]{entity.getUser_name(), userId};
+        String[] args = new String[]{entity.getConversation_id(), userId};
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
-                getSelectSql(ConversationColumn.TABLE_NAME, new String[]{ConversationColumn.USER_NAME,
+                getSelectSql(ConversationColumn.TABLE_NAME, new String[]{ConversationColumn.CONVERSATION_ID,
                         ConversationColumn.USER_ID}), args);
         if (exist(c)) {
 //            c.moveToFirst();
@@ -116,6 +116,20 @@ public class ConversationHelper extends ColumnHelper<BaseConversation> {
 
     }
 
+
+    public BaseConversation queryByid(String id) {
+        Cursor c = DBHelper.getInstance(mContext).rawQuery(
+                "SELECT * FROM " + ConversationColumn.TABLE_NAME + " WHERE " + ConversationColumn.USER_ID
+                        + " = ? " + " AND " + ConversationColumn.CONVERSATION_ID + " =?", new String[]{userId, id});
+        BaseConversation conversation = null;
+        if (exist(c)) {
+            c.moveToFirst();
+            conversation = getBean(c);
+        }
+        c.close();
+        return conversation;
+    }
+
     /**
      * 删除表内所有数据
      */
@@ -123,10 +137,26 @@ public class ConversationHelper extends ColumnHelper<BaseConversation> {
         DBHelper.getInstance(mContext).delete(ConversationColumn.TABLE_NAME, null, null);
     }
 
+    public void deleteByConversationId(String conversationid) {//根据分类id删除表情
+        DBHelper.getInstance(mContext).delete(ConversationColumn.TABLE_NAME, ConversationColumn.CONVERSATION_ID + " = ?" +
+                        " and " + ConversationColumn.USER_ID + " =?",
+                new String[]{conversationid, userId});
+    }
+
     @Override
     public void update(BaseConversation entity) {
-        String sql = ConversationColumn.USER_NAME + " = ? AND " + ConversationColumn.AVATAR + " = ?" + " and " + ConversationColumn.USER_ID + " =?";
+        String sql = ConversationColumn.CONVERSATION_ID + " = ?" + " and " + ConversationColumn.USER_ID + " =?";
         DBHelper.getInstance(mContext).update(ConversationColumn.TABLE_NAME, getValues(entity),
-                sql, new String[]{entity.getUser_name(), entity.getAvatar(), userId});
+                sql, new String[]{entity.getConversation_id(), userId});
+    }
+
+
+    //    select * from table where num =3 uniodn select * from table where num !=3
+    public void sortTop(String conversationId) {
+        BaseConversation conversation = this.queryByid(conversationId);
+        if (conversation != null) {
+            this.deleteByConversationId(conversationId);
+            this.save(conversation);
+        }
     }
 }

@@ -11,8 +11,10 @@
         android:layout_height="wrap_content"
         android:divider="@color/bg_pannel"
         android:dividerHeight="11dp"
-        android:numColumns="4"
-        android:scrollbars="none" />
+        android:horizontalSpacing="8dp"
+        android:numColumns="3"
+        android:scrollbars="none"
+        android:verticalSpacing="8dp" />
 
     <RelativeLayout
         android:id="@+id/rl_notify"

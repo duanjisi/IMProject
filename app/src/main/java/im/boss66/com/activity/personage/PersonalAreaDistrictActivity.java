@@ -15,7 +15,6 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.LocalAddressAdapter;
-import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.ChangeAreaRequest;
 
@@ -55,27 +54,27 @@ public class PersonalAreaDistrictActivity extends BaseActivity implements View.O
             if (bundle != null) {
                 province = bundle.getString("province");
                 city = bundle.getString("city");
-                LocalAddressEntity.FourChild child = (LocalAddressEntity.FourChild) bundle.getSerializable("list");
-                if (child != null) {
-                    final List<LocalAddressEntity.LastChild> list = child.getList();
-                    if (list != null) {
-                        adapter = new LocalAddressAdapter(this);
-                        adapter.getDistrictList(list,3);
-                        adapter.setOnItemClickListener(new LocalAddressAdapter.MyItemClickListener() {
-                            @Override
-                            public void onItemClick(View view, int postion) {
-                                if (list != null && list.size() > postion) {
-                                    LocalAddressEntity.LastChild child = list.get(postion);
-                                    if (child != null){
-                                        district = child.getRegion_id();
-                                        changeArea();
-                                    }
-                                }
-                            }
-                        });
-                        rv_area.setAdapter(adapter);
-                    }
-                }
+//                LocalAddressEntity.FourChild child = (LocalAddressEntity.FourChild) bundle.getSerializable("list");
+//                if (child != null) {
+//                    final List<LocalAddressEntity.LastChild> list = child.getList();
+//                    if (list != null) {
+//                        adapter = new LocalAddressAdapter(this);
+//                        adapter.getDistrictList(list,3);
+//                        adapter.setOnItemClickListener(new LocalAddressAdapter.MyItemClickListener() {
+//                            @Override
+//                            public void onItemClick(View view, int postion) {
+//                                if (list != null && list.size() > postion) {
+//                                    LocalAddressEntity.LastChild child = list.get(postion);
+//                                    if (child != null){
+//                                        district = child.getRegion_id();
+//                                        changeArea();
+//                                    }
+//                                }
+//                            }
+//                        });
+//                        rv_area.setAdapter(adapter);
+//                    }
+//                }
             }
         }
     }

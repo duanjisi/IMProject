@@ -12,6 +12,8 @@ public class Session extends Observable {
     public static final int ACTION_APPLICATION_EXIT = 1013;//退出当前所有activity
     public static final int ACTION_REFRESH_VIEWS = 1014;//刷新视图
     public static final int ACTION_SEND_IM_MESSAGE = 1015;//发送信息
+    public static final int ACTION_STOP_CHAT_SERVICE = 1016;//发送信息
+    public static final int ACTION_PREV_CLOSE_ACTIVITY = 1017;//关闭上一个activity
 
     public Session() {
 
@@ -59,6 +61,21 @@ public class Session extends Observable {
         SessionInfo sin = new SessionInfo();
         sin.setAction(ACTION_SEND_IM_MESSAGE);
         sin.setData(msg);
+        this.setChanged();
+        this.notifyObservers(sin);
+    }
+
+    public void stopChatService() {
+        SessionInfo sin = new SessionInfo();
+        sin.setAction(ACTION_STOP_CHAT_SERVICE);
+        this.setChanged();
+        this.notifyObservers(sin);
+    }
+
+    public void closePreActivity(String imagePath) {
+        SessionInfo sin = new SessionInfo();
+        sin.setAction(ACTION_PREV_CLOSE_ACTIVITY);
+        sin.setData(imagePath);
         this.setChanged();
         this.notifyObservers(sin);
     }

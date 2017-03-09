@@ -12,6 +12,7 @@ public class EmoEntity {
     private String emo_format = "";//格式png,jpg,gif
     private String emo_code = "";
     private String url = "";
+    private String emo_url = "";
 
     public String getEmo_id() {
         return emo_id;
@@ -75,5 +76,13 @@ public class EmoEntity {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getEmo_url() {
+        return emo_url;
+    }
+
+    public void setEmo_url(String emo_url) {
+        this.emo_url = emo_url;
     }
 }

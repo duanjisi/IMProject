@@ -14,8 +14,6 @@ import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.LocalAddressAdapter;
-import im.boss66.com.entity.LocalAddressEntity;
-import im.boss66.com.listener.RecycleViewItemListener;
 
 /**
  *地区-市
@@ -49,28 +47,28 @@ public class PersonalAreaCityActivity extends BaseActivity implements View.OnCli
             Bundle bundle = getIntent().getExtras();
             if (bundle != null){
                 final String province = bundle.getString("province");
-                LocalAddressEntity.ThreeChild child = (LocalAddressEntity.ThreeChild) bundle.getSerializable("list");
-                if (child != null){
-                    final List<LocalAddressEntity.FourChild> list = child.getList();
-                    if (list != null){
-                        adapter = new LocalAddressAdapter(this);
-                        adapter.getCityList(list,2);
-                        adapter.setOnItemClickListener(new LocalAddressAdapter.MyItemClickListener() {
-                            @Override
-                            public void onItemClick(View view, int postion) {
-                                if (list != null && list.size() > postion){
-                                    LocalAddressEntity.FourChild child = list.get(postion);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("list",child);
-                                    bundle.putString("province",province);
-                                    bundle.putString("city",child.getRegion_id());
-                                    openActivity(PersonalAreaDistrictActivity.class,bundle);
-                                }
-                            }
-                        });
-                        rv_area.setAdapter(adapter);
-                    }
-                }
+//                LocalAddressEntity.ThreeChild child = (LocalAddressEntity.ThreeChild) bundle.getSerializable("list");
+//                if (child != null){
+//                    final List<LocalAddressEntity.FourChild> list = child.getList();
+//                    if (list != null){
+//                        adapter = new LocalAddressAdapter(this);
+//                        adapter.getCityList(list,2);
+//                        adapter.setOnItemClickListener(new LocalAddressAdapter.MyItemClickListener() {
+//                            @Override
+//                            public void onItemClick(View view, int postion) {
+//                                if (list != null && list.size() > postion){
+//                                    LocalAddressEntity.FourChild child = list.get(postion);
+//                                    Bundle bundle = new Bundle();
+//                                    bundle.putSerializable("list",child);
+//                                    bundle.putString("province",province);
+//                                    bundle.putString("city",child.getRegion_id());
+//                                    openActivity(PersonalAreaDistrictActivity.class,bundle);
+//                                }
+//                            }
+//                        });
+//                        rv_area.setAdapter(adapter);
+//                    }
+//                }
             }
         }
     }
