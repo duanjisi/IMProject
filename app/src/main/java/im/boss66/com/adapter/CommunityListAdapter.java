@@ -19,6 +19,8 @@ import java.util.List;
 import im.boss66.com.R;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.Utils.UrlUtils;
+import im.boss66.com.activity.connection.PeopleCenterActivity;
+import im.boss66.com.activity.connection.SchoolHometownActivity;
 import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.activity.discover.ImagePagerActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
@@ -52,7 +54,7 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
     public final int TYPE_URL = 3;
     public final int TYPE_IMG = 1;
     public final int TYPE_VIDEO = 2;
-    private String curUserid;
+    private String curUserid, classType;
     private int sceenW;
 
     public void setCirclePresenter(CirclePresenter presenter) {
@@ -107,16 +109,34 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
         String createTime = entity.getAdd_time();
         boolean hasFavort = entity.hasFavort();
         boolean hasComment = entity.hasComment();
+        String address = entity.getFeed_to();
 
         final int circlePosition = position - HEADVIEW_SIZE;
         final CircleViewHolder holder = (CircleViewHolder) viewHolder;
 
         Glide.with(context).load(headImg).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.color.bg_gray).
                 transform(new GlideCircleTransform(context)).into(holder.headIv);
-
+        holder.headIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+                    Intent intent = new Intent(context, PeopleCenterActivity.class);
+                    intent.putExtra("name", entity.getUser_name());
+                    intent.putExtra("address", entity.getFeed_to());
+                    intent.putExtra("uid", entity.getUser_id());
+                    intent.putExtra("avatar", entity.getAvatar());
+                    ((SchoolHometownActivity) context).startActivityForResult(intent, 101);
+                }
+            }
+        });
         holder.nameTv.setText(name);
         holder.timeTv.setText(createTime);
-
+        if (!TextUtils.isEmpty(address)) {
+            holder.addressTv.setVisibility(View.VISIBLE);
+            holder.addressTv.setText(address);
+        } else {
+            holder.addressTv.setVisibility(View.GONE);
+        }
         if (!TextUtils.isEmpty(content)) {
             holder.contentTv.setExpand(entity.isExpand());
             holder.contentTv.setExpandStatusListener(new ExpandTextView.ExpandStatusListener() {
@@ -177,6 +197,8 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
                                 config.uid_to_name = commentItem.getUid_to_name();
                                 config.commentFromId = commentItem.getUid_from();
                                 config.pid = commentItem.getPid();
+                                config.commentId = commentItem.getComm_id();
+                                config.feedid = Integer.parseInt(commentItem.getFeed_id());
                                 config.isReply = true;
                                 presenter.showEditTextBody(config);
                             }
@@ -189,7 +211,7 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
                         //长按进行复制或者删除
                         FriendCircleCommentEntity commentItem = comment_list.get(commentPosition);
                         CommentDialog dialog = new CommentDialog(context, presenter, commentItem, circlePosition);
-                        dialog.setMfeedId(entity.getFeed_uid());
+                        dialog.setMfeedId(entity.getUser_id());
                         dialog.show();
                     }
                 });
@@ -244,8 +266,6 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
                             }
                         });
                     }
-                    //String linkTitle = circleItem.getLinkTitle();
-                    //((URLViewHolder) holder).urlContentTv.setText(linkTitle);
                 }
 
                 break;
@@ -306,7 +326,7 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
                                     intent.putExtra("url", url);
                                     intent.putExtra("imgurl", url_img);
                                     intent.putExtra("isDelete", true);
-                                    intent.putExtra("isFull",false);
+                                    intent.putExtra("isFull", false);
                                     context.startActivity(intent);
                                 }
                             }
@@ -375,5 +395,9 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
 
     public void getCurUserId(String uid) {
         this.curUserid = uid;
+    }
+
+    public void getClassType(String classType) {
+        this.classType = classType;
     }
 }

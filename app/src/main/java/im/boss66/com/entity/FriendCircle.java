@@ -32,6 +32,15 @@ public class FriendCircle implements Serializable {
     private String timeDay;
     private String user_name;
     private String avatar;
+    private String feed_to;//发布于哪里  学校社群或者家乡社群
+
+    public String getFeed_to() {
+        return feed_to;
+    }
+
+    public void setFeed_to(String feed_to) {
+        this.feed_to = feed_to;
+    }
 
     public String getUser_name() {
         return user_name;

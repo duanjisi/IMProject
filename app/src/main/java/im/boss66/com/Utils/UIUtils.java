@@ -4,6 +4,8 @@ import android.animation.FloatEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
@@ -640,6 +642,13 @@ public final class UIUtils {
             out.set(width, height);
         }
         return out;
+    }
+
+    public static Bitmap big(Bitmap bitmap, float size) {
+        Matrix matrix = new Matrix();
+        matrix.postScale((float) (size + 0.1), (float) (size + 0.1)); //长和宽放大缩小的比例
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return bitmap;
     }
 
 }

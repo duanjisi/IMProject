@@ -49,7 +49,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -130,13 +129,12 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     private boolean isReply;
     private String commentFromId, commentPid;
     private CommunityMsgListener communityMsgListener;
+    private String CuiUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_hometown);
-
-
         initArgument();
         initViews();
     }
@@ -223,17 +221,15 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         tv_club.setOnClickListener(this);
         tv_news.setOnClickListener(this);
 
-
         // 回调接口和adapter设置
         presenter = new CirclePresenter(this);
-//        List<CircleItem> list = FriendCircleTestData.createCircleDatas();
         adapter = new CommunityListAdapter(this);
+        adapter.getClassType("SchoolHometownActivity");
         AccountEntity sAccount = App.getInstance().getAccount();
         access_token = sAccount.getAccess_token();
-        String uid = sAccount.getUser_id();
-        adapter.getCurUserId(uid);
+        CuiUid = sAccount.getUser_id();
+        adapter.getCurUserId(CuiUid);
         adapter.setCirclePresenter(presenter);
-//        adapter.setDatas(list);
         mLRecyclerViewAdapter = new LRecyclerViewAdapter(adapter);
         //头部view设置，加入到adapter中
         RelativeLayout.LayoutParams linearParams = (RelativeLayout.LayoutParams) iv_bg.getLayoutParams(); //取控件textView当前的布局参数
@@ -254,7 +250,6 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                     @Override
                     public void run() {
                         rcv_news.refreshComplete(20);
-                        ToastUtil.showShort(SchoolHometownActivity.this, "刷新完成");
                         isOnRefresh = true;
                         isAddNew = false;
                         getCommunityList();
@@ -356,17 +351,16 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                     updateEditTextBodyVisible(View.GONE, null);
                     FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
                     if (item != null) {
-                        String feed_uid = "0";
+                        String feed_uid = CuiUid;
                         String pid = "0";
                         if (isReply) {
-                            pid = commentPid;
+                            pid = commentId;
                             feed_uid = commentFromId;
                         }
                         createComment(content, pid, feed_uid);
                     }
                 }
                 break;
-
         }
 
     }
@@ -383,7 +377,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 public void goMyMsg() {
                     Bundle bundle = new Bundle();
                     bundle.putString("classType", "SchoolHometownActivity");
-                    openActivity(CircleMessageListActivity.class,bundle);
+                    openActivity(CircleMessageListActivity.class, bundle);
                 }
             };
         }
@@ -391,15 +385,6 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         myNewsPop.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         myNewsPop.setAnimationStyle(R.style.PopupTitleBarAnim1);
         myNewsPop.showAsDropDown(parent);
-    }
-
-    public void openActivityForResult(Class<?> clazz, int requestCode, Bundle bundle) {
-        Intent intent = new Intent(this, clazz);
-        if (intent != null) {
-            intent.putExtras(bundle);
-        }
-        startActivityForResult(intent, requestCode);
-
     }
 
     private void getCommunityList() {
@@ -437,7 +422,6 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                         if (data.getCode() == 1) {
                             List<FriendCircle> list = data.getResult();
                             if (list != null && list.size() > 0) {
-                                Collections.reverse(list);
                                 showData(list);
                             }
                         } else {
@@ -579,6 +563,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
 
     //发表评论
     private void createComment(String content, String pid, String uid_to) {
+        et_send.setText("");
         CommunityCreateCommentRequest request = new CommunityCreateCommentRequest(TAG, String.valueOf(feedId), content, pid, uid_to);
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
@@ -714,6 +699,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     }
 
     private void showActionSheet(int type) {
+        updateEditTextBodyVisible(View.GONE, null);
         actionSheetType = type;
         ActionSheet actionSheet = new ActionSheet(SchoolHometownActivity.this)
                 .builder()
@@ -897,6 +883,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (requestCode == 101 && resultCode == RESULT_OK) {
+            isOnRefresh = true;
+            isAddNew = false;
+            getCommunityList();
         }
     }
 

@@ -79,6 +79,15 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/addressTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_6"
+                    android:singleLine="true"
+                    android:textColor="@color/text_app_num_gray"
+                    android:textSize="12sp" />
+
+                <TextView
                     android:id="@+id/deleteBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

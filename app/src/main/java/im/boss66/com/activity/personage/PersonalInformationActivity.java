@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -26,6 +27,7 @@ import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.config.LoginStatus;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.widget.CircleImageView;
@@ -48,6 +50,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
     private String headUrl;
     private boolean isFirst = false;
     private App mApplication;
+    private boolean isChange = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,30 +63,30 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
     private void initData() {
         mApplication = App.getInstance();
         AccountEntity sAccount = mApplication.getAccount();
-        if (sAccount != null){
+        if (sAccount != null) {
             headUrl = sAccount.getAvatar();
-            if (!TextUtils.isEmpty(headUrl)){
+            if (!TextUtils.isEmpty(headUrl)) {
                 imageLoader.displayImage(headUrl, iv_head,
                         ImageLoaderUtils.getDisplayImageOptions());
             }
             String userid = sAccount.getUser_id();
-            if (!TextUtils.isEmpty(userid)){
+            if (!TextUtils.isEmpty(userid)) {
                 tv_number.setText(userid);
             }
             String username = sAccount.getUser_name();
-            if (!TextUtils.isEmpty(username)){
+            if (!TextUtils.isEmpty(username)) {
                 tv_name.setText(username);
             }
             String sex = sAccount.getSex();
-            if (!TextUtils.isEmpty(sex)){
+            if (!TextUtils.isEmpty(sex)) {
                 tv_sex.setText(sex);
             }
             String signature = sAccount.getSignature();
-            if (!TextUtils.isEmpty(signature)){
+            if (!TextUtils.isEmpty(signature)) {
                 tv_signature.setText(signature);
             }
             String area = sAccount.getDistrict_str();
-            if (!TextUtils.isEmpty(area)){
+            if (!TextUtils.isEmpty(area)) {
                 tv_area.setText(area);
             }
         }
@@ -119,18 +122,21 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_back:
+                Intent intent = new Intent();
+                intent.putExtra("isChange", isChange);
+                setResult(102, intent);
                 finish();
                 break;
             case R.id.rl_head_icon://头像
                 Bundle bundle0 = new Bundle();
-                bundle0.putString("head",headUrl);
-                openActvityForResult(PersonalIconActivity.class, ICON_CHANGE_REQUEST,bundle0);
+                bundle0.putString("head", headUrl);
+                openActvityForResult(PersonalIconActivity.class, ICON_CHANGE_REQUEST, bundle0);
                 break;
             case R.id.rl_name://名字
                 Bundle bundle = new Bundle();
                 bundle.putString("changeType", "name");
                 String name = tv_name.getText().toString();
-                bundle.putString("changeValue",name);
+                bundle.putString("changeValue", name);
                 openActvityForResult(PersonalInfoChangeActivity.class, NAME_SEX_SIGNATURE_REQUEST, bundle);
                 break;
             case R.id.rl_qr_code://二维码
@@ -140,7 +146,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                 Bundle bundle1 = new Bundle();
                 bundle1.putString("changeType", "sex");
                 String sex = tv_sex.getText().toString();
-                bundle1.putString("changeValue",sex);
+                bundle1.putString("changeValue", sex);
                 openActvityForResult(PersonalInfoChangeActivity.class, NAME_SEX_SIGNATURE_REQUEST, bundle1);
                 break;
             case R.id.rl_area://地区
@@ -151,8 +157,8 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                 Bundle bundle2 = new Bundle();
                 bundle2.putString("changeType", "signature");
                 String signature = tv_signature.getText().toString();
-                bundle2.putString("changeValue",signature);
-                bundle2.putBoolean("isNull",isSignatureNull);
+                bundle2.putString("changeValue", signature);
+                bundle2.putBoolean("isNull", isSignatureNull);
                 openActvityForResult(PersonalInfoChangeActivity.class, NAME_SEX_SIGNATURE_REQUEST, bundle2);
                 break;
         }
@@ -163,33 +169,35 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ICON_CHANGE_REQUEST && resultCode == RESULT_OK && data != null) {
             headUrl = data.getStringExtra("headicon");
-            if (!TextUtils.isEmpty(headUrl)){
+            if (!TextUtils.isEmpty(headUrl)) {
+                isChange = true;
                 imageLoader.displayImage(headUrl, iv_head,
                         ImageLoaderUtils.getDisplayImageOptions());
             }
         } else if (requestCode == NAME_SEX_SIGNATURE_REQUEST && resultCode == RESULT_OK && data != null) {
             String changeType = data.getStringExtra("changeType");
             if (!TextUtils.isEmpty(changeType)) {
-                AccountEntity sAccount = mApplication.getAccount();
+                LoginStatus sLoginStatus = LoginStatus.getInstance();
                 String value = data.getStringExtra("back_value");
+                isChange = true;
                 switch (changeType) {
                     case "name":
                         tv_name.setText("" + value);
-                        sAccount.setUser_name(value);
+                        sLoginStatus.setUser_name(value);
                         break;
                     case "sex":
                         tv_sex.setText("" + value);
-                        sAccount.setSex(value);
+                        sLoginStatus.setSex_str(value);
                         break;
                     case "signature":
                         if (!TextUtils.isEmpty(value)) {
                             tv_signature.setText("" + value);
                             isSignatureNull = false;
-                            sAccount.setSignature(value);
+                            sLoginStatus.setSignature(value);
                         } else {
                             isSignatureNull = true;
                             tv_signature.setText(getString(R.string.not_filled));
-                            sAccount.setSignature(getString(R.string.not_filled));
+                            sLoginStatus.setSignature(getString(R.string.not_filled));
                         }
                         break;
                 }
@@ -200,12 +208,24 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
     @Override
     protected void onResume() {
         super.onResume();
-        if (isFirst && mApplication != null){
+        if (isFirst && mApplication != null) {
             AccountEntity sAccount = mApplication.getAccount();
             String area = sAccount.getDistrict_str();
-            if (!TextUtils.isEmpty(area)){
+            if (!TextUtils.isEmpty(area)) {
                 tv_area.setText(area);
             }
         }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            Intent intent = new Intent();
+            intent.putExtra("isChange", isChange);
+            setResult(102, intent);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }

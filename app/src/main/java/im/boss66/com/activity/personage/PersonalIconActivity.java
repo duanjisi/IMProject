@@ -260,6 +260,7 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
                     if (entity != null) {
                         ChangeAvatarEntity.Result result = entity.getResult();
                         if (result != null) {
+                            isHeadChange = true;
                             ToastUtil.showShort(context, "更改成功");
                             headurl = result.getAvatar();
                             imageLoader.displayImage(headurl, iv_icon,
