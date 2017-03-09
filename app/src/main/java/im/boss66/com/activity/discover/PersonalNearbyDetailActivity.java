@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.Utils.ImageLoaderUtils;
@@ -19,6 +20,7 @@ import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.ChatActivity;
 import im.boss66.com.activity.im.VerifyApplyActivity;
 import im.boss66.com.db.dao.ConversationHelper;
+import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.FriendState;
 import im.boss66.com.entity.NearByChildEntity;
 import im.boss66.com.entity.PersonEntity;
