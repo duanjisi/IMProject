@@ -186,7 +186,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_headlift_view:
-                if(result.size()>0){
+                if(result!=null&&result.size()>0){
                     Intent intent = new Intent();
                     intent.putExtra("school_name",school_name);
                     setResult(2,intent);
@@ -236,7 +236,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
-        if(result.size()>0){
+        if(result!=null&&result.size()>0){
             Intent intent = new Intent();
             intent.putExtra("school_name",school_name);
             setResult(2,intent);
@@ -244,6 +244,8 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
         }else{
             finish();
         }
+
+
 
 
 
