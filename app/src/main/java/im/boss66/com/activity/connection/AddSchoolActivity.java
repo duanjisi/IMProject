@@ -28,15 +28,13 @@ public class AddSchoolActivity extends ABaseActivity implements View.OnClickList
         tv_headcenter_view.setText("添加学校");
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headlift_view.setOnClickListener(this);
-        iv_headright_view = (ImageView) findViewById(R.id.iv_headright_view);
-        iv_headright_view.setVisibility(View.GONE);
+
 
         findViewById(R.id.rl_university).setOnClickListener(this);
         findViewById(R.id.rl_high_shcool).setOnClickListener(this);
         findViewById(R.id.rl_big_middle_shcool).setOnClickListener(this);
         findViewById(R.id.rl_middle_school).setOnClickListener(this);
         findViewById(R.id.rl_small_school).setOnClickListener(this);
-
     }
 
     @Override

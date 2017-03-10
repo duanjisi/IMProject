@@ -176,6 +176,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     showAddressSelection2();
                     break;
                 case 2: //更新成功
+                    showToast("保存成功",false);
                     finish();
                     SharedPreferencesMgr.setBoolean("setSuccess", true);
                     break;
