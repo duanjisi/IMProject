@@ -210,9 +210,9 @@ public class PersonalInfoChangeActivity extends BaseActivity implements View.OnC
                     public void onSuccess(String pojo) {
                         cancelLoadingDialog();
                         String sex = null;
-                        if ("1".equals(value)){
+                        if ("1".equals(value)) {
                             sex = "男";
-                        }else if("2".equals(value)){
+                        } else if ("2".equals(value)) {
                             sex = "女";
                         }
                         setBackValue(sex);
@@ -253,7 +253,6 @@ public class PersonalInfoChangeActivity extends BaseActivity implements View.OnC
                     + getChineseCount(source.toString());
             if (destCount + sourceCount > MAX_EN) {
                 return "";
-
             } else {
                 return source;
             }

@@ -207,7 +207,8 @@
         <!--相册Activity-->
         <activity
             android:name=".Utils.PhotoAlbumUtil.MultiImageSelectorActivity"
-            android:configChanges="orientation|screenSize"></activity>
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"></activity>
 
         <!--聊天信息-->
         <activity
@@ -218,102 +219,187 @@
             android:screenOrientation="portrait"></activity>
         <!--<activity android:name=".activity.LoginActivity"></activity>-->
         <!-- 摇一摇主界面 -->
-        <activity android:name=".activity.discover.SharkItOffActivity"></activity>
+        <activity
+            android:name=".activity.discover.SharkItOffActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 摇一摇设置界面 -->
-        <activity android:name=".activity.discover.SharkItOffSetActivity"></activity>
+        <activity
+            android:name=".activity.discover.SharkItOffSetActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 个人信息 -->
-        <activity android:name=".activity.personage.PersonalInformationActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalInformationActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 个人头像 -->
-        <activity android:name=".activity.personage.PersonalIconActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalIconActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 图片裁剪 -->
-        <activity android:name=".activity.personage.ClipImageActivity"></activity>
+        <activity
+            android:name=".activity.personage.ClipImageActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 我的二维码 -->
-        <activity android:name=".activity.personage.QrCodeActivity"></activity>
+        <activity
+            android:name=".activity.personage.QrCodeActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 修改个人名字，性别，个性签名共用类 -->
-        <activity android:name=".activity.personage.PersonalInfoChangeActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalInfoChangeActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置 -->
-        <activity android:name=".activity.personage.PersonalSetActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalSetActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 账号与安全 -->
-        <activity android:name=".activity.personage.PersonalAccountSafeActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalAccountSafeActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-新消息通知 -->
-        <activity android:name=".activity.personage.PersonalNewAlertsActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalNewAlertsActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-隐私 -->
-        <activity android:name=".activity.personage.PersonalPrivacyActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalPrivacyActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 钱包 -->
-        <activity android:name=".activity.personage.WalletActivity"></activity>
+        <activity
+            android:name=".activity.personage.WalletActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 关于 -->
-        <activity android:name=".activity.personage.AboutAppActivity"></activity>
+        <activity
+            android:name=".activity.personage.AboutAppActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-通用 -->
-        <activity android:name=".activity.personage.PersonalSetGeneralActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalSetGeneralActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-聊天背景 -->
-        <activity android:name=".activity.personage.PersonalSetChatBgActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalSetChatBgActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-照片和视频 -->
-        <activity android:name=".activity.personage.PersonalSetPhotosVideoActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalSetPhotosVideoActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-功能消息免打扰 -->
-        <activity android:name=".activity.personage.PersonalSetNoDisturbingActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalSetNoDisturbingActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-添加我的方式 -->
-        <activity android:name=".activity.personage.PersonalSetAddMyWayActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalSetAddMyWayActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 附近的人 -->
-        <activity android:name=".activity.discover.PeopleNearbyActivity"></activity>
+        <activity
+            android:name=".activity.discover.PeopleNearbyActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 朋友圈 -->
-        <activity android:name=".activity.discover.FriendCircleActivity"></activity>
+        <activity
+            android:name=".activity.discover.FriendCircleActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 朋友圈图片查看 -->
-        <activity android:name=".activity.discover.ImagePagerActivity"></activity>
+        <activity
+            android:name=".activity.discover.ImagePagerActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 朋友圈新消息列表 -->
-        <activity android:name=".activity.discover.CircleMessageListActivity"></activity>
+        <activity
+            android:name=".activity.discover.CircleMessageListActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 更换相册封面 -->
-        <activity android:name=".activity.discover.ReplaceAlbumCoverActivity"></activity>
+        <activity
+            android:name=".activity.discover.ReplaceAlbumCoverActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 视频播放 -->
         <activity
             android:name=".activity.discover.VideoPlayerActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"></activity>
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"></activity>
         <!-- webview -->
-        <activity android:name=".activity.discover.WebViewActivity"></activity>
+        <activity
+            android:name=".activity.discover.WebViewActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 附近的人详细资料 -->
-        <activity android:name=".activity.discover.PersonalNearbyDetailActivity"></activity>
+        <activity
+            android:name=".activity.discover.PersonalNearbyDetailActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-通用 -->
-        <activity android:name=".activity.personage.PersonalPhotoAlbumActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalPhotoAlbumActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 个人资料 -->
         <activity android:name=".activity.connection.PersonalDataActivity"></activity>
         <!-- 个人资料2 -->
         <!-- 添加人脉 -->
         <activity android:name=".activity.connection.AddPeopleActivity"></activity>
         <!-- 人脉中心 -->
-        <activity android:name=".activity.connection.PeopleCenterActivity"></activity>
+        <activity
+            android:name=".activity.connection.PeopleCenterActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-地区-省 -->
-        <activity android:name=".activity.personage.PersonalAreaProvinceActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalAreaProvinceActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-地区-市 -->
-        <activity android:name=".activity.personage.PersonalAreaCityActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalAreaCityActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-地区-区 -->
-        <activity android:name=".activity.personage.PersonalAreaDistrictActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalAreaDistrictActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-更换手机号 -->
-        <activity android:name=".activity.personage.ChanePhoneNumActivity"></activity>
-        <activity android:name=".activity.personage.ChangePhoneSmsActivity"></activity>
+        <activity
+            android:name=".activity.personage.ChanePhoneNumActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.personage.ChangePhoneSmsActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-更换手机号-填写验证码 -->
-        <activity android:name=".activity.personage.PersonalInputSmsActivity"></activity>
+        <activity
+            android:name=".activity.personage.PersonalInputSmsActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 设置-更换手机号-验证原手机 -->
-        <activity android:name=".activity.personage.VerifyOldPhoneActivity"></activity>
+        <activity
+            android:name=".activity.personage.VerifyOldPhoneActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 朋友圈发消息 -->
-        <activity android:name=".activity.discover.FriendSendNewMsgActivity"></activity>
+        <activity
+            android:name=".activity.discover.FriendSendNewMsgActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 相册详情 -->
-        <activity android:name=".activity.discover.PhotoAlbumDetailActivity"></activity>
+        <activity
+            android:name=".activity.discover.PhotoAlbumDetailActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 相册详情 -->
-        <activity android:name=".activity.discover.PhotoAlbumLookPicActivity"></activity>
+        <activity
+            android:name=".activity.discover.PhotoAlbumLookPicActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 相册评论 -->
-        <activity android:name=".activity.discover.CommentActivity"></activity>
+        <activity
+            android:name=".activity.discover.CommentActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 全网搜索 -->
-        <activity android:name=".activity.discover.SearchByAllNetActivity"></activity>
+        <activity
+            android:name=".activity.discover.SearchByAllNetActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 朋友圈发布限制条件 -->
-        <activity android:name=".activity.discover.FriendCircleWhoSeeActivity"></activity>
+        <activity
+            android:name=".activity.discover.FriendCircleWhoSeeActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 全网搜索 -->
-        <activity android:name=".activity.discover.SearchLookMoreActivity"></activity>
+        <activity
+            android:name=".activity.discover.SearchLookMoreActivity"
+            android:screenOrientation="portrait"></activity>
 
         <!-- 我的关注 -->
         <activity android:name=".activity.connection.MyFollowActivity"></activity>
         <!-- 我的消息 -->
         <activity android:name=".activity.connection.MyMessageActivity"></activity>
         <!-- 学校 家乡 -->
-        <activity android:name=".activity.connection.SchoolHometownActivity"></activity>
+        <activity
+            android:name=".activity.connection.SchoolHometownActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 发布消息-->
         <activity android:name=".activity.connection.SendInformationActivity"></activity>
         <!-- 简介 -->
@@ -323,7 +409,9 @@
         <!-- 社团 -->
         <!-- 商会 -->
         <!-- 视频录制 -->
-        <activity android:name=".activity.discover.RecordVideoActivity"></activity>
+        <activity
+            android:name=".activity.discover.RecordVideoActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 商会详情 -->
         <activity android:name=".activity.connection.ClubDetailActivity"></activity>
         <!-- 发动态 -->
@@ -337,14 +425,13 @@
         <!-- 查找学校-->
         <activity android:name=".activity.connection.SearchSchoolActivity"></activity>
         <!-- 编辑姓名-->
-        <activity android:name=".activity.connection.EditNameActivity"
+        <activity
+            android:name=".activity.connection.EditNameActivity"
             android:windowSoftInputMode="adjustResize"></activity>
         <!--社团和商会页-->
         <activity android:name=".activity.connection.ClubActivity"></activity>
         <!--家乡和校园动态-->
         <activity android:name=".activity.connection.NewsActivity"></activity>
-
-
 
 
         <!-- 微信入口 -->
