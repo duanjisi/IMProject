@@ -14,12 +14,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +22,6 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.http.BaseDataRequest;
-import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.ChangeSexRequest;
 import im.boss66.com.http.request.ChangeSignatureRequest;
 import im.boss66.com.http.request.ChangeUserNameRequest;
