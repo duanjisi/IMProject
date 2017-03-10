@@ -3,6 +3,7 @@ package im.boss66.com.Utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import java.util.HashMap;
 
@@ -19,7 +20,10 @@ public class ContactUtils {
             //读取通讯录的号码
             String number = cursor.getString(cursor
                     .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)).trim();
-            number = number.replace(" ", "");
+            Log.i("info", "===============number:" + number);
+            if (number.contains("-")) {
+                number = number.replace("-", "");
+            }
             if (number != null && !number.equals("")) {
                 if (number.contains("+86")) {
                     String str = number.substring(3, number.length());

@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -164,7 +163,8 @@ public class PhoneContactsActivity extends BaseActivity {
 
     private void requestPhoneContact() {
         String phones = ContactUtils.getPhoneNumbers(context);
-        Log.i("info", "===phones:" + phones);
+//        Log.i("info", "===phones:" + phones);
+//        showToast("phones:" + phones, true);
         if (phones != null && !phones.equals("")) {
             showLoadingDialog();
             PhoneContactsRequest request = new PhoneContactsRequest(TAG, phones);

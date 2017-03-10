@@ -58,8 +58,9 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
         Session.getInstance().addObserver(this);
     }
 
+
     public List<EaseUser> getUserList() {
-        return copyUserList;
+        return userList;
     }
 
     public void setPhoneContact(boolean phoneContact) {
@@ -387,14 +388,18 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
         return this;
     }
 
+
     @Override
     public void update(Observable observable, Object o) {
         SessionInfo sin = (SessionInfo) o;
         if (sin.getAction() == Session.ACTION_REFRESH_VIEWS) {
             int position = sin.getTag();
+            Log.i("info", "==========position:" + position);
             getItem(position).setChecked(false);
-            notifyDataSetChanged();
+            setNotifyOnChange(true);
+//            notifyDataSetChanged();
             Log.i("info", "=======update()");
         }
     }
+
 }

@@ -32,7 +32,7 @@ public class PermissionUtil {
     public static final String[] PERMISSIONS_GROUP_CONTCATS = {
             Manifest.permission.GET_ACCOUNTS,
             Manifest.permission.READ_CONTACTS};
-            //Manifest.permission.WRITE_CONTACTS
+    //Manifest.permission.WRITE_CONTACTS
 
     // 相机需要权限
     public static final String[] PERMISSIONS_GROUP_CAMERA = {
@@ -54,6 +54,11 @@ public class PermissionUtil {
     // 聊天相册
     public static final String[] PERMISSIONS_CHAT_ALBUM = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    // 读取联系人
+    public static final String[] PERMISSIONS_READ_CONTACTS = {
+            Manifest.permission.READ_CONTACTS
     };
 
     // 系统设置权限

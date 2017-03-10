@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
@@ -640,6 +641,10 @@ public final class UIUtils {
             out.set(width, height);
         }
         return out;
+    }
+
+    public static void Toast(Context context, String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
 }

@@ -33,6 +33,8 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.PrefKey;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.Utils.SoundUtil;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
@@ -86,9 +88,23 @@ public class MessageAdapter extends BaseAdapter {
     private SoundUtil mSoundUtil = SoundUtil.getInstance();
     private Handler mHandler = new Handler();
     private int mImageHeight;
+    private String toUid;
 
     public MessageAdapter(Context context, List<MessageItem> msgList) {
         this.mContext = context;
+        widthScreen = UIUtils.getScreenWidth(context) / 2;
+        mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 3;
+        resources = context.getResources();
+        mMsgList = msgList;
+        mInflater = LayoutInflater.from(context);
+        imageLoader = ImageLoaderUtils.createImageLoader(context);
+//        mSpUtil = PushApplication.getInstance().getSpUtil();
+//        mSoundUtil = SoundUtil.getInstance();
+    }
+
+    public MessageAdapter(Context context, List<MessageItem> msgList, String toUid) {
+        this.mContext = context;
+        this.toUid = toUid;
         widthScreen = UIUtils.getScreenWidth(context) / 2;
         mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 3;
         resources = context.getResources();
@@ -254,7 +270,7 @@ public class MessageAdapter extends BaseAdapter {
             if (msgType == MessageItem.MESSAGE_TYPE_EMOTION) {
                 handleEmotionMessage((EmotionMessageHolder) holder, mItem, parent);
             } else if (msgType == MessageItem.MESSAGE_TYPE_IMG) {
-                handleImageMessage((ImageMessageHolder) holder, mItem, parent, position);
+                handleImageMessage((ImageMessageHolder) holder, mItem, parent);
             } else if (msgType == MessageItem.MESSAGE_TYPE_TXT) {
                 handleTextMessage((TextMessageHolder) holder, mItem, parent);
             } else if (msgType == MessageItem.MESSAGE_TYPE_AUDIO) {
@@ -451,7 +467,7 @@ public class MessageAdapter extends BaseAdapter {
      * @Description 处理图片消息
      */
     private void handleImageMessage(final ImageMessageHolder holder,
-                                    final MessageItem mItem, final View parent, final int position) {
+                                    final MessageItem mItem, final View parent) {
         handleBaseMessage(holder, mItem);
         String imageUrl = mItem.getMessage();
         // 图片文件
@@ -466,6 +482,12 @@ public class MessageAdapter extends BaseAdapter {
                     for (MessageItem item : mMsgList) {
                         if (item.getMsgType() == MessageItem.MESSAGE_TYPE_IMG) {
                             photoUrls.add(item.getMessage());
+                        }
+                    }
+                    int position = 0;
+                    for (int i = 0; i < photoUrls.size(); i++) {
+                        if (photoUrls.get(i).equals(mItem.getMessage())) {
+                            position = i;
                         }
                     }
                     ImagePagerActivity.startImagePagerActivity(mContext, photoUrls, position, imageSize, false);
@@ -697,6 +719,15 @@ public class MessageAdapter extends BaseAdapter {
 //        holder.time.setText(TimeUtil.getChatTime(mItem.getDate()));
         holder.time.setText(TimeUtil.getChatTime(Long.parseLong(mItem.getTemp())));
         holder.time.setVisibility(View.VISIBLE);
+
+        if (mItem.isComMeg() && !toUid.equals("")) {
+            boolean showNick = PreferenceUtils.getBoolean(mContext, PrefKey.SHOW_NICK_NAME + toUid, true);
+            if (showNick) {
+                UIUtils.showView(holder.nick);
+            } else {
+                UIUtils.hindView(holder.nick);
+            }
+        }
         holder.nick.setText(mItem.getNick());
 //        holder.head.setBackgroundResource(R.drawable.ic_launcher);
         holder.progressBar.setVisibility(View.GONE);

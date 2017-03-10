@@ -6,13 +6,25 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.support.multidex.MultiDex;
+import android.support.v4.app.NotificationCompat;
+import android.widget.RemoteViews;
+import android.widget.Toast;
+import com.umeng.message.PushAgent;
+import com.umeng.message.UTrack;
+import com.umeng.message.UmengMessageHandler;
+import com.umeng.message.UmengNotificationClickHandler;
+import com.umeng.message.entity.UMessage;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.tavendo.autobahn.WebSocket;
+import de.tavendo.autobahn.WebSocketConnection;
 import im.boss66.com.Utils.SharePreferenceUtil;
 import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.config.LoginStatus;
@@ -26,7 +38,7 @@ public class App extends Application {
     public final static String API_KEY = "fiWrR2Ki8NkR6r5GHdM2lY7j";
     public final static String SECRIT_KEY = "PTtP7I1EfBnRMu0LimV8fRSIso0dZtgA";
     public static final String SP_FILE_NAME = "push_msg_sp";
-    public static final int PAGER_NUM = 4;
+    public static final int PAGER_NUM = 8;
     // ======头像===
     public static final int[] heads = {R.drawable.h0};
     public static final int NUM_PAGE = 6;// 总共有多少页
@@ -44,7 +56,9 @@ public class App extends Application {
     private Notification mNotification;
     //    private Gson mGson;
     private AccountEntity sAccount;
+    private WebSocket webSocket;
     private List<Activity> tempActivityList;
+    private PushAgent mPushAgent;
 //    private LocalAddressEntity.SecondChild localAddress;
 
     public synchronized static App getInstance() {
@@ -58,6 +72,7 @@ public class App extends Application {
         mApplication = this;
         initFaceMap();
         initData();
+        initUmengPush();
 //        Fresco.initialize(getApplicationContext());//注册，在setContentView之前。
     }
 
@@ -81,6 +96,86 @@ public class App extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+    }
+
+    private void initUmengPush() {
+        mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.setDebugMode(true);
+        UmengMessageHandler messageHandler = new UmengMessageHandler() {
+            /**
+             * 参考集成文档的1.6.3
+             * http://dev.umeng.com/push/android/integration#1_6_3
+             * */
+            @Override
+            public void dealWithCustomMessage(final Context context, final UMessage msg) {
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        // 对自定义消息的处理方式，点击或者忽略
+                        boolean isClickOrDismissed = true;
+                        if (isClickOrDismissed) {
+                            //自定义消息的点击统计
+                            UTrack.getInstance(getApplicationContext()).trackMsgClick(msg);
+                        } else {
+                            //自定义消息的忽略统计
+                            UTrack.getInstance(getApplicationContext()).trackMsgDismissed(msg);
+                        }
+                        Toast.makeText(context, msg.custom, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            /**
+             * 参考集成文档的1.6.4
+             * http://dev.umeng.com/push/android/integration#1_6_4
+             * */
+            @Override
+            public Notification getNotification(Context context,
+                                                UMessage msg) {
+                switch (msg.builder_id) {
+                    case 1:
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+                        RemoteViews myNotificationView = new RemoteViews(context.getPackageName(), R.layout.notification_view);
+                        myNotificationView.setTextViewText(R.id.notification_title, msg.title);
+                        myNotificationView.setTextViewText(R.id.notification_text, msg.text);
+                        myNotificationView.setImageViewBitmap(R.id.notification_large_icon, getLargeIcon(context, msg));
+                        myNotificationView.setImageViewResource(R.id.notification_small_icon, getSmallIconId(context, msg));
+                        builder.setContent(myNotificationView)
+                                .setSmallIcon(getSmallIconId(context, msg))
+                                .setTicker(msg.ticker)
+                                .setAutoCancel(true);
+                        return builder.build();
+                    default:
+                        //默认为0，若填写的builder_id并不存在，也使用默认。
+                        return super.getNotification(context, msg);
+                }
+            }
+        };
+        mPushAgent.setMessageHandler(messageHandler);
+
+        /**
+         * 该Handler是在BroadcastReceiver中被调用，故
+         * 如果需启动Activity，需添加Intent.FLAG_ACTIVITY_NEW_TASK
+         * 参考集成文档的1.6.2
+         * http://dev.umeng.com/push/android/integration#1_6_2
+         * */
+        UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
+            @Override
+            public void dealWithCustomAction(Context context, UMessage msg) {
+                Toast.makeText(context, msg.custom, Toast.LENGTH_LONG).show();
+            }
+        };
+        //使用自定义的NotificationHandler，来结合友盟统计处理消息通知
+        //参考http://bbs.umeng.com/thread-11112-1-1.html
+        //CustomNotificationHandler notificationClickHandler = new CustomNotificationHandler();
+        mPushAgent.setNotificationClickHandler(notificationClickHandler);
+    }
+
+    public WebSocket getWebSocket() {
+        if (webSocket == null)
+            webSocket = new WebSocketConnection();
+        return webSocket;
     }
 
     public synchronized UserDB getUserDB() {
@@ -363,6 +458,18 @@ public class App extends Application {
 
     public void setContacts(ArrayList<EaseUser> list) {
         this.contactList = list;
+    }
+
+    public void removeItem(String uid) {
+        if (contactList != null && contactList.size() != 0) {
+            Iterator<EaseUser> stringIterator = contactList.iterator();
+            while (stringIterator.hasNext()) {
+                EaseUser s = stringIterator.next();
+                if (s.getUserid().equals(uid)) {
+                    stringIterator.remove();
+                }
+            }
+        }
     }
 
     public void addTempActivity(Activity activity) {

@@ -210,6 +210,7 @@
 
                 </LinearLayout>
             </LinearLayout>
+            <!--android:background="@drawable/selector_nearby_bt_greet"-->
 
             <Button
                 android:id="@+id/bt_greet"
@@ -218,12 +219,13 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
                 android:layout_marginTop="16.5dp"
-                android:background="@drawable/selector_nearby_bt_greet"
+                android:background="@drawable/bg_login"
                 android:paddingBottom="@dimen/dp_14"
                 android:paddingTop="@dimen/dp_14"
                 android:text="@string/greet"
                 android:textColor="@drawable/selector_textcolor_white_gary"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/bt_complaint"
@@ -236,8 +238,8 @@
                 android:paddingBottom="@dimen/dp_14"
                 android:paddingTop="@dimen/dp_14"
                 android:text="@string/complaint"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:visibility="gone" />
         </LinearLayout>
-
     </ScrollView>
 </LinearLayout>

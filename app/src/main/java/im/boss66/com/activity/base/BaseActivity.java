@@ -16,7 +16,6 @@ import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
-
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.widget.DialogFactory;

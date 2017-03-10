@@ -1,7 +1,9 @@
 package im.boss66.com.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -11,6 +13,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.IUmengUnregisterCallback;
+import com.umeng.message.PushAgent;
+import com.umeng.message.UmengRegistrar;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -24,7 +30,6 @@ import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
-import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
@@ -45,6 +50,7 @@ import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.EmoCollectionsRequest;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.services.ChatServices;
+import im.boss66.com.services.MyPushIntentService;
 import im.boss66.com.widget.dialog.PeopleDataDialog;
 
 /**
@@ -53,6 +59,7 @@ import im.boss66.com.widget.dialog.PeopleDataDialog;
 public class MainActivity extends BaseActivity implements Observer {
     private final static String TAG = MainActivity.class.getSimpleName();
     private PermissionListener permissionListener;
+    private Handler handler = new Handler();
     private static final int VIEW_PAGER_PAGE_1 = 0;
     private static final int VIEW_PAGER_PAGE_2 = 1;
     private static final int VIEW_PAGER_PAGE_3 = 2;
@@ -72,9 +79,10 @@ public class MainActivity extends BaseActivity implements Observer {
     //    private ImageView ivSearch, ivAdd;
 //    private RelativeLayout rl_top_bar;
 //    private String userid, uid;
-
     private PeopleDataDialog peopleDataDialog;
     //    private SimpleDraweeView simpleDrawee00, simpleDrawee01;
+    private PushAgent mPushAgent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,13 +118,17 @@ public class MainActivity extends BaseActivity implements Observer {
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(new MyPageChangeListener());
         mViewPager.setCurrentItem(VIEW_PAGER_PAGE_1);
+
+        mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.enable(mRegisterCallback);
+        mPushAgent.setPushIntentServiceClass(MyPushIntentService.class);
+
         Intent intent = new Intent(context, ChatServices.class);
         intent.putExtra("userid", account.getUser_id());
         startService(intent);
         ChatServices.startChatService(context);
         getPermission(PermissionUtil.PERMISSIONS_SYSTEM_SETTING);
         requestLoveStore();
-//        loadGif();
     }
 
     public InputStream getImageStream(String path) throws Exception {
@@ -518,6 +530,64 @@ public class MainActivity extends BaseActivity implements Observer {
                 ).request(permissionListener);
     }
 
+    public IUmengRegisterCallback mRegisterCallback = new IUmengRegisterCallback() {
+        @Override
+        public void onRegistered(final String registrationId) {
+            // TODO Auto-generated method stub
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+//                    updateStatus();
+                    Log.i("info", "registrationId:" + registrationId);
+                    Log.i("info", "deviceToken:" + mPushAgent.getRegistrationId());
+                    new AddAliasTask(account.getUser_id(), "QQ").execute();
+                }
+            });
+        }
+    };
+
+    public IUmengUnregisterCallback mUnregisterCallback = new IUmengUnregisterCallback() {
+        @Override
+        public void onUnregistered(String registrationId) {
+            // TODO Auto-generated method stub
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+//                    updateStatus();
+                }
+            }, 2000);
+        }
+    };
+
+    class AddAliasTask extends AsyncTask<Void, Void, Boolean> {
+        String alias;
+        String aliasType;
+
+        public AddAliasTask(String aliasString, String aliasTypeString) {
+            // TODO Auto-generated constructor stub
+            this.alias = aliasString;
+            this.aliasType = aliasTypeString;
+        }
+
+        protected Boolean doInBackground(Void... params) {
+            try {
+                return mPushAgent.addAlias(alias, aliasType);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (Boolean.TRUE.equals(result)) {
+                Log.i(TAG, "alias was set successfully.");
+            }
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -530,5 +600,10 @@ public class MainActivity extends BaseActivity implements Observer {
         contactBooksFragment = null;
         discoverFragment = null;
         mineFragment = null;
+
+        if (mPushAgent.isEnabled() || UmengRegistrar.isRegistered(MainActivity.this)) {
+            //开启推送并设置注册的回调处理
+            mPushAgent.disable(mUnregisterCallback);
+        }
     }
 }

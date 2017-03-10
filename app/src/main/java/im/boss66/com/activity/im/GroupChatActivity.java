@@ -1,7 +1,11 @@
 package im.boss66.com.activity.im;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -10,6 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.GroupMemAdapter;
@@ -24,6 +29,7 @@ import im.boss66.com.http.request.GroupsRequest;
  */
 public class GroupChatActivity extends BaseActivity implements View.OnClickListener {
     private final static String TAG = GroupChatActivity.class.getSimpleName();
+    private LocalBroadcastReceiver mLocalBroadcastReceiver;
     private TextView tvBack, tvTips;
     private ListView listView;
     private GroupMemAdapter adapter;
@@ -42,6 +48,11 @@ public class GroupChatActivity extends BaseActivity implements View.OnClickListe
         tvTips = (TextView) findViewById(R.id.tv_tips);
         listView = (ListView) findViewById(R.id.listView);
         tvBack.setOnClickListener(this);
+        mLocalBroadcastReceiver = new LocalBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.Action.EXIT_CURRETN_GROUP_REFRESH_DATAS);
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(mLocalBroadcastReceiver, filter);
         adapter = new GroupMemAdapter(context);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new ItemClickListener());
@@ -75,6 +86,21 @@ public class GroupChatActivity extends BaseActivity implements View.OnClickListe
         });
     }
 
+    private void refrshGroups() {
+        GroupsRequest request = new GroupsRequest(TAG, userid);
+        request.send(new BaseModelRequest.RequestCallback<BaseGrpMember>() {
+            @Override
+            public void onSuccess(BaseGrpMember pojo) {
+                bindDatas(pojo);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, true);
+            }
+        });
+    }
+
     private void bindDatas(BaseGrpMember baseGrpMember) {
         if (baseGrpMember != null) {
             ArrayList<GroupEntity> groups = baseGrpMember.getData();
@@ -98,5 +124,22 @@ public class GroupChatActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent);
             }
         }
+    }
+
+    private class LocalBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (Constants.Action.EXIT_CURRETN_GROUP_REFRESH_DATAS.equals(action)) {
+                refrshGroups();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).
+                unregisterReceiver(mLocalBroadcastReceiver);
     }
 }

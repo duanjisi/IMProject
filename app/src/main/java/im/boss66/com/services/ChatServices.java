@@ -18,7 +18,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import de.tavendo.autobahn.WebSocket;
-import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketConnectionHandler;
 import im.boss66.com.App;
 import im.boss66.com.Session;
@@ -37,10 +36,11 @@ import im.boss66.com.http.HttpUrl;
  * Created by Johnny on 2017/1/16.
  */
 public class ChatServices extends Service implements Observer {
-    private static WebSocket mConnection = new WebSocketConnection();
+    //    private static WebSocket mConnection = new WebSocketConnection();
     public static ArrayList<receiveMessageCallback> callbacks = new ArrayList<>();
     private String userid;
     private MessageDB mMsgDB;// 保存消息的数据库
+    private WebSocket mConnection;
 
     @Nullable
     @Override
@@ -54,6 +54,7 @@ public class ChatServices extends Service implements Observer {
         super.onCreate();
         Session.getInstance().addObserver(this);
         mMsgDB = App.getInstance().getMessageDB();// 发送数据库
+        mConnection = App.getInstance().getWebSocket();
         startConnection();
     }
 
@@ -120,6 +121,8 @@ public class ChatServices extends Service implements Observer {
 
 
     public void sendMessage(String msg) {
+        Log.i("info", "===================IM发消息:" + msg);
+        Log.i("info", "===================mConnection:" + mConnection);
         if (mConnection != null && msg != null && !msg.equals("")) {
             mConnection.sendTextMessage(msg);
         }
@@ -131,6 +134,7 @@ public class ChatServices extends Service implements Observer {
 //    }
 
     private void messageHandle(String str) {
+        Log.i("info", "===================IM接消息");
         MycsLog.i("info", "====str:" + str);
         String[] datas = str.split("_");
         if (datas != null && datas.length > 6) {
