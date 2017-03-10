@@ -203,4 +203,6 @@ public class HttpUrl {
     public static final String HOMETOWN_NEWS = MAIN_URL+"api/v1/hometown/message";
     //搜索学校
     public static final String SEARCH_SCHOOL = MAIN_URL+"api/v1/search/school";
+    //获取用户信息
+    public static final String SEARCH_USER_INFO = MAIN_URL+"ucenter/userinfo/index";
 }

@@ -22,6 +22,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.App;
@@ -211,7 +212,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
             SharedPreferencesMgr.setBoolean("EditSchool", false);
         }
 
-    }
+        }
 
     private void initData() {
         SchoolListRequest request = new SchoolListRequest(TAG);
@@ -225,6 +226,9 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onFailure(String msg) {
                 //没数据code！=1的时候走该方法
+//                //刷新adapter
+                adapter.setDatas(new ArrayList<SchoolListEntity.ResultBean>());
+                adapter.notifyDataSetChanged();
                 img_school.setVisibility(View.VISIBLE);
                 tv_school.setVisibility(View.VISIBLE);
             }
@@ -243,7 +247,5 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
         } else {
             finish();
         }
-
-
     }
 }

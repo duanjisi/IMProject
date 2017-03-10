@@ -62,6 +62,7 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
     };
     private List<SearchSchoolListEntity.ResultBean> result;
     private String id;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +116,7 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onItemClick(int postion) {
                 id = result.get(postion).getId();
-                String name = result.get(postion).getName();
+                name = result.get(postion).getName();
                 et_school.setText(name);
             }
 
@@ -170,11 +171,17 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
                 //如果id为空
                 if (!TextUtils.isEmpty(id)) {
                     Intent intent = new Intent();
-                    intent.putExtra("school", id);
+                    intent.putExtra("schoolId", id);
+                    intent.putExtra("schoolName", name);
                     setResult(1, intent);
                     finish();
                 } else {
-                    ToastUtil.showShort(context,"请选择学校");
+                    Intent intent = new Intent();
+                    intent.putExtra("schoolId", 17+"");
+                    intent.putExtra("schoolName", name);
+                    setResult(1, intent);
+                    finish();
+//                    ToastUtil.showShort(context,"请选择学校");
                 }
 
                 break;

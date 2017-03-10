@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.StringBuilderPrinter;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -19,8 +20,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,12 +44,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import im.boss66.com.App;
 import im.boss66.com.Utils.SharedPreferencesMgr;
+import im.boss66.com.Utils.TimeUtil;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 import im.boss66.com.entity.JobEntity;
 import im.boss66.com.entity.LocalAddressEntity;
+import im.boss66.com.entity.UserInfoEntity;
 import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.ChooseJobRequest;
 import im.boss66.com.http.request.SaveUserInfoRequest;
 import im.boss66.com.widget.dialog.ChooseYourLikeDialog;
@@ -184,6 +196,51 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                 case 3: //更新失败
                     showToast("更新失败", false);
                     break;
+                case 4:
+                    // 编辑资料，显示数据
+
+                    UserInfoEntity.ResultBean result = userInfoEntity.getResult();
+
+                    //遍历省市区，存三个map
+                    LocalAddressEntity.SecondChild result1 = jsonDate.getResult();
+                    List<LocalAddressEntity.ThreeChild> list = result1.getList();
+                    map1 = new HashMap<>();
+                    map2 = new HashMap<>();
+                    map3 = new HashMap<>();
+                    for(int i =0;i<list.size();i++){
+                        map1.put(list.get(i).getRegion_id(),list.get(i).getRegion_name()); //省存map里
+                        List<LocalAddressEntity.FourChild> list2 = list.get(i).getList();
+                        for(int j=0;j<list2.size();j++){
+                            map2.put(list2.get(j).getRegion_id(),list2.get(j).getRegion_name()); //市
+                            List<LocalAddressEntity.LastChild> list3 = list2.get(j).getList();
+                            for(int k = 0;k<list3.size();k++){
+                                map3.put(list3.get(k).getRegion_id(),list3.get(k).getRegion_name()); //区
+                            }
+                        }
+                    }
+                    tv_name2.setText(result.getUser_name());
+                    tv_sex2.setText(result.getSex());
+                    int province = result.getProvince();//所在地省
+                    int city = result.getCity();//市
+                    int district = result.getDistrict();//区
+
+                    String ht_province = result.getHt_province();
+                    String ht_city = result.getHt_city();
+                    String ht_district = result.getHt_district();
+
+                    tv_school3.setVisibility(View.GONE);
+                    tv_hometown3.setVisibility(View.GONE);
+
+                    tv_location2.setText(map1.get(province+"")+map2.get(city+"")+map3.get(district+""));
+                    tv_hometown2.setText(map1.get(ht_province)+map2.get(ht_city)+map3.get(ht_district));
+                    tv_job2.setText(result.getIndustry());
+                    tv_school2.setText(result.getSchool());
+                    tv_like2.setText(result.getInterest());
+                    String signature = result.getSignature();
+//                    String dateTime = TimeUtil.getDateTime(Long.parseLong(signature));
+//                    tv_time2.setText(dateTime);
+
+                    break;
             }
         }
     };
@@ -211,13 +268,68 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
     private int sexType;
     private long millionSecnds;
     private String youLike;
+    private boolean isEdit;    //是否编辑页面
+    private UserInfoEntity userInfoEntity;
+    private HashMap<String, String> map1;
+    private HashMap<String, String> map2;
+    private HashMap<String, String> map3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_data);
+        Intent intent = getIntent();
+        if(intent!=null){
+            isEdit = intent.getBooleanExtra("isEdit", false);
+        }
         initCityData();
         initViews();
+        if(isEdit){
+            initData();
+
+        }
+    }
+
+    private void initData() {
+
+        showLoadingDialog();
+        String url = HttpUrl.SEARCH_USER_INFO;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>(){
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                if(result!=null){
+                    userInfoEntity = JSON.parseObject(result, UserInfoEntity.class);
+                    if(userInfoEntity !=null){
+                        if(userInfoEntity.getCode()==1){
+
+                            handler.obtainMessage(4).sendToTarget();
+                        }else{
+                            showToast(userInfoEntity.getMessage(),false);
+                        }
+
+                    }
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
+                showToast(e.getMessage(), false);
+            }
+        });
+
+
     }
 
 
@@ -293,6 +405,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 
                 if (TextUtils.isEmpty(tv_name2.getText())
                         || TextUtils.isEmpty(tv_sex2.getText())
+                        || TextUtils.isEmpty(tv_time2.getText())
                         || TextUtils.isEmpty(tv_location2.getText())
                         || TextUtils.isEmpty(tv_hometown2.getText())
                         || TextUtils.isEmpty(tv_job2.getText())

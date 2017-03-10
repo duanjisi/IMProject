@@ -115,6 +115,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
     private String curLoginUid;
     private boolean isChange = false;
 
+    private RelativeLayout rl_edit_info;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,6 +154,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         // 头部view
         View header = LayoutInflater.from(this).inflate(R.layout.headview_people_center,
                 (ViewGroup) findViewById(android.R.id.content), false);
+        rl_edit_info = (RelativeLayout) header.findViewById(R.id.rl_edit_info);
         user_bg_icon = (ImageView) header.findViewById(R.id.user_bg_icon);
         TextView tv_back = (TextView) header.findViewById(R.id.tv_back);
         RelativeLayout rl_head = (RelativeLayout) header.findViewById(R.id.rl_head);
@@ -164,6 +166,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         iv_msg = (ImageView) header.findViewById(R.id.iv_msg);
         bt_add.setOnClickListener(this);
         rl_msg.setOnClickListener(this);
+        rl_edit_info.setOnClickListener(this);
 
         FrameLayout.LayoutParams headParam = (FrameLayout.LayoutParams) rl_head.getLayoutParams();
         headParam.height = sceenW / 3 * 2;
@@ -351,6 +354,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 Bundle bundle = new Bundle();
                 bundle.putString("classType", "SchoolHometownActivity");
                 openActivity(CircleMessageListActivity.class, bundle);
+                break;
+            case R.id.rl_edit_info: // 修改资料
+                Intent intent = new Intent(this, PersonalDataActivity.class);
+                Intent intent1 = intent.putExtra("isEdit", true);
+                startActivity(intent1);
+
                 break;
         }
     }

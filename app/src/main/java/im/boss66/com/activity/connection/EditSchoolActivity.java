@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -196,6 +197,7 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
             case R.id.tv_headright_view: //完成
 
                 if (!"请选择".equals(tv_year.getText().toString())
+                        && !TextUtils.isEmpty(tv_school_department.getText().toString())
                         && !"请填写".equals(tv_school_name.getText().toString())) {
                     if(flag){
                         editSchoolInfo();
@@ -360,10 +362,11 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && data != null) {
-            schoolname = data.getStringExtra("school");
+            schoolname = data.getStringExtra("schoolName");
+            schoolId = Integer.parseInt(data.getStringExtra("schoolId"));
             tv_school_name.setText(schoolname);
             tv_school_name.setTextColor(Color.BLACK);
-            schoolId = Integer.parseInt(schoolname);
+            schoolId=17;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
