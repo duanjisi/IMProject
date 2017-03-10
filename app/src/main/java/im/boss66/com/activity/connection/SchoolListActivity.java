@@ -83,6 +83,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
     };
     private String school_name;
 
+    private boolean noSchool;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,10 +157,10 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
                 String result = responseInfo.result;
                 try {
                     JSONObject jsonObject = new JSONObject(result);
-                    if(jsonObject!=null){
+                    if (jsonObject != null) {
                         if (jsonObject.getInt("code") == 1) {
                             handler.obtainMessage(2).sendToTarget();
-                        }else{
+                        } else {
                             showToast(jsonObject.getString("message"), false);
                         }
                     }
@@ -184,14 +185,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_headlift_view:
-                if (result != null && result.size() > 0) {
-                    Intent intent = new Intent();
-                    intent.putExtra("school_name", school_name);
-                    setResult(2, intent);
-                    finish();
-                } else {
-                    finish();
-                }
+                setSchool();
                 break;
             case R.id.tv_headright_view:
                 Intent intent = new Intent(this, AddSchoolActivity.class);
@@ -212,7 +206,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
             SharedPreferencesMgr.setBoolean("EditSchool", false);
         }
 
-        }
+    }
 
     private void initData() {
         SchoolListRequest request = new SchoolListRequest(TAG);
@@ -221,6 +215,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
             public void onSuccess(String str) {
                 schoolListEntity = JSON.parseObject(str, SchoolListEntity.class);
                 handler.obtainMessage(1).sendToTarget();
+                noSchool =false;
             }
 
             @Override
@@ -231,6 +226,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
                 adapter.notifyDataSetChanged();
                 img_school.setVisibility(View.VISIBLE);
                 tv_school.setVisibility(View.VISIBLE);
+                noSchool = true;
             }
         });
 
@@ -239,13 +235,26 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
+        setSchool();
+    }
+
+    private void setSchool() {
+        if(noSchool){
+            Intent intent = new Intent();
+            intent.putExtra("school_name", "");
+            setResult(2, intent);
+            finish();
+            noSchool = false;
+            return;
+        }
         if (result != null && result.size() > 0) {
             Intent intent = new Intent();
             intent.putExtra("school_name", school_name);
             setResult(2, intent);
             finish();
-        } else {
+        }  else {
             finish();
         }
+
     }
 }

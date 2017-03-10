@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -124,6 +125,7 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
 
         }
         tv_headlift_view.setOnClickListener(this);
+
 
         rcv_club = (RecyclerView) findViewById(R.id.rcv_club);
 

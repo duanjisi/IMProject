@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,6 +83,7 @@ public class NewsActivity extends ABaseActivity implements View.OnClickListener 
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
         tv_headcenter_view.setText(title);
+
         tv_headlift_view.setOnClickListener(this);
         rcv_news = (RecyclerView) findViewById(R.id.rcv_news);
         rcv_news.setLayoutManager(new LinearLayoutManager(this));
