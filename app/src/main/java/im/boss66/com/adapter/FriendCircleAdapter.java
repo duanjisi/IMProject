@@ -180,6 +180,8 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                                 config.commentFromId = commentItem.getUid_from();
                                 config.pid = commentItem.getPid();
                                 config.isReply = true;
+                                config.commentId = commentItem.getComm_id();
+                                config.feedid = Integer.parseInt(commentItem.getFeed_id());
                                 presenter.showEditTextBody(config);
                             }
                         }
@@ -308,7 +310,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                                     intent.putExtra("url", url);
                                     intent.putExtra("imgurl", url_img);
                                     intent.putExtra("isDelete", true);
-                                    intent.putExtra("isFull",false);
+                                    intent.putExtra("isFull", false);
                                     context.startActivity(intent);
                                 }
                             }

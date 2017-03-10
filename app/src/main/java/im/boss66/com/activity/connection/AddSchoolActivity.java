@@ -3,6 +3,7 @@ package im.boss66.com.activity.connection;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,12 +29,12 @@ public class AddSchoolActivity extends ABaseActivity implements View.OnClickList
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headlift_view.setOnClickListener(this);
 
+
         findViewById(R.id.rl_university).setOnClickListener(this);
         findViewById(R.id.rl_high_shcool).setOnClickListener(this);
         findViewById(R.id.rl_big_middle_shcool).setOnClickListener(this);
         findViewById(R.id.rl_middle_school).setOnClickListener(this);
         findViewById(R.id.rl_small_school).setOnClickListener(this);
-
     }
 
     @Override

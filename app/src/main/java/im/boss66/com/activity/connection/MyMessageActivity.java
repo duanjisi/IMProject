@@ -93,7 +93,6 @@ public class MyMessageActivity extends ABaseActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.tv_headright_view:
-                showToast("清空",false);
                 break;
 
         }

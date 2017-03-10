@@ -8,7 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.lidroid.xutils.HttpUtils;
@@ -19,6 +21,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.adapter.NewsAdapter;
 import im.boss66.com.entity.ClubEntity;
@@ -80,6 +83,7 @@ public class NewsActivity extends ABaseActivity implements View.OnClickListener 
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
         tv_headcenter_view.setText(title);
+
         tv_headlift_view.setOnClickListener(this);
         rcv_news = (RecyclerView) findViewById(R.id.rcv_news);
         rcv_news.setLayoutManager(new LinearLayoutManager(this));
@@ -97,8 +101,19 @@ public class NewsActivity extends ABaseActivity implements View.OnClickListener 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String result = responseInfo.result;
-                newsEntity = JSON.parseObject(result, NewsEntity.class);
-                handler.obtainMessage(1).sendToTarget();
+                if(result!=null){
+                    newsEntity = JSON.parseObject(result, NewsEntity.class);
+                    if(newsEntity!=null){
+                        if(newsEntity.getCode()==1){
+
+                            handler.obtainMessage(1).sendToTarget();
+                        }else{
+                            ToastUtil.show(NewsActivity.this,newsEntity.getMessage(), Toast.LENGTH_SHORT);
+                        }
+                    }
+
+                }
+
 
 
             }

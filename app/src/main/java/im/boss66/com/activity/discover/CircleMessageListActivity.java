@@ -85,10 +85,14 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
                 new CircleMessageListAdapter.RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
+                        int size = adapter.getItemCount();
+                        if (position >= size && (position - 1) >= 0) {
+                            position = position - 1;
+                        }
                         CircleMsgListEntity.CircleMsgItem item = (CircleMsgListEntity.CircleMsgItem) adapter.getDatas().get(position);
                         Bundle bundle = new Bundle();
                         bundle.putInt("feedId", item.getFeed_id());
-                        bundle.putString("classType",classType);
+                        bundle.putString("classType", classType);
                         openActivity(PhotoAlbumDetailActivity.class, bundle);
                     }
 

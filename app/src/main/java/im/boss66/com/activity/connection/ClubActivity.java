@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -78,6 +79,7 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
     }
 
     private void initData() {
+        showLoadingDialog();
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
@@ -86,15 +88,26 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
                 String result = responseInfo.result;
-                clubEntity = JSON.parseObject(result, ClubEntity.class);
-                handler.obtainMessage(1).sendToTarget();
 
+
+                if(result!=null){
+                    clubEntity = JSON.parseObject(result, ClubEntity.class);
+                    if(clubEntity!=null){
+                        if(clubEntity.getCode()==1){
+                            handler.obtainMessage(1).sendToTarget();
+                        }else {
+                            showToast(clubEntity.getMessage(),false);
+                        }
+                    }
+                }
 
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
                 showToast(e.getMessage(), false);
             }
         });
@@ -106,13 +119,13 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
         if(isSchool){
-
             tv_headcenter_view.setText("社团");
         }else{
             tv_headcenter_view.setText("商会");
 
         }
         tv_headlift_view.setOnClickListener(this);
+
 
         rcv_club = (RecyclerView) findViewById(R.id.rcv_club);
 

@@ -190,10 +190,19 @@ public class HttpUrl {
     public static final String COMMUNITY_CLEAR_MY_MSG = MAIN_URL + "api/v1/contactsmsg/flushall";
     //帖子-获取帖子详情
     public static final String COMMUNITY_GET_DETAIL = MAIN_URL + "api/v1/contactsfeed/view";
+    //帖子-获取某个用户的帖子列表
+    public static final String COMMUNITY_GET_USER_DETAIL = MAIN_URL + "api/v1/contactsc";
+    //帖子-获取某个用户的帖子列表
+    public static final String COMMUNITY_GET_NEW_MSG = MAIN_URL + "api/v1/contactsmsg/getnewest";
+
     //商会详情页
     public static final String CLUB_DETATIL = MAIN_URL + "hometown/cofc";
     //学校动态
     public static final String SCHOOL_NEWS = MAIN_URL + "api/v1/school/message";
     //家乡动态
-    public static final String HOMETOWN_NEWS = MAIN_URL + "api/v1/hometown/message";
+    public static final String HOMETOWN_NEWS = MAIN_URL+"api/v1/hometown/message";
+    //搜索学校
+    public static final String SEARCH_SCHOOL = MAIN_URL+"api/v1/search/local-school";
+    //获取用户信息
+    public static final String SEARCH_USER_INFO = MAIN_URL+"ucenter/userinfo/index";
 }

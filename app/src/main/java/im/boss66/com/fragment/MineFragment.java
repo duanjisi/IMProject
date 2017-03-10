@@ -25,12 +25,13 @@ import im.boss66.com.entity.AccountEntity;
 /**
  * 个人中心
  */
-public class MineFragment extends BaseFragment implements View.OnClickListener{
+public class MineFragment extends BaseFragment implements View.OnClickListener {
 
-    private RelativeLayout rl_information,rl_photo,rl_collect,rl_wallet,rl_expression,rl_set;
+    private RelativeLayout rl_information, rl_photo, rl_collect, rl_wallet, rl_expression, rl_set;
     private ImageView iv_head;
-    private TextView tv_name,tv_number;
+    private TextView tv_name, tv_number;
     private ImageLoader imageLoader;
+    private AccountEntity sAccount;
 
     @Nullable
     @Override
@@ -47,19 +48,23 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
     private void initData() {
         imageLoader = ImageLoaderUtils.createImageLoader(getActivity());
-        AccountEntity sAccount = App.getInstance().getAccount();
-        if (sAccount != null){
+        showInfo();
+    }
+
+    private void showInfo() {
+        sAccount = App.getInstance().getAccount();
+        if (sAccount != null) {
             String head = sAccount.getAvatar();
-            if (!TextUtils.isEmpty(head)){
+            if (!TextUtils.isEmpty(head)) {
                 imageLoader.displayImage(head, iv_head,
                         ImageLoaderUtils.getDisplayImageOptions());
             }
             String userid = sAccount.getUser_id();
             String username = sAccount.getUser_name();
-            if (!TextUtils.isEmpty(username)){
+            if (!TextUtils.isEmpty(username)) {
                 tv_name.setText(username);
-            }else {
-                tv_name.setText(""+userid);
+            } else {
+                tv_name.setText("" + userid);
             }
         }
     }
@@ -84,23 +89,23 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.rl_information://个人信息
-                openActivity(PersonalInformationActivity.class,null);
+                openActvityForResult(PersonalInformationActivity.class, 101);
                 break;
             case R.id.rl_photo://相册
-                openActivity(PersonalPhotoAlbumActivity.class,null);
+                openActivity(PersonalPhotoAlbumActivity.class, null);
                 break;
             case R.id.rl_collect://收藏
                 break;
             case R.id.rl_wallet://钱包
-                Intent intent0 = new Intent(getActivity(),WalletActivity.class);
+                Intent intent0 = new Intent(getActivity(), WalletActivity.class);
                 startActivity(intent0);
                 break;
             case R.id.rl_expression://表情
                 break;
             case R.id.rl_set://设置
-                openActivity(PersonalSetActivity.class,null);
+                openActivity(PersonalSetActivity.class, null);
                 break;
         }
     }
@@ -111,5 +116,21 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             intent.putExtras(bundle);
         }
         startActivity(intent);
+    }
+
+    public void openActvityForResult(Class<?> clazz, int requestCode) {
+        Intent intent = new Intent(getActivity(), clazz);
+        startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101 && resultCode == 102 && data != null) {
+            boolean isChange = data.getBooleanExtra("isChange", false);
+            if (isChange) {
+                showInfo();
+            }
+        }
     }
 }

@@ -1,6 +1,5 @@
 package im.boss66.com.activity.connection;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -8,21 +7,23 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,12 +36,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import im.boss66.com.App;
 import im.boss66.com.Utils.SharedPreferencesMgr;
+import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 import im.boss66.com.entity.JobEntity;
 import im.boss66.com.entity.LocalAddressEntity;
+import im.boss66.com.entity.UserInfoEntity;
 import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.ChooseJobRequest;
 import im.boss66.com.http.request.SaveUserInfoRequest;
 import im.boss66.com.widget.dialog.ChooseYourLikeDialog;
@@ -130,61 +135,9 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
     protected String mCurrentDistrictName = "";
 
 
-    private DatePickerDialog.OnDateSetListener DatePickerListener = new DatePickerDialog.OnDateSetListener() {
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            tv_time2.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
-            String s1 = String.valueOf(year);
-            String s2;
-            String s3;
-
-
-            if (monthOfYear > 9) {
-                s2 = String.valueOf(monthOfYear);
-            } else {
-                s2 = "0" + String.valueOf(monthOfYear);
-            }
-            if (dayOfMonth > 9) {
-                s3 = String.valueOf(dayOfMonth);
-
-            } else {
-                s3 = "0" + String.valueOf(dayOfMonth);
-            }
-            String str = s1 + s2 + s3;
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
-            try {
-                //时间戳
-                millionSecnds = sdf.parse(str).getTime();
-                tv_time2.setText(s1 + s2  + s3);
-            } catch (ParseException e) {
-                e.printStackTrace();
-
-            }
-        }
-    };
     private List<JobEntity.ResultBean> jobList;
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 1:
-                    showAddressSelection2();
-                    break;
-                case 2: //更新成功
-                    finish();
-                    SharedPreferencesMgr.setBoolean("setSuccess",true);
-                    break;
-                case 3: //更新失败
-                    showToast("更新失败",false);
-                    break;
-            }
-        }
-    };
+
     private ChooseYourLikeDialog chooseYourLikeDialog;
     private List<LocalAddressEntity.ThreeChild> list1;       //省
     private List<LocalAddressEntity.FourChild> cityList;      //市
@@ -206,16 +159,183 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
     private String[] sexStr; //性别数组
     private String sexName;  //选择的性别
 
-    private int sexType;
-    private long millionSecnds;
+    private String sexType;
+    private String millionSecnds;
     private String youLike;
+    private boolean isEdit;    //是否编辑页面
+    private UserInfoEntity userInfoEntity;
+    private HashMap<String, String> map1;
+    private HashMap<String, String> map2;
+    private HashMap<String, String> map3;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    showAddressSelection2();
+                    break;
+                case 2: //更新成功
+                    showToast("保存成功",false);
+                    finish();
+                    SharedPreferencesMgr.setBoolean("setSuccess", true);
+                    break;
+                case 3: //更新失败
+                    showToast("更新失败", false);
+                    break;
+                case 4:
+                    // 编辑资料，显示数据
+
+                    UserInfoEntity.ResultBean result = userInfoEntity.getResult();
+
+                    //遍历省市区，存三个map
+                    LocalAddressEntity.SecondChild result1 = jsonDate.getResult();
+                    List<LocalAddressEntity.ThreeChild> list = result1.getList();
+                    map1 = new HashMap<>();
+                    map2 = new HashMap<>();
+                    map3 = new HashMap<>();
+                    for (int i = 0; i < list.size(); i++) {
+                        map1.put(list.get(i).getRegion_id(), list.get(i).getRegion_name()); //省存map里
+                        List<LocalAddressEntity.FourChild> list2 = list.get(i).getList();
+                        for (int j = 0; j < list2.size(); j++) {
+                            map2.put(list2.get(j).getRegion_id(), list2.get(j).getRegion_name()); //市
+                            List<LocalAddressEntity.LastChild> list3 = list2.get(j).getList();
+                            for (int k = 0; k < list3.size(); k++) {
+                                map3.put(list3.get(k).getRegion_id(), list3.get(k).getRegion_name()); //区
+                            }
+                        }
+                    }
+                    String user_name = result.getUser_name();
+                    String user_sex = result.getSex();
+
+                    int user_province = result.getProvince();//所在地省
+                    int user_city = result.getCity();//市
+                    int user_district = result.getDistrict();//区
+
+                    String user_ht_province = result.getHt_province(); //家乡
+                    String user_ht_city = result.getHt_city();
+                    String user_ht_district = result.getHt_district();
+
+                    tv_sex2.setText(user_sex);
+                    tv_name2.setText(user_name);
+                    tv_school3.setVisibility(View.GONE);
+                    tv_hometown3.setVisibility(View.GONE);
+
+                    tv_location2.setText(map1.get(user_province + "") + map2.get(user_city + "") + map3.get(user_district + ""));
+                    tv_hometown2.setText(map1.get(user_ht_province) + map2.get(user_ht_city) + map3.get(user_ht_district));
+                    String user_industry = result.getIndustry();
+                    tv_job2.setText(user_industry);
+
+                    String user_school = result.getSchool();
+                    tv_school2.setText(user_school);
+
+                    String user_interest = result.getInterest();
+                    tv_like2.setText(user_interest);
+
+                    String signature = result.getSignature();
+//                    String dateTime = TimeUtil.getDateTime(Long.parseLong(signature));
+//                    tv_time2.setText(dateTime);
+                    String time = SharedPreferencesMgr.getString("millionSecnds", "");
+                    tv_time2.setText(TimeUtil.getDateTime(Long.parseLong(time) * 1000));
+
+                    sexType = user_sex.equals("男") ? "1" : "2";
+                    millionSecnds = time;
+                    province_id = user_province + "";
+                    city_id = user_city + "";
+                    county_id = user_district + "";
+                    province_id2 = user_ht_province + "";
+                    city_id2 = user_ht_city + "";
+                    county_id2 = user_ht_district + "";
+                    jobName = user_industry;
+                    youLike = user_interest;
+                    break;
+            }
+        }
+    };
+
+    private DatePickerDialog.OnDateSetListener DatePickerListener = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            tv_time2.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
+            String s1 = String.valueOf(year);
+            String s2;
+            String s3;
+            s2 = String.valueOf(monthOfYear);
+            s3 = String.valueOf(dayOfMonth);
+            String str = s1 + "-" + s2 + "-" + s3;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            try {
+                //时间戳
+                long time = sdf.parse(str).getTime();
+                millionSecnds = time / 1000 + "";
+                SharedPreferencesMgr.setString("millionSecnds", millionSecnds);
+                tv_time2.setText(s1 + "-" + s2 + "-" + s3);
+            } catch (ParseException e) {
+                e.printStackTrace();
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_data);
+        Intent intent = getIntent();
+        if (intent != null) {
+            isEdit = intent.getBooleanExtra("isEdit", false);
+        }
         initCityData();
         initViews();
+        if (isEdit) {
+            initData();
+
+        }
+    }
+
+    private void initData() {
+
+        showLoadingDialog();
+        String url = HttpUrl.SEARCH_USER_INFO;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                if (result != null) {
+                    userInfoEntity = JSON.parseObject(result, UserInfoEntity.class);
+                    if (userInfoEntity != null) {
+                        if (userInfoEntity.getCode() == 1) {
+
+                            handler.obtainMessage(4).sendToTarget();
+                        } else {
+                            showToast(userInfoEntity.getMessage(), false);
+                        }
+
+                    }
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
+                showToast(e.getMessage(), false);
+            }
+        });
+
+
     }
 
 
@@ -291,13 +411,16 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 
                 if (TextUtils.isEmpty(tv_name2.getText())
                         || TextUtils.isEmpty(tv_sex2.getText())
+                        || TextUtils.isEmpty(tv_time2.getText())
                         || TextUtils.isEmpty(tv_location2.getText())
                         || TextUtils.isEmpty(tv_hometown2.getText())
                         || TextUtils.isEmpty(tv_job2.getText())
+                        || TextUtils.isEmpty(tv_school2.getText())
                         || TextUtils.isEmpty(tv_like2.getText())) {
 
                     showToast("请完善资料", false);
                 } else {
+
                     saveInfo();
                 }
                 break;
@@ -372,37 +495,39 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 
     }
 
-    private void saveInfo() {
-        SaveUserInfoRequest request = new SaveUserInfoRequest(TAG,String.valueOf(sexType),String.valueOf(millionSecnds/1000),
-                province_id,city_id,county_id,province_id2,city_id2,county_id2
-        ,jobName,youLike);
-       request.send(new BaseDataRequest.RequestCallback<String>() {
-           @Override
-           public void onSuccess(String str) {
-               try {
-                   JSONObject jsonObject = new JSONObject(str);
-                   if(jsonObject.getInt("code")==1){
-                       handler.obtainMessage(2).sendToTarget();
-                   }
-               } catch (JSONException e) {
-                   e.printStackTrace();
-                   handler.obtainMessage(3).sendToTarget();
-               }
-           }
 
-           @Override
-           public void onFailure(String msg) {
-               showToast(msg,false);
-           }
-       });
+    private void saveInfo() {
+        SaveUserInfoRequest request = new SaveUserInfoRequest(TAG, sexType, millionSecnds,
+                province_id, city_id, county_id, province_id2, city_id2, county_id2
+                , jobName, youLike);
+        request.send(new BaseDataRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String str) {
+                try {
+                    JSONObject jsonObject = new JSONObject(str);
+                    if (jsonObject.getInt("code") == 1) {
+                        handler.obtainMessage(2).sendToTarget();
+                    } else {
+                        showToast(jsonObject.getString("message"), false);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    handler.obtainMessage(3).sendToTarget();
+                }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, false);
+            }
+        });
 
 
     }
 
     private void showAddressSelection2() {
         if (dialog2 == null) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    this);
+            dialog2 = new Dialog(context, R.style.Dialog_full);
             View view_dialog = View.inflate(this,
                     R.layout.dialog_single_select, null);
 
@@ -419,10 +544,17 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             // 添加onclick事件
             mBtnConfirm2.setOnClickListener(this);
             btn_cancle2.setOnClickListener(this);
-            dialogBuilder.setView(view_dialog);
-            dialog2 = dialogBuilder.create();
+            dialog2.setContentView(view_dialog);
             Window dialogWindow = dialog2.getWindow();
-            dialogWindow.setGravity(Gravity.BOTTOM);
+
+            dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
+            dialogWindow.setBackgroundDrawableResource(android.R.color.transparent); //加上可以在底部对其屏幕底部
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.gravity = Gravity.BOTTOM;
+            dialogWindow.setAttributes(lp);
+            dialog2.setCanceledOnTouchOutside(true);
         }
         dialog2.show();
         setUpData2();
@@ -443,8 +575,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 
     private void showAddressSelection() {
         if (dialog == null) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    this);
+            dialog = new Dialog(context, R.style.Dialog_full);
             View view_dialog = View.inflate(this,
                     R.layout.dialog_shipping_address_select, null);
             // 省
@@ -469,15 +600,17 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             mViewDistrict.addChangingListener(this);
             // 添加onclick事件
             mBtnConfirm.setOnClickListener(this);
-            dialogBuilder.setView(view_dialog);
-            dialog = dialogBuilder.create();
+            dialog.setContentView(view_dialog);
 
             Window dialogWindow = dialog.getWindow();
+            dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
+            dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
             lp.width = WindowManager.LayoutParams.MATCH_PARENT;
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             lp.gravity = Gravity.BOTTOM;
             dialogWindow.setAttributes(lp);
+            dialog.setCanceledOnTouchOutside(true);
         }
         dialog.show();
         setUpData();
@@ -499,9 +632,9 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
         int pCurrent = mViewProvince.getCurrentItem();
         cityList = list1.get(pCurrent).getList();
         mCurrentProviceName = mProvinceDatas[pCurrent];
-        if(flag==4){
+        if (flag == 4) {
             province_id = mProvinceDatas2[pCurrent];
-        }else if(flag==5){
+        } else if (flag == 5) {
             province_id2 = mProvinceDatas2[pCurrent];
 
         }
@@ -521,9 +654,9 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
         int pCurrent = mViewCity.getCurrentItem();
         districtList = cityList.get(pCurrent).getList();
         mCurrentCityName = mCitisDatasMap.get(mCurrentProviceName)[pCurrent];
-        if(flag==4){
+        if (flag == 4) {
             city_id = mCitisDatasMap2.get(mCurrentProviceName)[pCurrent];
-        }else if(flag==5){
+        } else if (flag == 5) {
             city_id2 = mCitisDatasMap2.get(mCurrentProviceName)[pCurrent];
         }
         String[] areas = mDistrictDatasMap.get(mCurrentCityName);
@@ -534,9 +667,9 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                 this, areas));
         mViewDistrict.setCurrentItem(0);
         mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[0];
-        if(flag==4){
+        if (flag == 4) {
             county_id = mDistrictDatasMap2.get(mCurrentCityName)[0];
-        }else if(flag==5){
+        } else if (flag == 5) {
             county_id2 = mDistrictDatasMap2.get(mCurrentCityName)[0];
         }
 
@@ -612,12 +745,22 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             public void onSuccess(String entry) {
                 handler.obtainMessage(1).sendToTarget();
                 jobEntity = JSON.parseObject(entry, JobEntity.class);
-                jobList = jobEntity.getResult();
-                jobStr = new String[jobList.size()];
+                if (jobEntity != null) {
+                    if (jobEntity.getCode() == 1) {
+                        jobList = jobEntity.getResult();
+                        if (jobList != null && jobList.size() > 0) {
+                            jobStr = new String[jobList.size()];
+                            for (int i = 0; i < jobList.size(); i++) {
+                                jobStr[i] = jobList.get(i).getName();
+                            }
+                        }
+                    } else {
+                        showToast(jobEntity.getMessage(), false);
+                    }
 
-                for (int i = 0; i < jobList.size(); i++) {
-                    jobStr[i] = jobList.get(i).getName();
+
                 }
+
 
             }
 
@@ -639,14 +782,14 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
     @Override
     public void showLike(ArrayList<String> str, ArrayList<Integer> integers) { //保存接口回调,integers为兴趣id集合
         youLike = "";
-        if(str.size()==0){
+        if (str.size() == 0) {
             youLike = "";
-        }else{
+        } else {
             for (int i = 0; i < str.size(); i++) {
                 String s1 = str.get(i);
                 youLike = youLike + s1 + "|";
             }
-            youLike = youLike.substring(0, youLike.length()-1);
+            youLike = youLike.substring(0, youLike.length() - 1);
         }
         tv_like2.setText(youLike);
 
@@ -661,11 +804,11 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             updateAreas();
         } else if (wheel == mViewDistrict) {
             mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[newValue];
-            if(flag==4){
+            if (flag == 4) {
 
                 county_id = mDistrictDatasMap2.get(mCurrentCityName)[newValue];
-            }else if(flag==5){
-                county_id2= mDistrictDatasMap2.get(mCurrentCityName)[newValue];
+            } else if (flag == 5) {
+                county_id2 = mDistrictDatasMap2.get(mCurrentCityName)[newValue];
 
             }
         } else if (wheel == id_sex) {
@@ -699,9 +842,9 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
         } else {
             tv_sex2.setText(sexName);
             if (sexName.equals("男")) {
-                sexType = 1;
+                sexType = "1";
             } else {
-                sexType = 2;
+                sexType = "2";
             }
         }
 

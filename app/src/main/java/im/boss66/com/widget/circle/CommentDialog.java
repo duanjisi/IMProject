@@ -62,7 +62,7 @@ public class CommentDialog extends Dialog implements
         copyTv.setOnClickListener(this);
         TextView deleteTv = (TextView) findViewById(R.id.deleteTv);
         if (mCommentItem != null
-                && getMfeedId().equals(
+                && mfeedId.equals(
                 mCommentItem.getUid_from())) {
             deleteTv.setVisibility(View.VISIBLE);
         } else {
@@ -83,7 +83,7 @@ public class CommentDialog extends Dialog implements
                 break;
             case R.id.deleteTv:
                 if (mPresenter != null && mCommentItem != null) {
-                    mPresenter.deleteComment(mCirclePosition, mCommentItem.getComm_id(),true);
+                    mPresenter.deleteComment(mCirclePosition, mCommentItem.getComm_id(), true);
                 }
                 dismiss();
                 break;

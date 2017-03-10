@@ -128,9 +128,10 @@ public class CommentListView extends LinearLayout {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         builder.append(setClickableSpan(name, bean.getUid_from()));
         String from_id = bean.getUid_from();
-        if (from_id != null && !curUserId.equals(from_id) && !TextUtils.isEmpty(toReplyName)) {
+        String uid_to = bean.getUid_to();
+        if (from_id != null && !TextUtils.isEmpty(toReplyName) && !uid_to.equals(from_id)) {
             builder.append(" 回复 ");
-            builder.append(setClickableSpan(toReplyName, bean.getUid_to()));
+            builder.append(setClickableSpan(toReplyName, uid_to));
         }
         builder.append(": ");
         //转换表情字符

@@ -65,7 +65,6 @@
                     android:layout_toRightOf="@+id/tv_text"
                     android:background="@drawable/hp_big_chat"
                     android:gravity="center"
-                    android:text="88"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:visibility="gone" />
@@ -208,7 +207,6 @@
                     android:layout_toRightOf="@+id/tv_people_nearby"
                     android:background="@drawable/hp_big_chat"
                     android:gravity="center"
-                    android:text="88"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:visibility="gone" />

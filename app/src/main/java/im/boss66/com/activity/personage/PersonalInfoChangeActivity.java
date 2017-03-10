@@ -14,12 +14,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +22,6 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.http.BaseDataRequest;
-import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.ChangeSexRequest;
 import im.boss66.com.http.request.ChangeSignatureRequest;
 import im.boss66.com.http.request.ChangeUserNameRequest;
@@ -217,9 +210,9 @@ public class PersonalInfoChangeActivity extends BaseActivity implements View.OnC
                     public void onSuccess(String pojo) {
                         cancelLoadingDialog();
                         String sex = null;
-                        if ("1".equals(value)){
+                        if ("1".equals(value)) {
                             sex = "男";
-                        }else if("2".equals(value)){
+                        } else if ("2".equals(value)) {
                             sex = "女";
                         }
                         setBackValue(sex);
@@ -260,7 +253,6 @@ public class PersonalInfoChangeActivity extends BaseActivity implements View.OnC
                     + getChineseCount(source.toString());
             if (destCount + sourceCount > MAX_EN) {
                 return "";
-
             } else {
                 return source;
             }

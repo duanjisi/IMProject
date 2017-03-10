@@ -28,9 +28,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="26dp"
+                android:text="@string/my_loose_change"
                 android:textColor="@color/black"
-                android:textSize="21sp"
-                android:text="@string/my_loose_change"/>
+                android:textSize="21sp" />
 
             <TextView
                 android:id="@+id/tv_money"
@@ -38,23 +38,23 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="26dp"
+                android:text="￥0.00"
                 android:textColor="@color/black"
-                android:textSize="43sp"
-                android:text="￥888"/>
+                android:textSize="43sp" />
 
             <Button
                 android:id="@+id/bt_recharge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="18dp"
                 android:layout_marginLeft="22dp"
                 android:layout_marginRight="22dp"
                 android:layout_marginTop="47dp"
-                android:layout_marginBottom="18dp"
+                android:background="@drawable/bg_round_red"
                 android:padding="16.5dp"
                 android:text="@string/recharge"
-                android:textSize="20sp"
                 android:textColor="@color/white"
-                android:background="@drawable/bg_round_red"/>
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/bt_withdraw"
@@ -62,11 +62,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="22dp"
                 android:layout_marginRight="22dp"
+                android:background="@drawable/bg_round_white"
                 android:padding="16.5dp"
                 android:text="@string/withdraw"
-                android:textSize="20sp"
                 android:textColor="@color/black"
-                android:background="@drawable/bg_round_white"/>
+                android:textSize="20sp" />
 
         </LinearLayout>
 

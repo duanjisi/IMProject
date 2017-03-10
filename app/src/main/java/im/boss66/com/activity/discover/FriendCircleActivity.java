@@ -138,6 +138,9 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     private int cameraType;//1:相机 2：相册 3：视频
     private boolean isReply;
     private String commentFromId, commentPid;
+    private String CurUid;
+    private final int CHANGE_ALBUM_COVER = 5;//封面
+    private ImageView iv_bg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,15 +190,15 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         presenter = new CirclePresenter(this);
         adapter = new FriendCircleAdapter(this);
         AccountEntity sAccount = App.getInstance().getAccount();
-        String uid = sAccount.getUser_id();
+        CurUid = sAccount.getUser_id();
         access_token = sAccount.getAccess_token();
-        adapter.getCurUserId(uid);
+        adapter.getCurUserId(CurUid);
         adapter.setCirclePresenter(presenter);
         mLRecyclerViewAdapter = new LRecyclerViewAdapter(adapter);
 
         View header = LayoutInflater.from(this).inflate(R.layout.item_friend_circle_head,
                 (ViewGroup) findViewById(android.R.id.content), false);
-        ImageView iv_bg = (ImageView) header.findViewById(R.id.iv_bg);
+        iv_bg = (ImageView) header.findViewById(R.id.iv_bg);
         ImageView iv_head = (ImageView) header.findViewById(R.id.iv_head);
         TextView tv_name = (TextView) header.findViewById(R.id.tv_name);
         ll_new = (LinearLayout) header.findViewById(R.id.ll_new);
@@ -217,7 +220,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
         String user_name = sAccount.getUser_name();
         if (TextUtils.isEmpty(user_name)) {
-            tv_name.setText("" + uid);
+            tv_name.setText("" + CurUid);
         } else {
             tv_name.setText("" + user_name);
         }
@@ -312,10 +315,10 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     updateEditTextBodyVisible(View.GONE, null);
                     FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
                     if (item != null) {
-                        String feed_uid = "0";
+                        String feed_uid = CurUid;
                         String pid = "0";
                         if (isReply) {
-                            pid = commentPid;
+                            pid = commentId;
                             feed_uid = commentFromId;
                         }
                         createComment(content, pid, feed_uid);
@@ -394,6 +397,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void showActionSheet(int type) {
+        updateEditTextBodyVisible(View.GONE, null);
         actionSheetType = type;
         ActionSheet actionSheet = new ActionSheet(FriendCircleActivity.this)
                 .builder()
@@ -426,7 +430,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     cameraType = RECORD_VIDEO;
                     getPermission();
                 } else if (actionSheetType == 2) {
-                    openActivity(ReplaceAlbumCoverActivity.class);
+                    openActvityForResult(ReplaceAlbumCoverActivity.class, CHANGE_ALBUM_COVER);
                 } else if (actionSheetType == 3) {
                     ll_new.setVisibility(View.GONE);
                     openActivity(CircleMessageListActivity.class);
@@ -446,7 +450,6 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void getFriendCircleList() {
-        showLoadingDialog();
         String curPage, curSize;
         String url = HttpUrl.FRIEND_CIRCLE_LIST;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
@@ -467,7 +470,6 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                cancelLoadingDialog();
                 String result = responseInfo.result;
                 if (result != null) {
                     FriendCircleEntity data = JSON.parseObject(result, FriendCircleEntity.class);
@@ -489,7 +491,6 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
                 showToast(e.getMessage(), false);
             }
         });
@@ -564,6 +565,11 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (requestCode == CHANGE_ALBUM_COVER && resultCode == RESULT_OK) {
+            SharedPreferences mPreferences = context.getSharedPreferences("albumCover", MODE_PRIVATE);
+            String albumCover = mPreferences.getString("albumCover", "");
+            imageLoader.displayImage(albumCover, iv_bg,
+                    ImageLoaderUtils.getDisplayImageOptions());
         }
     }
 

@@ -63,9 +63,6 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
     private String mOutputPath;
     private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
     private ImageLoader imageLoader;
-    //    private final String savePath = Environment
-//            .getExternalStorageDirectory()
-//            + File.separator;
     private Uri imageUri;
     private String imageName;
     private String access_token;
@@ -95,7 +92,8 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
             @Override
             public boolean onLongClick(View view) {
                 isLongClick = true;
-                return false;
+                showActionSheet();
+                return true;
             }
         });
         imageLoader = ImageLoaderUtils.createImageLoader(this);
@@ -166,11 +164,16 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
     public void onClick(int which) {
         switch (which) {
             case 1://拍照 or 长按 保存图片
-                if (isLongClick) {//长按 保存图片
+                if (isLongClick && iv_icon != null) {//长按 保存图片
+                    iv_icon.setDrawingCacheEnabled(true);
+                    bitmap = iv_icon.getDrawingCache();
                     if (bitmap != null) {
-                        FileUtil.saveBitmap(this, bitmap);
+                        FileUtils.saveImageToGallery(this, bitmap);
+                        iv_icon.setDrawingCacheEnabled(false);
+                        ToastUtil.showShort(this, getString(R.string.success_save));
+                    } else {
+                        ToastUtil.showShort(this, getString(R.string.msg_could_not_save_photo));
                     }
-                    ToastUtil.showShort(this, getString(R.string.success_save));
                 } else {//拍照
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -198,10 +201,15 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
                 startActivityForResult(intent, OPEN_ALBUM);
                 break;
             case 3://保存图片
+                iv_icon.setDrawingCacheEnabled(true);
+                bitmap = iv_icon.getDrawingCache();
                 if (bitmap != null) {
-                    FileUtil.saveBitmap(this, bitmap);
+                    FileUtils.saveImageToGallery(this, bitmap);
+                    iv_icon.setDrawingCacheEnabled(false);
+                    ToastUtil.showShort(this, getString(R.string.success_save));
+                } else {
+                    ToastUtil.showShort(this, getString(R.string.msg_could_not_save_photo));
                 }
-                ToastUtil.showShort(this, getString(R.string.success_save));
                 break;
         }
     }
@@ -260,6 +268,7 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
                     if (entity != null) {
                         ChangeAvatarEntity.Result result = entity.getResult();
                         if (result != null) {
+                            isHeadChange = true;
                             ToastUtil.showShort(context, "更改成功");
                             headurl = result.getAvatar();
                             imageLoader.displayImage(headurl, iv_icon,

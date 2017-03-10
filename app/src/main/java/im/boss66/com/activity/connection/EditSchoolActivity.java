@@ -8,15 +8,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.alibaba.fastjson.JSON;
@@ -36,6 +39,7 @@ import java.util.Date;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.SharedPreferencesMgr;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.entity.SaveSchoolEntity;
 import im.boss66.com.http.BaseDataRequest;
@@ -60,7 +64,6 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
     private TextView tv_year;
     private TextView tv_school_name;
 
-    private RelativeLayout rl_school_department;
 
     private String[] years;
     private CancelEditDialog dialog;
@@ -194,6 +197,7 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
             case R.id.tv_headright_view: //完成
 
                 if (!"请选择".equals(tv_year.getText().toString())
+                        && !TextUtils.isEmpty(tv_school_department.getText().toString())
                         && !"请填写".equals(tv_school_name.getText().toString())) {
                     if(flag){
                         editSchoolInfo();
@@ -202,24 +206,18 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
                     }
 
                 } else {
-
-                    showToast("您填写的信息不全", false);
+                    ToastUtil.showShort(context,"您填写的信息不全");
                 }
 
                 break;
 
             case R.id.rl_school:
                 Intent intent = new Intent(this, SearchSchoolActivity.class);
+                intent.putExtra("schoolType",schoolType);
 
                 startActivityForResult(intent, 1);
                 break;
-            case R.id.rl_school_department:
-//                if ("请填写".equals(tv_school_name.getText().toString())) {
-//                    showToast("请先选择学校", false);
-//                } else {
-//                }
 
-                break;
             case R.id.rl_school_time:
                 showAddressSelection();
 
@@ -231,7 +229,6 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
 
     private void editSchoolInfo() {
         showLoadingDialog();
-//        EditSchoolRequest request = new EditSchoolRequest(TAG, schoolId+"", majorInfo, year, us_id+"");
         String url = HttpUrl.EDIT_SCHOOL_INFO;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
@@ -248,10 +245,15 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
                 String result = responseInfo.result;
 
                 try {
-                    JSONObject jsonObject = new JSONObject(result);
-                    if(jsonObject.getInt("code")==1){
-                        handler.obtainMessage(2).sendToTarget();
+                    if(result!=null){
+                        JSONObject jsonObject = new JSONObject(result);
+                        if(jsonObject.getInt("code")==1){
+                            handler.obtainMessage(2).sendToTarget();
+                        }else{
+                            ToastUtil.show(EditSchoolActivity.this,jsonObject.getString("message"), Toast.LENGTH_SHORT);
+                        }
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -269,8 +271,7 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
 
     private void showAddressSelection() {
         if (dialog2 == null) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    this);
+            dialog2 = new Dialog(context, R.style.Dialog_full);
             View view_dialog = View.inflate(this,
                     R.layout.dialog_single_select, null);
 
@@ -307,10 +308,18 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
                     dialog2.dismiss();
                 }
             });
-            dialogBuilder.setView(view_dialog);
-            dialog2 = dialogBuilder.create();
+            dialog2.setContentView(view_dialog);
             Window dialogWindow = dialog2.getWindow();
-            dialogWindow.setGravity( Gravity.BOTTOM);
+
+            dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
+            dialogWindow.setBackgroundDrawableResource(android.R.color.transparent); //加上可以在底部对其屏幕底部
+
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.gravity = Gravity.BOTTOM;
+            dialogWindow.setAttributes(lp);
+            dialog2.setCanceledOnTouchOutside(true);
         }
         dialog2.show();
         id_sex.setViewAdapter(new ArrayWheelAdapter<>(this,years));
@@ -327,7 +336,15 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
             public void onSuccess(String str) {
                 cancelLoadingDialog();
                 saveSchoolEntity = JSON.parseObject(str, SaveSchoolEntity.class);
-                handler.obtainMessage(1).sendToTarget();
+                if(saveSchoolEntity!=null){
+
+                    if(saveSchoolEntity.getCode()==1){
+
+                        handler.obtainMessage(1).sendToTarget();
+                    }else{
+                        showToast(saveSchoolEntity.getMessage(),false);
+                    }
+                }
 
             }
 
@@ -345,10 +362,10 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && data != null) {
-            schoolname = data.getStringExtra("school");
+            schoolname = data.getStringExtra("schoolName");
+            schoolId = Integer.parseInt(data.getStringExtra("schoolId"));
             tv_school_name.setText(schoolname);
             tv_school_name.setTextColor(Color.BLACK);
-            schoolId = Integer.parseInt(schoolname);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

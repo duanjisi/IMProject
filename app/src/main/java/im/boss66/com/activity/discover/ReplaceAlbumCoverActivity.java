@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -22,11 +23,15 @@ import com.lidroid.xutils.http.client.HttpRequest;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
+import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
+import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.personage.ClipImageActivity;
@@ -34,6 +39,7 @@ import im.boss66.com.config.LoginStatus;
 import im.boss66.com.entity.AlbumCoverEntity;
 import im.boss66.com.entity.ChangeAvatarEntity;
 import im.boss66.com.http.HttpUrl;
+import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.util.Utils;
 
 /**
@@ -43,11 +49,14 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
 
     private TextView tv_back, tv_title, tv_photo_album, tv_take_photos;
     private Uri imageUri;
-    private String imageName,mOutputPath,access_token;
+    private String imageName, mOutputPath, access_token;
     private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
     private final int OPEN_CAMERA = 1;//相机
     private final int OPEN_ALBUM = 2;//相册
     private final int REQUEST_CLIP_IMAGE = 3;//裁剪
+    private PermissionListener permissionListener;
+    private int cameraType;//1:相机 2：相册
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,30 +84,12 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                 finish();
                 break;
             case R.id.tv_photo_album://相册
-//                imageName = getNowTime() + ".png";
-//                imageUri = Uri
-//                        .fromFile(new File(savePath, imageName));
-//                Intent intent = new Intent(Intent.ACTION_PICK, null);
-//                intent.setDataAndType(
-//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-//
-//                startActivityForResult(intent, OPEN_ALBUM);
+                cameraType = OPEN_ALBUM;
+                getPermission();
                 break;
             case R.id.tv_take_photos://拍照
-                Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                imageName = getNowTime() + ".png";
-                // 指定调用相机拍照后照片的储存路径
-                File dir = new File(savePath);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                File file = new File(dir, imageName);
-                imageUri = Uri.fromFile(file);
-                intent1.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                if (intent1.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent1, OPEN_CAMERA);
-                }
+                cameraType = OPEN_CAMERA;
+                getPermission();
                 break;
         }
     }
@@ -123,12 +114,12 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                             ToastUtil.showShort(context, "更改成功");
                             String url = result.getAvatar();
                             Intent intent = new Intent();
-                            intent.putExtra("icon_url",url);
-                            SharedPreferences mPreferences = context.getSharedPreferences("albumCover",MODE_PRIVATE);
+                            intent.putExtra("icon_url", url);
+                            SharedPreferences mPreferences = context.getSharedPreferences("albumCover", MODE_PRIVATE);
                             SharedPreferences.Editor editor = mPreferences.edit();
                             editor.putString("albumCover", url);
                             editor.apply();
-                            setResult(RESULT_OK,intent);
+                            setResult(RESULT_OK, intent);
                             finish();
                         }
                     }
@@ -149,32 +140,24 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {    //打开相机
-            if (data == null) {
-                return;
-            } else {
-                if (imageUri != null) {
-                    String path = Utils.getPath(this, imageUri);
-                    if (!TextUtils.isEmpty(path)) {
-                        ClipImageActivity.prepare()
-                                .aspectX(2).aspectY(2)//裁剪框横向及纵向上的比例
-                                .inputPath(path).outputPath(mOutputPath)//要裁剪的图片地址及裁剪后保存的地址
-                                .startForResult(this, REQUEST_CLIP_IMAGE);
-                    }
+            if (imageUri != null) {
+                String path = Utils.getPath(this, imageUri);
+                if (!TextUtils.isEmpty(path)) {
+                    ClipImageActivity.prepare()
+                            .aspectX(2).aspectY(2)//裁剪框横向及纵向上的比例
+                            .inputPath(path).outputPath(mOutputPath)//要裁剪的图片地址及裁剪后保存的地址
+                            .startForResult(this, REQUEST_CLIP_IMAGE);
                 }
             }
-        } else if (requestCode == OPEN_ALBUM && resultCode == RESULT_OK) { //打开相册
-            if (data == null) {
-                return;
-            } else {
-                Uri originalUri = data.getData();  //获得图片的uri
-                if (originalUri != null) {
-                    String path = Utils.getPath(this, originalUri);
-                    if (!TextUtils.isEmpty(path)) {
-                        ClipImageActivity.prepare()
-                                .aspectX(2).aspectY(2)//裁剪框横向及纵向上的比例
-                                .inputPath(path).outputPath(mOutputPath)//要裁剪的图片地址及裁剪后保存的地址
-                                .startForResult(this, REQUEST_CLIP_IMAGE);
-                    }
+        } else if (requestCode == OPEN_ALBUM && resultCode == RESULT_OK && data != null) { //打开相册
+            ArrayList<String> selectPicList = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+            if (selectPicList != null && selectPicList.size() > 0) {
+                String path = selectPicList.get(0);
+                if (!TextUtils.isEmpty(path)) {
+                    ClipImageActivity.prepare()
+                            .aspectX(2).aspectY(2)//裁剪框横向及纵向上的比例
+                            .inputPath(path).outputPath(mOutputPath)//要裁剪的图片地址及裁剪后保存的地址
+                            .startForResult(this, REQUEST_CLIP_IMAGE);
                 }
             }
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CLIP_IMAGE) {
@@ -191,6 +174,55 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMddHHmmssSS");
         return dateFormat.format(date);
+    }
+
+    private void getPermission() {
+        permissionListener = new PermissionListener() {
+            @Override
+            public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
+            }
+
+            @Override
+            public void onRequestPermissionSuccess() {
+                if (cameraType == OPEN_CAMERA) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    String imageName = getNowTime() + ".png";
+                    // 指定调用相机拍照后照片的储存路径
+                    File dir = new File(savePath);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+                    File file = new File(dir, imageName);
+                    imageUri = Uri.fromFile(file);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(intent, OPEN_CAMERA);
+                    }
+                } else if (cameraType == OPEN_ALBUM) {
+                    MultiImageSelector.create(context).
+                            showCamera(false).
+                            count(1)
+                            .single() // 单选模式
+                            .start(ReplaceAlbumCoverActivity.this, OPEN_ALBUM);
+                }
+            }
+
+            @Override
+            public void onRequestPermissionError() {
+                ToastUtil.showShort(ReplaceAlbumCoverActivity.this, getString(R.string.giving_camera_permissions));
+            }
+        };
+        PermissionUtil
+                .with(this)
+                .permissions(
+                        PermissionUtil.PERMISSIONS_GROUP_CAMERA //相机权限
+                ).request(permissionListener);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
     }
 
 }

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_head"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/user_bg_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/person" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/people_center_head_bg" />
+
+    <TextView
+        android:id="@+id/tv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_back"
+        android:gravity="center"
+        android:padding="@dimen/dp_10"
+        android:text="返回"
+        android:textColor="@color/white"
+        android:textSize="17.5sp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_msg"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/shape_head_people_center"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/iv_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/news_no" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_6"
+            android:layout_toRightOf="@+id/iv_msg"
+            android:text="消息"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/bt_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/dp_14"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/shape_round_people_center"
+        android:text="+ 添加"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_32" />
+
+    <im.boss66.com.widget.RoundImageView
+        android:id="@+id/user_head"
+        android:layout_width="4050dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/person" />
+
+    <RelativeLayout
+        android:id="@+id/rl_edit_info"
+        android:layout_below="@+id/user_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_6"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_6"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:layout_alignBottom="@id/tv_name"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/tv_name"
+            android:src="@drawable/arrow_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

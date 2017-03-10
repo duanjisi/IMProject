@@ -8,7 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.lidroid.xutils.HttpUtils;
@@ -20,6 +22,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
 import im.boss66.com.adapter.FamousPeopleAdapter;
@@ -36,11 +39,11 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
     private String url;
     private RecyclerView rcv_famous_people;
     private FamousPeopleAdapter adapter;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 1:
                     result = famousPeopleEntity.getResult();
                     adapter.setDatas(result);
@@ -61,10 +64,10 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.getExtras().containsKey("school_id")) {
-                id = intent.getIntExtra("school_id",-1);
+                id = intent.getIntExtra("school_id", -1);
                 url = HttpUrl.SCHOOL_FAMOUS_PEOPLE;
             } else {
-                id = intent.getIntExtra("hometown_id",-1);
+                id = intent.getIntExtra("hometown_id", -1);
                 url = HttpUrl.BUSINESS_FAMOUS_PEOPLE;
 
             }
@@ -76,21 +79,34 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
 
     private void initData() {
 
+        showLoadingDialog();
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        url = url+"?id=" + id;
-        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>(){
+        url = url + "?id=" + id;
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
                 String result = responseInfo.result;
-                famousPeopleEntity = JSON.parseObject(result, FamousPeopleEntity.class);
-                handler.obtainMessage(1).sendToTarget();
+                if (result != null) {
+                    famousPeopleEntity = JSON.parseObject(result, FamousPeopleEntity.class);
+                    if(famousPeopleEntity!=null){
+                        if (famousPeopleEntity.getCode() == 1) {
+                            handler.obtainMessage(1).sendToTarget();
+                        } else {
+                            ToastUtil.show(context, famousPeopleEntity.getMessage(), Toast.LENGTH_SHORT);
+                        }
+                    }
+
+                }
+
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
                 showToast(e.getMessage(), false);
             }
         });
@@ -99,6 +115,7 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
     private void initViews() {
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
+
         tv_headcenter_view.setText("名人");
         tv_headlift_view.setOnClickListener(this);
 
@@ -110,7 +127,7 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_headlift_view:
                 finish();
                 break;
