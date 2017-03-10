@@ -3,6 +3,7 @@ package im.boss66.com.activity.im;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,9 +15,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.CommonDialogUtils;
-import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.Utils.PrefKey;
 import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
@@ -29,6 +30,7 @@ import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.GroupInform;
 import im.boss66.com.entity.MemberEntity;
 import im.boss66.com.http.BaseModelRequest;
+import im.boss66.com.http.request.GroupCancelMemsRequest;
 import im.boss66.com.http.request.GroupMembersRequest;
 import im.boss66.com.widget.EaseSwitchButton;
 import im.boss66.com.widget.MyGridView;
@@ -53,6 +55,7 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
     private GroupInform groupInform;
     private boolean isTop;
     private EaseSwitchButton switchDisturb;
+    private EaseSwitchButton switchNick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,7 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
         switchTop = (EaseSwitchButton) findViewById(R.id.switch_btn_top);
         gridView = (MyGridView) findViewById(R.id.gridView);
         switchDisturb = (EaseSwitchButton) findViewById(R.id.switch_btn);
+        switchNick = (EaseSwitchButton) findViewById(R.id.switch_btn_nick);
         adapter = new MemberAdapter(context);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new ItemClickListener());
@@ -101,7 +105,15 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
         btnExit.setOnClickListener(this);
         switchTop.setOnClickListener(this);
         switchDisturb.setOnClickListener(this);
-        boolean isopen = PreferenceUtils.getBoolean(this, groupid, true);
+        switchNick.setOnClickListener(this);
+        boolean showNick = PreferenceUtils.getBoolean(this, PrefKey.SHOW_NICK_NAME + groupid, true);
+        if (showNick) {
+            switchNick.openSwitch();
+        } else {
+            switchNick.closeSwitch();
+        }
+
+        boolean isopen = PreferenceUtils.getBoolean(this, PrefKey.AVOID_DISTURB + groupid, true);
         if (isopen) {
             switchDisturb.openSwitch();
         } else {
@@ -233,7 +245,20 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
                     switchDisturb.openSwitch();
                     isOpen = true;
                 }
-                PreferenceUtils.putBoolean(this, groupid, isOpen);
+                PreferenceUtils.putBoolean(this, PrefKey.AVOID_DISTURB + groupid, isOpen);
+                break;
+            case R.id.switch_btn_nick:
+                boolean showNick;
+                if (switchNick.isSwitchOpen()) {
+                    switchNick.closeSwitch();
+                    showNick = false;
+                } else {
+                    switchNick.openSwitch();
+                    showNick = true;
+                }
+                PreferenceUtils.putBoolean(this, PrefKey.SHOW_NICK_NAME + groupid, showNick);
+                Intent it = new Intent(Constants.Action.REFRSH_CHAT_PAGER);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(it);
                 break;
         }
     }
@@ -250,6 +275,8 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
             @Override
             public void onClick(View view) {
                 mMsgDB.clearMsgDatas(MsgTab);
+                Intent intent = new Intent(Constants.Action.REFRSH_CHAT_PAGER_DATAS);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 dialog.dismiss();
             }
         });
@@ -300,8 +327,47 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
             @Override
             public void onClick(View v) {
                 CommonDialogUtils.dismiss();
+                if (groupInform != null) {
+                    if (groupInform.getCreator().equals(account.getUser_id())) {
+//                        Intent it = new Intent(context, ChatGroupNameActivity.class);
+//                        it.putExtra("obj", groupInform);
+//                        it.putExtra("isNotice", true);
+//                        startActivityForResult(it, 101);
+                    } else {
+//                        showToast("仅群主可编辑公告", true);
+                        outGroupRequest();
+                    }
+                }
             }
         }, context, msg);
+    }
+
+    private void outGroupRequest() {
+        showLoadingDialog();
+        GroupCancelMemsRequest request = new GroupCancelMemsRequest(TAG, groupid, userid);
+        request.send(new BaseModelRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String pojo) {
+                cancelLoadingDialog();
+                onDeleteHandler();
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                cancelLoadingDialog();
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void onDeleteHandler() {
+        if (groupInform != null) {
+            showToast("退出" + groupInform.getName() + "群成功!", true);
+        }
+        mMsgDB.clearMsgDatas(MsgTab);
+        Intent intent = new Intent(Constants.Action.EXIT_CURRETN_GROUP_REFRESH_DATAS);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        finish();
     }
 
     private class ItemClickListener implements AdapterView.OnItemClickListener {

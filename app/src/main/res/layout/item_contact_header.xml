@@ -9,6 +9,7 @@
         android:id="@+id/rl_add_friends"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <FrameLayout
             android:id="@+id/fl"
             android:layout_width="47dp"
@@ -24,16 +25,25 @@
                 android:layout_marginTop="6dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/hp_add_friends" />
-
+            <!--<TextView-->
+            <!--android:id="@+id/tv_notify"-->
+            <!--android:layout_width="18.5dp"-->
+            <!--android:layout_height="18.5dp"-->
+            <!--android:layout_gravity="top|right"-->
+            <!--android:background="@drawable/bg_circle_notify"-->
+            <!--android:gravity="center"-->
+            <!--android:text="1"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:visibility="visible" />-->
             <TextView
                 android:id="@+id/tv_notify"
-                android:layout_width="18.5dp"
-                android:layout_height="18.5dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="top|right"
                 android:background="@drawable/bg_circle_notify"
                 android:gravity="center"
-                android:text="1"
                 android:textColor="@color/white"
+                android:textSize="11sp"
                 android:visibility="gone" />
         </FrameLayout>
 

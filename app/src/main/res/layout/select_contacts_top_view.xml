@@ -56,6 +56,7 @@
             android:id="@+id/iv_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ease_search_bar_icon_normal" />
         <!--android:drawableLeft="@drawable/ease_search_bar_icon_normal"-->
         <EditText
@@ -68,6 +69,7 @@
             android:focusableInTouchMode="true"
             android:foregroundGravity="center_vertical"
             android:hint="搜索"
+            android:paddingRight="40dp"
             android:singleLine="true"
             android:textColorHint="@color/gray_normal"
             android:textSize="16sp" />

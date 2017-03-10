@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import im.boss66.com.R;
@@ -112,6 +113,20 @@ public class EaseContactList extends RelativeLayout {
         }
     }
 
+    public void removeItem(String uid) {
+        if (adapter != null) {
+            List<EaseUser> list = adapter.getUserList();
+            Iterator<EaseUser> stringIterator = list.iterator();
+            while (stringIterator.hasNext()) {
+                EaseUser s = stringIterator.next();
+                if (s.getUserid().equals(uid)) {
+                    stringIterator.remove();
+                    adapter.remove(s);
+                }
+            }
+        }
+    }
+
     public void init(List<EaseUser> contactList, View header) {
         this.contactList = contactList;
         adapter = new EaseContactAdapter(context, 0, new ArrayList<EaseUser>(contactList));
@@ -199,6 +214,11 @@ public class EaseContactList extends RelativeLayout {
         handler.sendMessage(msg);
     }
 
+    public void notifyDataSetChanged() {
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
 
     public void refresh(List<EaseUser> contactList) {
         Message msg = handler.obtainMessage(MSG_UPDATE_LIST2);

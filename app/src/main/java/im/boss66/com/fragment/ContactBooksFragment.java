@@ -1,11 +1,15 @@
 package im.boss66.com.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.AddFriendActivity;
-import im.boss66.com.activity.book.BookSearchActivity;
 import im.boss66.com.activity.book.NewFriendsActivity;
+import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.activity.discover.SearchByAllNetActivity;
-import im.boss66.com.activity.im.ChatActivity;
 import im.boss66.com.activity.im.GroupChatActivity;
 import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.BaseContact;
@@ -46,6 +50,7 @@ import im.boss66.com.widget.TopNavigationBar;
  */
 public class ContactBooksFragment extends BaseFragment {
     private final static String TAG = ContactBooksFragment.class.getSimpleName();
+    private LocalBroadcastReceiver mLocalBroadcastReceiver;
     private TopNavigationBar topNavigationBar;
     private InputMethodManager inputMethodManager;
     private List<EaseUser> contactList;
@@ -86,6 +91,14 @@ public class ContactBooksFragment extends BaseFragment {
         tvSearch = (TextView) view.findViewById(R.id.tv_search);
         query = (EditText) view.findViewById(R.id.query);
         clearSearch = (ImageButton) view.findViewById(R.id.search_clear);
+
+        mLocalBroadcastReceiver = new LocalBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.Action.CONTACTS_REMOVE_CURRETN_ITEM);
+        filter.addAction(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
+        filter.addAction(Constants.Action.CHAT_AGREE_FRIENDSHIP);
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(mLocalBroadcastReceiver, filter);
 
         iv_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +171,7 @@ public class ContactBooksFragment extends BaseFragment {
         });
         contactListLayout.init(contactList, header);
         request();
+        requestNewNums();
 //        initData(null);
     }
 
@@ -202,11 +216,15 @@ public class ContactBooksFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EaseUser user = (EaseUser) listView.getItemAtPosition(position);
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra("title", user.getUsername());
-                intent.putExtra("toUid", user.getUserid());
-                intent.putExtra("toAvatar", user.getAvatar());
-                intent.putExtra("isgroup", false);
+//                Intent intent = new Intent(getActivity(), ChatActivity.class);
+//                intent.putExtra("title", user.getUsername());
+//                intent.putExtra("toUid", user.getUserid());
+//                intent.putExtra("toAvatar", user.getAvatar());
+//                intent.putExtra("isgroup", false);
+//                startActivity(intent);
+                Intent intent = new Intent(getActivity(), PersonalNearbyDetailActivity.class);
+                intent.putExtra("classType", "ContactBooksFragment");
+                intent.putExtra("userid", user.getUserid());
                 startActivity(intent);
             }
         });
@@ -227,13 +245,11 @@ public class ContactBooksFragment extends BaseFragment {
         request.send(new BaseDataRequest.RequestCallback<FriendState>() {
             @Override
             public void onSuccess(FriendState pojo) {
-                cancelLoadingDialog();
                 bindData(pojo);
             }
 
             @Override
             public void onFailure(String msg) {
-                cancelLoadingDialog();
                 showToast(msg, true);
             }
         });
@@ -243,7 +259,7 @@ public class ContactBooksFragment extends BaseFragment {
         if (state != null) {
             String num = state.getCount();
             if (num != null && !num.equals("0")) {
-                UIUtils.hindView(tv_new_nums);
+                UIUtils.showView(tv_new_nums);
                 tv_new_nums.setText(num);
             } else {
                 UIUtils.hindView(tv_new_nums);
@@ -257,5 +273,72 @@ public class ContactBooksFragment extends BaseFragment {
                 inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    private class LocalBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (Constants.Action.CONTACTS_REMOVE_CURRETN_ITEM.equals(action)) {
+                String userid = intent.getStringExtra("userid");
+                Log.i("info", "======被删除的userid:" + userid);
+                if (userid != null && !userid.equals("")) {
+                    App.getInstance().removeItem(userid);
+                    contactListLayout.removeItem(userid);
+                }
+            } else if (Constants.Action.CHAT_NEW_MESSAGE_NOTICE.equals(action)) {//添加好友新消息,更新消息书，及其提示
+                Log.i("info", "=============requestNewNums()");
+                requestNewNums();
+            } else if (Constants.Action.CHAT_AGREE_FRIENDSHIP.equals(action)) {//同意彼此为好友关系，刷新列表数据
+                Log.i("info", "=============refreshPagerDatas()");
+                refreshPagerDatas();
+                requestNewNums();
+            }
+        }
+    }
+
+    private void refreshPagerDatas() {
+        ContactsRequest request = new ContactsRequest(TAG);
+        request.send(new BaseDataRequest.RequestCallback<BaseContact>() {
+            @Override
+            public void onSuccess(BaseContact pojo) {
+                refreshDatas(pojo);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void refreshDatas(BaseContact baseContact) {
+        if (contactList != null) {
+            contactList.clear();
+        }
+        ArrayList<ContactEntity> list = baseContact.getResult();
+        if (list != null && list.size() != 0) {
+            for (int i = 0; i < list.size(); i++) {
+                ContactEntity entity = list.get(i);
+                EaseUser easeUser = new EaseUser();
+                easeUser.setAvatar(entity.getAvatar());
+                easeUser.setInitialLetter(entity.getFirst_letter());
+                easeUser.setNick(entity.getUser_name());
+                easeUser.setUserName(entity.getUser_name());
+                easeUser.setUserid(entity.getFriend_id());
+                easeUser.setFid(entity.getFid());
+                contactList.add(easeUser);
+            }
+            App.getInstance().setContacts((ArrayList<EaseUser>) contactList);
+//            contactListLayout.notifyDataSetChanged();
+            contactListLayout.init(contactList);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getActivity()).
+                unregisterReceiver(mLocalBroadcastReceiver);
     }
 }

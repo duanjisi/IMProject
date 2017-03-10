@@ -108,8 +108,12 @@ public class NewFriendsActivity extends BaseActivity implements View.OnClickList
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             NewFriend friend = (NewFriend) adapterView.getItemAtPosition(i);
+//            Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
+//            intent.putExtra("friend", friend);
+//            startActivity(intent);
             Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
-            intent.putExtra("friend", friend);
+            intent.putExtra("classType", "NewFriendsActivity");
+            intent.putExtra("userid", friend.getUser_id());
             startActivity(intent);
         }
     }

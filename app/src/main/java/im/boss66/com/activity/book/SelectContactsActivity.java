@@ -38,7 +38,6 @@ import java.util.List;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
-import im.boss66.com.Session;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
@@ -65,7 +64,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     //    protected ImageButton clearSearch;
     protected EditText query;
     private ImageLoader imageLoader;
-    private LinearLayout linearLayout;
+    private LinearLayout linearLayout, ll_search;
     private ImageView iv_tag;
     //    private Gallery gallery;
 //    private MyAdapter adapter;
@@ -111,7 +110,13 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         ll_max_width = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 120));
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         linearLayout = (LinearLayout) findViewById(R.id.ll_image);
+        ll_search = (LinearLayout) findViewById(R.id.rl_search);
         iv_tag = (ImageView) findViewById(R.id.iv_tag);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_search.getLayoutParams();
+        params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        params.height = mImageHeight;
+        ll_search.setLayoutParams(params);
 
         header = getLayoutInflater().inflate(R.layout.item_select_contacts, null);
         query = (EditText) findViewById(R.id.query);
@@ -240,7 +245,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     public boolean onKey(View view, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_DEL
                 && event.getAction() == KeyEvent.ACTION_DOWN && getText(query).equals("")) {
-//            deleteLastView();
+            deleteLastView();
             return true;
         }
         return false;
@@ -249,7 +254,6 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     private String getTips() {
         String member_ids = getMemberIds();
         String[] str = member_ids.split(",");
-        Log.i("info", "=========member_ids:" + member_ids);
         if (!member_ids.equals("")) {
             return "确定(" + str.length + ")";
         } else {
@@ -304,12 +308,12 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 
     private void requestGroupCreate() {//建群请求
         String member_ids = null;
-        if (isCreateGroup){
+        if (isCreateGroup) {
             member_ids = user_ids;
-            for (String id:userIdList){
+            for (String id : userIdList) {
                 member_ids = member_ids + "," + id;
             }
-        }else {
+        } else {
             member_ids = userid + "," + getMemberIds();
         }
         Log.i("info", "member_ids:" + member_ids);
@@ -499,7 +503,21 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 //            }
 //        });
         linearLayout.addView(insertImage(user, position));
+//        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) linearLayout.getLayoutParams();
+////        int width = params.width;
+//        linearLayout.measure(w, h);
+//        int width = linearLayout.getWidth();
+//        Log.i("info", "==============width:" + width);
+//        if (width > 100) {
+////            mImageHeight * 3
+//            params.width = 100;
+//            params.height = FrameLayout.LayoutParams.WRAP_CONTENT;
+//            linearLayout.setLayoutParams(params);
+//        }
     }
+
+    int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+    int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 
     private void deleteView(EaseUser user) {
         String uid = user.getUserid();
@@ -530,11 +548,18 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     private void deleteLastView() {
         int count = linearLayout.getChildCount();
         if (count != 0) {
-            linearLayout.removeViewAt(count - 1);
+            Log.i("info", "===============deleteLastView()");
             View view = linearLayout.getChildAt(count - 1);
             String userid = (String) view.getTag();
             int position = (int) view.getTag(R.id.top_area);
-            Session.getInstance().actionRefreshViews(userid, position);
+            refreshDatas(userid);
+            Log.i("info", "==========view:" + view + "\n" + "tag:" + view.getTag());
+//            Session.getInstance().actionRefreshViews(userid, position);
+            linearLayout.removeViewAt(count - 1);
+            tvOption.setText(getTips());
+            if (linearLayout.getChildCount() == 0) {
+                UIUtils.showView(iv_tag);
+            }
 //            final ArrayList<EaseUser> users = (ArrayList<EaseUser>) contactListLayout.getList();
 //            for (int i = 0; i < users.size(); i++) {
 //                EaseUser user = (EaseUser) listView.getItemAtPosition(i);
@@ -550,11 +575,15 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 //                }
 //            });
         }
-//        else {
-//            Drawable drawable = getResources().getDrawable(R.drawable.ease_search_bar_icon_normal);
-//            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-//            query.setCompoundDrawables(drawable, null, null, null);
-//        }
+    }
+
+    private void refreshDatas(String userid) {
+        for (EaseUser user : contactList) {
+            if (user.getUserid().equals(userid)) {
+                user.setChecked(false);
+            }
+        }
+        contactListLayout.notifyDataSetChanged();
     }
 
     @Override

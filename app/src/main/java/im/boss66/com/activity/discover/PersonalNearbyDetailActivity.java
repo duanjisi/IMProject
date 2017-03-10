@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.Utils.ImageLoaderUtils;
@@ -177,6 +178,7 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
             UIUtils.showView(rl_privacy);
             tv_area.setText(entity.getDistrict());
             tv_personalized_signature.setText(entity.getSignature());
+            UIUtils.showView(bt_greet);
             if (friendState.getIs_friend().equals("1")) {
                 iv_set.setImageResource(R.drawable.hp_chat_more);
                 iv_set.setVisibility(View.VISIBLE);
@@ -191,6 +193,8 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 tv_source.setText("群消息");
             } else if ("ContactBooksFragment".equals(classType)) {
                 tv_source.setText("通讯录");
+            } else if ("NewFriendsActivity".equals(classType)) {
+                tv_source.setText("新的朋友");
             } else {
                 tv_source.setText("来源于~");
             }
@@ -264,6 +268,10 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 public void onSuccess(String pojo) {
                     cancelLoadingDialog();
                     if (person != null) {
+                        Intent intent = new Intent(Constants.Action.CONTACTS_REMOVE_CURRETN_ITEM);
+                        intent.putExtra("userid", person.getUser_id());
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
                         ConversationHelper.getInstance().deleteByConversationId(person.getUser_id());
                         Session.getInstance().refreshConversationPager();
                     }

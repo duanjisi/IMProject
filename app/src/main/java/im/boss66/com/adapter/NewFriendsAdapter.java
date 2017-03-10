@@ -1,25 +1,36 @@
 package im.boss66.com.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.NewFriend;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.HandleFriendRequest;
+
 /**
  * Created by Johnny on 2017/2/17.
  */
 public class NewFriendsAdapter extends ABaseAdapter<NewFriend> {
     private final static String TAG = NewFriendsAdapter.class.getSimpleName();
     private ImageLoader imageLoader;
+    private AccountEntity account;
 
     public NewFriendsAdapter(Context context) {
         super(context);
+        account = App.getInstance().getAccount();
         this.imageLoader = ImageLoaderUtils.createImageLoader(context);
     }
 
@@ -67,9 +78,13 @@ public class NewFriendsAdapter extends ABaseAdapter<NewFriend> {
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String pojo) {
+                String str = account.getUser_name() + "已成为你的好友!";
+                NetworkUtil.senNotification(friend.getUser_id(), "chat", str);
                 cancelLoadingDialog();
                 friend.setFeedback_mark("2");
                 notifyDataSetChanged();
+                Intent intent = new Intent(Constants.Action.CHAT_AGREE_FRIENDSHIP);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
                 showToast("接受好友成功!", true);
             }
 

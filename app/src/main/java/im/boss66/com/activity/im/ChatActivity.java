@@ -396,6 +396,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mLocalBroadcastReceiver = new LocalBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.Action.EMOJI_EDITED_SEND);
+        filter.addAction(Constants.Action.REFRSH_CHAT_PAGER_DATAS);
+        filter.addAction(Constants.Action.EXIT_CURRETN_GROUP_REFRESH_DATAS);
+        filter.addAction(Constants.Action.REFRSH_CHAT_PAGER);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(mLocalBroadcastReceiver, filter);
 
@@ -403,7 +406,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mApplication = App.getInstance();
         mMsgDB = mApplication.getMessageDB();// 发送数据库
         mRecentDB = mApplication.getRecentDB();// 接收消息数据库
-        adapter = new MessageAdapter(context, initMsgData());
+//        adapter = new MessageAdapter(context, initMsgData());
+        adapter = new MessageAdapter(context, initMsgData(), toUid);
         mMsgListView = (MsgListView) findViewById(R.id.msg_listView);
         // 触摸ListView隐藏表情和输入法
         mMsgListView.setOnTouchListener(this);
@@ -786,8 +790,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     it3 = new Intent(context, ChatInformActivity.class);
                     it3.putExtra("uid", toUid);
-                    it3.putExtra("head",toAvatar);
-                    it3.putExtra("name",title);
+                    it3.putExtra("head", toAvatar);
+                    it3.putExtra("name", title);
                 }
                 if (it3 != null) {
 //                    startActivity(it3);
@@ -885,7 +889,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        }
 //        ChatServices.sendMessage(getString(MESSAGE_TYPE_EMOTION, faceCode));
         Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_EMOTION, faceCode));
-        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_EMOTION, "");
+//        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_EMOTION, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_EMOTION, mSpUtil.getUserId(),
@@ -949,7 +953,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
 //        ChatServices.sendMessage(getString(MESSAGE_TYPE_IMG, photoPath));
         Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_IMG, photoPath));
-        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_IMG, "");
+//        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_IMG, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_IMG, mSpUtil.getUserId(),
@@ -974,7 +978,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        }
 //        ChatServices.sendMessage(getString(MESSAGE_TYPE_TXT, msg));
         Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_TXT, msg));
-        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_TXT, msg);
+//        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_TXT, msg);
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_TXT, mSpUtil.getUserId(),
@@ -999,7 +1003,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        }
 //        ChatServices.sendMessage(getString(MESSAGE_TYPE_AUDIO, photoPath));
         Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_AUDIO, photoPath));
-        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_AUDIO, "");
+//        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_AUDIO, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_AUDIO, mSpUtil.getUserId(),
@@ -1080,7 +1084,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        }
 //        ChatServices.sendMessage(getString(MESSAGE_TYPE_VIDEO, faceCode));
         Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_VIDEO, faceCode));
-        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_VIDEO, "");
+//        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_VIDEO, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_VIDEO, mSpUtil.getUserId(),
@@ -1449,7 +1453,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onItemClick(EmoEntity entity) {//点击表情，发送表情
-        showToast("emoji_id:" + entity.getEmo_id(), true);
+//        showToast("emoji_id:" + entity.getEmo_id(), true);
         boolean isEdit = (boolean) ivEditPic.getTag();
         if (!isEdit) {
             String code = entity.getEmo_code();
@@ -2116,6 +2120,17 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 if (path != null && !path.equals("")) {
                     uploadImageAudioFile(path, true, 0);
                 }
+            } else if (Constants.Action.REFRSH_CHAT_PAGER_DATAS.equals(action)) {
+                MSGPAGERNUM = 0;
+                List<MessageItem> msgList = initMsgData();
+                int position = adapter.getCount();
+                adapter.setmMsgList(msgList);
+                mMsgListView.stopRefresh();
+                mMsgListView.setSelection(adapter.getCount() - position - 1);
+            } else if (Constants.Action.REFRSH_CHAT_PAGER.equals(action)) {
+                adapter.notifyDataSetChanged();
+            } else if (Constants.Action.EXIT_CURRETN_GROUP_REFRESH_DATAS.equals(action)) {
+                finish();
             }
         }
     }

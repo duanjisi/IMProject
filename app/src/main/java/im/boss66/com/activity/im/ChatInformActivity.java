@@ -3,6 +3,7 @@ package im.boss66.com.activity.im;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,13 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.book.SelectContactsActivity;
-import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.db.MessageDB;
 import im.boss66.com.widget.EaseSwitchButton;
 
 /**
@@ -30,6 +32,8 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
     private ImageView ivIcon, iv_add;
     private RelativeLayout rl_chat_file, rl_chat_bg, rl_chat_records, rl_clear_records, rl_complain;
     private EaseSwitchButton switchTop, switchDisturb;
+    private MessageDB mMsgDB;// 保存消息的数据库
+    private String MsgTab;
     private String uid;
 
     @Override
@@ -40,6 +44,7 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initViews() {
+        mMsgDB = App.getInstance().getMessageDB();
         iv_add = (ImageView) findViewById(R.id.iv_add);
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvName = (TextView) findViewById(R.id.tv_name);
@@ -73,6 +78,7 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
         if (intent != null) {
             uid = intent.getStringExtra("uid");
             String head = intent.getStringExtra("head");
+            MsgTab = App.getInstance().getUid() + "_" + uid;
             if (!TextUtils.isEmpty(head)) {
                 ImageLoader imageLoader = ImageLoaderUtils.createImageLoader(this);
                 imageLoader.displayImage(head, ivIcon,
@@ -143,6 +149,9 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
         view.findViewById(R.id.option).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mMsgDB.clearMsgDatas(MsgTab);
+                Intent intent = new Intent(Constants.Action.REFRSH_CHAT_PAGER_DATAS);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 dialog.dismiss();
             }
         });

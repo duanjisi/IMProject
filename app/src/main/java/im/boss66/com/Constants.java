@@ -10,5 +10,11 @@ public class Constants {
 
     public static final class Action {
         public static final String EMOJI_EDITED_SEND = "local.EMOJI_EDITED_SEND_ACTION";
+        public static final String REFRSH_CHAT_PAGER_DATAS = "local.refresh.chat.pager.datas";
+        public static final String REFRSH_CHAT_PAGER = "local.refresh.chat.pager";
+        public static final String EXIT_CURRETN_GROUP_REFRESH_DATAS = "local.exist.current.group.refresh.data";
+        public static final String CONTACTS_REMOVE_CURRETN_ITEM = "local.contact.remove.current.item";
+        public static final String CHAT_NEW_MESSAGE_NOTICE = "local.chat.new.message.notice";
+        public static final String CHAT_AGREE_FRIENDSHIP = "local.agree.us.friendship";
     }
 }
