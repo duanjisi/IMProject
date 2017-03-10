@@ -27,31 +27,33 @@
         android:textColor="@color/white"
         android:textSize="17.5sp" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rl_msg"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/dp_10"
         android:background="@drawable/shape_head_people_center"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/iv_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/news_no" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/dp_6"
             android:layout_toRightOf="@+id/iv_msg"
             android:text="消息"
             android:textColor="@color/white" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/bt_add"
@@ -63,11 +65,12 @@
         android:background="@drawable/shape_round_people_center"
         android:text="+ 添加"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_32" />
+        android:textSize="@dimen/text_size_32"
+        android:visibility="gone" />
 
     <im.boss66.com.widget.RoundImageView
         android:id="@+id/user_head"
-        android:layout_width="4050dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:scaleType="centerCrop"
@@ -75,16 +78,17 @@
 
     <RelativeLayout
         android:id="@+id/rl_edit_info"
-        android:layout_below="@+id/user_head"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_head"
+        android:layout_marginTop="@dimen/dp_6">
 
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/dp_6"
+            android:gravity="center"
             android:textColor="@color/white" />
 
         <TextView
@@ -97,15 +101,14 @@
             android:textColor="@color/white" />
 
         <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tv_name"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/tv_name"
-            android:src="@drawable/arrow_normal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/arrow_normal" />
 
     </RelativeLayout>
-
 
 
 </RelativeLayout>

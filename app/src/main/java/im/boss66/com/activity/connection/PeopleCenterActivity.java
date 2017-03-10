@@ -108,7 +108,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
     private TextView tv_name;
     private TextView tv_address;
     private Button bt_add;
-    private RelativeLayout rl_msg;
+    private LinearLayout rl_msg;
     private ImageView iv_msg, user_bg_icon;
     private ImageLoader imageLoader;
     private boolean isCurrentUser;
@@ -116,6 +116,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
     private boolean isChange = false;
 
     private RelativeLayout rl_edit_info;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,7 +163,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         tv_name = (TextView) header.findViewById(R.id.tv_name);
         tv_address = (TextView) header.findViewById(R.id.tv_address);
         bt_add = (Button) header.findViewById(R.id.bt_add);
-        rl_msg = (RelativeLayout) header.findViewById(R.id.rl_msg);
+        rl_msg = (LinearLayout) header.findViewById(R.id.rl_msg);
         iv_msg = (ImageView) header.findViewById(R.id.iv_msg);
         bt_add.setOnClickListener(this);
         rl_msg.setOnClickListener(this);
@@ -172,12 +173,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         headParam.height = sceenW / 3 * 2;
         rl_head.setLayoutParams(headParam);
         RelativeLayout.LayoutParams headIconParam = (RelativeLayout.LayoutParams) user_head.getLayoutParams();
-        headIconParam.height = sceenW / 5;
-        headIconParam.width = sceenW / 5;
+        headIconParam.height = sceenW / 10*3;
+        headIconParam.width = sceenW / 10*3;
         user_head.setLayoutParams(headIconParam);
 
         RelativeLayout.LayoutParams headMsgParam = (RelativeLayout.LayoutParams) rl_msg.getLayoutParams();
-        headIconParam.height = sceenW / 7;
+        headMsgParam.width = sceenW / 7;
         rl_msg.setLayoutParams(headMsgParam);
         tv_back.setOnClickListener(this);
 
@@ -193,7 +194,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 rl_msg.setVisibility(View.GONE);
                 requestFriendShip();
                 getNoreadMsg();
-            }else {
+            } else {
                 isCurrentUser = true;
             }
         } else {
