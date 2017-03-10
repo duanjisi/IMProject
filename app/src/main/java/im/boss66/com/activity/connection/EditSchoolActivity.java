@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.alibaba.fastjson.JSON;
@@ -37,6 +38,7 @@ import java.util.Date;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.SharedPreferencesMgr;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.entity.SaveSchoolEntity;
 import im.boss66.com.http.BaseDataRequest;
@@ -61,7 +63,6 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
     private TextView tv_year;
     private TextView tv_school_name;
 
-    private RelativeLayout rl_school_department;
 
     private String[] years;
     private CancelEditDialog dialog;
@@ -203,8 +204,7 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
                     }
 
                 } else {
-
-                    showToast("您填写的信息不全", false);
+                    ToastUtil.showShort(context,"您填写的信息不全");
                 }
 
                 break;
@@ -215,13 +215,7 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
 
                 startActivityForResult(intent, 1);
                 break;
-            case R.id.rl_school_department:
-//                if ("请填写".equals(tv_school_name.getText().toString())) {
-//                    showToast("请先选择学校", false);
-//                } else {
-//                }
 
-                break;
             case R.id.rl_school_time:
                 showAddressSelection();
 
@@ -233,7 +227,6 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
 
     private void editSchoolInfo() {
         showLoadingDialog();
-//        EditSchoolRequest request = new EditSchoolRequest(TAG, schoolId+"", majorInfo, year, us_id+"");
         String url = HttpUrl.EDIT_SCHOOL_INFO;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
@@ -250,10 +243,15 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
                 String result = responseInfo.result;
 
                 try {
-                    JSONObject jsonObject = new JSONObject(result);
-                    if(jsonObject.getInt("code")==1){
-                        handler.obtainMessage(2).sendToTarget();
+                    if(result!=null){
+                        JSONObject jsonObject = new JSONObject(result);
+                        if(jsonObject.getInt("code")==1){
+                            handler.obtainMessage(2).sendToTarget();
+                        }else{
+                            ToastUtil.show(EditSchoolActivity.this,jsonObject.getString("message"), Toast.LENGTH_SHORT);
+                        }
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -336,7 +334,15 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
             public void onSuccess(String str) {
                 cancelLoadingDialog();
                 saveSchoolEntity = JSON.parseObject(str, SaveSchoolEntity.class);
-                handler.obtainMessage(1).sendToTarget();
+                if(saveSchoolEntity!=null){
+
+                    if(saveSchoolEntity.getCode()==1){
+
+                        handler.obtainMessage(1).sendToTarget();
+                    }else{
+                        showToast(saveSchoolEntity.getMessage(),false);
+                    }
+                }
 
             }
 

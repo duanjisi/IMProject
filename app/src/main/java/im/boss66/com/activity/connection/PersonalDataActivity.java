@@ -296,6 +296,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                         || TextUtils.isEmpty(tv_location2.getText())
                         || TextUtils.isEmpty(tv_hometown2.getText())
                         || TextUtils.isEmpty(tv_job2.getText())
+                        || TextUtils.isEmpty(tv_school2.getText())
                         || TextUtils.isEmpty(tv_like2.getText())) {
 
                     showToast("请完善资料", false);
@@ -385,6 +386,8 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     JSONObject jsonObject = new JSONObject(str);
                     if (jsonObject.getInt("code") == 1) {
                         handler.obtainMessage(2).sendToTarget();
+                    }else{
+                        showToast(jsonObject.getString("message"),false);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -621,12 +624,23 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             public void onSuccess(String entry) {
                 handler.obtainMessage(1).sendToTarget();
                 jobEntity = JSON.parseObject(entry, JobEntity.class);
-                jobList = jobEntity.getResult();
-                jobStr = new String[jobList.size()];
+                if(jobEntity!=null){
+                    if(jobEntity.getCode()==1){
+                        jobList = jobEntity.getResult();
+                        if(jobList!=null&&jobList.size()>0){
+                            jobStr = new String[jobList.size()];
+                            for (int i = 0; i < jobList.size(); i++) {
+                                jobStr[i] = jobList.get(i).getName();
+                            }
+                        }
+                    }else {
+                        showToast(jobEntity.getMessage(),false);
+                    }
 
-                for (int i = 0; i < jobList.size(); i++) {
-                    jobStr[i] = jobList.get(i).getName();
+
                 }
+
+
 
             }
 

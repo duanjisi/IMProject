@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.lidroid.xutils.HttpUtils;
@@ -58,28 +59,21 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
-                    if(schoolListEntity.getResult().size()==0){
+                    result = schoolListEntity.getResult();
+                    if (result.size() == 0) {
                         img_school.setVisibility(View.VISIBLE);
                         tv_school.setVisibility(View.VISIBLE);
-                    }else{
-                        result = schoolListEntity.getResult();
+                    } else {
                         adapter.setDatas(result);
                         adapter.notifyDataSetChanged();
-                        int level = -1;
-                        if(result.size()>0){
-                            //把学校信息和id存起来
-                            school_name = result.get(0).getSchool_name();
-
-
-
-                        }else{
-                            img_school.setVisibility(View.GONE);
-                            tv_school.setVisibility(View.GONE);
-                        }
+                        //把学校信息存起来
+                        school_name = result.get(0).getSchool_name();
+                        img_school.setVisibility(View.GONE);
+                        tv_school.setVisibility(View.GONE);
                     }
                     break;
                 case 2:
-                    showToast("删除成功",false);
+                    showToast("删除成功", false);
                     initData();
                     break;
 
@@ -117,13 +111,13 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onItemClick(int postion) {
                 Intent intent = new Intent(SchoolListActivity.this, EditSchoolActivity.class);
-                intent.putExtra("SchoolListActivity",true);
-                intent.putExtra("schoolName",schoolListEntity.getResult().get(postion).getSchool_name());
-                intent.putExtra("schoolNote",schoolListEntity.getResult().get(postion).getNote());
-                intent.putExtra("schoolyear",schoolListEntity.getResult().get(postion).getEdu_year());
-                intent.putExtra("schoolId",schoolListEntity.getResult().get(postion).getSchool_id());
-                intent.putExtra("schoolType",schoolListEntity.getResult().get(postion).getLevel());
-                intent.putExtra("us_id",schoolListEntity.getResult().get(postion).getUs_id());
+                intent.putExtra("SchoolListActivity", true);
+                intent.putExtra("schoolName", schoolListEntity.getResult().get(postion).getSchool_name());
+                intent.putExtra("schoolNote", schoolListEntity.getResult().get(postion).getNote());
+                intent.putExtra("schoolyear", schoolListEntity.getResult().get(postion).getEdu_year());
+                intent.putExtra("schoolId", schoolListEntity.getResult().get(postion).getSchool_id());
+                intent.putExtra("schoolType", schoolListEntity.getResult().get(postion).getLevel());
+                intent.putExtra("us_id", schoolListEntity.getResult().get(postion).getUs_id());
                 startActivity(intent);
 
             }
@@ -153,22 +147,25 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
 
-        url = url+"?us_id=" + schoolListEntity.getResult().get(position).getUs_id();
-        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>(){
+        url = url + "?us_id=" + schoolListEntity.getResult().get(position).getUs_id();
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String result = responseInfo.result;
                 try {
                     JSONObject jsonObject = new JSONObject(result);
-                    if(jsonObject.getInt("code")==1){
-                        handler.obtainMessage(2).sendToTarget();
-
+                    if(jsonObject!=null){
+                        if (jsonObject.getInt("code") == 1) {
+                            handler.obtainMessage(2).sendToTarget();
+                        }else{
+                            showToast(jsonObject.getString("message"), false);
+                        }
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
 
 
             }
@@ -186,12 +183,12 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_headlift_view:
-                if(result!=null&&result.size()>0){
+                if (result != null && result.size() > 0) {
                     Intent intent = new Intent();
-                    intent.putExtra("school_name",school_name);
-                    setResult(2,intent);
+                    intent.putExtra("school_name", school_name);
+                    setResult(2, intent);
                     finish();
-                }else{
+                } else {
                     finish();
                 }
                 break;
@@ -227,7 +224,9 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
 
             @Override
             public void onFailure(String msg) {
-                showToast(msg,false);
+                //没数据code！=1的时候走该方法
+                img_school.setVisibility(View.VISIBLE);
+                tv_school.setVisibility(View.VISIBLE);
             }
         });
 
@@ -236,17 +235,14 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
-        if(result!=null&&result.size()>0){
+        if (result != null && result.size() > 0) {
             Intent intent = new Intent();
-            intent.putExtra("school_name",school_name);
-            setResult(2,intent);
+            intent.putExtra("school_name", school_name);
+            setResult(2, intent);
             finish();
-        }else{
+        } else {
             finish();
         }
-
-
-
 
 
     }

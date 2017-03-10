@@ -39,18 +39,18 @@ import im.boss66.com.listener.RecycleViewItemListener;
  */
 public class SearchSchoolActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView tv_headright_view,tv_headlift_view;
+    private TextView tv_headright_view, tv_headlift_view;
     private EditText et_school;
     private int schoolType;
     private SearchSchoolListEntity searchSchoolListEntity;
     private RecyclerView rcv_search_school;
     private SearchSchoolAdapter adapter;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 1:
                     result = searchSchoolListEntity.getResult();
                     adapter.setDatas(result);
@@ -69,7 +69,7 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
         setContentView(R.layout.activity_search_school);
         Intent intent = getIntent();
 
-        if(intent!=null){
+        if (intent != null) {
             schoolType = intent.getIntExtra("schoolType", -1);
         }
         initViews();
@@ -77,8 +77,8 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
 
     private void initViews() {
 
-        tv_headlift_view  = (TextView) findViewById(R.id.tv_headlift_view);
-        tv_headright_view  = (TextView) findViewById(R.id.tv_headright_view);
+        tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
+        tv_headright_view = (TextView) findViewById(R.id.tv_headright_view);
         tv_headlift_view.setOnClickListener(this);
         tv_headright_view.setOnClickListener(this);
 
@@ -100,7 +100,7 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void afterTextChanged(Editable editable) {
                 //两个字以上才请求接口
-                if(editable.length()>1){
+                if (editable.length() > 1) {
                     initData();
 
 
@@ -133,14 +133,23 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
         String url = HttpUrl.SEARCH_SCHOOL;
-        url = url+"?key=" + et_school.getText().toString()+"?page=0"+"?size=3"+"?level="+schoolType;
-        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>(){
+        url = url + "?key=" + et_school.getText().toString() + "?page=0" + "?size=3" + "?level=" + schoolType;
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String result = responseInfo.result;
-                searchSchoolListEntity = JSON.parseObject(result, SearchSchoolListEntity.class);
-                handler.obtainMessage(1).sendToTarget();
+                if (result != null) {
+                    searchSchoolListEntity = JSON.parseObject(result, SearchSchoolListEntity.class);
+                    if (searchSchoolListEntity != null) {
+                        if (searchSchoolListEntity.getCode() == 1) {
+                            handler.obtainMessage(1).sendToTarget();
+                        }else{
+                            showToast(searchSchoolListEntity.getMessage(),false);
+                        }
+                    }
+                }
+
 
             }
 
@@ -159,13 +168,13 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.tv_headright_view:
                 //如果id为空
-                if(!TextUtils.isEmpty(id)){
+                if (!TextUtils.isEmpty(id)) {
                     Intent intent = new Intent();
-                    intent.putExtra("school",id);
-                    setResult(1,intent);
+                    intent.putExtra("school", id);
+                    setResult(1, intent);
                     finish();
-                }else {
-                    showToast("请选择学校",false);
+                } else {
+                    ToastUtil.showShort(context,"请选择学校");
                 }
 
                 break;

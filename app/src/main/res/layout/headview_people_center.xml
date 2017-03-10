@@ -67,28 +67,44 @@
 
     <im.boss66.com.widget.RoundImageView
         android:id="@+id/user_head"
-        android:layout_width="wrap_content"
+        android:layout_width="4050dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:scaleType="centerCrop"
         android:src="@drawable/person" />
 
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <RelativeLayout
         android:layout_below="@+id/user_head"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dp_6"
-        android:textColor="@color/white" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_name"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dp_6"
-        android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_6"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_6"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:layout_alignBottom="@id/tv_name"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/tv_name"
+            android:src="@drawable/arrow_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+
 
 </RelativeLayout>

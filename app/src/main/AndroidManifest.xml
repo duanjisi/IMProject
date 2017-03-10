@@ -327,7 +327,6 @@
         <!-- 商会详情 -->
         <activity android:name=".activity.connection.ClubDetailActivity"></activity>
         <!-- 发动态 -->
-        <activity android:name=".activity.connection.ConnectionSendMsgActivity"></activity>
         <!-- 学校列表 -->
         <activity android:name=".activity.connection.SchoolListActivity"></activity>
         <!-- 添加学校-->

@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 
 /**
@@ -41,7 +42,7 @@ public class EditNameActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.tv_headright_view: //完成
                 if(TextUtils.isEmpty(et_name.getText().toString())){
-                    showToast("请您填写姓名",false);
+                    ToastUtil.showShort(context,"请您填写姓名");
                 }else{
                     Intent intent = new Intent();
                     intent.putExtra("name",et_name.getText().toString());
