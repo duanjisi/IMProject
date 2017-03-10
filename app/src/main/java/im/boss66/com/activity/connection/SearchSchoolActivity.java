@@ -134,7 +134,7 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
         String url = HttpUrl.SEARCH_SCHOOL;
-        url = url + "?key=" + et_school.getText().toString() + "?page=0" + "?size=3" + "?level=" + schoolType;
+        url = url + "?key=" + et_school.getText().toString() +  "&level=" + schoolType+"";
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
             @Override
@@ -176,12 +176,7 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
                     setResult(1, intent);
                     finish();
                 } else {
-                    Intent intent = new Intent();
-                    intent.putExtra("schoolId", 17+"");
-                    intent.putExtra("schoolName", name);
-                    setResult(1, intent);
-                    finish();
-//                    ToastUtil.showShort(context,"请选择学校");
+                    ToastUtil.showShort(context,"请选择学校");
                 }
 
                 break;

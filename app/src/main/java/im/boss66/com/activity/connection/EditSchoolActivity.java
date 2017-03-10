@@ -366,7 +366,6 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
             schoolId = Integer.parseInt(data.getStringExtra("schoolId"));
             tv_school_name.setText(schoolname);
             tv_school_name.setTextColor(Color.BLACK);
-            schoolId=17;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

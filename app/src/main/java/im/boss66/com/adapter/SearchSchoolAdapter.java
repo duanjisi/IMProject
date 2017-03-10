@@ -27,6 +27,7 @@ public class SearchSchoolAdapter extends BaseRecycleViewAdapter{
         final SearchSchoolHolder holder1 = (SearchSchoolHolder) holder;
         SearchSchoolListEntity.ResultBean item  = (SearchSchoolListEntity.ResultBean) datas.get(position);
         holder1.tv_school.setText(item.getName());
+        holder1.tv_location.setText(item.getRegion());
         holder1.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,10 +49,13 @@ public class SearchSchoolAdapter extends BaseRecycleViewAdapter{
     }
     public static class SearchSchoolHolder extends RecyclerView.ViewHolder{
         private TextView tv_school;
+        private TextView tv_location;
+
 
         public SearchSchoolHolder(View itemView) {
             super(itemView);
             tv_school = (TextView) itemView.findViewById(R.id.tv_school);
+            tv_location = (TextView) itemView.findViewById(R.id.tv_location);
         }
     }
 }

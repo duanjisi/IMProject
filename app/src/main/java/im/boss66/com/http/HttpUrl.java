@@ -202,7 +202,7 @@ public class HttpUrl {
     //家乡动态
     public static final String HOMETOWN_NEWS = MAIN_URL+"api/v1/hometown/message";
     //搜索学校
-    public static final String SEARCH_SCHOOL = MAIN_URL+"api/v1/search/school";
+    public static final String SEARCH_SCHOOL = MAIN_URL+"api/v1/search/local-school";
     //获取用户信息
     public static final String SEARCH_USER_INFO = MAIN_URL+"ucenter/userinfo/index";
 }

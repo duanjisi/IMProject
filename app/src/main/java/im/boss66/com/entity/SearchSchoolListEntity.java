@@ -8,14 +8,15 @@ import java.util.List;
 
 public class SearchSchoolListEntity {
 
+
     /**
-     * name : SCHOOL
+     * name : LOCAL-SCHOOL
      * version : v1
      * message : succeed
      * code : 1
      * status : 200
      * type : app\modules\api\modules\v1\controllers\SearchController
-     * result : [{"id":"58","name":"中山大学","desc":"&nbsp; &nbsp; &nbsp;中山大学由孙中山先生创办，有着一百多年办学传统，是中国南方科学研究、文化学术与人才培养的重镇。作为中国教育部直属高校，通过部省共建，中山大学已经成为一所国内一流、国际知名的现代综合性大学...","region":"广东广州海珠区","level":"5"}]
+     * result : [{"id":"38","name":"中南林业科技大学-勿删","level":"5","region":"湖南长沙天心区"},{"id":"58","name":"中山大学","level":"5","region":"广东广州海珠区"}]
      */
 
     private String name;
@@ -84,18 +85,16 @@ public class SearchSchoolListEntity {
 
     public static class ResultBean {
         /**
-         * id : 58
-         * name : 中山大学
-         * desc : &nbsp; &nbsp; &nbsp;中山大学由孙中山先生创办，有着一百多年办学传统，是中国南方科学研究、文化学术与人才培养的重镇。作为中国教育部直属高校，通过部省共建，中山大学已经成为一所国内一流、国际知名的现代综合性大学...
-         * region : 广东广州海珠区
+         * id : 38
+         * name : 中南林业科技大学-勿删
          * level : 5
+         * region : 湖南长沙天心区
          */
 
         private String id;
         private String name;
-        private String desc;
-        private String region;
         private String level;
+        private String region;
 
         public String getId() {
             return id;
@@ -113,12 +112,12 @@ public class SearchSchoolListEntity {
             this.name = name;
         }
 
-        public String getDesc() {
-            return desc;
+        public String getLevel() {
+            return level;
         }
 
-        public void setDesc(String desc) {
-            this.desc = desc;
+        public void setLevel(String level) {
+            this.level = level;
         }
 
         public String getRegion() {
@@ -127,14 +126,6 @@ public class SearchSchoolListEntity {
 
         public void setRegion(String region) {
             this.region = region;
-        }
-
-        public String getLevel() {
-            return level;
-        }
-
-        public void setLevel(String level) {
-            this.level = level;
         }
     }
 }
