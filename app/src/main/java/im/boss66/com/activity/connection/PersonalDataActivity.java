@@ -236,7 +236,13 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 //                    String dateTime = TimeUtil.getDateTime(Long.parseLong(signature));
 //                    tv_time2.setText(dateTime);
                     String time = SharedPreferencesMgr.getString("millionSecnds", "");
-                    tv_time2.setText(TimeUtil.getDateTime(Long.parseLong(time) * 1000));
+                    try{
+                        if(!TextUtils.isEmpty(time)){
+                            tv_time2.setText(TimeUtil.getDateTime(Long.parseLong(time) * 1000));
+                        }
+                    }catch (Exception e){
+
+                    }
 
                     sexType = user_sex.equals("男") ? "1" : "2";
                     millionSecnds = time;
