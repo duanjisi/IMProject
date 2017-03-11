@@ -30,6 +30,7 @@ import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
+import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
