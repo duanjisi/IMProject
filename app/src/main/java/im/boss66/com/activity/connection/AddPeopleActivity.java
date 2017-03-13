@@ -16,10 +16,10 @@ import java.util.List;
 
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
+import im.boss66.com.entity.SchoolmateListEntity;
 import im.boss66.com.fragment.CountrymanFragment;
 import im.boss66.com.fragment.CustomAddFragment;
 import im.boss66.com.fragment.SchoolmateFragment;
-import im.boss66.com.widget.ViewpagerIndicatorOver;
 import im.boss66.com.widget.ViewpagerIndicatorOver2;
 import im.boss66.com.widget.dialog.SearchPop;
 
@@ -30,7 +30,6 @@ import im.boss66.com.widget.dialog.SearchPop;
 public class AddPeopleActivity extends ABaseActivity implements View.OnClickListener {
 
 
-//    private PeopleSearchAdapter adapter;
 
     private ViewpagerIndicatorOver2 vp_indicator; //指示器
     private ViewPager vp_search_people;
@@ -42,16 +41,20 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
 
     private RelativeLayout rl_search, rl_top_bar;
     private SearchPop searchPop;
+    private int fragment_position;
+    private SchoolmateFragment schoolmateFragment;
+    private CountrymanFragment countrymanFragment;
+    private CustomAddFragment customAddFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_people);
         initViews();
-
         initIndicator();
-
     }
+
+
 
     private void initIndicator() {
         //Viewpager指示器的相关设置
@@ -65,21 +68,23 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
         vp_indicator.setListener(new ViewpagerIndicatorOver2.ICallBack() {
             @Override
             public void setText(int position) {
+                fragment_position = position;
                 if (position == 2) {
-                    tv_search.setText("搜索兴趣爱好");
-
+                    tv_search.setText("搜索兴趣或职业");
                 } else {
                     tv_search.setText("搜索人脉");
-
                 }
 
             }
         });
 
         fragments = new ArrayList<>();
-        fragments.add(new SchoolmateFragment());
-        fragments.add(new CountrymanFragment());
-        fragments.add(new CustomAddFragment());
+        schoolmateFragment = new SchoolmateFragment();
+        countrymanFragment = new CountrymanFragment();
+        customAddFragment = new CustomAddFragment();
+        fragments.add(schoolmateFragment);
+        fragments.add(countrymanFragment);
+        fragments.add(customAddFragment);
         vp_indicator.setViewPager(vp_search_people, 0);
         vp_indicator.setViewPagerAdapter(getSupportFragmentManager(), fragments);
 
@@ -100,7 +105,7 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
         rl_search.setOnClickListener(this);
         vp_indicator = (ViewpagerIndicatorOver2) findViewById(R.id.vp_indicator);
         vp_search_people = (ViewPager) findViewById(R.id.vp_search_people);
-        searchPop = new SearchPop(getApplicationContext());
+        searchPop = new SearchPop(getApplicationContext(),fragment_position);
         searchPop.setListener(new SearchPop.ICallBack() {
             @Override
             public void setVisible() {
@@ -108,6 +113,28 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
                 vp_indicator.setVisibility(View.VISIBLE);
                 rl_search.setVisibility(View.VISIBLE);
             }
+
+            @Override
+            public void refreash(int position,SchoolmateListEntity schoolmateListEntity) {
+
+                switch (position){
+                    case 0://fragment修改数据，adapter刷新
+                        schoolmateFragment.refresh(schoolmateListEntity);
+
+                        break;
+                    case 1:
+                        countrymanFragment.refresh(schoolmateListEntity);
+
+                        break;
+                    case 2:
+                        customAddFragment.refresh(schoolmateListEntity);
+
+                        break;
+
+                }
+            }
+
+
         });
     }
 

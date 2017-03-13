@@ -7,7 +7,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,10 @@ import com.alibaba.fastjson.JSON;
 
 import java.util.List;
 import im.boss66.com.R;
+import im.boss66.com.activity.connection.FuwaDealActivity;
+import im.boss66.com.activity.connection.FuwaPackageActivity;
 import im.boss66.com.activity.connection.SchoolHometownActivity;
+import im.boss66.com.activity.connection.SearchSchoolActivity;
 import im.boss66.com.adapter.MyHometownAdapter;
 import im.boss66.com.adapter.MySchoolAdapter;
 import im.boss66.com.entity.MyInfo;
@@ -134,14 +136,18 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
         switch (view.getId()) {
             case R.id.iv_add:
-                if (peopleConnectionPop == null) {
-                    showPop(rl_top_bar);
-                } else {
-                    if (!peopleConnectionPop.isShowing()) {
-                        showPop(rl_top_bar);
-                    }
+//                if (peopleConnectionPop == null) {
+//                    showPop(rl_top_bar);
+//                } else {
+//                    if (!peopleConnectionPop.isShowing()) {
+//                        showPop(rl_top_bar);
+//                    }
+//
+//                }
 
-                }
+//                先跳到福娃页写界面。
+                Intent intent = new Intent(getActivity(), FuwaDealActivity.class);
+                startActivity(intent);
                 break;
 
         }

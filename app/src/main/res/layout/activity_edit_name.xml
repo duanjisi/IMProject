@@ -53,6 +53,7 @@
 
 
         <EditText
+            android:singleLine="true"
             android:layout_marginLeft="22dp"
             android:id="@+id/et_name"
             android:background="@null"
