@@ -6,8 +6,8 @@
 
     <TextView
         android:id="@+id/tv_school"
-        android:textSize="16sp"
-        android:textColor="@color/text_color_gray_c"
+        android:textSize="17.5sp"
+        android:textColor="@color/bg_rectangle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
@@ -15,7 +15,7 @@
         android:layout_marginTop="3dp"
         android:layout_below="@id/tv_school"
         android:textSize="14sp"
-        android:textColor="@color/text_color_gray_c"
+        android:textColor="@color/bg_rectangle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <View
