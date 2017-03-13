@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -30,6 +31,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import im.boss66.com.App;
@@ -37,12 +39,16 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
+import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
+import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.config.LoginStatus;
 import im.boss66.com.entity.ChangeAvatarEntity;
 import im.boss66.com.http.HttpUrl;
+import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.util.Utils;
 import im.boss66.com.widget.ActionSheet;
 import im.boss66.com.widget.photoview.PhotoView;
@@ -68,6 +74,8 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
     private String access_token;
     private boolean isHeadChange = false;
     private String headurl;
+    private PermissionListener permissionListener;
+    private int cameraType;//1:相机 2：相册
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,30 +183,13 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
                         ToastUtil.showShort(this, getString(R.string.msg_could_not_save_photo));
                     }
                 } else {//拍照
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                    imageName = getNowTime() + ".png";
-                    // 指定调用相机拍照后照片的储存路径
-                    File dir = new File(savePath);
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-                    File file = new File(dir, imageName);
-                    imageUri = Uri.fromFile(file);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivityForResult(intent, OPEN_CAMERA);
-                    }
+                    cameraType = OPEN_CAMERA;
+                    getPermission();
                 }
                 break;
             case 2://从手机相册选择
-                imageName = getNowTime() + ".png";
-                imageUri = Uri
-                        .fromFile(new File(savePath, imageName));
-                Intent intent = new Intent(Intent.ACTION_PICK, null);
-                intent.setDataAndType(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                startActivityForResult(intent, OPEN_ALBUM);
+                cameraType = OPEN_ALBUM;
+                getPermission();
                 break;
             case 3://保存图片
                 iv_icon.setDrawingCacheEnabled(true);
@@ -231,9 +222,9 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
             if (data == null) {
                 return;
             } else {
-                Uri originalUri = data.getData();  //获得图片的uri
-                if (originalUri != null) {
-                    String path = Utils.getPath(this, originalUri);
+                ArrayList<String> selectPicList = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                if (selectPicList != null && selectPicList.size() > 0) {
+                    String path = selectPicList.get(0);
                     if (!TextUtils.isEmpty(path)) {
                         ClipImageActivity.prepare()
                                 .aspectX(2).aspectY(2)//裁剪框横向及纵向上的比例
@@ -298,6 +289,56 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMddHHmmssSS");
         return dateFormat.format(date);
+    }
+
+    private void getPermission() {
+        permissionListener = new PermissionListener() {
+            @Override
+            public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
+            }
+
+            @Override
+            public void onRequestPermissionSuccess() {
+                if (cameraType == OPEN_CAMERA) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    imageName = getNowTime() + ".png";
+                    // 指定调用相机拍照后照片的储存路径
+                    File dir = new File(savePath);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+                    File file = new File(dir, imageName);
+                    imageUri = Uri.fromFile(file);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(intent, OPEN_CAMERA);
+                    }
+                } else if (cameraType == OPEN_ALBUM) {
+                    MultiImageSelector.create(context).
+                            showCamera(false).
+                            count(1)
+                            .multi() // 多选模式, 默认模式;
+                            .start(PersonalIconActivity.this, OPEN_ALBUM);
+                }
+            }
+
+            @Override
+            public void onRequestPermissionError() {
+                ToastUtil.showShort(PersonalIconActivity.this, getString(R.string.giving_camera_permissions));
+            }
+        };
+        PermissionUtil
+                .with(this)
+                .permissions(
+                        PermissionUtil.PERMISSIONS_GROUP_CAMERA //相机权限
+                ).request(permissionListener);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
     }
 
 }

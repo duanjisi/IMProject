@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/iv_head"
         android:layout_toRightOf="@+id/iv_head"
+        android:layout_marginLeft="@dimen/dp_10"
         android:textColor="@color/main_color_blue" />
 
     <TextView

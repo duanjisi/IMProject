@@ -10,11 +10,13 @@ import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +41,7 @@ import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
@@ -47,10 +50,14 @@ import java.util.Hashtable;
 
 import im.boss66.com.R;
 import im.boss66.com.Utils.MycsLog;
+import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
+import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.AddFriendRequest;
+import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.util.RGBLuminanceSource;
 import im.boss66.com.util.Utils;
 import im.boss66.com.widget.scan.CameraManager;
@@ -81,13 +88,14 @@ public class CaptureActivity extends BaseActivity {
 //    private GoogleApiClient client;
     private TextView tvBack, tvPhoto;
     private Bitmap scanBitmap;
+    private PermissionListener permissionListener;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         findViewById();
-        initViews();
+        getPermission();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
 //        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -561,4 +569,34 @@ public class CaptureActivity extends BaseActivity {
         }
         return yuv;
     }
+
+    private void getPermission() {
+        permissionListener = new PermissionListener() {
+            @Override
+            public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
+            }
+
+            @Override
+            public void onRequestPermissionSuccess() {
+                initViews();
+            }
+
+            @Override
+            public void onRequestPermissionError() {
+                ToastUtil.showShort(CaptureActivity.this, getString(R.string.giving_camera_permissions));
+            }
+        };
+        PermissionUtil
+                .with(this)
+                .permissions(
+                        PermissionUtil.PERMISSIONS_CHAT_CAMERA //相机权限
+                ).request(permissionListener);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
+    }
+
 }
