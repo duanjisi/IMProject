@@ -98,7 +98,7 @@ public class RecommendAdapter extends BaseRecycleViewAdapter {
         if (item != null) {
             Glide.with(context).load(item.getAvatar()).into(holder1.img_follow);
             holder1.tv_follow_name.setText(item.getUser_name());
-            holder1.tv_same.setText(item.getSimilar()+""); //相似度
+            holder1.tv_same.setText("相似度"+item.getSimilar()+"%"); //相似度
             List<SchoolmateListEntity.ResultBean.SchoolBean> school = item.getSchool();
 
             //来源于

@@ -136,18 +136,18 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
         switch (view.getId()) {
             case R.id.iv_add:
-//                if (peopleConnectionPop == null) {
-//                    showPop(rl_top_bar);
-//                } else {
-//                    if (!peopleConnectionPop.isShowing()) {
-//                        showPop(rl_top_bar);
-//                    }
-//
-//                }
+                if (peopleConnectionPop == null) {
+                    showPop(rl_top_bar);
+                } else {
+                    if (!peopleConnectionPop.isShowing()) {
+                        showPop(rl_top_bar);
+                    }
 
-//                先跳到福娃页写界面。
-                Intent intent = new Intent(getActivity(), FuwaDealActivity.class);
-                startActivity(intent);
+                }
+
+////                先跳到福娃页写界面。
+//                Intent intent = new Intent(getActivity(), FuwaDealActivity.class);
+//                startActivity(intent);
                 break;
 
         }

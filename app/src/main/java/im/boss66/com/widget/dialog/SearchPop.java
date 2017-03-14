@@ -54,11 +54,15 @@ public class SearchPop extends BasePopuWindow implements View.OnClickListener {
         }
     };
 
-    public SearchPop(Context context, int fragment_position) {
+    public SearchPop(Context context) {
         super(context);
-        this.fragment_position = fragment_position;
         this.context = context;
         this.getBackground().setAlpha(150);
+    }
+
+
+    public void setFragment_position(int fragment_position) {
+        this.fragment_position = fragment_position;
     }
 
     @Override
@@ -70,7 +74,7 @@ public class SearchPop extends BasePopuWindow implements View.OnClickListener {
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
                     // 搜索
-//                    initData();
+                    initData();
 
                 }
                 return false;

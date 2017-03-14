@@ -34,6 +34,7 @@
 
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/rl_top"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/rl_top_bar"
         android:layout_marginTop="10dp"
@@ -79,6 +80,7 @@
 
     </RelativeLayout>
     <View
+        android:layout_below="@id/rl_top"
         android:id="@+id/view_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

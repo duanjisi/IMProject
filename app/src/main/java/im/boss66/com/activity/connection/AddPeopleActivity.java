@@ -41,7 +41,6 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
 
     private RelativeLayout rl_search, rl_top_bar;
     private SearchPop searchPop;
-    private int fragment_position;
     private SchoolmateFragment schoolmateFragment;
     private CountrymanFragment countrymanFragment;
     private CustomAddFragment customAddFragment;
@@ -68,7 +67,7 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
         vp_indicator.setListener(new ViewpagerIndicatorOver2.ICallBack() {
             @Override
             public void setText(int position) {
-                fragment_position = position;
+                searchPop.setFragment_position(position);
                 if (position == 2) {
                     tv_search.setText("搜索兴趣或职业");
                 } else {
@@ -105,7 +104,10 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
         rl_search.setOnClickListener(this);
         vp_indicator = (ViewpagerIndicatorOver2) findViewById(R.id.vp_indicator);
         vp_search_people = (ViewPager) findViewById(R.id.vp_search_people);
-        searchPop = new SearchPop(getApplicationContext(),fragment_position);
+
+
+
+        searchPop = new SearchPop(getApplicationContext());      //切换后position不同。
         searchPop.setListener(new SearchPop.ICallBack() {
             @Override
             public void setVisible() {
@@ -136,6 +138,7 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
 
 
         });
+
     }
 
     @Override
@@ -148,6 +151,7 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
                 rl_top_bar.setVisibility(View.GONE);
                 vp_indicator.setVisibility(View.GONE);
                 rl_search.setVisibility(View.INVISIBLE);
+
                 searchPop.showAtLocation(vp_search_people, Gravity.NO_GRAVITY,0,0);
                 break;
 
