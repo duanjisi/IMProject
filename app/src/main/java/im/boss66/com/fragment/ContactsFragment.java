@@ -148,7 +148,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 ////                先跳到福娃页写界面。
 //                Intent intent = new Intent(getActivity(), FuwaDealActivity.class);
 //                startActivity(intent);
-                break;
+//                break;
 
         }
     }
