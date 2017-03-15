@@ -91,6 +91,7 @@
             android:background="@color/transparent"
             android:paddingLeft="@dimen/dp_6"
             android:hint="@string/write_phone"
+            android:inputType="phone"
             android:textColorHint="@color/ios7_white"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_16"/>

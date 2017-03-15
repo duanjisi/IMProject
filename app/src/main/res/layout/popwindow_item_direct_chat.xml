@@ -18,6 +18,5 @@
         layout="@layout/item_direct_input_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_line"
         android:layout_alignParentBottom="true" />
 </RelativeLayout>

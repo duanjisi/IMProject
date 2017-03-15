@@ -1,6 +1,7 @@
 package im.boss66.com.adapter;
 
 import android.content.Context;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +79,7 @@ public class FolderAdapter extends BaseAdapter {
         if (holder != null) {
             if(i == 0){
                 holder.name.setText(R.string.mis_folder_all);
-                holder.path.setText("/sdcard");
+                holder.path.setText(Environment.getExternalStorageDirectory().getPath());
                 holder.size.setText(String.format("%d%s",
                         getTotalImageSize(), mContext.getResources().getString(R.string.mis_photo_unit)));
                 if(mFolders.size()>0){

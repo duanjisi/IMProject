@@ -86,7 +86,6 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.alibaba:fastjson:1.2.9'
     compile 'net.jodah:typetools:0.4.0'
-    compile 'com.facebook.fresco:fresco:0.9.0+'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile files('libs/autobahn.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')

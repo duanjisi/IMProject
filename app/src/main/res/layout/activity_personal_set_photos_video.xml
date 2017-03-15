@@ -38,7 +38,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
-                android:layout_toRightOf="@+id/iv_photo"
                 android:text="@string/photo"
                 android:textColor="@color/black"
                 android:textSize="17.5sp" />
@@ -78,7 +77,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
-                android:layout_toRightOf="@+id/iv_photo"
                 android:text="@string/video"
                 android:textColor="@color/black"
                 android:textSize="17.5sp" />

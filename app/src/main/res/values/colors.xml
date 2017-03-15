@@ -125,5 +125,6 @@
     <color name="text_bg">#eaeaea</color>
     <color name="province_line_border">#C7C7C7</color>
 
-
+    <color name="translucence">#a2000000</color>
+    <color name="red_fuwa">#D3000F</color>
 </resources>

@@ -360,7 +360,6 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 Intent intent = new Intent(this, PersonalDataActivity.class);
                 Intent intent1 = intent.putExtra("isEdit", true);
                 startActivity(intent1);
-
                 break;
         }
     }
