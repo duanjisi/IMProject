@@ -16,7 +16,6 @@ import im.boss66.com.fragment.FuwaSellFragment;
  */
 
 public class FuwaDealActivity extends BaseActivity implements View.OnClickListener {
-    private View view_content;
     private FragmentTransaction fragmentTransaction;
     private FuwaSellFragment fuwaSellFragment;
     private FuwaMySellFragment fuwaMySellFragment;
@@ -40,7 +39,6 @@ public class FuwaDealActivity extends BaseActivity implements View.OnClickListen
         findViewById(R.id.ll_lift).setOnClickListener(this);
         findViewById(R.id.ll_right).setOnClickListener(this);
 
-        view_content = findViewById(R.id.view_content);
         view_lift = findViewById(R.id.view_lift);
         view_right = findViewById(R.id.view_right);
 

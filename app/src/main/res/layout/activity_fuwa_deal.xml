@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:paddingLeft="16dp"
             android:paddingRight="11dp"
-            android:drawableLeft="@drawable/ic_back"
+            android:drawableLeft="@drawable/fuwa_return"
             />
 
         <TextView

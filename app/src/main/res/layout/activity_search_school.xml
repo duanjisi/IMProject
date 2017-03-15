@@ -60,6 +60,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
+            android:singleLine="true"
             android:id="@+id/et_school"
             android:textCursorDrawable="@null"
             android:background="@null"

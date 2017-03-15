@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import com.alibaba.fastjson.JSON;
 
 import java.util.List;
+
 import im.boss66.com.R;
 import im.boss66.com.activity.connection.FuwaDealActivity;
 import im.boss66.com.activity.connection.FuwaPackageActivity;
@@ -34,7 +35,7 @@ import im.boss66.com.widget.dialog.PeopleConnectionPop;
  * Created by Johnny on 2017/2/13.
  */
 public class ContactsFragment extends BaseFragment implements View.OnClickListener {
-    private final  static  String TAG  = ContactsFragment.class.getSimpleName();
+    private final static String TAG = ContactsFragment.class.getSimpleName();
 
     private RecyclerView rcv_mySchool;
     private RecyclerView rcv_myHometown;
@@ -45,11 +46,11 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private MyHometownAdapter myHometownAdapter;
     private MyInfo myInfo;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 1:
                     mySchoolAdapter.setDatas(school_list);
                     mySchoolAdapter.notifyDataSetChanged();
@@ -77,7 +78,6 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     }
 
 
-
     private void initViews(View view) {
 
         rcv_mySchool = (RecyclerView) view.findViewById(R.id.rcv_mySchool);
@@ -92,9 +92,9 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(getActivity(), SchoolHometownActivity.class);
-                intent.putExtra("isSchool",true);
-                intent.putExtra("name",school_list.get(position).getName());
-                intent.putExtra("school_id",school_list.get(position).getSchool_id());
+                intent.putExtra("isSchool", true);
+                intent.putExtra("name", school_list.get(position).getName());
+                intent.putExtra("school_id", school_list.get(position).getSchool_id());
                 startActivity(intent);
             }
 
@@ -104,14 +104,14 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
             }
         });
 
-        myHometownAdapter= new MyHometownAdapter(getActivity());
+        myHometownAdapter = new MyHometownAdapter(getActivity());
         myHometownAdapter.setItemListener(new RecycleViewItemListener() {
             @Override
             public void onItemClick(int postion) {
                 Intent intent = new Intent(getActivity(), SchoolHometownActivity.class);
-                intent.putExtra("isSchool",false);
-                intent.putExtra("name",hometown_list.get(postion).getName());
-                intent.putExtra("hometown_id",hometown_list.get(postion).getHometown_id());
+                intent.putExtra("isSchool", false);
+                intent.putExtra("name", hometown_list.get(postion).getName());
+                intent.putExtra("hometown_id", hometown_list.get(postion).getHometown_id());
                 startActivity(intent);
             }
 
@@ -136,19 +136,18 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
         switch (view.getId()) {
             case R.id.iv_add:
-                if (peopleConnectionPop == null) {
-                    showPop(rl_top_bar);
-                } else {
-                    if (!peopleConnectionPop.isShowing()) {
-                        showPop(rl_top_bar);
-                    }
+//                if (peopleConnectionPop == null) {
+//                    showPop(rl_top_bar);
+//                } else {
+//                    if (!peopleConnectionPop.isShowing()) {
+//                        showPop(rl_top_bar);
+//                    }
+//                }
 
-                }
-
-////                先跳到福娃页写界面。
-//                Intent intent = new Intent(getActivity(), FuwaDealActivity.class);
-//                startActivity(intent);
-//                break;
+//                先跳到福娃页写界面。
+                Intent intent = new Intent(getActivity(), FuwaDealActivity.class);
+                startActivity(intent);
+                break;
 
         }
     }
@@ -180,11 +179,10 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
             @Override
             public void onFailure(String msg) {
-                showToast(msg,false);
+                showToast(msg, false);
 
             }
         });
-
 
 
     }

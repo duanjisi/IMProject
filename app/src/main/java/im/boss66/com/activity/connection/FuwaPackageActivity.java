@@ -47,7 +47,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     private RecyclerView rcv_fuwalist;
     private FuwaListAdaper adaper;
 
-    private PopupWindow popupWindow;
 
     private List<FuwaListEntity> datas = new ArrayList<>();
     private Dialog dialog;

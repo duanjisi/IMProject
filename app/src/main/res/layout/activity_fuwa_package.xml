@@ -15,7 +15,7 @@
             android:id="@+id/tv_headlift_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableLeft="@drawable/selector_text_bg_white_gary"
+            android:drawableLeft="@drawable/fuwa_return"
             android:gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="11dp"
