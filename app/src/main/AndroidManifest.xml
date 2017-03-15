@@ -440,6 +440,10 @@
         <activity android:name=".activity.connection.ClubActivity"></activity>
         <!--家乡和校园动态-->
         <activity android:name=".activity.connection.NewsActivity"></activity>
+        <!--福娃背包-->
+        <activity android:name=".activity.connection.FuwaPackageActivity"></activity>
+        <!--福娃交易-->
+        <activity android:name=".activity.connection.FuwaDealActivity"></activity>
 
 
         <!-- 微信入口 -->

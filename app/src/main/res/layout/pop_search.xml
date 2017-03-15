@@ -27,6 +27,8 @@
                 android:src="@drawable/search_gray" />
 
             <EditText
+                android:singleLine="true"
+                android:textColor="@color/black"
                 android:id="@+id/et_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
