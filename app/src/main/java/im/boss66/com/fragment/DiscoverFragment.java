@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.discover.FriendCircleActivity;
 import im.boss66.com.activity.discover.PeopleNearbyActivity;
 import im.boss66.com.activity.discover.SharkItOffActivity;
+import im.boss66.com.activity.treasure.MainTreasureActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BaseResult;
 import im.boss66.com.entity.CircleNewest;
@@ -39,7 +39,7 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
     private TextView tv_friends_no_read, tv_nearby_no_read;
     private String access_token;
     private boolean isLoad = false;
-    private String newCount,newIcon;
+    private String newCount, newIcon;
 
     @Nullable
     @Override
@@ -78,7 +78,7 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
                 if (!TextUtils.isEmpty(newCount)) {
                     bundle1.putString("newCount", newCount);
                 }
-                if (!TextUtils.isEmpty(newIcon)){
+                if (!TextUtils.isEmpty(newIcon)) {
                     bundle1.putString("newIcon", newIcon);
                 }
                 openActivity(FriendCircleActivity.class, bundle1);
@@ -102,6 +102,7 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
             case R.id.rl_shopping:
                 break;
             case R.id.rl_game:
+                openActivity(MainTreasureActivity.class, null);
                 break;
         }
     }
@@ -164,7 +165,7 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
         if (result != null) {
             newCount = result.getCount();
             CircleNewest.CircleNewestUser frist_user = result.getFrist_user();
-            if (frist_user != null){
+            if (frist_user != null) {
                 newIcon = frist_user.getAvatar();
             }
             if (tv_friends_no_read != null) {

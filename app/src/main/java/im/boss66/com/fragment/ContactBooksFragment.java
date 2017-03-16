@@ -23,14 +23,19 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Session;
+import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.UIUtils;
-import im.boss66.com.activity.AddFriendActivity;
 import im.boss66.com.activity.book.NewFriendsActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.activity.discover.SearchByAllNetActivity;
@@ -39,6 +44,7 @@ import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.BaseContact;
 import im.boss66.com.entity.ContactEntity;
 import im.boss66.com.entity.FriendState;
+import im.boss66.com.entity.MessageEvent;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.ContactsRequest;
 import im.boss66.com.http.request.NewFriendNumRequest;
@@ -48,27 +54,28 @@ import im.boss66.com.widget.TopNavigationBar;
 /**
  * Created by Johnny on 2017/1/14.
  */
-public class ContactBooksFragment extends BaseFragment {
+public class ContactBooksFragment extends BaseFragment implements Observer {
     private final static String TAG = ContactBooksFragment.class.getSimpleName();
     private LocalBroadcastReceiver mLocalBroadcastReceiver;
     private TopNavigationBar topNavigationBar;
     private InputMethodManager inputMethodManager;
-    private List<EaseUser> contactList;
+    private static List<EaseUser> contactList;
     private RelativeLayout rlSearch, rlTag;
     private TextView tvSearch;
     protected ImageButton clearSearch;
     protected EditText query;
-    private EaseContactList contactListLayout;
+    private static EaseContactList contactListLayout;
     protected ListView listView;
     private ImageView iv_add;
     private View viewSearch;
     private View header;
     private RelativeLayout rl_new_friend, rl_chat_group;
-    private TextView tv_new_nums;
+    private static TextView tv_new_nums;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Session.getInstance().addObserver(this);
         return inflater.inflate(R.layout.fragment_contact_books, container, false);
     }
 
@@ -79,8 +86,20 @@ public class ContactBooksFragment extends BaseFragment {
     }
 
     private void initViews(View view) {
-//        topNavigationBar = (TopNavigationBar) view.findViewById(R.id.top_navigation_bar);
-//        topNavigationBar.setRightBtnOnClickedListener(this);
+//        MyPushIntentService.getInstance().setPushCallback(new MyPushIntentService.pushCallback() {
+//            @Override
+//            public void onMessageReceiver(String action) {
+//                android.util.Log.i("info", "==================action");
+//                if (action.equals(Constants.Action.CHAT_NEW_MESSAGE_NOTICE)) {
+//                    Log.i("info", "=============requestNewNums()");
+//                    requestNewNums();
+//                } else if (action.equals(Constants.Action.CHAT_AGREE_FRIENDSHIP)) {
+//                    Log.i("info", "=============refreshPagerDatas()");
+//                    refreshPagerDatas();
+//                    requestNewNums();
+//                }
+//            }
+//        });
         contactList = new ArrayList<EaseUser>();
         inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         header = getActivity().getLayoutInflater().inflate(R.layout.item_contact_header, null);
@@ -103,8 +122,9 @@ public class ContactBooksFragment extends BaseFragment {
         iv_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), AddFriendActivity.class);
-                startActivity(intent);
+                EventBus.getDefault().post(new MessageEvent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE));
+//                Intent intent = new Intent(getActivity(), AddFriendActivity.class);
+//                startActivity(intent);
             }
         });
         viewSearch.setOnClickListener(new View.OnClickListener() {
@@ -240,7 +260,7 @@ public class ContactBooksFragment extends BaseFragment {
 //        });
     }
 
-    private void requestNewNums() {
+    private static void requestNewNums() {
         NewFriendNumRequest request = new NewFriendNumRequest(TAG);
         request.send(new BaseDataRequest.RequestCallback<FriendState>() {
             @Override
@@ -250,12 +270,13 @@ public class ContactBooksFragment extends BaseFragment {
 
             @Override
             public void onFailure(String msg) {
-                showToast(msg, true);
+//                showToast(msg, true);
+                UIUtils.Toast(App.getInstance().getApplicationContext(), msg);
             }
         });
     }
 
-    private void bindData(FriendState state) {
+    private static void bindData(FriendState state) {
         if (state != null) {
             String num = state.getCount();
             if (num != null && !num.equals("0")) {
@@ -297,7 +318,7 @@ public class ContactBooksFragment extends BaseFragment {
         }
     }
 
-    private void refreshPagerDatas() {
+    private static void refreshPagerDatas() {
         ContactsRequest request = new ContactsRequest(TAG);
         request.send(new BaseDataRequest.RequestCallback<BaseContact>() {
             @Override
@@ -307,12 +328,13 @@ public class ContactBooksFragment extends BaseFragment {
 
             @Override
             public void onFailure(String msg) {
-                showToast(msg, true);
+//                showToast(msg, true);
+                UIUtils.Toast(App.getInstance().getApplicationContext(), msg);
             }
         });
     }
 
-    private void refreshDatas(BaseContact baseContact) {
+    private static void refreshDatas(BaseContact baseContact) {
         if (contactList != null) {
             contactList.clear();
         }
@@ -332,6 +354,60 @@ public class ContactBooksFragment extends BaseFragment {
             App.getInstance().setContacts((ArrayList<EaseUser>) contactList);
 //            contactListLayout.notifyDataSetChanged();
             contactListLayout.init(contactList);
+        }
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        SessionInfo sin = (SessionInfo) o;
+        if (sin.getAction() == Session.ACTION_CONTACTS_REFRESH_PAGER) {
+//            String action = (String) sin.getData();
+//            if (action.equals(Constants.Action.CHAT_NEW_MESSAGE_NOTICE)) {
+//                Log.i("info", "=============requestNewNums()");
+//                requestNewNums();
+//            } else if (action.equals(Constants.Action.CHAT_AGREE_FRIENDSHIP)) {
+//                Log.i("info", "=============refreshPagerDatas()");
+//                refreshPagerDatas();
+//                requestNewNums();
+//            }
+        }
+    }
+
+
+//    @Override
+//    public void onMessageReceiver(String action) {
+//        android.util.Log.i("info", "==================action");
+//        if (action.equals(Constants.Action.CHAT_NEW_MESSAGE_NOTICE)) {
+//            Log.i("info", "=============requestNewNums()");
+//            requestNewNums();
+//        } else if (action.equals(Constants.Action.CHAT_AGREE_FRIENDSHIP)) {
+//            Log.i("info", "=============refreshPagerDatas()");
+//            refreshPagerDatas();
+//            requestNewNums();
+//        }
+//    }
+
+    public void onChatMessageReceiver(String action) {
+        if (action.equals(Constants.Action.CHAT_NEW_MESSAGE_NOTICE)) {
+            Log.i("info", "=============requestNewNums()");
+            requestNewNums();
+        } else if (action.equals(Constants.Action.CHAT_AGREE_FRIENDSHIP)) {
+            Log.i("info", "=============refreshPagerDatas()");
+            refreshPagerDatas();
+            requestNewNums();
+        }
+    }
+
+
+    public static void onMessage(String action) {
+        Log.i("info", "=============onMessage中action:" + action);
+        if (action.equals(Constants.Action.CHAT_NEW_MESSAGE_NOTICE)) {
+            Log.i("info", "=============requestNewNums()");
+            requestNewNums();
+        } else if (action.equals(Constants.Action.CHAT_AGREE_FRIENDSHIP)) {
+            Log.i("info", "=============refreshPagerDatas()");
+            refreshPagerDatas();
+            requestNewNums();
         }
     }
 

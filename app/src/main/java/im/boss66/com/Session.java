@@ -1,5 +1,7 @@
 package im.boss66.com;
 
+import android.content.Context;
+
 import java.util.Observable;
 
 /**
@@ -14,6 +16,7 @@ public class Session extends Observable {
     public static final int ACTION_SEND_IM_MESSAGE = 1015;//发送信息
     public static final int ACTION_STOP_CHAT_SERVICE = 1016;//发送信息
     public static final int ACTION_PREV_CLOSE_ACTIVITY = 1017;//关闭上一个activity
+    public static final int ACTION_CONTACTS_REFRESH_PAGER = 1018;//刷新通讯录数据
 
     public Session() {
 
@@ -78,5 +81,21 @@ public class Session extends Observable {
         sin.setData(imagePath);
         this.setChanged();
         this.notifyObservers(sin);
+    }
+
+    public void refreshContacts(Context context, String action) {
+        SessionInfo sin = new SessionInfo();
+        sin.setAction(ACTION_CONTACTS_REFRESH_PAGER);
+        sin.setData(action);
+        this.setChanged();
+        this.notifyObservers(sin);
+//        Log.i("info", "============================refreshContacts()");
+
+//        Log.i("info", "=========context:" + App.getInstance().getActivity());
+//        if (context != null) {
+//            Log.i("info", "=========action:" + action);
+//            LocalBroadcastManager.getInstance(App.getInstance().getActivity()).sendBroadcast(new Intent(action));
+//        }
+
     }
 }

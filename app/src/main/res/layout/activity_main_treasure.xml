@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/treasure_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_command"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="11dp"
+        android:paddingRight="11dp"
+        android:text="我的口令"
+        android:textColor="@color/golden_color"
+        android:textSize="17.5sp" />
+
+    <ImageView
+        android:id="@+id/iv_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="82dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/treasure_heading" />
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_tag"
+        android:layout_marginTop="13dp">
+
+        <ImageView
+            android:id="@+id/iv_msg"
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:layout_toLeftOf="@+id/iv_bag"
+            android:scaleType="centerCrop"
+            android:src="@drawable/treasure_news" />
+
+        <ImageView
+            android:id="@+id/iv_bag"
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="11dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/treasure_bag" />
+
+        <ImageView
+            android:id="@+id/iv_trade"
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:layout_toRightOf="@+id/iv_bag"
+            android:scaleType="centerCrop"
+            android:src="@drawable/treasure_buy" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_find"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/rl"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_treasure_btn"
+        android:text="找福娃"
+        android:textColor="@color/golden_color"
+        android:textSize="19.8sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_store"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/btn_find"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/bg_treasure_btn"
+        android:text="藏福娃"
+        android:textColor="@color/golden_color"
+        android:textSize="19.8sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_store"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="39dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="11dp"
+        android:paddingRight="11dp"
+        android:text="福娃排行榜 >"
+        android:textColor="#d0976f"
+        android:textSize="16.5sp" />
+</RelativeLayout>

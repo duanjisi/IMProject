@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="42.4dp"
+        android:layout_height="53.4dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/me_loca" />
+
+    <im.boss66.com.widget.CircleImageView
+        android:id="@+id/header"
+        android:layout_width="41.4dp"
+        android:layout_height="41.4dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/person"
+        android:visibility="visible" />
+</RelativeLayout>

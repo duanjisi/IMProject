@@ -11,6 +11,7 @@ import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
 import com.umeng.message.PushAgent;
 import com.umeng.message.UTrack;
 import com.umeng.message.UmengMessageHandler;
@@ -33,6 +34,7 @@ import im.boss66.com.db.RecentDB;
 import im.boss66.com.db.UserDB;
 import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.fragment.ContactBooksFragment;
 
 public class App extends Application {
     public final static String API_KEY = "fiWrR2Ki8NkR6r5GHdM2lY7j";
@@ -63,6 +65,17 @@ public class App extends Application {
 
     public synchronized static App getInstance() {
         return mApplication;
+    }
+
+
+    private ContactBooksFragment contactBooksFragment;
+
+    public void setFragment(ContactBooksFragment fragment) {
+        this.contactBooksFragment = fragment;
+    }
+
+    public ContactBooksFragment getFragment() {
+        return contactBooksFragment;
     }
 
     @Override
@@ -153,7 +166,6 @@ public class App extends Application {
             }
         };
         mPushAgent.setMessageHandler(messageHandler);
-
         /**
          * 该Handler是在BroadcastReceiver中被调用，故
          * 如果需启动Activity，需添加Intent.FLAG_ACTIVITY_NEW_TASK

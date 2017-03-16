@@ -18,6 +18,9 @@ import com.umeng.message.IUmengUnregisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -42,6 +45,7 @@ import im.boss66.com.entity.EmoCate;
 import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmoGroup;
 import im.boss66.com.entity.EmoLove;
+import im.boss66.com.entity.MessageEvent;
 import im.boss66.com.fragment.ContactBooksFragment;
 import im.boss66.com.fragment.ContactsFragment;
 import im.boss66.com.fragment.DiscoverFragment;
@@ -88,9 +92,16 @@ public class MainActivity extends BaseActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Session.getInstance().addObserver(this);
+        EventBus.getDefault().register(this);
         Fresco.initialize(MainActivity.this);//注册，在setContentView之前。
         setContentView(R.layout.activity_main);
         initViews();
+    }
+
+    @Subscribe
+    public void onMessageEvent(MessageEvent messageEvent) {
+        Log.i("info", "=============onMessageEvent");
+        showToast("action:" + messageEvent.getAction(), true);
     }
 
     private void initViews() {
@@ -123,6 +134,9 @@ public class MainActivity extends BaseActivity implements Observer {
         mPushAgent = PushAgent.getInstance(this);
         mPushAgent.enable(mRegisterCallback);
         mPushAgent.setPushIntentServiceClass(MyPushIntentService.class);
+
+//        String sha1 = UIUtils.getSHA1(context);
+//        Log.i("info", "=======sha1:" + sha1);
 
         Intent intent = new Intent(context, ChatServices.class);
         intent.putExtra("userid", account.getUser_id());
@@ -388,6 +402,7 @@ public class MainActivity extends BaseActivity implements Observer {
         discoverFragment = new DiscoverFragment();
         mineFragment = new MineFragment();
 
+        App.getInstance().setFragment(contactBooksFragment);
         mFragments.add(homePagerFragment);
         mFragments.add(contactBooksFragment);
         mFragments.add(contactsFragment);
@@ -503,6 +518,8 @@ public class MainActivity extends BaseActivity implements Observer {
         SessionInfo sin = (SessionInfo) data;
         if (sin.getAction() == Session.ACTION_APPLICATION_EXIT) {
             finish();
+        } else if (sin.getAction() == Session.ACTION_CONTACTS_REFRESH_PAGER) {
+            Log.i("info", "==========================来新消息了");
         }
     }
 
@@ -600,7 +617,7 @@ public class MainActivity extends BaseActivity implements Observer {
         contactBooksFragment = null;
         discoverFragment = null;
         mineFragment = null;
-
+        EventBus.getDefault().unregister(this);
         if (mPushAgent.isEnabled() || UmengRegistrar.isRegistered(MainActivity.this)) {
             //开启推送并设置注册的回调处理
             mPushAgent.disable(mUnregisterCallback);
