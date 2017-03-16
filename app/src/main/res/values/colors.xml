@@ -132,4 +132,7 @@
 
     <color name="translucence">#a2000000</color>
     <color name="red_fuwa">#D3000F</color>
+    <color name="red_fuwa_alpa">#BFd3000f</color>
+    <color name="red_fuwa_alpa_stroke">#ff0012</color>
+
 </resources>

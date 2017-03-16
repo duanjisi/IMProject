@@ -1,8 +1,11 @@
 package im.boss66.com.activity.discover;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -12,9 +15,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,6 +34,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
@@ -39,7 +46,7 @@ import im.boss66.com.widget.scan.CameraManager;
 import im.boss66.com.widget.scan.CameraPreview;
 
 /**
- * Created by GMARUnity on 2017/3/16.
+ * 藏福娃
  */
 public class HideFuwaActivity extends BaseActivity implements View.OnClickListener, SensorEventListener {
 
@@ -68,6 +75,13 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private PermissionListener permissionListener;
     private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
 
+    private TextView tv_address;
+    private ImageView iv_show_address;
+    private PopupWindow popWindow;
+    private RelativeLayout rl_address;
+    private RelativeLayout rl_search;
+    private RecyclerView rv_address;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +92,11 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
 
     private void initView() {
         autoFocusHandler = new Handler();
+
+        rl_address = (RelativeLayout) findViewById(R.id.rl_address);
+        tv_address = (TextView) findViewById(R.id.tv_address);
+        iv_show_address = (ImageView) findViewById(R.id.iv_show_address);
+
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_bottom = (TextView) findViewById(R.id.tv_bottom);
         tv_change_place = (TextView) findViewById(R.id.tv_change_place);
@@ -86,6 +105,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         bt_catch.setOnClickListener(this);
         tv_back.setOnClickListener(this);
         tv_change_place.setOnClickListener(this);
+        iv_show_address.setOnClickListener(this);
+        mSensorManager = (SensorManager) App.getInstance().getSystemService(Activity.SENSOR_SERVICE);
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);// TYPE_GRAVITY
     }
 
     private void initViewParams() {
@@ -215,6 +237,17 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 tv_bottom.setVisibility(View.VISIBLE);
                 mCamera.startPreview();
                 break;
+            case R.id.iv_show_address:
+                if (popWindow != null && popWindow.isShowing()) {
+                    iv_show_address.setImageResource(R.drawable.down_fw);
+                    popWindow.dismiss();
+                } else {
+                    iv_show_address.setImageResource(R.drawable.up_fw);
+                    showPop();
+                }
+                break;
+            case R.id.rl_search:
+                break;
         }
     }
 
@@ -316,6 +349,36 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMddHHmmssSS");
         return dateFormat.format(date);
+    }
+
+    private void showPop() {
+        if (popWindow == null) {
+            View popupView = getLayoutInflater().inflate(R.layout.popupwd_fuwa_hide, null);
+            rl_search = (RelativeLayout) popupView.findViewById(R.id.rl_search);
+            rv_address = (RecyclerView) popupView.findViewById(R.id.rv_address);
+            rl_search.setOnClickListener(this);
+            popWindow = new PopupWindow(popupView, 400, 600);
+            popWindow.setAnimationStyle(R.style.PopupTitleBarAnim1);
+            popWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F8F8F8")));
+            popWindow.setFocusable(true);
+            popWindow.setOutsideTouchable(true);
+        }
+        popWindow.showAsDropDown(rl_address, 0, 20);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        canFocus = true;
+        mSensorManager.registerListener(this, mSensor,
+                SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mSensorManager.unregisterListener(this, mSensor);
+        canFocus = false;
     }
 
 }
