@@ -17,6 +17,7 @@ import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.activity.discover.CatchFuwaActivity;
+import im.boss66.com.activity.discover.ChooseFuwaHideActivity;
 import im.boss66.com.activity.personage.PersonalInformationActivity;
 import im.boss66.com.activity.personage.PersonalPhotoAlbumActivity;
 import im.boss66.com.activity.personage.PersonalSetActivity;
@@ -98,6 +99,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 openActivity(PersonalPhotoAlbumActivity.class, null);
                 break;
             case R.id.rl_collect://收藏
+                openActivity(ChooseFuwaHideActivity.class, null);
                 break;
             case R.id.rl_wallet://钱包
                 Intent intent0 = new Intent(getActivity(), WalletActivity.class);

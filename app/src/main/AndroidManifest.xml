@@ -400,6 +400,11 @@
         <activity
             android:name=".activity.discover.ChooseFuwaHideActivity"
             android:screenOrientation="portrait"></activity>
+        <!-- 选择要藏的福娃 -->
+        <activity
+            android:name=".activity.discover.HideFuwaActivity"
+            android:screenOrientation="portrait"></activity>
+
 
         <!-- 我的关注 -->
         <activity android:name=".activity.connection.MyFollowActivity"></activity>

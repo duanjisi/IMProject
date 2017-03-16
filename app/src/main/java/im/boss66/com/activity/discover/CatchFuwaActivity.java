@@ -118,14 +118,14 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        //按住事件发生后执行代码的区域
+                        //按住
                         ll_thread.setVisibility(View.VISIBLE);
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        //移动事件发生后执行代码的区域
+                        //移动
                         break;
                     case MotionEvent.ACTION_UP:
-                        //松开事件发生后执行代码的区域
+                        //松开
                         ll_thread.setVisibility(View.GONE);
                         break;
                 }
@@ -285,12 +285,10 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             try {
                 Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-                //
                 if (bm != null) {
                     Bitmap bitmap = rotateBitmap(bm, 90);
                     if (bitmap != null) {
-                        Bitmap bitmap1 = cropPhotoImage(bitmap);
-                        if (bitmap1 != null) {
+                        if (bitmap != null) {
                             String imageName = getNowTime() + ".jpg";
                             // 指定调用相机拍照后照片的储存路径
                             File dir = new File(savePath);
@@ -300,7 +298,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             File file = new File(dir, imageName);
                             BufferedOutputStream bos
                                     = new BufferedOutputStream(new FileOutputStream(file));
-                            bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bos);
                             bos.flush();
                             bos.close();
                         }
