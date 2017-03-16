@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_people_data"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="270dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/bg_fuwa_pop">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="15dp"
+            android:src="@drawable/fuwa_close" />
+
+        <RelativeLayout
+            android:id="@+id/rl_fuwa"
+            android:layout_width="110dp"
+            android:layout_height="140dp"
+            android:layout_marginLeft="31dp"
+            android:layout_marginTop="51dp"
+            android:background="@drawable/fuwa_bgs">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/number_bg" />
+
+                <TextView
+                    android:id="@+id/tv_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="1"
+                    android:textColor="@color/text_color_yellow2"
+                    android:textSize="13.2dp" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/img_fuwa"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/person" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@id/img_fuwa"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/line_red" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/line_red" />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_fuwa_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/rl_fuwa"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/rl_fuwa"
+            android:text="1号福娃"
+            android:textColor="@color/white"
+            android:textSize="19dp" />
+
+        <TextView
+            android:id="@+id/tv_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_fuwa_num"
+            android:layout_below="@id/tv_fuwa_num"
+            android:layout_marginTop="25dp"
+            android:text="来源于:港棉纺织"
+            android:textColor="@color/bg_rectangle"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_catch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_from"
+            android:layout_below="@id/tv_from"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="33dp"
+            android:text="捕获与：珠江国际纺织城"
+            android:textColor="@color/bg_rectangle"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_below="@id/tv_catch"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/ll_sell"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:paddingRight="30dp"
+                    android:paddingLeft="30dp"
+                    android:background="@drawable/shape_fuwa"
+                    android:text="出售"
+                    android:textSize="20dp"
+                    android:textColor="@color/text_color_yellow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_give"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:paddingRight="30dp"
+                    android:paddingLeft="30dp"
+                    android:background="@drawable/shape_fuwa"
+                    android:text="赠送"
+                    android:textSize="20dp"
+                    android:textColor="@color/text_color_yellow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

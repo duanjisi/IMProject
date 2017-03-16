@@ -498,7 +498,6 @@ public class MainActivity extends BaseActivity implements Observer {
                     } else {
                         if (!peopleDataDialog.isShowing()) {
                             peopleDataDialog.show();
-
                         }
                     }
                     break;

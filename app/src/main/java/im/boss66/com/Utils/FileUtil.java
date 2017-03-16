@@ -29,6 +29,7 @@ import java.math.BigDecimal;
  */
 public final class FileUtil {
 
+    private static String jpegName ="";
     /**
      * 检查SD卡是否挂载
      *
@@ -499,6 +500,14 @@ public final class FileUtil {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getJpegName() {
+        return jpegName;
+    }
+
+    public static void setJpegName(String jpegName) {
+        FileUtil.jpegName = jpegName;
     }
 
 }

@@ -175,7 +175,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
         bt_send.setOnClickListener(this);
 
         tv_back = (TextView) findViewById(R.id.tv_back);
-        tv_title = (TextView) findViewById(R.id.tv_back);
+        tv_title = (TextView) findViewById(R.id.tv_title);
         tv_back.setOnClickListener(this);
         tv_title.setText("详情");
         RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) iv_head.getLayoutParams();

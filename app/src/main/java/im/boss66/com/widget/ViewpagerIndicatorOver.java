@@ -83,6 +83,11 @@ public class ViewpagerIndicatorOver extends LinearLayout {
     private int COLOR_TEXT_HIGHLIFHT = 0xFF49C4E6;
     private int COLOR_INDICATOR_LINE = 0xFFFD2741;
 
+    public void setLineColor(int color){
+        COLOR_INDICATOR_LINE = color;
+
+    }
+
     public ViewpagerIndicatorOver(Context context) {
         this(context, null);
     }

@@ -9,11 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.lidroid.xutils.HttpUtils;
@@ -29,7 +27,6 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.SearchSchoolAdapter;
-import im.boss66.com.entity.ClubEntity;
 import im.boss66.com.entity.SearchSchoolListEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.RecycleViewItemListener;
@@ -55,6 +52,7 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
                     result = searchSchoolListEntity.getResult();
                     adapter.setDatas(result);
                     adapter.notifyDataSetChanged();
+                    et_school.setFocusable(false);
                     break;
 
             }
@@ -182,4 +180,6 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
                 break;
         }
     }
+
+
 }

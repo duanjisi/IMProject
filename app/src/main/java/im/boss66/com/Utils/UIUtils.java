@@ -698,4 +698,21 @@ public final class UIUtils {
         }
         return null;
     }
+    /**
+     * 旋转Bitmap
+     */
+    public static Bitmap getRotateBitmap(Bitmap b, float rotateDegree) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate((float) rotateDegree);
+        Bitmap rotaBitmap = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, false);
+        return rotaBitmap;
+    }
+
+    public static float getScreenRate(Context context){
+        Point P = getScreenSize(context);
+        float H = P.y;
+        float W = P.x;
+        return (H/W);
+    }
+
 }

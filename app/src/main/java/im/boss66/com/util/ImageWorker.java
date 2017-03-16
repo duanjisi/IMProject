@@ -34,6 +34,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import im.boss66.com.BuildConfig;
+import im.boss66.com.R;
 
 /**
  * This class wraps up completing some arbitrary long running work when loading a bitmap to an
@@ -377,7 +378,7 @@ public abstract class ImageWorker {
             // Transition drawable with a transparent drawable and the final drawable
             final TransitionDrawable td =
                     new TransitionDrawable(new Drawable[]{
-                            new ColorDrawable(android.R.color.transparent),
+                            new ColorDrawable(mResources.getColor(R.color.transparent)),
                             drawable
                     });
             // Set background to loading bitmap

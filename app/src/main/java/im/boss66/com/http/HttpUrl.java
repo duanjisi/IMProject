@@ -209,4 +209,16 @@ public class HttpUrl {
 
     //查询周围的福娃
     public static final String FIND_AROUND_CHILDREN = BASE_FUWA_URL + "query?";
+    public static final String SEARCH_USER_INFO = MAIN_URL + "ucenter/userinfo/index";
+    //同学推荐
+    public static final String SCHOOLMATE_LIST = MAIN_URL + "api/v1/search/same-school";
+    //同乡推荐
+    public static final String COUNTRYMAN_LIST = MAIN_URL + "api/v1/search/same-home";
+    //随便看看(自定义)
+    public static final String RANDOWM_LOOK = MAIN_URL + "api/v1/search/rand";
+    //搜索人脉用户
+    public static final String SEARCH_PEOPLE = MAIN_URL + "api/v1/search/user";
+    //查自己的福娃
+    public static final String QUERY_MY_FUWA = "http://wsimali.66boss.com:9090/api/querymy?user=";
+
 }

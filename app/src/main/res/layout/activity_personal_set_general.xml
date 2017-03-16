@@ -35,7 +35,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:layout_toRightOf="@+id/iv_photo"
                     android:text="@string/font_size"
                     android:textColor="@color/black"
                     android:textSize="17.5sp" />
@@ -69,7 +68,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:layout_toRightOf="@+id/iv_photo"
                     android:text="@string/chat_bg"
                     android:textColor="@color/black"
                     android:textSize="17.5sp" />
@@ -103,7 +101,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:layout_toRightOf="@+id/iv_photo"
                     android:text="@string/my_face"
                     android:textColor="@color/black"
                     android:textSize="17.5sp" />
@@ -138,7 +135,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:layout_toRightOf="@+id/iv_photo"
                     android:text="@string/photos_videos"
                     android:textColor="@color/black"
                     android:textSize="17.5sp" />
@@ -174,7 +170,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:layout_toRightOf="@+id/iv_photo"
                     android:text="@string/receiver_model"
                     android:textColor="@color/black"
                     android:textSize="17.5sp" />
@@ -217,7 +212,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:layout_toRightOf="@+id/iv_photo"
                     android:text="@string/function"
                     android:textColor="@color/black"
                     android:textSize="17.5sp" />
@@ -253,7 +247,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:layout_toRightOf="@+id/iv_photo"
                     android:text="@string/chat_logs_migration"
                     android:textColor="@color/black"
                     android:textSize="17.5sp" />
@@ -288,7 +281,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:layout_toRightOf="@+id/iv_photo"
                     android:text="@string/memory_space"
                     android:textColor="@color/black"
                     android:textSize="17.5sp" />

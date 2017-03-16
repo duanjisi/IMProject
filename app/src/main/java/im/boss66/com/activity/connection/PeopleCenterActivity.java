@@ -178,7 +178,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         user_head.setLayoutParams(headIconParam);
 
         RelativeLayout.LayoutParams headMsgParam = (RelativeLayout.LayoutParams) rl_msg.getLayoutParams();
-        headMsgParam.width = sceenW / 7;
+        headMsgParam.width = sceenW / 5;
         rl_msg.setLayoutParams(headMsgParam);
         tv_back.setOnClickListener(this);
 
@@ -360,7 +360,6 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 Intent intent = new Intent(this, PersonalDataActivity.class);
                 Intent intent1 = intent.putExtra("isEdit", true);
                 startActivity(intent1);
-
                 break;
         }
     }

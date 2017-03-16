@@ -226,4 +226,7 @@
     <string name="selected_friends_see">选中的朋友可见</string>
     <string name="selected_friends_no_see">选中的朋友不可见</string>
     <string name="address_book_to_choose">从通讯录选择</string>
+
+    <string name="to_choose_hide_fuwa">请选择你要藏的福娃</string>
+    <string name="stay_on_target_objects_a_while">对准目标物体停留一会儿</string>
 </resources>

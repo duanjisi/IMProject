@@ -25,6 +25,11 @@
     <color name="orange">#ff3300</color>
     <color name="titlbarBgColor">#181A1A</color>
     <color name="hint_text_color">#888888</color>
+    <color name="text_color_yellow">#e7d09a</color>
+    <color name="text_color_yellow2">#d3000f</color>
+    <color name="text_color_grey">#8d1800</color>
+    <color name="line_red">#ff7f5b</color>
+    <color name="line_red2">#cf241c</color>
 
     <!--<color name="chat_background">@color/window_bg</color>-->
     <!--<color name="chat_title_name">@color/color_bai</color>-->
@@ -80,7 +85,6 @@
     <color name="bt_bg_gray">#DFDFDF</color>
     <color name="tv_bg_gray">#F2F2F2</color>
     <color name="bg_rectangle">#CCCCCC</color>
-    <color name="golden_color">#e7d09a</color>
     <color name="light_black">#2E2E2E</color>
     <color name="color_8290AF">#8290AF</color>
     <color name="color_232323">#232323</color>
@@ -126,6 +130,8 @@
     <color name="text_bg">#eaeaea</color>
     <color name="province_line_border">#C7C7C7</color>
 
+    <color name="translucence">#a2000000</color>
+    <color name="red_fuwa">#D3000F</color>
 
     <color name="act_background">#efefef</color>
     <color name="phone_bg">#f6f6f6</color>

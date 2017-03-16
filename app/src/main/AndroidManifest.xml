@@ -421,6 +421,20 @@
             android:name=".activity.discover.SearchLookMoreActivity"
             android:screenOrientation="portrait"></activity>
 
+        <!-- 找福娃 -->
+        <activity
+            android:name=".activity.discover.CatchFuwaActivity"
+            android:screenOrientation="portrait"></activity>
+        <!-- 选择要藏的福娃 -->
+        <activity
+            android:name=".activity.discover.ChooseFuwaHideActivity"
+            android:screenOrientation="portrait"></activity>
+        <!-- 选择要藏的福娃 -->
+        <activity
+            android:name=".activity.discover.HideFuwaActivity"
+            android:screenOrientation="portrait"></activity>
+
+
         <!-- 我的关注 -->
         <activity android:name=".activity.connection.MyFollowActivity"></activity>
         <!-- 我的消息 -->
@@ -460,6 +474,10 @@
         <activity android:name=".activity.connection.ClubActivity"></activity>
         <!--家乡和校园动态-->
         <activity android:name=".activity.connection.NewsActivity"></activity>
+        <!--福娃背包-->
+        <activity android:name=".activity.connection.FuwaPackageActivity"></activity>
+        <!--福娃交易-->
+        <activity android:name=".activity.connection.FuwaDealActivity"></activity>
 
 
         <!-- 微信入口 -->

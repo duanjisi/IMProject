@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="小6 1.0"
+        android:text="嗨萌 1.0"
         android:textColor="@color/text_new_alerts_gray"
         android:textSize="20sp" />
 
@@ -47,7 +47,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
-                android:layout_toRightOf="@+id/iv_photo"
                 android:text="@string/to_score"
                 android:textColor="@color/black"
                 android:textSize="17.5sp" />
@@ -81,7 +80,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
-                android:layout_toRightOf="@+id/iv_photo"
                 android:text="@string/function_introduction"
                 android:textColor="@color/black"
                 android:textSize="17.5sp" />
@@ -115,7 +113,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
-                android:layout_toRightOf="@+id/iv_photo"
                 android:text="@string/system_informs"
                 android:textColor="@color/black"
                 android:textSize="17.5sp" />
@@ -150,7 +147,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
-                android:layout_toRightOf="@+id/iv_photo"
                 android:text="@string/complaint"
                 android:textColor="@color/black"
                 android:textSize="17.5sp" />

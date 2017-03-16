@@ -580,26 +580,29 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         String fileName = null;
         if (uri != null) {
             // content
-            Log.d("Scheme", uri.getScheme().toString());
-            if (uri.getScheme().toString().equals("content")) {
+            Log.d("Scheme", uri.getScheme());
+            if (uri.getScheme().equals("content")) {
                 Cursor cursor = getContentResolver().query(uri, null,
                         null, null, null);
-                if (cursor.moveToNext()) {
-                    int columnIndex = cursor
-                            .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-                    fileName = cursor.getString(columnIndex);
-                    //获取缩略图id
-                    int id = cursor.getInt(cursor
-                            .getColumnIndex(MediaStore.Video.VideoColumns._ID));
-                    //获取缩略图
+                if (cursor != null){
+                    if (cursor.moveToNext()) {
+                        int columnIndex = cursor
+                                .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+                        fileName = cursor.getString(columnIndex);
+                        //获取缩略图id
+                        int id = cursor.getInt(cursor
+                                .getColumnIndex(MediaStore.Video.VideoColumns._ID));
+                        //获取缩略图
 //                    Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(
 //                            getContentResolver(), id, MediaStore.Images.Thumbnails.MICRO_KIND,
 //                            null);
 
-                    if (!fileName.startsWith("/mnt")) {
-                        fileName = "/mnt/" + fileName;
+                        if (!fileName.startsWith("/mnt")) {
+                            fileName = "/mnt/" + fileName;
+                        }
+                        Log.d("fileName", fileName);
                     }
-                    Log.d("fileName", fileName);
+                    cursor.close();
                 }
             }
         }
