@@ -7,6 +7,7 @@ public class HttpUrl {
     public static final String MAIN_URL = "https://api.66boss.com/";
     public static final String BASE_URL = "http://live.66boss.com/";
     public static final String BASE_IM_URL = "http://live.66boss.com:6060/";
+    public static final String BASE_FUWA_URL = "http://wsimali.66boss.com:9090/api/";
     public static final String WS_URL = "ws://live.66boss.com:6060/entry";
     public static final String NOTIFICATION_LINK = "http://live.66boss.com/umeng/send?";
     public static final String UPLOAD_AUDIO_URL = BASE_URL + "upload/writev1?";
@@ -200,9 +201,12 @@ public class HttpUrl {
     //学校动态
     public static final String SCHOOL_NEWS = MAIN_URL + "api/v1/school/message";
     //家乡动态
-    public static final String HOMETOWN_NEWS = MAIN_URL+"api/v1/hometown/message";
+    public static final String HOMETOWN_NEWS = MAIN_URL + "api/v1/hometown/message";
     //搜索学校
-    public static final String SEARCH_SCHOOL = MAIN_URL+"api/v1/search/local-school";
+    public static final String SEARCH_SCHOOL = MAIN_URL + "api/v1/search/local-school";
     //获取用户信息
-    public static final String SEARCH_USER_INFO = MAIN_URL+"ucenter/userinfo/index";
+    public static final String SEARCH_USER_INFO = MAIN_URL + "ucenter/userinfo/index";
+
+    //查询周围的福娃
+    public static final String FIND_AROUND_CHILDREN = BASE_FUWA_URL + "query?";
 }

@@ -26,6 +26,14 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!--<uses-permission android:name="android.permission.WRITE_CONTACTS" />-->
 
+    <!--高德地图-->
+    <!--允许程序打开网络套接字-->
+    <!--允许程序设置内置sd卡的写权限-->
+    <!--允许程序获取网络状态-->
+    <!--允许程序访问WiFi网络信息-->
+    <!--允许程序读写手机状态和身份-->
+    <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera.flash" />
@@ -123,6 +131,27 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.im.EmojiSelectWellActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <!--找福娃-->
+        <activity
+            android:name=".activity.treasure.AroundPosActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--找福娃-->
+        <activity
+            android:name=".activity.treasure.WalkRouteDetailActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--找福娃-->
+        <activity
+            android:name=".activity.treasure.WalkRouteActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--找福娃-->
+        <activity
+            android:name=".activity.treasure.FindTreasureChildrenActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--福娃首页-->
+        <activity
+            android:name=".activity.treasure.MainTreasureActivity"
             android:screenOrientation="portrait"></activity>
 
         <!--群聊名称-->
@@ -460,6 +489,11 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- 定位需要的服务 -->
+        <service android:name="com.amap.api.location.APSService" />
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="d469515dcddb6c98d055e12e0da65207"></meta-data>
         <!-- QQ第三方登录 end -->
 
         <!-- 友盟 start -->

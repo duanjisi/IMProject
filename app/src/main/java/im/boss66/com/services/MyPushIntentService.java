@@ -14,11 +14,13 @@ import com.umeng.message.UmengBaseIntentService;
 import com.umeng.message.entity.UMessage;
 
 import org.android.agoo.client.BaseConstants;
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import im.boss66.com.Constants;
 import im.boss66.com.activity.book.NewFriendsActivity;
+import im.boss66.com.entity.MessageEvent;
 
 /**
  * Developer defined push intent service.
@@ -36,6 +38,16 @@ public class MyPushIntentService extends UmengBaseIntentService {
     private static final int notifyID_FRIEND_REPLY = 1004;
     private static final int notifyID_ADERTISING = 1005;
     private static final int notifyID_REDPACKET = 1006;
+
+
+    private static MyPushIntentService pushIntentService;
+
+    public static MyPushIntentService getInstance() {
+        if (pushIntentService == null) {
+            pushIntentService = new MyPushIntentService();
+        }
+        return pushIntentService;
+    }
 
     @Override
     protected void onMessage(Context context, Intent intent) {
@@ -88,15 +100,29 @@ public class MyPushIntentService extends UmengBaseIntentService {
                 if (notice.contains("已成为你的好友!")) {
                     intent = new Intent();
                     android.util.Log.i("info", "=============receiver()");
+
+//                    if (pushCallback != null) {
+//                        pushCallback.onMessageReceiver(Constants.Action.CHAT_AGREE_FRIENDSHIP);
+//                    }
+//                    Session.getInstance().refreshContacts(null, Constants.Action.CHAT_AGREE_FRIENDSHIP);
 //                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(Constants.Action.CHAT_AGREE_FRIENDSHIP));
-                    senBroadCast(appContext, Constants.Action.CHAT_AGREE_FRIENDSHIP);
+//                    senBroadCast(appContext, Constants.Action.CHAT_AGREE_FRIENDSHIP);
                     notificationId = notifyID_FRIEND_REPLY;
                 } else {
                     notificationId = notifyID_FRIEND_ADD;
 //                    it = new Intent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
                     android.util.Log.i("info", "=====8888888========add()");
                     intent = new Intent(appContext, NewFriendsActivity.class);
-                    senBroadCast(appContext, Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
+                    EventBus.getDefault().post(new MessageEvent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE));
+//                    ContactBooksFragment.onMessage(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
+//                    App.getInstance().getFragment().onChatMessageReceiver(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
+
+//                    if (pushCallback != null) {
+//                        android.util.Log.i("info", "=====6666666========add()");
+//                        pushCallback.onMessageReceiver(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
+//                    }
+//                    Session.getInstance().refreshContacts(null, Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
+//                    senBroadCast(appContext, Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
 //                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE));
                 }
 //                if (it != null) {
@@ -136,6 +162,16 @@ public class MyPushIntentService extends UmengBaseIntentService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private pushCallback pushCallback;
+
+    public void setPushCallback(MyPushIntentService.pushCallback pushCallback) {
+        this.pushCallback = pushCallback;
+    }
+
+    public interface pushCallback {
+        void onMessageReceiver(String action);
     }
 
     private void senBroadCast(Context context, String action) {

@@ -69,7 +69,6 @@ public class BaseFragment extends Fragment {
         if (getActivity() != null && !TextUtils.isEmpty(msg)) {
             Toast.makeText(getActivity(), msg, length ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
         }
-
     }
 
     /**

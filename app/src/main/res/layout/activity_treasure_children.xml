@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_navigation_bar_height"
+        android:background="@color/top_bar_color">
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/hp_back_golden"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="11dp"
+            android:text="返回"
+            android:textColor="@color/golden_color"
+            android:textSize="16.5sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="找福娃"
+            android:textColor="@color/golden_color"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_top_bar">
+
+        <com.amap.api.maps2d.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            android:id="@+id/top_bar"
+            layout="@layout/item_treasure_top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"></include>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="60dp">
+
+            <ImageView
+                android:id="@+id/iv_reset_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="18dp"
+                android:src="@drawable/treasure_location" />
+
+            <TextView
+                android:id="@+id/tv_store"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="18dp"
+                android:background="@drawable/bg_circle_notify"
+                android:gravity="center"
+                android:text="藏福娃"
+                android:textColor="@color/golden_color"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </FrameLayout>
+</RelativeLayout>

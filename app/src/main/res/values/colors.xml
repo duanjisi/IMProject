@@ -80,6 +80,7 @@
     <color name="bt_bg_gray">#DFDFDF</color>
     <color name="tv_bg_gray">#F2F2F2</color>
     <color name="bg_rectangle">#CCCCCC</color>
+    <color name="golden_color">#e7d09a</color>
     <color name="light_black">#2E2E2E</color>
     <color name="color_8290AF">#8290AF</color>
     <color name="color_232323">#232323</color>
@@ -126,4 +127,7 @@
     <color name="province_line_border">#C7C7C7</color>
 
 
+    <color name="act_background">#efefef</color>
+    <color name="phone_bg">#f6f6f6</color>
+    <color name="blue">#4c90f9</color>
 </resources>
