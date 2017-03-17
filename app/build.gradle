@@ -15,6 +15,16 @@ android {
         }
     }
 
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
     dexOptions {
         javaMaxHeapSize "4g"
     }

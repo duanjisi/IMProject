@@ -1,11 +1,11 @@
-package im.boss66.com.activity.discover;
+package im.boss66.com.activity.treasure;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -17,18 +17,34 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.services.core.AMapException;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.poisearch.PoiResult;
+import com.amap.api.services.poisearch.PoiSearch;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -41,6 +57,7 @@ import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.adapter.FuwaHideAddressAdapter;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.scan.CameraManager;
 import im.boss66.com.widget.scan.CameraPreview;
@@ -48,7 +65,8 @@ import im.boss66.com.widget.scan.CameraPreview;
 /**
  * 藏福娃
  */
-public class HideFuwaActivity extends BaseActivity implements View.OnClickListener, SensorEventListener {
+public class HideFuwaActivity extends BaseActivity implements View.OnClickListener, SensorEventListener, AMapLocationListener,
+        PoiSearch.OnPoiSearchListener {
 
     private TextView tv_back, tv_bottom, tv_change_place;
     private Button bt_catch;
@@ -82,6 +100,25 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private RelativeLayout rl_search;
     private RecyclerView rv_address;
 
+    private AMapLocationClient mlocationClient;
+    private AMapLocationClientOption mLocationOption;
+    private PoiResult poiResult; // poi返回的结果
+    private int currentPage = 0;// 当前页面，从0开始计数
+    private PoiSearch.Query query;// Poi查询条件类
+    private LatLonPoint lp;//
+    private PoiSearch poiSearch;
+    private List<PoiItem> poiItems;// poi数据
+    private AMapLocation location;
+    private FuwaHideAddressAdapter addressAdapter;
+    private String userId, geohash, address;
+    private File imgFile;
+    private String classType;
+    private Dialog dialog;
+    private ImageView iv_dialog_icon;
+    private TextView tv_dialog_address, bt_hide_ok;
+    private Bitmap bitmapImg;
+    private boolean isJump = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +128,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
+        userId = App.getInstance().getAccount().getUser_id();
         autoFocusHandler = new Handler();
 
         rl_address = (RelativeLayout) findViewById(R.id.rl_address);
@@ -111,6 +149,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initViewParams() {
+        initMap();
         mCameraManager = new CameraManager(this);
         try {
             mCameraManager.openDriver();
@@ -166,19 +205,19 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
                 if (bm != null) {
-                    Bitmap bitmap = UIUtils.getRotateBitmap(bm, 90);
-                    if (bitmap != null) {
-                        if (bitmap != null) {
+                    bitmapImg = UIUtils.getRotateBitmap(bm, 90);
+                    if (bitmapImg != null) {
+                        if (bitmapImg != null) {
                             String imageName = getNowTime() + ".jpg";
                             // 指定调用相机拍照后照片的储存路径
                             File dir = new File(savePath);
                             if (!dir.exists()) {
                                 dir.mkdirs();
                             }
-                            File file = new File(dir, imageName);
+                            imgFile = new File(dir, imageName);
                             BufferedOutputStream bos
-                                    = new BufferedOutputStream(new FileOutputStream(file));
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bos);
+                                    = new BufferedOutputStream(new FileOutputStream(imgFile));
+                            bitmapImg.compress(Bitmap.CompressFormat.JPEG, 40, bos);
                             bos.flush();
                             bos.close();
                         }
@@ -220,6 +259,11 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     protected void onDestroy() {
         super.onDestroy();
         releaseCamera();
+        if (mlocationClient != null) {
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+        }
+        mlocationClient = null;
     }
 
     @Override
@@ -229,12 +273,18 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.bt_catch:
-
+                Bundle bundle = new Bundle();
+                bundle.putString("address", address);
+                bundle.putString("geohash", geohash);
+                ChooseFuwaHideActivity.getImgFile(imgFile);
+                openActvityForResult(ChooseFuwaHideActivity.class, 101, bundle);
+                isJump = true;
                 break;
             case R.id.tv_change_place:
                 tv_change_place.setVisibility(View.INVISIBLE);
                 bt_catch.setVisibility(View.GONE);
                 tv_bottom.setVisibility(View.VISIBLE);
+                previewing = true;
                 mCamera.startPreview();
                 break;
             case R.id.iv_show_address:
@@ -247,6 +297,12 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 }
                 break;
             case R.id.rl_search:
+                break;
+            case R.id.bt_hide_ok:
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                finish();
                 break;
         }
     }
@@ -335,7 +391,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         PermissionUtil
                 .with(this)
                 .permissions(
-                        PermissionUtil.PERMISSIONS_CHAT_CAMERA //相机权限
+                        PermissionUtil.PERMISSIONS_CAMERA_LOCATION //相机权限
                 ).request(permissionListener);
     }
 
@@ -357,13 +413,13 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             rl_search = (RelativeLayout) popupView.findViewById(R.id.rl_search);
             rv_address = (RecyclerView) popupView.findViewById(R.id.rv_address);
             rl_search.setOnClickListener(this);
-            popWindow = new PopupWindow(popupView, 400, 600);
-            popWindow.setAnimationStyle(R.style.PopupTitleBarAnim1);
-            popWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F8F8F8")));
+            popWindow = new PopupWindow(popupView);
+            //popWindow.setAnimationStyle(R.style.PopupTitleBarAnim1);
+            popWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.umeng_socialize_share_transparent_corner));
             popWindow.setFocusable(true);
             popWindow.setOutsideTouchable(true);
         }
-        popWindow.showAsDropDown(rl_address, 0, 20);
+        popWindow.showAsDropDown(tv_back, 0, 0);
     }
 
     @Override
@@ -381,4 +437,141 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         canFocus = false;
     }
 
+    private void initMap() {
+        poiItems = new ArrayList<>();
+        addressAdapter = new FuwaHideAddressAdapter(poiItems);
+        if (mlocationClient == null) {
+            //初始化定位
+            mlocationClient = new AMapLocationClient(this);
+            //初始化定位参数
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位回调监听
+            mlocationClient.setLocationListener(this);
+            //设置为高精度定位模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //设置定位参数
+            mLocationOption.setInterval(30000);
+            mlocationClient.setLocationOption(mLocationOption);
+            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+            // 在定位结束后，在合适的生命周期调用onDestroy()方法
+            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+            mlocationClient.startLocation();//启动定位
+        }
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        this.location = aMapLocation;
+        if (location != null) {
+            initPostionData(location);
+        }
+    }
+
+    @Override
+    public void onPoiSearched(PoiResult result, int rcode) {
+        if (rcode == AMapException.CODE_AMAP_SUCCESS) {
+            if (result != null && result.getQuery() != null) {// 搜索poi的结果
+                if (result.getQuery().equals(query)) {// 是否是同一条
+                    poiResult = result;
+                    poiItems = poiResult.getPois();// 取得第一页的poiitem数据，页数从数字0开始
+                    if (poiItems != null && poiItems.size() > 0) {
+                        //printStr(poiItems);
+                        addressAdapter.onDataChange(poiItems);
+                    }
+                }
+            } else {
+                showToast("没数据!", true);
+            }
+        } else {
+            showToast(rcode, true);
+        }
+    }
+
+    @Override
+    public void onPoiItemSearched(PoiItem poiItem, int i) {
+
+    }
+
+    private void initPostionData(AMapLocation aMapLocation) {
+        if (aMapLocation != null) {
+            if (lp == null) {
+                lp = new LatLonPoint(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+            }
+            address = aMapLocation.getPoiName();
+            geohash = aMapLocation.getLongitude() + "-" + aMapLocation.getLatitude();
+            tv_address.setText("" + address);
+            String city = aMapLocation.getCity();
+            doSearchQuery(address, city);
+        }
+    }
+
+    /**
+     * 开始进行poi搜索
+     */
+    /**
+     * 开始进行poi搜索
+     */
+    protected void doSearchQuery(String keyWord, String city) {
+        currentPage = 0;
+        query = new PoiSearch.Query(keyWord, "", city);// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
+        query.setPageSize(20);// 设置每页最多返回多少条poiitem
+        query.setPageNum(currentPage);// 设置查第一页
+
+        if (lp != null) {
+            poiSearch = new PoiSearch(this, query);
+            poiSearch.setOnPoiSearchListener(this);
+            poiSearch.setBound(new PoiSearch.SearchBound(lp, 5000, true));//
+            // 设置搜索区域为以lp点为圆心，其周围5000米范围
+            poiSearch.searchPOIAsyn();// 异步搜索
+        }
+    }
+
+
+    private void showSuccessHideDialog() {
+        if (dialog == null) {
+            View view = LayoutInflater.from(context).inflate(
+                    R.layout.dialog_hide_ok, null);
+            int sceenW = UIUtils.getScreenWidth(this);
+            int sceenH = UIUtils.getScreenHeight(this);
+            tv_dialog_address = (TextView) view.findViewById(R.id.bt_hide_ok);
+            iv_dialog_icon = (ImageView) view.findViewById(R.id.iv_dialog_icon);
+            FrameLayout.LayoutParams imgParams = (FrameLayout.LayoutParams) iv_dialog_icon.getLayoutParams();
+            imgParams.width = sceenW / 2;
+            imgParams.height = sceenH / 3;
+            iv_dialog_icon.setLayoutParams(imgParams);
+            bt_hide_ok = (Button) view.findViewById(R.id.bt_hide_ok);
+            bt_hide_ok.setOnClickListener(this);
+
+            dialog = new Dialog(context, R.style.ActionSheetDialogStyle);
+            dialog.setContentView(view);
+            Window dialogWindow = dialog.getWindow();
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            lp.width = (int) (sceenW * 0.8);
+            lp.height = (int) (sceenH * 0.7);
+            dialogWindow.setAttributes(lp);
+            dialogWindow.setGravity(Gravity.CENTER);
+            dialog.setCanceledOnTouchOutside(false);
+        }
+        if (bitmapImg != null) {
+            iv_dialog_icon.setImageBitmap(bitmapImg);
+        }
+        tv_dialog_address.setText("" + address);
+        dialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101 && resultCode == RESULT_OK) {
+            showSuccessHideDialog();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isJump)
+            canFocusIn = true;
+    }
 }

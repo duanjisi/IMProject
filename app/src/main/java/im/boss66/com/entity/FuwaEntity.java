@@ -58,5 +58,15 @@ public class FuwaEntity {
 
         private int num;
         private List<String> idList = new ArrayList<>();
+
+        public boolean isSel() {
+            return isSel;
+        }
+
+        public void setSel(boolean sel) {
+            isSel = sel;
+        }
+
+        private boolean isSel = false;
     }
 }

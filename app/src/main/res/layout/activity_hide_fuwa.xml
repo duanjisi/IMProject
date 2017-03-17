@@ -105,7 +105,9 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_4"
             android:layout_toRightOf="@+id/iv_left"
-            android:text="水水水水搜索所"
+            android:maxEms="8"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/white" />
 
         <ImageView

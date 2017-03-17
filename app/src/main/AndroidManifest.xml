@@ -423,15 +423,15 @@
 
         <!-- 找福娃 -->
         <activity
-            android:name=".activity.discover.CatchFuwaActivity"
+            android:name=".activity.treasure.CatchFuwaActivity"
             android:screenOrientation="portrait"></activity>
         <!-- 选择要藏的福娃 -->
         <activity
-            android:name=".activity.discover.ChooseFuwaHideActivity"
+            android:name=".activity.treasure.ChooseFuwaHideActivity"
             android:screenOrientation="portrait"></activity>
         <!-- 选择要藏的福娃 -->
         <activity
-            android:name=".activity.discover.HideFuwaActivity"
+            android:name=".activity.treasure.HideFuwaActivity"
             android:screenOrientation="portrait"></activity>
 
 

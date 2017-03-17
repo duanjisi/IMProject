@@ -82,12 +82,25 @@
             android:text="福娃藏在这"
             android:textColor="@color/white" />
 
-        <ImageView
-            android:id="@+id/iv_thread"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/person"
-            android:src="@drawable/thread" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_thread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+            <ImageView
+                android:id="@+id/iv_thread_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/thread" />
+
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/tv_address"
@@ -106,19 +119,13 @@
         android:id="@+id/iv_success_catch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
-    <Button
-        android:id="@+id/bt_catch"
+    <ImageView
+        android:id="@+id/iv_success"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/iv_success_catch"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/bg_login"
-        android:visibility="gone"
-        android:text="捕 捉"
-        android:textColor="#E6CC97"
-        android:textSize="22sp" />
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>
