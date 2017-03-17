@@ -1,8 +1,9 @@
-package im.boss66.com.activity.discover;
+package im.boss66.com.activity.treasure;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,13 +20,14 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -33,6 +35,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.gifdecoder.GifDecoder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.Target;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -46,11 +64,15 @@ import java.util.List;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.MD5Util;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.entity.BaseResult;
+import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.RoundImageView;
 import im.boss66.com.widget.scan.CameraManager;
@@ -62,7 +84,7 @@ import im.boss66.com.widget.scan.CameraPreview;
 public class CatchFuwaActivity extends BaseActivity implements View.OnClickListener, SensorEventListener {
 
     private LinearLayout ll_thread;
-    private ImageView iv_click, iv_thread;
+    private ImageView iv_click, iv_thread, iv_thread_bg;
     private TextView tv_back, tv_address;
     private RelativeLayout rl_preciew;
     private Calendar mCalendar;
@@ -88,7 +110,11 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
     private Dialog dialog;
     private ImageView iv_success_catch;
-    private Button bt_catch;
+    // private Button bt_catch;
+    private String userId, fuwaId;
+    private File imgFile;
+    private ImageLoader imageLoader;
+    private ImageView iv_success;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,9 +126,15 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
     private void initView() {
 
+        imageLoader = ImageLoaderUtils.createImageLoader(this);
+        userId = App.getInstance().getUid();
         iv_success_catch = (ImageView) findViewById(R.id.iv_success_catch);
-        bt_catch = (Button) findViewById(R.id.bt_catch);
+//        bt_catch = (Button) findViewById(R.id.bt_catch);
 
+        int sceenW = UIUtils.getScreenWidth(this);
+        int sceenH = UIUtils.getScreenHeight(this);
+
+        iv_thread_bg = (ImageView) findViewById(R.id.iv_thread_bg);
         ll_thread = (LinearLayout) findViewById(R.id.ll_thread);
         iv_thread = (ImageView) findViewById(R.id.iv_thread);
         iv_click = (ImageView) findViewById(R.id.iv_click);
@@ -110,6 +142,17 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         autoFocusHandler = new Handler();
         rl_preciew = (RelativeLayout) findViewById(R.id.rl_preciew);
         tv_back = (TextView) findViewById(R.id.tv_back);
+
+        RelativeLayout.LayoutParams threadParam = (RelativeLayout.LayoutParams) iv_thread_bg.getLayoutParams();
+        threadParam.height = sceenH / 4;
+        threadParam.width = sceenH / 6;
+        iv_thread_bg.setLayoutParams(threadParam);
+
+        RelativeLayout.LayoutParams threadbgParam = (RelativeLayout.LayoutParams) iv_thread.getLayoutParams();
+        threadbgParam.height = sceenH / 4;
+        threadbgParam.width = sceenH / 6;
+        iv_thread.setLayoutParams(threadbgParam);
+
         tv_back.setOnClickListener(this);
         mSensorManager = (SensorManager) App.getInstance().getSystemService(Activity.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);// TYPE_GRAVITY
@@ -132,6 +175,15 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 return true;
             }
         });
+        Intent intent = getIntent();
+        if (intent != null) {
+            fuwaId = intent.getStringExtra("gid");
+            String imgUrl = intent.getStringExtra("pic");
+            if (!TextUtils.isEmpty(imgUrl)) {
+                imageLoader.displayImage(imgUrl, iv_thread,
+                        ImageLoaderUtils.getDisplayImageOptions());
+            }
+        }
     }
 
     private void initViewParams() {
@@ -295,12 +347,13 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             if (!dir.exists()) {
                                 dir.mkdirs();
                             }
-                            File file = new File(dir, imageName);
+                            imgFile = new File(dir, imageName);
                             BufferedOutputStream bos
-                                    = new BufferedOutputStream(new FileOutputStream(file));
+                                    = new BufferedOutputStream(new FileOutputStream(imgFile));
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bos);
                             bos.flush();
                             bos.close();
+                            getServerData();
                         }
                     }
                 }
@@ -470,5 +523,83 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         }
         dialog.show();
     }
+
+    private void getServerData() {
+        String signUrl = "/capture?user=" + userId + "+&gid=" + fuwaId + "&platform=boss66";
+        String sign = MD5Util.getStringMD5(signUrl);
+        String url = HttpUrl.CATCH_MY_FUWA + userId + "&gid=" +
+                fuwaId + "&sign=" + sign;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("file", imgFile);
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String res = responseInfo.result;
+                if (!TextUtils.isEmpty(res)) {
+                    BaseResult data = BaseResult.parse(res);
+                    if (data != null) {
+                        int code = data.getCode();
+                        if (code == 0) {
+
+                        } else {
+                            showToast("捉取失败TAT，再试下吧", false);
+                        }
+                    }
+                } else {
+                    showToast("捉取失败TAT，再试下吧", false);
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                showToast(s, false);
+            }
+        });
+    }
+
+    private void playSucessGif() {
+        Glide.with(this)
+                .load(R.drawable.fuwa_catch_succ)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .listener(new RequestListener<Integer, GlideDrawable>() {
+
+                    @Override
+                    public boolean onException(Exception arg0, Integer arg1,
+                                               Target<GlideDrawable> arg2, boolean arg3) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource,
+                                                   Integer model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
+                        // 计算动画时长
+                        GifDrawable drawable = (GifDrawable) resource;
+                        GifDecoder decoder = drawable.getDecoder();
+                        int duration = 0;
+                        for (int i = 0; i < drawable.getFrameCount(); i++) {
+                            duration += decoder.getDelay(i);
+                        }
+                        //发送延时消息，通知动画结束
+                        handler.sendEmptyMessageDelayed(111,
+                                duration);
+                        return false;
+                    }
+                }) //仅仅加载一次gif动画
+                .into(new GlideDrawableImageViewTarget(iv_success, 1));
+    }
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 111:
+                    showDialog();
+                    break;
+            }
+        }
+    };
 
 }

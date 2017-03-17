@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/choose_bg"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_22">
+
+        <ImageView
+            android:id="@+id/iv_dialog_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
+
+        <RelativeLayout
+            android:id="@+id/rl_search"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom|center"
+            android:background="@drawable/bg_dialog_hid_ok"
+            android:gravity="center"
+            android:paddingBottom="12dp"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:paddingTop="12dp">
+
+            <ImageView
+                android:id="@+id/iv_search_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/fw_search" />
+
+            <TextView
+                android:id="@+id/tv_dialog_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_toRightOf="@+id/iv_search_img"
+                android:text="@string/search_your_present_position"
+                android:textColor="@color/text_color_gray_9" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_22"
+        android:text="@string/fuwa_hide_ok"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_22"
+        android:text="@string/go_fuwa_address_find"
+        android:textColor="@color/btn_white_normal"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/bt_hide_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_change_place"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_22"
+        android:background="@drawable/bg_login"
+        android:paddingLeft="@dimen/dp_22"
+        android:paddingRight="@dimen/dp_22"
+        android:text="完成"
+        android:textColor="#E6CC97"
+        android:textSize="22sp" />
+
+</LinearLayout>

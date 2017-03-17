@@ -42,12 +42,44 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <include
-            android:id="@+id/top_bar"
-            layout="@layout/item_treasure_top_bar"
+        <im.boss66.com.widget.WrappingSlidingDrawer
+            android:id="@+id/slidingDrawer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"></include>
+            android:content="@+id/content"
+            android:handle="@+id/handle"
+            android:orientation="vertical"
+            android:rotation="180">
+            <!--<LinearLayout-->
+            <!--android:id="@+id/content"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:rotation="180"></LinearLayout>-->
+            <!--android:id="@+id/top_bar"-->
+            <include
+                android:id="@+id/content"
+                layout="@layout/item_treasure_top_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:rotation="180"
+                android:visibility="visible"></include>
+
+            <ImageView
+                android:id="@+id/handle"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:background="#F9F9F9"
+                android:rotation="180"
+                android:src="@drawable/launch" />
+        </im.boss66.com.widget.WrappingSlidingDrawer>
+
+        <!--<include-->
+        <!--android:id="@+id/top_bar"-->
+        <!--layout="@layout/item_treasure_top_bar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:visibility="gone"></include>-->
 
         <RelativeLayout
             android:layout_width="match_parent"

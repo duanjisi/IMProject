@@ -1,5 +1,4 @@
 package im.boss66.com.activity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,10 +9,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.exception.SocializeException;
+
 import java.util.Map;
+
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.UIUtils;
@@ -23,7 +25,6 @@ import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.LoginRequest;
 import im.boss66.com.http.request.QQLoginRequest;
 import im.boss66.com.http.request.WXLoginRequest;
-
 /**
  * Created by Johnny on 2017/1/16.
  */

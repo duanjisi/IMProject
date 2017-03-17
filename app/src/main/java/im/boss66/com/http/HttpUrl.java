@@ -234,4 +234,8 @@ public class HttpUrl {
 
 
 
+    //藏福娃
+    public static final String HIDE_MY_FUWA = BASE_FUWA_URL + "hide?owner=";
+    //捉福娃
+    public static final String CATCH_MY_FUWA = BASE_FUWA_URL + "capture?user=";
 }

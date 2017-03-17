@@ -10,19 +10,20 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/bg_gray"
-        android:layout_marginTop="16.5dp"/>
+        android:layout_marginTop="16.5dp"
+        android:background="@color/bg_gray" />
 
     <im.boss66.com.widget.ClearEditText
         android:id="@+id/et_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:background="@color/white"
-        android:visibility="gone"
+        android:padding="8dp"
         android:singleLine="true"
         android:textColor="@color/black"
-        android:textSize="17sp">
+        android:textSize="17sp"
+        android:visibility="gone">
+
         <requestFocus />
     </im.boss66.com.widget.ClearEditText>
 
@@ -31,23 +32,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/personal_bt_selector"
-        android:visibility="gone"
-        android:padding="15dp">
+        android:padding="15dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="男"
-            android:textSize="17sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textSize="17sp" />
 
         <ImageView
             android:id="@+id/iv_man_gou"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/hp_red_selected"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:src="@drawable/hp_red_selected" />
 
     </RelativeLayout>
 
@@ -55,31 +56,31 @@
         android:id="@+id/v_sex"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/bg_gray"/>
+        android:background="@color/bg_gray" />
 
     <RelativeLayout
         android:id="@+id/rl_sex_woman"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/personal_bt_selector"
-        android:visibility="gone"
-        android:padding="15dp">
+        android:padding="15dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="女"
-            android:textSize="17sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textSize="17sp" />
 
         <ImageView
             android:id="@+id/iv_woman_gou"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/hp_red_selected"
             android:layout_alignParentRight="true"
-            android:visibility="gone"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:src="@drawable/hp_red_selected"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -87,11 +88,11 @@
         android:id="@+id/rl_signature"
         android:layout_width="match_parent"
         android:layout_height="88dp"
-        android:paddingRight="8dp"
-        android:paddingLeft="8dp"
-        android:paddingBottom="6dp"
-        android:paddingTop="6dp"
         android:background="@color/white"
+        android:paddingBottom="6dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="6dp"
         android:visibility="gone">
 
         <EditText
@@ -101,7 +102,7 @@
             android:background="@color/white"
             android:gravity="top"
             android:textColor="@color/black"
-            android:textSize="17.6sp"/>
+            android:textSize="17.6sp" />
 
         <TextView
             android:id="@+id/tv_signature_num"
@@ -109,14 +110,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:textColor="@color/text_gray"
-            android:text="30"/>
+            android:text="30"
+            android:textColor="@color/text_gray" />
 
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/bg_gray"/>
+        android:background="@color/bg_gray" />
 
 </LinearLayout>
