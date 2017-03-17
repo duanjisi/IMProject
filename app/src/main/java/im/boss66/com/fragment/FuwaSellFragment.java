@@ -1,35 +1,51 @@
 package im.boss66.com.fragment;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import im.boss66.com.R;
 import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.activity.treasure.FuwaDealActivity;
 import im.boss66.com.adapter.FuwaSellAdapter;
 import im.boss66.com.entity.FuwaSellEntity;
+import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.RecycleViewItemListener;
-import im.boss66.com.widget.ViewpagerIndicatorOver;
-import im.boss66.com.widget.ViewpagerIndicatorOver2;
-import im.boss66.com.widget.ViewpagerIndicatorOver3;
-
-import static android.R.attr.width;
+import im.boss66.com.widget.wheel.ArrayWheelAdapter;
+import im.boss66.com.widget.wheel.OnWheelChangedListener;
+import im.boss66.com.widget.wheel.WheelView;
 
 /**
  * Created by liw on 2017/3/13.
@@ -43,16 +59,46 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
     private ImageView img_choose;
     private ImageView img_price;
 
-    private ViewPager vp_fuwa_sell;
     private TextView tv_buy;
-    private List<View> views = new ArrayList<>();
 
-
-    private ViewpagerIndicatorOver3 vp_indicator; //指示器
 
     private FuwaSellAdapter adapter;
 
-    private List<FuwaSellEntity> datas = new ArrayList<>();
+    private Dialog dialog;
+    private List<FuwaSellEntity.DataBean> datas;
+    private List<FuwaSellEntity.DataBean> datasChoose = new ArrayList<>();
+
+    private RecyclerView rcv_fuwalist;
+
+
+    private Dialog dialog2;
+    private WheelView id_sex;
+    private TextView mBtnConfirm2;
+    private TextView btn_cancle2;
+
+    private boolean choose = false;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    adapter.setDatas(datas);
+                    adapter.setChooses();
+
+                    adapter.notifyDataSetChanged();
+
+                    break;
+
+            }
+        }
+    };
+    private String[] fuwas;
+
+    private Map<String, Integer> fuwaMap = new HashMap<>();
+
+    private int fuwaNum = 0;
+    private FuwaSellEntity.DataBean chooseFuwa;
 
     @Nullable
     @Override
@@ -64,36 +110,41 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initList();
+
 
         initViews(view);
 
-        initIndicator();
+        initData();
 
 
     }
 
-    private void initList() {
-        for (int i = 0; i < 21; i++) {
-            FuwaSellEntity entity = new FuwaSellEntity();
-            entity.setS1(i+"");
-            entity.setS2(i+"");
-            entity.setS3("https://img3.doubanio.com/img/celebrity/medium/11263.jpg");
-            datas.add(entity);
-        }
+    private void initData() {
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        String url = HttpUrl.SEARCH_FUWA_SELL;
+        httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (result != null) {
+                    FuwaSellEntity fuwaSellEntity = JSON.parseObject(result, FuwaSellEntity.class);
+                    if (fuwaSellEntity.getCode() == 0) {
+                        datas = fuwaSellEntity.getData();
+                        handler.obtainMessage(1).sendToTarget();
+                    } else {
+                        showToast(fuwaSellEntity.getMessage(), false);
+                    }
 
-    }
+                }
 
-    private void initIndicator() {
-        //Viewpager指示器的相关设置
+            }
 
-        vp_indicator.setVisiableTabCount(datas.size()%6==0?datas.size()/6:datas.size()/6+1);
-        vp_indicator.setColorTabNormal(0xFF000000);
-        vp_indicator.setColorTabSelected(0xFFFD2741);
-        vp_indicator.setWidthIndicatorLine(1.0f);
-        vp_indicator.setLineBold(5);
-        vp_indicator.setViewPager(vp_fuwa_sell, 0);
-
+            @Override
+            public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
+                showToast(e.getMessage(), false);
+            }
+        });
     }
 
 
@@ -106,104 +157,44 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         img_choose = (ImageView) view.findViewById(R.id.img_choose);
         img_price = (ImageView) view.findViewById(R.id.img_price);
 
-        vp_fuwa_sell = (ViewPager) view.findViewById(R.id.vp_fuwa_sell);
         tv_buy = (TextView) view.findViewById(R.id.tv_buy);
         tv_buy.setOnClickListener(this);
 
-        vp_indicator = (ViewpagerIndicatorOver3) view.findViewById(R.id.vp_indicator);
 
-
-        //
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        if(datas.size()>5){ //大于一页
-            List<FuwaSellEntity> datas2 = new ArrayList<>();
-
-            if(datas.size()%6==0){      //刚好整页
-                 for (int i = 0; i < datas.size()/6; i++) {
-                    View view1 = inflater.inflate(R.layout.fuwa_view, null);
-                    RecyclerView rcv_fuwalist = (RecyclerView) view1.findViewById(R.id.rcv_fuwalist);
-                    rcv_fuwalist.setLayoutManager(new GridLayoutManager(getActivity(), 3)); //每行3个，显示6个
-
-                     adapter = new FuwaSellAdapter(getActivity());
-                     datas2 = datas.subList(i*6,i*6+6); //前闭后开
-                     adapter.setDatas(datas2);
-
-                     setAdapterListener(adapter,datas2);
-
-                    rcv_fuwalist.setAdapter(adapter);
-
-                    views.add(view1);
-                }
-            }else {
-                for (int i = 0; i < datas.size() / 6 + 1; i++) {
-                    View view1 = inflater.inflate(R.layout.fuwa_view, null);
-                    RecyclerView rcv_fuwalist = (RecyclerView) view1.findViewById(R.id.rcv_fuwalist);
-                    rcv_fuwalist.setLayoutManager(new GridLayoutManager(getActivity(), 3)); //每行3个，显示6个
-                    adapter = new FuwaSellAdapter(getActivity());
-
-
-                    if(i==datas.size()/6){  //最后一页
-                        datas2 = datas.subList(i*6,datas.size());
-                    }else {
-                        datas2 = datas.subList(i*6,i*6+6); //前闭后开
-                    }
-
-                    setAdapterListener(adapter,datas2);
-                    adapter.setDatas(datas2);
-                    rcv_fuwalist.setAdapter(adapter);
-                    views.add(view1);
-                }
-            }
-
-        }else{     //只有一页
-            View view1 = inflater.inflate(R.layout.fuwa_view, null);
-            RecyclerView rcv_fuwalist = (RecyclerView) view1.findViewById(R.id.rcv_fuwalist);
-            rcv_fuwalist.setLayoutManager(new GridLayoutManager(getActivity(), 3)); //每行3个，显示6个
-            adapter = new FuwaSellAdapter(getActivity());
-            setAdapterListener(adapter,datas);
-            adapter.setDatas(datas);
-            rcv_fuwalist.setAdapter(adapter);
-            views.add(view1);
-        }
-
-
-        MyPagerAdapter adapter = new MyPagerAdapter(views);
-        vp_fuwa_sell.setAdapter(adapter);
-        vp_fuwa_sell.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-    }
-
-    private void setAdapterListener(final FuwaSellAdapter adapter, final List<FuwaSellEntity> datas2) {
+        rcv_fuwalist = (RecyclerView) view.findViewById(R.id.rcv_fuwalist);
+        rcv_fuwalist.setLayoutManager(new GridLayoutManager(getActivity(), 2, GridLayoutManager.HORIZONTAL, false));
+        adapter = new FuwaSellAdapter(getActivity());
 
         adapter.setItemListener(new RecycleViewItemListener() {
             @Override
             public void onItemClick(int postion) {
-                //点击弹出
-//                for(int i =0;i<datas2.size();i++){
-//                    if(postion==i){
-//                        adapter.chooses[i]=true;
-//                    }else{
-//                        adapter.chooses[i]=false;
-//                    }
-//                }
-//                adapter.notifyDataSetChanged();
 
-                //改变当前页面选中状态，然后还要让其他页面选中状态清空
+                if (choose) {
+                    if (datasChoose != null && datasChoose.size() > 0) {
+                        for (int i = 0; i < datasChoose.size(); i++) {
+                            if (postion == i) {
+                                adapter.chooses[i] = true;
+                            } else {
+                                adapter.chooses[i] = false;
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        chooseFuwa = datasChoose.get(postion);
+                    }
+                } else {
+                    if (datas != null && datas.size() > 0) {
+                        for (int i = 0; i < datas.size(); i++) {
+                            if (postion == i) {
+                                adapter.chooses[i] = true;
+                            } else {
+                                adapter.chooses[i] = false;
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        chooseFuwa = datas.get(postion);
+                    }
+                }
+
 
             }
 
@@ -213,37 +204,99 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             }
         });
 
+        rcv_fuwalist.setAdapter(adapter);
+        fuwas = new String[67];
+        for (int i = 66; i >= 0; i--) {
+            if (i == 0) {
+                fuwas[i] = "全部";
+            } else {
+                fuwas[i] = i + "号福娃";
+            }
+            fuwaMap.put(fuwas[i], i);
+        }
+
+
     }
 
-    public class MyPagerAdapter extends PagerAdapter {
-        private List<View> list_view;
 
-        public MyPagerAdapter(List<View> list_view) {
-            this.list_view = list_view;
+    private void showAddressSelection() {
+        if (dialog2 == null) {
+            dialog2 = new Dialog(getActivity(), R.style.Dialog_full);
+            View view_dialog = View.inflate(getActivity(),
+                    R.layout.dialog_single_select, null);
+
+            id_sex = (WheelView) view_dialog.findViewById(R.id.id_sex);
+            mBtnConfirm2 = (TextView) view_dialog.findViewById(R.id.btn_confirm2);
+            btn_cancle2 = (TextView) view_dialog.findViewById(R.id.btn_cancle2);
+
+            // 设置可见条目数量
+            id_sex.setVisibleItems(7);
+
+            // 添加change事件
+            id_sex.addChangingListener(new OnWheelChangedListener() {
+                @Override
+                public void onChanged(WheelView wheel, int oldValue, int newValue) {
+                    int currentItem = id_sex.getCurrentItem();
+                    String fuwa = fuwas[currentItem];
+                    fuwaNum = fuwaMap.get(fuwa);
+
+                }
+            });
+
+            // 添加onclick事件
+            mBtnConfirm2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog2.dismiss();
+                    datasChoose.clear();
+                    //筛选福娃
+//                    Log.i("liwya", fuwaNum + "");
+                    if (fuwaNum > 0) {   //选中1-66号福娃
+
+                        if (datas != null && datas.size() > 0) {
+                            for (int i = 0; i < datas.size(); i++) {
+                                if (fuwaNum == datas.get(i).getFuwaid()) {
+                                    datasChoose.add(datas.get(i));
+                                }
+                            }
+                            adapter.setDatas(datasChoose);
+                            adapter.setChooses();
+                            adapter.notifyDataSetChanged();
+                        }
+                        choose = true;
+                    } else { //选中全部
+                        adapter.setDatas(datas);
+                        adapter.setChooses();
+                        adapter.notifyDataSetChanged();
+                        choose = false;
+                    }
+
+                }
+            });
+            btn_cancle2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog2.dismiss();
+                }
+            });
+            dialog2.setContentView(view_dialog);
+            Window dialogWindow = dialog2.getWindow();
+
+            dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
+            dialogWindow.setBackgroundDrawableResource(android.R.color.transparent); //加上可以在底部对其屏幕底部
+
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.gravity = Gravity.BOTTOM;
+            dialogWindow.setAttributes(lp);
+            dialog2.setCanceledOnTouchOutside(true);
         }
+        dialog2.show();
+        id_sex.setViewAdapter(new ArrayWheelAdapter<>(getActivity(), fuwas));
 
-        @Override
-        public int getCount() {
-            return list_view.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-
-            container.addView(list_view.get(position));
-            return list_view.get(position);
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(list_view.get(position));
-        }
     }
+
 
     @Override
     public void onClick(View view) {
@@ -252,8 +305,11 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                 tv_price.setTextColor(0xffcccccc);
                 img_price.setImageResource(R.drawable.fuwa_price);
 
+                tv_price.setText("价格");
                 tv_choose.setTextColor(0xffe7d09a);
                 img_choose.setImageResource(R.drawable.screen_click);
+
+                showAddressSelection();
                 break;
 
 
@@ -262,13 +318,98 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                 img_choose.setImageResource(R.drawable.fuwa_screen);
 
                 tv_price.setTextColor(0xffe7d09a);
+                tv_price.setText("价格从低到高");
                 img_price.setImageResource(R.drawable.price_click);
+                if (fuwaNum > 0) {   //用dataschoose排序    先根据价格，再根据order id排序
 
+                    if (datasChoose != null && datasChoose.size() > 0) {
+                        Collections.sort(datasChoose, new Comparator<FuwaSellEntity.DataBean>() {
+                            @Override
+                            public int compare(FuwaSellEntity.DataBean data1, FuwaSellEntity.DataBean data2) {
+                                // 排序
+                                return data1.getAmount().compareTo(data2.getAmount());
+                            }
+                        });
+                        adapter.setDatas(datasChoose);
+                        adapter.setChooses();
+                        adapter.notifyDataSetChanged();
+                        choose = true;
+                    }
+
+                } else { //用datas排序
+                    if (datas != null && datas.size() > 0) {
+                        Collections.sort(datas, new Comparator<FuwaSellEntity.DataBean>() {
+                            @Override
+                            public int compare(FuwaSellEntity.DataBean data1, FuwaSellEntity.DataBean data2) {
+                                // 排序
+                                return data1.getAmount().compareTo(data2.getAmount());
+                            }
+                        });
+                        adapter.setDatas(datas);
+                        adapter.setChooses();
+                        adapter.notifyDataSetChanged();
+                        choose = false;
+                    }
+                }
                 break;
 
             case R.id.tv_buy: //购买
+
+                //如果选中了
+
+                if (chooseFuwa != null) {
+                    showFuwaDialog(getActivity());
+                }
+
                 break;
         }
 
     }
+
+    //弹第一个福娃dialog
+    private void showFuwaDialog(final Context context) {
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        // 不同页面加载不同的popup布局
+        View view = inflater.inflate(R.layout.pop_fuwa_buy, null);
+        TextView tv_fuwa_num = (TextView) view.findViewById(R.id.tv_fuwa_num);
+        tv_fuwa_num.setText(chooseFuwa.getFuwaid() + "号福娃");
+
+        ImageView img_cancle = (ImageView) view.findViewById(R.id.img_cancle);
+        img_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        TextView tv_price = (TextView) view.findViewById(R.id.tv_price);
+
+        tv_price.setText("购买金额: " + chooseFuwa.getAmount() + "元");
+        TextView tv_buy = (TextView) view.findViewById(R.id.tv_buy);
+        tv_buy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showToast("buy", false);
+            }
+        });
+
+        dialog = new Dialog(context, R.style.dialog_ios_style);
+        dialog.setContentView(view);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(false);
+
+
+        //设置dialog大小
+        Window dialogWindow = dialog.getWindow();
+        WindowManager manager = ((FuwaDealActivity) context).getWindowManager();
+        WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+        dialogWindow.setGravity(Gravity.CENTER);
+        Display d = manager.getDefaultDisplay(); // 获取屏幕宽、高度
+        params.width = (int) (d.getWidth() * 0.9); // 宽度设置为屏幕的0.9，根据实际情况调整
+        dialogWindow.setAttributes(params);
+
+        dialog.show();
+    }
+
 }

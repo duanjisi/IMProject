@@ -19,10 +19,10 @@ import com.alibaba.fastjson.JSON;
 import java.util.List;
 
 import im.boss66.com.R;
-import im.boss66.com.activity.connection.FuwaDealActivity;
-import im.boss66.com.activity.connection.FuwaPackageActivity;
+import im.boss66.com.Utils.SharedPreferencesMgr;
+import im.boss66.com.activity.MainActivity;
+import im.boss66.com.activity.treasure.FuwaPackageActivity;
 import im.boss66.com.activity.connection.SchoolHometownActivity;
-import im.boss66.com.activity.connection.SearchSchoolActivity;
 import im.boss66.com.adapter.MyHometownAdapter;
 import im.boss66.com.adapter.MySchoolAdapter;
 import im.boss66.com.entity.MyInfo;
@@ -30,6 +30,7 @@ import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.MyInfoRequest;
 import im.boss66.com.listener.RecycleViewItemListener;
 import im.boss66.com.widget.dialog.PeopleConnectionPop;
+import im.boss66.com.widget.dialog.PeopleDataDialog;
 
 /**
  * Created by Johnny on 2017/2/13.
@@ -46,12 +47,25 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private MyHometownAdapter myHometownAdapter;
     private MyInfo myInfo;
 
+    private PeopleDataDialog peopleDataDialog;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
+                    if(school_list==null&&hometown_list==null){
+                        if (peopleDataDialog == null) {
+                            peopleDataDialog = new PeopleDataDialog(getActivity());
+                            peopleDataDialog.show();
+                        } else {
+                            if (!peopleDataDialog.isShowing()) {
+                                peopleDataDialog.show();
+                            }
+                        }
+                    }
+
                     mySchoolAdapter.setDatas(school_list);
                     mySchoolAdapter.notifyDataSetChanged();
                     myHometownAdapter.setDatas(hometown_list);
@@ -136,17 +150,14 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
         switch (view.getId()) {
             case R.id.iv_add:
-//                if (peopleConnectionPop == null) {
-//                    showPop(rl_top_bar);
-//                } else {
-//                    if (!peopleConnectionPop.isShowing()) {
-//                        showPop(rl_top_bar);
-//                    }
-//                }
+                if (peopleConnectionPop == null) {
+                    showPop(rl_top_bar);
+                } else {
+                    if (!peopleConnectionPop.isShowing()) {
+                        showPop(rl_top_bar);
+                    }
+                }
 
-//                先跳到福娃页写界面。
-                Intent intent = new Intent(getActivity(), FuwaDealActivity.class);
-                startActivity(intent);
                 break;
 
         }
@@ -159,10 +170,10 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         peopleConnectionPop.showAsDropDown(parent);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        initData();
+        @Override
+        public void onResume() {
+            super.onResume();
+            initData();
     }
 
     private void initData() {

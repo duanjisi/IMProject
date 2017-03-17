@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_marginLeft="15dp"
     android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/rl_fuwa"
-        android:layout_width="90dp"
-        android:layout_height="100dp"
+        android:layout_width="100dp"
+        android:layout_height="110dp"
         android:background="@drawable/fuwa_bgs">
 
 
         <ImageView
             android:id="@+id/img_fuwa"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/person" />
+            android:src="@drawable/fuwabig" />
 
         <ImageView
             android:id="@+id/img_choose"
@@ -53,23 +53,23 @@
         android:layout_marginTop="11dp"
         android:layout_below="@id/rl_fuwa"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/person"
-        android:layout_width="30dp"
-        android:layout_height="30dp" />
+        android:src="@drawable/fuwa_rmb"
+        android:layout_width="25dp"
+        android:layout_height="25dp" />
     <LinearLayout
         android:layout_centerHorizontal="true"
         android:layout_below="@id/img_money"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <TextView
-            android:textSize="13sp"
+            android:textSize="11sp"
             android:textColor="@color/text_color_yellow"
             android:text="¥"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/tv_price"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/text_color_yellow"
             android:text="200"
             android:layout_width="wrap_content"

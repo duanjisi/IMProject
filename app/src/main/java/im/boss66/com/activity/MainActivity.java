@@ -34,6 +34,7 @@ import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.SharedPreferencesMgr;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
@@ -135,8 +136,8 @@ public class MainActivity extends BaseActivity implements Observer {
         mPushAgent.enable(mRegisterCallback);
         mPushAgent.setPushIntentServiceClass(MyPushIntentService.class);
 
-//        String sha1 = UIUtils.getSHA1(context);
-//        Log.i("info", "=======sha1:" + sha1);
+        String sha1 = UIUtils.getSHA1(context);
+        Log.i("info", "=======sha1:" + sha1);
 
         Intent intent = new Intent(context, ChatServices.class);
         intent.putExtra("userid", account.getUser_id());
@@ -489,17 +490,7 @@ public class MainActivity extends BaseActivity implements Observer {
                 case R.id.rb_contact:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_3);
 //                    设置成功不弹窗
-                    if (SharedPreferencesMgr.getBoolean("setSuccess", false)) {
-                        return;
-                    }
-                    if (peopleDataDialog == null) {
-                        peopleDataDialog = new PeopleDataDialog(MainActivity.this);
-                        peopleDataDialog.show();
-                    } else {
-                        if (!peopleDataDialog.isShowing()) {
-                            peopleDataDialog.show();
-                        }
-                    }
+
                     break;
                 case R.id.rb_discover:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_4);
