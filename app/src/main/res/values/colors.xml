@@ -133,8 +133,13 @@
 
     <color name="translucence">#a2000000</color>
     <color name="red_fuwa">#D3000F</color>
+    <color name="red_fuwa_alpa">#BFd3000f</color>
+    <color name="red_fuwa_alpa_stroke">#ff0012</color>
+
 
     <color name="act_background">#efefef</color>
     <color name="phone_bg">#f6f6f6</color>
     <color name="blue">#4c90f9</color>
+    <color name="golden_color">#e7d09a</color>
+
 </resources>

@@ -204,8 +204,6 @@ public class HttpUrl {
     public static final String HOMETOWN_NEWS = MAIN_URL + "api/v1/hometown/message";
     //搜索学校
     public static final String SEARCH_SCHOOL = MAIN_URL + "api/v1/search/local-school";
-    //获取用户信息
-    public static final String SEARCH_USER_INFO = MAIN_URL + "ucenter/userinfo/index";
 
     //查询周围的福娃
     public static final String FIND_AROUND_CHILDREN = BASE_FUWA_URL + "query?";
@@ -219,5 +217,8 @@ public class HttpUrl {
     public static final String SEARCH_PEOPLE = MAIN_URL + "api/v1/search/user";
     //查自己的福娃
     public static final String QUERY_MY_FUWA = "http://wsimali.66boss.com:9090/api/querymy?user=";
-
+    //藏福娃
+    public static final String HIDE_MY_FUWA = BASE_FUWA_URL + "hide?owner=";
+    //捉福娃
+    public static final String CATCH_MY_FUWA = BASE_FUWA_URL + "capture?user=";
 }

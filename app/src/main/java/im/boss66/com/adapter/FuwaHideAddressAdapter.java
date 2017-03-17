@@ -8,77 +8,60 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.amap.api.services.core.PoiItem;
 
 import java.util.List;
 
 import im.boss66.com.R;
-import im.boss66.com.Utils.UIUtils;
-import im.boss66.com.entity.FuwaEntity;
-import im.boss66.com.widget.RoundImageView;
 
 /**
- * Created by GMARUnity on 2017/3/15.
+ * Created by GMARUnity on 2017/3/16.
  */
-public class ChooseFuwaHideAdapter extends RecyclerView.Adapter<ChooseFuwaHideAdapter.FuViewHolder> {
+public class FuwaHideAddressAdapter extends RecyclerView.Adapter<FuwaHideAddressAdapter.FuViewHolder> {
 
-    private List<FuwaEntity.Data> list;
-    private static int sceenW;
+    private List<PoiItem> poiItems;
 
-    public ChooseFuwaHideAdapter(Context context, List<FuwaEntity.Data> bi) {
-        list = bi;
-        sceenW = UIUtils.getScreenWidth(context);
+    public FuwaHideAddressAdapter(List<PoiItem> poiItems) {
+        this.poiItems = poiItems;
     }
 
     @Override
     public FuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hide_fuwa, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fuwa_hide_address, parent, false);
         return new FuViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(FuViewHolder holder, int position) {
-        FuwaEntity.Data item = list.get(position);
+        PoiItem item = poiItems.get(position);
         if (item != null) {
-            List<String> num_list = item.getIdList();
-            if (num_list != null) {
-                holder.tv_fu_num.setText("x" + num_list.size());
-            }
-            holder.tv_serial_number.setText(item.getId());
-            if (!item.isSel()) {
-                holder.iv_sel.setImageResource(R.drawable.unselected);
-            } else {
-                holder.iv_sel.setImageResource(R.drawable.fuwa_sel);
-            }
+            String name = item.getTitle();
+            String address = item.getAdName();
+            holder.tv_title.setText("" + name);
+            holder.tv_content.setText("" + address);
         }
     }
 
-    public void onDataChange(List<FuwaEntity.Data> list) {
-        this.list = list;
+    public void onDataChange(List<PoiItem> poiItems) {
+        this.poiItems = poiItems;
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return poiItems.size();
     }
 
     public static class FuViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tv_serial_number, tv_fu_num;
-        private ImageView iv_sel;
-        private RelativeLayout rl_item;
+        private TextView tv_title, tv_content;
 
         public FuViewHolder(View itemView) {
             super(itemView);
-            rl_item = (RelativeLayout) itemView.findViewById(R.id.rl_item);
-            tv_serial_number = (TextView) itemView.findViewById(R.id.tv_serial_number);
-            tv_fu_num = (TextView) itemView.findViewById(R.id.tv_fu_num);
-            iv_sel = (ImageView) itemView.findViewById(R.id.iv_sel);
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rl_item.getLayoutParams();
-            layoutParams.width = sceenW / 4;
-            rl_item.setLayoutParams(layoutParams);
+            tv_title = (TextView) itemView.findViewById(R.id.tv_title);
+            tv_content = (TextView) itemView.findViewById(R.id.tv_content);
         }
     }
 

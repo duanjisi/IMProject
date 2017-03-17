@@ -229,4 +229,7 @@
 
     <string name="to_choose_hide_fuwa">请选择你要藏的福娃</string>
     <string name="stay_on_target_objects_a_while">对准目标物体停留一会儿</string>
+    <string name="search_your_present_position">搜索你现在的位置</string>
+    <string name="fuwa_hide_ok">福娃藏好了</string>
+    <string name="go_fuwa_address_find">到福娃所在位置，按线索图扫描找福娃</string>
 </resources>
