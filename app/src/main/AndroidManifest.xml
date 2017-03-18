@@ -433,7 +433,10 @@
         <activity
             android:name=".activity.treasure.HideFuwaActivity"
             android:screenOrientation="portrait"></activity>
-
+        <!-- 搜索地址 -->
+        <activity
+            android:name=".activity.treasure.SearchAddressActivity"
+            android:screenOrientation="portrait"></activity>
 
         <!-- 我的关注 -->
         <activity android:name=".activity.connection.MyFollowActivity"></activity>
