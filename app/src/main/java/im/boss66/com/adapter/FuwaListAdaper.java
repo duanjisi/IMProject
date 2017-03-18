@@ -10,14 +10,20 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.List;
+import java.util.Map;
+
 import im.boss66.com.R;
+import im.boss66.com.entity.FuwaEntity;
 import im.boss66.com.entity.FuwaListEntity;
+import im.boss66.com.entity.MyFuwaEntity;
 
 /**
  * Created by liw on 2017/3/14.
  */
 public class FuwaListAdaper extends  BaseRecycleViewAdapter{
     private Context context;
+    private Map<String,List<MyFuwaEntity.DataBean>>  map;
 
     public FuwaListAdaper(Context context) {
         this.context = context;
@@ -27,10 +33,15 @@ public class FuwaListAdaper extends  BaseRecycleViewAdapter{
     public void onBindItemHolder(RecyclerView.ViewHolder holder, int position) {
         final FuwaListHodler hodler1 = (FuwaListHodler) holder;
 
-        FuwaListEntity item = (FuwaListEntity) datas.get(position);
-        hodler1.tv_number.setText(item.getS1());
-        hodler1.tv_count.setText(item.getS2());
-        Glide.with(context).load(item.getS3()).into(hodler1.img_fuwa);
+        FuwaEntity.Data item = (FuwaEntity.Data) datas.get(position);
+        if (item != null) {
+            List<String> num_list = item.getIdList();
+            if (num_list != null) {
+                hodler1.tv_count.setText("" + num_list.size());
+            }
+            hodler1.tv_number.setText(item.getId());
+        }
+
         hodler1.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,14 +64,13 @@ public class FuwaListAdaper extends  BaseRecycleViewAdapter{
 
     public class FuwaListHodler extends RecyclerView.ViewHolder{
         private TextView tv_number;
-        private ImageView img_fuwa;
         private TextView tv_count;
 
         public FuwaListHodler(View itemView) {
             super(itemView);
             tv_number = (TextView) itemView.findViewById(R.id.tv_number);
             tv_count = (TextView) itemView.findViewById(R.id.tv_count);
-            img_fuwa = (ImageView) itemView.findViewById(R.id.img_fuwa);
         }
     }
+
 }

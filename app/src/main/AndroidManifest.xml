@@ -475,9 +475,12 @@
         <!--家乡和校园动态-->
         <activity android:name=".activity.connection.NewsActivity"></activity>
         <!--福娃背包-->
-        <activity android:name=".activity.connection.FuwaPackageActivity"></activity>
+        <activity android:name=".activity.treasure.FuwaPackageActivity"></activity>
         <!--福娃交易-->
-        <activity android:name=".activity.connection.FuwaDealActivity"></activity>
+        <activity android:name=".activity.treasure.FuwaDealActivity"></activity>
+        <!--福娃排行榜-->
+        <activity android:name=".activity.treasure.FuwaTopList"></activity>
+
 
 
         <!-- 微信入口 -->

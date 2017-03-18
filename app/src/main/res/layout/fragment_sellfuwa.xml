@@ -94,8 +94,6 @@
         android:id="@+id/rl_line"
         android:layout_above="@id/tv_buy"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <View
@@ -104,27 +102,21 @@
             android:layout_width="match_parent"
             android:layout_height="3dp"/>
 
-        <im.boss66.com.widget.ViewpagerIndicatorOver3
-            android:id="@+id/vp_indicator"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:orientation="horizontal"
-            hyman:visiable_tab_count="3">
 
-        </im.boss66.com.widget.ViewpagerIndicatorOver3>
     </RelativeLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp_fuwa_sell"
-        android:layout_marginBottom="10dp"
+
+    <android.support.v7.widget.RecyclerView
+        android:scrollbarThumbHorizontal="@drawable/my_bar"
+        android:id="@+id/rcv_fuwalist"
         android:layout_marginTop="10dp"
+        android:scrollbars="horizontal"
+        android:scrollbarFadeDuration="0"
         android:layout_above="@id/rl_line"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v4.view.ViewPager>
+    </android.support.v7.widget.RecyclerView>
 
 
 

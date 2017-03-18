@@ -1,4 +1,4 @@
-package im.boss66.com.activity.connection;
+package im.boss66.com.activity.treasure;
 
 import android.graphics.Color;
 import android.os.Bundle;

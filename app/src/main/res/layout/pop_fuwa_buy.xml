@@ -19,7 +19,20 @@
             android:layout_margin="15dp"
             android:src="@drawable/fuwa_close" />
 
+        <TextView
+
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/tv_fuwa_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1号福娃"
+            android:textColor="@color/white"
+            android:textSize="19dp" />
+
+
         <RelativeLayout
+            android:layout_centerHorizontal="true"
             android:id="@+id/rl_fuwa"
             android:layout_width="110dp"
             android:layout_height="140dp"
@@ -48,8 +61,8 @@
 
             <ImageView
                 android:id="@+id/img_fuwa"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/fuwabig" />
 
@@ -75,87 +88,31 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/tv_fuwa_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/rl_fuwa"
-            android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@id/rl_fuwa"
-            android:text="1号福娃"
-            android:textColor="@color/white"
-            android:textSize="19dp" />
-
-        <TextView
-            android:id="@+id/tv_from"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/tv_fuwa_num"
-            android:layout_below="@id/tv_fuwa_num"
-            android:layout_marginTop="25dp"
-            android:text="来源于:港棉纺织"
+            android:id="@+id/tv_price"
+            android:layout_below="@id/rl_fuwa"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
             android:textColor="@color/bg_rectangle"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/tv_catch"
+            android:text="购买金额:200元"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/tv_from"
-            android:layout_below="@id/tv_from"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="33dp"
-            android:text="捕获与：珠江国际纺织城"
-            android:textColor="@color/bg_rectangle"
-            android:textSize="15sp" />
+            android:layout_height="wrap_content" />
 
-        <LinearLayout
-            android:layout_below="@id/tv_catch"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/ll_sell"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content">
+
                 <TextView
+                    android:id="@+id/tv_buy"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="15dp"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:paddingRight="30dp"
-                    android:paddingLeft="30dp"
+                    android:paddingRight="80dp"
+                    android:paddingLeft="80dp"
                     android:background="@drawable/shape_fuwa"
-                    android:text="出售"
+                    android:text="确认购买"
                     android:textSize="20dp"
                     android:textColor="@color/text_color_yellow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_give"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:paddingRight="30dp"
-                    android:paddingLeft="30dp"
-                    android:background="@drawable/shape_fuwa"
-                    android:text="赠送"
-                    android:textSize="20dp"
-                    android:textColor="@color/text_color_yellow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-        </LinearLayout>
 
     </RelativeLayout>
 
