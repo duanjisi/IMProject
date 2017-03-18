@@ -175,6 +175,7 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
                     if (poiItems != null && poiItems.size() > 0) {
                         if (addressAdapter == null){
                             addressAdapter = new FuwaHideAddressAdapter(poiItems);
+                            addressAdapter.setIsShowIcon(false);
                             rv_content.setAdapter(addressAdapter);
                         }else {
                             addressAdapter.onDataChange(poiItems);

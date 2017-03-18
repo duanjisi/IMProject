@@ -44,6 +44,8 @@ import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -166,32 +168,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             finish();
         }
         mCamera = mCameraManager.getCamera();
-
-        Camera.Parameters parameters = mCamera.getParameters();
-
-        int PreviewWidth = UIUtils.getScreenWidth(this);
-        int PreviewHeight = UIUtils.getScreenHeight(this);
-
-        // 选择合适的预览尺寸
-        List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
-
-        // 如果sizeList只有一个我们也没有必要做什么了，因为就他一个别无选择
-        if (sizeList.size() > 1) {
-            Iterator<Camera.Size> itor = sizeList.iterator();
-            while (itor.hasNext()) {
-                Camera.Size cur = itor.next();
-                if (cur.width == PreviewWidth
-                        && cur.height == PreviewHeight) {
-                    PreviewWidth = cur.width;
-                    PreviewHeight = cur.height;
-                    break;
-                }
-            }
-        }
-        parameters.setPictureSize(PreviewWidth, PreviewHeight);
-        mCamera.setParameters(parameters);
         mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
-        Camera.Size size = parameters.getPictureSize();
         rl_preciew.addView(mPreview);
     }
 
@@ -618,6 +595,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101 && resultCode == RESULT_OK) {
+            EventBus.getDefault().post("1");
             showSuccessHideDialog();
         }
     }

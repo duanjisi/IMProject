@@ -52,6 +52,8 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -198,30 +200,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             showToast(R.string.error_open_camera_error, false);
             finish();
         }
-        int PreviewWidth = UIUtils.getScreenWidth(this);
-        int PreviewHeight = UIUtils.getScreenHeight(this);
         mCamera = mCameraManager.getCamera();
-
-        Camera.Parameters parameters = mCamera.getParameters();
-
-        // 选择合适的预览尺寸
-        List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
-
-        // 如果sizeList只有一个我们也没有必要做什么了，因为就他一个别无选择
-        if (sizeList.size() > 1) {
-            Iterator<Camera.Size> itor = sizeList.iterator();
-            while (itor.hasNext()) {
-                Camera.Size cur = itor.next();
-                if (cur.width == PreviewWidth
-                        && cur.height == PreviewHeight) {
-                    PreviewWidth = cur.width;
-                    PreviewHeight = cur.height;
-                    break;
-                }
-            }
-        }
-        parameters.setPictureSize(PreviewWidth, PreviewHeight);
-        mCamera.setParameters(parameters);
         mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
         rl_preciew.addView(mPreview);
     }
@@ -552,6 +531,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     if (data != null) {
                         int code = data.getCode();
                         if (code == 0) {
+                            EventBus.getDefault().post("1");
                             playSucessGif();
                         } else {
                             previewing = true;

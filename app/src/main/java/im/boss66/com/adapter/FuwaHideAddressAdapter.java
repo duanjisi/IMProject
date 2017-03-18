@@ -23,6 +23,7 @@ import im.boss66.com.R;
 public class FuwaHideAddressAdapter extends RecyclerView.Adapter<FuwaHideAddressAdapter.FuViewHolder> {
 
     private List<PoiItem> poiItems;
+    private boolean isShow = true;
 
     public FuwaHideAddressAdapter(List<PoiItem> poiItems) {
         this.poiItems = poiItems;
@@ -43,6 +44,11 @@ public class FuwaHideAddressAdapter extends RecyclerView.Adapter<FuwaHideAddress
             holder.tv_title.setText("" + name);
             holder.tv_content.setText("" + address);
         }
+        if (isShow){
+            holder.iv_left.setVisibility(View.VISIBLE);
+        }else {
+            holder.iv_left.setVisibility(View.GONE);
+        }
     }
 
     public void onDataChange(List<PoiItem> poiItems) {
@@ -58,9 +64,11 @@ public class FuwaHideAddressAdapter extends RecyclerView.Adapter<FuwaHideAddress
     public static class FuViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tv_title, tv_content;
+        private ImageView iv_left;
 
         public FuViewHolder(View itemView) {
             super(itemView);
+            iv_left = (ImageView) itemView.findViewById(R.id.iv_left);
             tv_title = (TextView) itemView.findViewById(R.id.tv_title);
             tv_content = (TextView) itemView.findViewById(R.id.tv_content);
         }
@@ -114,6 +122,10 @@ public class FuwaHideAddressAdapter extends RecyclerView.Adapter<FuwaHideAddress
 
             public void onLongClick(View view, int posotion);
         }
+    }
+
+    public void setIsShowIcon(boolean isShow) {
+        this.isShow = isShow;
     }
 
 }
