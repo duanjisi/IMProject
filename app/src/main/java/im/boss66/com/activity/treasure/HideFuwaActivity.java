@@ -165,20 +165,23 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             showToast(R.string.error_open_camera_error, false);
             finish();
         }
-        int PreviewWidth = 0, PreviewHeight = 0;
         mCamera = mCameraManager.getCamera();
 
         Camera.Parameters parameters = mCamera.getParameters();
 
+        int PreviewWidth = UIUtils.getScreenWidth(this);
+        int PreviewHeight = UIUtils.getScreenHeight(this);
+
         // 选择合适的预览尺寸
         List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
+
         // 如果sizeList只有一个我们也没有必要做什么了，因为就他一个别无选择
-        if (sizeList != null && sizeList.size() > 1) {
+        if (sizeList.size() > 1) {
             Iterator<Camera.Size> itor = sizeList.iterator();
             while (itor.hasNext()) {
                 Camera.Size cur = itor.next();
-                if (cur.width >= PreviewWidth
-                        && cur.height >= PreviewHeight) {
+                if (cur.width == PreviewWidth
+                        && cur.height == PreviewHeight) {
                     PreviewWidth = cur.width;
                     PreviewHeight = cur.height;
                     break;

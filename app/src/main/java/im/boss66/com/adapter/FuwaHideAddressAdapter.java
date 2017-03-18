@@ -42,12 +42,6 @@ public class FuwaHideAddressAdapter extends RecyclerView.Adapter<FuwaHideAddress
             String address = item.getSnippet();
             holder.tv_title.setText("" + name);
             holder.tv_content.setText("" + address);
-            Log.i("info", "================title:" + item.getTitle());
-            Log.i("info", "================BusinessArea:" + item.getBusinessArea());
-            Log.i("info", "================CityName:" + item.getCityName());
-            Log.i("info", "================Snippet:" + item.getSnippet());
-            Log.i("info", "================getAdName:" + item.getAdName());
-            Log.i("info", "================IndoorData:" + item.getIndoorData().getFloorName());
         }
     }
 

@@ -212,8 +212,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             Iterator<Camera.Size> itor = sizeList.iterator();
             while (itor.hasNext()) {
                 Camera.Size cur = itor.next();
-                if (cur.width >= PreviewWidth
-                        && cur.height >= PreviewHeight) {
+                if (cur.width == PreviewWidth
+                        && cur.height == PreviewHeight) {
                     PreviewWidth = cur.width;
                     PreviewHeight = cur.height;
                     break;

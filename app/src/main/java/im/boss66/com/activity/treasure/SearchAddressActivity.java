@@ -24,6 +24,7 @@ import java.util.List;
 
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.adapter.FuwaHideAddressAdapter;
 import im.boss66.com.widget.ClearEditText;
 
 /**
@@ -50,6 +51,7 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
     private AMapLocation location;
     private String keyWord;
     private String city;
+    private FuwaHideAddressAdapter addressAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,7 +173,12 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
                     poiResult = result;
                     poiItems = poiResult.getPois();// 取得第一页的poiitem数据，页数从数字0开始
                     if (poiItems != null && poiItems.size() > 0) {
-                        printStr(poiItems);
+                        if (addressAdapter == null){
+                            addressAdapter = new FuwaHideAddressAdapter(poiItems);
+                            rv_content.setAdapter(addressAdapter);
+                        }else {
+                            addressAdapter.onDataChange(poiItems);
+                        }
                     }
                 }
             } else {
