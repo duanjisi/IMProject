@@ -2,6 +2,12 @@ package im.boss66.com.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,11 +20,13 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -85,9 +93,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                 case 1:
                     adapter.setDatas(datas);
                     adapter.setChooses();
-
                     adapter.notifyDataSetChanged();
-
                     break;
 
             }
@@ -99,6 +105,11 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
     private int fuwaNum = 0;
     private FuwaSellEntity.DataBean chooseFuwa;
+    private PopupWindow popupWindow;
+    private View dialog_view;
+    private Double fuwa_price;
+
+    private boolean zhifubao = true; //支付宝购买
 
     @Nullable
     @Override
@@ -120,11 +131,13 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initData() {
+        showLoadingDialog();
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         String url = HttpUrl.SEARCH_FUWA_SELL;
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
                 String result = responseInfo.result;
                 if (result != null) {
                     FuwaSellEntity fuwaSellEntity = JSON.parseObject(result, FuwaSellEntity.class);
@@ -250,7 +263,6 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                     dialog2.dismiss();
                     datasChoose.clear();
                     //筛选福娃
-//                    Log.i("liwya", fuwaNum + "");
                     if (fuwaNum > 0) {   //选中1-66号福娃
 
                         if (datas != null && datas.size() > 0) {
@@ -371,11 +383,11 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         // 不同页面加载不同的popup布局
-        View view = inflater.inflate(R.layout.pop_fuwa_buy, null);
-        TextView tv_fuwa_num = (TextView) view.findViewById(R.id.tv_fuwa_num);
+        dialog_view = inflater.inflate(R.layout.pop_fuwa_buy, null);
+        TextView tv_fuwa_num = (TextView) dialog_view.findViewById(R.id.tv_fuwa_num);
         tv_fuwa_num.setText(chooseFuwa.getFuwaid() + "号福娃");
 
-        ImageView img_cancle = (ImageView) view.findViewById(R.id.img_cancle);
+        ImageView img_cancle = (ImageView) dialog_view.findViewById(R.id.img_cancle);
         img_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -383,19 +395,20 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             }
         });
 
-        TextView tv_price = (TextView) view.findViewById(R.id.tv_price);
-
-        tv_price.setText("购买金额: " + chooseFuwa.getAmount() + "元");
-        TextView tv_buy = (TextView) view.findViewById(R.id.tv_buy);
+        TextView tv_price = (TextView) dialog_view.findViewById(R.id.tv_price);
+        fuwa_price = chooseFuwa.getAmount();
+        tv_price.setText("购买金额: " + fuwa_price + "元");
+        TextView tv_buy = (TextView) dialog_view.findViewById(R.id.tv_buy);
         tv_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showToast("buy", false);
+//                showToast("buy", false);
+                    showPop();
             }
         });
 
         dialog = new Dialog(context, R.style.dialog_ios_style);
-        dialog.setContentView(view);
+        dialog.setContentView(dialog_view);
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(false);
 
@@ -410,6 +423,75 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         dialogWindow.setAttributes(params);
 
         dialog.show();
+    }
+
+    private void showPop() {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        final View view = inflater.inflate(R.layout.pop_pay, null);
+        int screenWidth = UIUtils.getScreenWidth(getActivity());
+        popupWindow = new PopupWindow(view, screenWidth,
+                ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(0xb0000000));
+        popupWindow.getBackground().setAlpha(150);
+        popupWindow.setAnimationStyle(R.style.ActionSheetDialogAnimation);
+        popupWindow.showAtLocation(dialog_view.findViewById(R.id.tv_price),Gravity.BOTTOM,0,0);
+        final ImageView img_zhifubao_choose = (ImageView) view.findViewById(R.id.img_zhifubao_choose);
+        final ImageView img_wx_choose = (ImageView) view.findViewById(R.id.img_wx_choose);
+        final TextView tv_count = (TextView) view.findViewById(R.id.tv_count);
+        tv_count.setText(fuwa_price+"元");
+        view.findViewById(R.id.rl_zhifubao).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                img_zhifubao_choose.setImageResource(R.drawable.money_choose);
+                img_wx_choose.setImageResource(R.drawable.money_nochoose);
+
+                zhifubao = true;
+            }
+        });
+        view.findViewById(R.id.rl_weixin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                img_wx_choose.setImageResource(R.drawable.money_choose);
+                img_zhifubao_choose.setImageResource(R.drawable.money_nochoose);
+
+                zhifubao = false;
+            }
+        });
+        view.findViewById(R.id.tv_buy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(zhifubao){
+                    showToast("支付宝",false);
+                }else{
+                    showToast("微信",false);
+                }
+            }
+        });
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                int top = view.findViewById(R.id.pop_layout).getTop();
+                int Bottom = view.findViewById(R.id.pop_layout).getBottom();
+                int left = view.findViewById(R.id.pop_layout).getLeft();
+                int right = view.findViewById(R.id.pop_layout).getRight();
+                int y = (int) event.getY();
+                int x = (int) event.getX();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (y < top || y > Bottom) {
+                            popupWindow.dismiss();
+                        }
+                        if (x < left || x > right) {
+                            popupWindow.dismiss();
+                        }
+                        break;
+                }
+
+                return true;
+            }
+        });
     }
 
 }

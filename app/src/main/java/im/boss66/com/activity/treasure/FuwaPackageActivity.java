@@ -377,7 +377,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String res = responseInfo.result;
-                Log.i("liwya",res);
                 try {
                     JSONObject jsonObject = new JSONObject(res);
                     if(jsonObject.getInt("code")==0){
@@ -406,7 +405,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String res = responseInfo.result;
-                Log.i("liwya",res);
                 if (!TextUtils.isEmpty(res)) {
                     try {
                         JSONObject jsonObject = new JSONObject(res);

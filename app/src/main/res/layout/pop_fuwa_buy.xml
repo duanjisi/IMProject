@@ -35,7 +35,7 @@
             android:layout_centerHorizontal="true"
             android:id="@+id/rl_fuwa"
             android:layout_width="110dp"
-            android:layout_height="140dp"
+            android:layout_height="125dp"
             android:layout_marginLeft="31dp"
             android:layout_marginTop="51dp"
             android:background="@drawable/fuwa_bgs">

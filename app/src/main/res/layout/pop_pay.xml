@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    
+    <RelativeLayout
+        android:id="@+id/pop_layout"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="350dp">
+
+        <ImageView
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/fuwa_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2" />
+
+
+        <TextView
+            android:textSize="18sp"
+            android:textColor="@color/praise_item_default"
+            android:text="付款详情"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView2"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/textView" />
+        <View
+            android:id="@+id/view_one"
+            android:layout_marginTop="45dp"
+            android:background="@color/umeng_socialize_ucenter_bg"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_zhifubao"
+            android:layout_below="@id/view_one"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+            <ImageView
+                android:id="@+id/img_zhifubao"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/zhifubao_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_toRightOf="@id/img_zhifubao"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:text="支付宝"
+                android:textSize="15sp"
+                android:textColor="@color/praise_item_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/img_zhifubao_choose"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/money_choose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <View
+                android:background="@color/umeng_socialize_ucenter_bg"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+
+            android:id="@+id/rl_weixin"
+            android:layout_below="@id/rl_zhifubao"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+            <ImageView
+                android:id="@+id/img_wx"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/weixin_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_toRightOf="@id/img_wx"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:text="微信"
+                android:textSize="15sp"
+                android:textColor="@color/praise_item_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/img_wx_choose"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/money_nochoose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <View
+                android:background="@color/umeng_socialize_ucenter_bg"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_below="@id/rl_weixin"
+            android:text="需付款"
+            android:textSize="15sp"
+            android:textColor="@color/praise_item_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/rl_weixin"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
+            android:textSize="15sp"
+            android:textColor="@color/praise_item_default"
+            android:text="100元"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_buy"
+            android:gravity="center"
+            android:clickable="true"
+            android:text="确认付款"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:background="@drawable/shape_pay"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="43dp" />
+    </RelativeLayout>
+
+
+</RelativeLayout>
