@@ -30,7 +30,6 @@
     <color name="text_color_grey">#8d1800</color>
     <color name="line_red">#ff7f5b</color>
     <color name="line_red2">#cf241c</color>
-    <color name="golden_color">#e7d09a</color>
 
     <!--<color name="chat_background">@color/window_bg</color>-->
     <!--<color name="chat_title_name">@color/color_bai</color>-->
@@ -140,5 +139,6 @@
     <color name="act_background">#efefef</color>
     <color name="phone_bg">#f6f6f6</color>
     <color name="blue">#4c90f9</color>
+    <color name="golden_color">#e7d09a</color>
 
 </resources>
