@@ -71,6 +71,7 @@ import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BaseResult;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
@@ -115,6 +116,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private File imgFile;
     private ImageLoader imageLoader;
     private ImageView iv_success;
+    private String fuwaNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,9 +131,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         imageLoader = ImageLoaderUtils.createImageLoader(this);
         userId = App.getInstance().getUid();
         iv_success_catch = (ImageView) findViewById(R.id.iv_success_catch);
-//        bt_catch = (Button) findViewById(R.id.bt_catch);
-
-        int sceenW = UIUtils.getScreenWidth(this);
+        iv_success = (ImageView) findViewById(R.id.iv_success);
         int sceenH = UIUtils.getScreenHeight(this);
 
         iv_thread_bg = (ImageView) findViewById(R.id.iv_thread_bg);
@@ -145,12 +145,12 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
         RelativeLayout.LayoutParams threadParam = (RelativeLayout.LayoutParams) iv_thread_bg.getLayoutParams();
         threadParam.height = sceenH / 4;
-        threadParam.width = sceenH / 6;
+        threadParam.width = sceenH / 4;
         iv_thread_bg.setLayoutParams(threadParam);
 
         RelativeLayout.LayoutParams threadbgParam = (RelativeLayout.LayoutParams) iv_thread.getLayoutParams();
         threadbgParam.height = sceenH / 4;
-        threadbgParam.width = sceenH / 6;
+        threadbgParam.width = sceenH / 4;
         iv_thread.setLayoutParams(threadbgParam);
 
         tv_back.setOnClickListener(this);
@@ -179,6 +179,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         if (intent != null) {
             fuwaId = intent.getStringExtra("gid");
             String imgUrl = intent.getStringExtra("pic");
+            fuwaNum = intent.getStringExtra("id");
             if (!TextUtils.isEmpty(imgUrl)) {
                 imageLoader.displayImage(imgUrl, iv_thread,
                         ImageLoaderUtils.getDisplayImageOptions());
@@ -220,9 +221,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         parameters.setPictureSize(PreviewWidth, PreviewHeight);
         mCamera.setParameters(parameters);
         mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
-        Camera.Size size = parameters.getPictureSize();
-        Log.i("size", "width:" + size.width + "hegit:" + size.height +
-                "----PreviewWidth:" + PreviewWidth + " PreviewHeight:" + PreviewHeight);
         rl_preciew.addView(mPreview);
     }
 
@@ -250,11 +248,13 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_back:
-                //showDialog();
                 finish();
                 break;
             case R.id.tv_continue:
-
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                finish();
                 break;
             case R.id.bt_share:
                 break;
@@ -520,12 +520,25 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             dialogWindow.setAttributes(lp);
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
+            AccountEntity sAccount = App.getInstance().getAccount();
+            if (sAccount != null) {
+                String head = sAccount.getAvatar();
+                imageLoader.displayImage(head, roundImageView,
+                        ImageLoaderUtils.getDisplayImageOptions());
+                String userName = sAccount.getUser_name();
+                if (!TextUtils.isEmpty(userName)) {
+                    tv_name.setText(userName);
+                } else {
+                    tv_name.setText("" + sAccount.getUser_id());
+                }
+            }
+            tv_fuwa.setText(fuwaNum + "号福娃");
         }
         dialog.show();
     }
 
     private void getServerData() {
-        String signUrl = "/capture?user=" + userId + "+&gid=" + fuwaId + "&platform=boss66";
+        String signUrl = "/capture?user=" + userId + "&gid=" + fuwaId + "&platform=boss66";
         String sign = MD5Util.getStringMD5(signUrl);
         String url = HttpUrl.CATCH_MY_FUWA + userId + "&gid=" +
                 fuwaId + "&sign=" + sign;
@@ -541,12 +554,16 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     if (data != null) {
                         int code = data.getCode();
                         if (code == 0) {
-
+                            playSucessGif();
                         } else {
+                            previewing = true;
+                            mCamera.startPreview();
                             showToast("捉取失败TAT，再试下吧", false);
                         }
                     }
                 } else {
+                    previewing = true;
+                    mCamera.startPreview();
                     showToast("捉取失败TAT，再试下吧", false);
                 }
             }
@@ -559,6 +576,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void playSucessGif() {
+        iv_success.setVisibility(View.VISIBLE);
         Glide.with(this)
                 .load(R.drawable.fuwa_catch_succ)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -580,6 +598,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                         int duration = 0;
                         for (int i = 0; i < drawable.getFrameCount(); i++) {
                             duration += decoder.getDelay(i);
+                        }
+                        if (duration > 3000) {
+                            duration = 3000;
                         }
                         //发送延时消息，通知动画结束
                         handler.sendEmptyMessageDelayed(111,
