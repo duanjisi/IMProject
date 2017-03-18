@@ -307,6 +307,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 }
                 break;
             case R.id.rl_search:
+                openActivity(SearchAddressActivity.class);
                 break;
             case R.id.bt_hide_ok:
                 if (dialog != null && dialog.isShowing()) {
@@ -434,6 +435,30 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             layoutManager.setOrientation(OrientationHelper.VERTICAL);
             rv_address.setLayoutManager(layoutManager);
             rv_address.setAdapter(addressAdapter);
+            rv_address.addOnItemTouchListener(new FuwaHideAddressAdapter.RecyclerItemClickListener(this,
+                    new FuwaHideAddressAdapter.RecyclerItemClickListener.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            if (poiItems != null) {
+                                PoiItem item = poiItems.get(position);
+                                if (item != null) {
+                                    address = item.getTitle();
+                                    geohash = item.getLatLonPoint().getLongitude() + "-" + item.getLatLonPoint().getLatitude();
+                                    tv_address.setText("" + address);
+                                    //String city = item.getCityName();
+                                    // doSearchQuery(address, city);
+                                    if (popWindow != null && popWindow.isShowing()) {
+                                        popWindow.dismiss();
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onLongClick(View view, int posotion) {
+
+                        }
+                    }));
             popWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
@@ -441,11 +466,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 }
             });
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            popWindow.showAsDropDown(rl_address, 0, 0, Gravity.CENTER_HORIZONTAL);
-        } else {
-            popWindow.showAsDropDown(rl_address, -50, 0);
-        }
+        int xOff = UIUtils.getScreenWidth(this) / 2 - rl_address.getWidth() / 3;
+        int xOffDp = UIUtils.px2dip(this, xOff);
+        int v_with = rl_address.getWidth();
+        popWindow.showAsDropDown(rl_address, -xOffDp, 0);
     }
 
     @Override

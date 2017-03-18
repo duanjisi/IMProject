@@ -198,13 +198,15 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             showToast(R.string.error_open_camera_error, false);
             finish();
         }
-        int PreviewWidth = 0, PreviewHeight = 0;
+        int PreviewWidth = UIUtils.getScreenWidth(this);
+        int PreviewHeight = UIUtils.getScreenHeight(this);
         mCamera = mCameraManager.getCamera();
 
         Camera.Parameters parameters = mCamera.getParameters();
 
         // 选择合适的预览尺寸
         List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
+
         // 如果sizeList只有一个我们也没有必要做什么了，因为就他一个别无选择
         if (sizeList.size() > 1) {
             Iterator<Camera.Size> itor = sizeList.iterator();
@@ -338,9 +340,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
                 if (bm != null) {
-                    Bitmap bitmap = rotateBitmap(bm, 90);
-                    if (bitmap != null) {
-                        if (bitmap != null) {
+                    bm = rotateBitmap(bm, 90);
+                    if (bm != null) {
+                        if (bm != null) {
                             String imageName = getNowTime() + ".jpg";
                             // 指定调用相机拍照后照片的储存路径
                             File dir = new File(savePath);
@@ -350,7 +352,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             imgFile = new File(dir, imageName);
                             BufferedOutputStream bos
                                     = new BufferedOutputStream(new FileOutputStream(imgFile));
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bos);
+                            bm.compress(Bitmap.CompressFormat.JPEG, 40, bos);
                             bos.flush();
                             bos.close();
                             getServerData();
@@ -468,12 +470,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         Matrix matrix = new Matrix();
         matrix.setRotate(alpha);
         // 围绕原地进行旋转
-        Bitmap newBM = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);
-        if (newBM.equals(origin)) {
-            return newBM;
-        }
-        origin.recycle();
-        return newBM;
+        origin = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);
+        return origin;
     }
 
     public static Bitmap getCircleBitmap(Bitmap bitmap) {
