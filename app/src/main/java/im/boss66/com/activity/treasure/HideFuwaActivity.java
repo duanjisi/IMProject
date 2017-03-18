@@ -11,10 +11,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,6 +29,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,6 +43,8 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -117,7 +124,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private ImageView iv_dialog_icon;
     private TextView tv_dialog_address, bt_hide_ok;
     private Bitmap bitmapImg;
-    private boolean isJump = false;
+    private boolean isJump = false, isHideOk = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,32 +167,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             showToast(R.string.error_open_camera_error, false);
             finish();
         }
-        int PreviewWidth = 0, PreviewHeight = 0;
         mCamera = mCameraManager.getCamera();
-
-        Camera.Parameters parameters = mCamera.getParameters();
-
-        // 选择合适的预览尺寸
-        List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
-        // 如果sizeList只有一个我们也没有必要做什么了，因为就他一个别无选择
-        if (sizeList.size() > 1) {
-            Iterator<Camera.Size> itor = sizeList.iterator();
-            while (itor.hasNext()) {
-                Camera.Size cur = itor.next();
-                if (cur.width >= PreviewWidth
-                        && cur.height >= PreviewHeight) {
-                    PreviewWidth = cur.width;
-                    PreviewHeight = cur.height;
-                    break;
-                }
-            }
-        }
-        parameters.setPictureSize(PreviewWidth, PreviewHeight);
-        mCamera.setParameters(parameters);
         mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
-        Camera.Size size = parameters.getPictureSize();
-        Log.i("size", "width:" + size.width + "hegit:" + size.height +
-                "----PreviewWidth:" + PreviewWidth + " PreviewHeight:" + PreviewHeight);
         rl_preciew.addView(mPreview);
     }
 
@@ -285,23 +268,32 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 bt_catch.setVisibility(View.GONE);
                 tv_bottom.setVisibility(View.VISIBLE);
                 previewing = true;
+                canFocusIn = true;
+                isHideOk = true;
                 mCamera.startPreview();
                 break;
             case R.id.iv_show_address:
-                if (popWindow != null && popWindow.isShowing()) {
-                    iv_show_address.setImageResource(R.drawable.down_fw);
-                    popWindow.dismiss();
+                if (popWindow != null) {
+                    if (popWindow.isShowing()) {
+                        iv_show_address.setImageResource(R.drawable.down_fw);
+                        popWindow.dismiss();
+                    } else {
+                        iv_show_address.setImageResource(R.drawable.up_fw);
+                        showPop();
+                    }
                 } else {
                     iv_show_address.setImageResource(R.drawable.up_fw);
                     showPop();
                 }
                 break;
             case R.id.rl_search:
+                openActivity(SearchAddressActivity.class);
                 break;
             case R.id.bt_hide_ok:
                 if (dialog != null && dialog.isShowing()) {
                     dialog.dismiss();
                 }
+                isHideOk = true;
                 finish();
                 break;
         }
@@ -342,7 +334,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                             //移动后静止一段时间，可以发生对焦行为
                             if (!isFocusing) {
                                 canFocusIn = false;
-                                if (!previewing && isTakePic) {
+                                if (!previewing && isTakePic && isHideOk) {
                                     mCamera.takePicture(null, null, mPictureCallback);
                                     isTakePic = false;
                                     tv_change_place.setVisibility(View.VISIBLE);
@@ -413,13 +405,51 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             rl_search = (RelativeLayout) popupView.findViewById(R.id.rl_search);
             rv_address = (RecyclerView) popupView.findViewById(R.id.rv_address);
             rl_search.setOnClickListener(this);
-            popWindow = new PopupWindow(popupView);
-            //popWindow.setAnimationStyle(R.style.PopupTitleBarAnim1);
-            popWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.umeng_socialize_share_transparent_corner));
+            int sceenH = UIUtils.getScreenHeight(this);
+            popWindow = new PopupWindow(popupView, WindowManager.LayoutParams.WRAP_CONTENT, sceenH / 2, true);
+            popWindow.setAnimationStyle(R.style.PopupTitleBarAnim1);
+            popWindow.setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
             popWindow.setFocusable(true);
             popWindow.setOutsideTouchable(true);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            layoutManager.setOrientation(OrientationHelper.VERTICAL);
+            rv_address.setLayoutManager(layoutManager);
+            rv_address.setAdapter(addressAdapter);
+            rv_address.addOnItemTouchListener(new FuwaHideAddressAdapter.RecyclerItemClickListener(this,
+                    new FuwaHideAddressAdapter.RecyclerItemClickListener.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            if (poiItems != null) {
+                                PoiItem item = poiItems.get(position);
+                                if (item != null) {
+                                    address = item.getTitle();
+                                    geohash = item.getLatLonPoint().getLongitude() + "-" + item.getLatLonPoint().getLatitude();
+                                    tv_address.setText("" + address);
+                                    //String city = item.getCityName();
+                                    // doSearchQuery(address, city);
+                                    if (popWindow != null && popWindow.isShowing()) {
+                                        popWindow.dismiss();
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onLongClick(View view, int posotion) {
+
+                        }
+                    }));
+            popWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    iv_show_address.setImageResource(R.drawable.down_fw);
+                }
+            });
         }
-        popWindow.showAsDropDown(tv_back, 0, 0);
+        int xOff = UIUtils.getScreenWidth(this) / 2 - rl_address.getWidth() / 3;
+        int xOffDp = UIUtils.px2dip(this, xOff);
+        int v_with = rl_address.getWidth();
+        popWindow.showAsDropDown(rl_address, -xOffDp, 0);
     }
 
     @Override
@@ -440,6 +470,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private void initMap() {
         poiItems = new ArrayList<>();
         addressAdapter = new FuwaHideAddressAdapter(poiItems);
+
         if (mlocationClient == null) {
             //初始化定位
             mlocationClient = new AMapLocationClient(this);
@@ -534,7 +565,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                     R.layout.dialog_hide_ok, null);
             int sceenW = UIUtils.getScreenWidth(this);
             int sceenH = UIUtils.getScreenHeight(this);
-            tv_dialog_address = (TextView) view.findViewById(R.id.bt_hide_ok);
+            tv_dialog_address = (TextView) view.findViewById(R.id.tv_dialog_address);
             iv_dialog_icon = (ImageView) view.findViewById(R.id.iv_dialog_icon);
             FrameLayout.LayoutParams imgParams = (FrameLayout.LayoutParams) iv_dialog_icon.getLayoutParams();
             imgParams.width = sceenW / 2;
@@ -564,6 +595,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101 && resultCode == RESULT_OK) {
+            EventBus.getDefault().post("1");
             showSuccessHideDialog();
         }
     }
@@ -571,7 +603,13 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
-        if (isJump)
+        if (isJump) {
+            tv_change_place.setVisibility(View.GONE);
+            tv_bottom.setVisibility(View.VISIBLE);
+            bt_catch.setVisibility(View.GONE);
+            previewing = true;
             canFocusIn = true;
+            isHideOk = false;
+        }
     }
 }

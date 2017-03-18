@@ -54,6 +54,7 @@ import java.util.Map;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
@@ -62,6 +63,7 @@ import im.boss66.com.entity.BaseChildren;
 import im.boss66.com.entity.ChildEntity;
 import im.boss66.com.http.BaseDataModel;
 import im.boss66.com.http.request.AroundChildrenRequest;
+import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.util.AMapUtil;
 import im.boss66.com.util.SensorEventHelper;
 import im.boss66.com.widget.CircleImageView;
@@ -118,12 +120,14 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private ImageView handler;
     private TextView tv_location, tv_distanc_start, tv_distanc_target, tv_time, tv_num;
     private Button btn_catch;
+    private PermissionListener permissionListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_treasure_children);
         initViews();
+        getPermission();
         initData(savedInstanceState);
     }
 
@@ -257,6 +261,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                     Intent intent = new Intent(context, CatchFuwaActivity.class);
                     intent.putExtra("pic", currentChild.getPic());
                     intent.putExtra("gid", currentChild.getGid());
+                    intent.putExtra("id",currentChild.getId());
                     startActivity(intent);
                 }
                 break;
@@ -701,4 +706,29 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             progDialog.dismiss();
         }
     }
+
+    private void getPermission() {
+        permissionListener = new PermissionListener() {
+            @Override
+            public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
+            }
+
+            @Override
+            public void onRequestPermissionSuccess() {
+
+            }
+
+            @Override
+            public void onRequestPermissionError() {
+                ToastUtil.showShort(FindTreasureChildrenActivity.this, getString(R.string.giving_system_location_permissions));
+            }
+        };
+        PermissionUtil
+                .with(this)
+                .permissions(
+                        PermissionUtil.PERMISSIONS_GROUP_LOACATION //相机权限
+                ).request(permissionListener);
+    }
+
 }

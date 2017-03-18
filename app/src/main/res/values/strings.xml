@@ -232,4 +232,5 @@
     <string name="search_your_present_position">搜索你现在的位置</string>
     <string name="fuwa_hide_ok">福娃藏好了</string>
     <string name="go_fuwa_address_find">到福娃所在位置，按线索图扫描找福娃</string>
+    <string name="giving_system_location_permissions">需要定位权限</string>
 </resources>

@@ -52,6 +52,8 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,6 +73,7 @@ import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BaseResult;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
@@ -115,6 +118,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private File imgFile;
     private ImageLoader imageLoader;
     private ImageView iv_success;
+    private String fuwaNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,9 +133,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         imageLoader = ImageLoaderUtils.createImageLoader(this);
         userId = App.getInstance().getUid();
         iv_success_catch = (ImageView) findViewById(R.id.iv_success_catch);
-//        bt_catch = (Button) findViewById(R.id.bt_catch);
-
-        int sceenW = UIUtils.getScreenWidth(this);
+        iv_success = (ImageView) findViewById(R.id.iv_success);
         int sceenH = UIUtils.getScreenHeight(this);
 
         iv_thread_bg = (ImageView) findViewById(R.id.iv_thread_bg);
@@ -145,12 +147,12 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
         RelativeLayout.LayoutParams threadParam = (RelativeLayout.LayoutParams) iv_thread_bg.getLayoutParams();
         threadParam.height = sceenH / 4;
-        threadParam.width = sceenH / 6;
+        threadParam.width = sceenH / 4;
         iv_thread_bg.setLayoutParams(threadParam);
 
         RelativeLayout.LayoutParams threadbgParam = (RelativeLayout.LayoutParams) iv_thread.getLayoutParams();
         threadbgParam.height = sceenH / 4;
-        threadbgParam.width = sceenH / 6;
+        threadbgParam.width = sceenH / 4;
         iv_thread.setLayoutParams(threadbgParam);
 
         tv_back.setOnClickListener(this);
@@ -179,6 +181,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         if (intent != null) {
             fuwaId = intent.getStringExtra("gid");
             String imgUrl = intent.getStringExtra("pic");
+            fuwaNum = intent.getStringExtra("id");
             if (!TextUtils.isEmpty(imgUrl)) {
                 imageLoader.displayImage(imgUrl, iv_thread,
                         ImageLoaderUtils.getDisplayImageOptions());
@@ -197,32 +200,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             showToast(R.string.error_open_camera_error, false);
             finish();
         }
-        int PreviewWidth = 0, PreviewHeight = 0;
         mCamera = mCameraManager.getCamera();
-
-        Camera.Parameters parameters = mCamera.getParameters();
-
-        // 选择合适的预览尺寸
-        List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
-        // 如果sizeList只有一个我们也没有必要做什么了，因为就他一个别无选择
-        if (sizeList.size() > 1) {
-            Iterator<Camera.Size> itor = sizeList.iterator();
-            while (itor.hasNext()) {
-                Camera.Size cur = itor.next();
-                if (cur.width >= PreviewWidth
-                        && cur.height >= PreviewHeight) {
-                    PreviewWidth = cur.width;
-                    PreviewHeight = cur.height;
-                    break;
-                }
-            }
-        }
-        parameters.setPictureSize(PreviewWidth, PreviewHeight);
-        mCamera.setParameters(parameters);
         mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
-        Camera.Size size = parameters.getPictureSize();
-        Log.i("size", "width:" + size.width + "hegit:" + size.height +
-                "----PreviewWidth:" + PreviewWidth + " PreviewHeight:" + PreviewHeight);
         rl_preciew.addView(mPreview);
     }
 
@@ -250,11 +229,13 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_back:
-                //showDialog();
                 finish();
                 break;
             case R.id.tv_continue:
-
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                finish();
                 break;
             case R.id.bt_share:
                 break;
@@ -338,9 +319,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
                 if (bm != null) {
-                    Bitmap bitmap = rotateBitmap(bm, 90);
-                    if (bitmap != null) {
-                        if (bitmap != null) {
+                    bm = rotateBitmap(bm, 90);
+                    if (bm != null) {
+                        if (bm != null) {
                             String imageName = getNowTime() + ".jpg";
                             // 指定调用相机拍照后照片的储存路径
                             File dir = new File(savePath);
@@ -350,7 +331,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             imgFile = new File(dir, imageName);
                             BufferedOutputStream bos
                                     = new BufferedOutputStream(new FileOutputStream(imgFile));
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bos);
+                            bm.compress(Bitmap.CompressFormat.JPEG, 40, bos);
                             bos.flush();
                             bos.close();
                             getServerData();
@@ -468,12 +449,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         Matrix matrix = new Matrix();
         matrix.setRotate(alpha);
         // 围绕原地进行旋转
-        Bitmap newBM = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);
-        if (newBM.equals(origin)) {
-            return newBM;
-        }
-        origin.recycle();
-        return newBM;
+        origin = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);
+        return origin;
     }
 
     public static Bitmap getCircleBitmap(Bitmap bitmap) {
@@ -520,12 +497,25 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             dialogWindow.setAttributes(lp);
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
+            AccountEntity sAccount = App.getInstance().getAccount();
+            if (sAccount != null) {
+                String head = sAccount.getAvatar();
+                imageLoader.displayImage(head, roundImageView,
+                        ImageLoaderUtils.getDisplayImageOptions());
+                String userName = sAccount.getUser_name();
+                if (!TextUtils.isEmpty(userName)) {
+                    tv_name.setText(userName);
+                } else {
+                    tv_name.setText("" + sAccount.getUser_id());
+                }
+            }
+            tv_fuwa.setText(fuwaNum + "号福娃");
         }
         dialog.show();
     }
 
     private void getServerData() {
-        String signUrl = "/capture?user=" + userId + "+&gid=" + fuwaId + "&platform=boss66";
+        String signUrl = "/capture?user=" + userId + "&gid=" + fuwaId + "&platform=boss66";
         String sign = MD5Util.getStringMD5(signUrl);
         String url = HttpUrl.CATCH_MY_FUWA + userId + "&gid=" +
                 fuwaId + "&sign=" + sign;
@@ -541,12 +531,17 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     if (data != null) {
                         int code = data.getCode();
                         if (code == 0) {
-
+                            EventBus.getDefault().post("1");
+                            playSucessGif();
                         } else {
+                            previewing = true;
+                            mCamera.startPreview();
                             showToast("捉取失败TAT，再试下吧", false);
                         }
                     }
                 } else {
+                    previewing = true;
+                    mCamera.startPreview();
                     showToast("捉取失败TAT，再试下吧", false);
                 }
             }
@@ -559,6 +554,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void playSucessGif() {
+        iv_success.setVisibility(View.VISIBLE);
         Glide.with(this)
                 .load(R.drawable.fuwa_catch_succ)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -580,6 +576,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                         int duration = 0;
                         for (int i = 0; i < drawable.getFrameCount(); i++) {
                             duration += decoder.getDelay(i);
+                        }
+                        if (duration > 3000) {
+                            duration = 3000;
                         }
                         //发送延时消息，通知动画结束
                         handler.sendEmptyMessageDelayed(111,
