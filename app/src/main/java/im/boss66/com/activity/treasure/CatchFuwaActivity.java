@@ -53,6 +53,8 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -100,7 +102,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     boolean isFocusing = false;
     boolean canFocusIn = false;  //内部是否能够对焦控制机制
     boolean canFocus = false;
-    public static final int DELEY_DURATION = 2000;
+    public static final int DELEY_DURATION = 3500;
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private CameraPreview mPreview;
@@ -527,28 +529,36 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String res = responseInfo.result;
                 if (!TextUtils.isEmpty(res)) {
-                    BaseResult data = BaseResult.parse(res);
-                    if (data != null) {
-                        int code = data.getCode();
-                        if (code == 0) {
+                    try {
+                        JSONObject obj = new JSONObject(res);
+                        int code = obj.getInt("code");
+                        boolean isTrue = obj.getBoolean("data");
+                        if (code == 0 && isTrue) {
                             EventBus.getDefault().post("1");
                             playSucessGif();
                         } else {
                             previewing = true;
                             mCamera.startPreview();
-                            showToast("捉取失败TAT，再试下吧", false);
+                            autoFocusHandler.postDelayed(doAutoFocus, 1000);
+                            showToast("捕捉失败TAT，再试下吧", false);
                         }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 } else {
                     previewing = true;
                     mCamera.startPreview();
-                    showToast("捉取失败TAT，再试下吧", false);
+                    autoFocusHandler.postDelayed(doAutoFocus, 1000);
+                    showToast("捕捉失败TAT，再试下吧", false);
                 }
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(s, false);
+                previewing = true;
+                mCamera.startPreview();
+                autoFocusHandler.postDelayed(doAutoFocus, 1000);
+                showToast("捕捉失败TAT，再试下吧", false);
             }
         });
     }
@@ -601,4 +611,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         }
     };
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }

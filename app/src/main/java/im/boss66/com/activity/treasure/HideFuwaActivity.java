@@ -287,7 +287,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 }
                 break;
             case R.id.rl_search:
-                openActivity(SearchAddressActivity.class);
+                isJump = true;
+                openActvityForResult(SearchAddressActivity.class, 102);
                 break;
             case R.id.bt_hide_ok:
                 if (dialog != null && dialog.isShowing()) {
@@ -469,7 +470,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
 
     private void initMap() {
         poiItems = new ArrayList<>();
-        addressAdapter = new FuwaHideAddressAdapter(poiItems);
+        addressAdapter = new FuwaHideAddressAdapter(this, poiItems);
 
         if (mlocationClient == null) {
             //初始化定位
@@ -597,6 +598,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         if (requestCode == 101 && resultCode == RESULT_OK) {
             EventBus.getDefault().post("1");
             showSuccessHideDialog();
+        } else if (requestCode == 102 && resultCode == RESULT_OK && data != null) {
+            address = data.getStringExtra("address");
+            geohash = data.getStringExtra("geohash");
+            tv_address.setText("" + address);
         }
     }
 
