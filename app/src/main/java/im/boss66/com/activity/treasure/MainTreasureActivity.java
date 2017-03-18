@@ -8,9 +8,6 @@ import android.widget.TextView;
 
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
-import im.boss66.com.activity.treasure.CatchFuwaActivity;
-import im.boss66.com.activity.treasure.ChooseFuwaHideActivity;
-import im.boss66.com.activity.treasure.HideFuwaActivity;
 
 /**
  * Created by Johnny on 2017/3/13
@@ -67,8 +64,8 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
                 break;
             case R.id.btn_find://找福娃
-                //openActivity(FindTreasureChildrenActivity.class);
-                openActivity(CatchFuwaActivity.class);
+                openActivity(FindTreasureChildrenActivity.class);
+//                openActivity(CatchFuwaActivity.class);
                 break;
             case R.id.btn_store://藏福娃
                 openActivity(HideFuwaActivity.class);

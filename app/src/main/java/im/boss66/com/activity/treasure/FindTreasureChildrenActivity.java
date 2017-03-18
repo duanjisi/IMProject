@@ -1,6 +1,7 @@
 package im.boss66.com.activity.treasure;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -253,7 +254,10 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 break;
             case R.id.btn_catch:
                 if (currentChild != null) {
-
+                    Intent intent = new Intent(context, CatchFuwaActivity.class);
+                    intent.putExtra("pic", currentChild.getPic());
+                    intent.putExtra("gid", currentChild.getGid());
+                    startActivity(intent);
                 }
                 break;
         }
@@ -472,6 +476,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                     mLocMarker.setPosition(location);
                     mPersonMarker.setPosition(location);
                 }
+                refreshView(amapLocation);
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
                 Log.i("info", "errText:" + errText);
