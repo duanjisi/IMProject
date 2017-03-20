@@ -23,8 +23,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -36,6 +34,7 @@ import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.activity.AddFriendActivity;
 import im.boss66.com.activity.book.NewFriendsActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.activity.discover.SearchByAllNetActivity;
@@ -44,7 +43,6 @@ import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.BaseContact;
 import im.boss66.com.entity.ContactEntity;
 import im.boss66.com.entity.FriendState;
-import im.boss66.com.entity.MessageEvent;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.ContactsRequest;
 import im.boss66.com.http.request.NewFriendNumRequest;
@@ -122,9 +120,9 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
         iv_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventBus.getDefault().post(new MessageEvent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE));
-//                Intent intent = new Intent(getActivity(), AddFriendActivity.class);
-//                startActivity(intent);
+//                EventBus.getDefault().post(new MessageEvent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE));
+                Intent intent = new Intent(getActivity(), AddFriendActivity.class);
+                startActivity(intent);
             }
         });
         viewSearch.setOnClickListener(new View.OnClickListener() {

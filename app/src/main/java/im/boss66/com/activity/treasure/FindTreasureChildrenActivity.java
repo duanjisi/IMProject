@@ -46,6 +46,8 @@ import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -125,6 +127,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_treasure_children);
         initViews();
         getPermission();
@@ -178,7 +181,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         mRouteSearch.setRouteSearchListener(this);
         if (aMap == null) {
             aMap = mMapView.getMap();
-
             mUiSettings = aMap.getUiSettings();
             mUiSettings
                     .setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_LEFT);// 设置地图logo显示在左下方
@@ -201,6 +203,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             aMap.setMyLocationEnabled(true);
             // 设置定位的类型为定位模式，有定位、跟随或地图根据面向方向旋转几种
 //            setupLocationStyle();
+            aMap.postInvalidate();
         }
     }
 
@@ -251,7 +254,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 finish();
                 break;
             case R.id.tv_store:
-
+                openActivity(HideFuwaActivity.class);
                 break;
             case R.id.iv_reset_location:
                 backOlderPosition();
@@ -261,7 +264,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                     Intent intent = new Intent(context, CatchFuwaActivity.class);
                     intent.putExtra("pic", currentChild.getPic());
                     intent.putExtra("gid", currentChild.getGid());
-                    intent.putExtra("id",currentChild.getId());
+                    intent.putExtra("id", currentChild.getId());
                     startActivity(intent);
                 }
                 break;
@@ -329,12 +332,18 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     @Override
     public void onMapClick(LatLng latLng) {
         if (!isMarkerClick(latLng)) {
-//            if (topBar.getVisibility() == View.VISIBLE) {
-//                topBar.setVisibility(View.GONE);
-//            }
-            if (slidingDrawer.isOpened()) {
-                slidingDrawer.animateClose();
+            if (slidingDrawer.getVisibility() != View.GONE) {
+                UIUtils.hindView(slidingDrawer);
+                if (walkRouteOverlay != null) {
+                    walkRouteOverlay.removeFromMap();
+                    walkRouteOverlay = null;
+                }
             }
+//            else {
+//                if (slidingDrawer.isOpened()) {
+//                    slidingDrawer.animateClose();
+//                }
+//            }
         }
     }
 
@@ -368,13 +377,20 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
 
     private void catchChild(ChildEntity child) {
+        if (slidingDrawer.getVisibility() != View.VISIBLE) {
+            UIUtils.showView(slidingDrawer);
+        }
+
         this.currentChild = child;
         if (markerMap != null && markerMap.size() != 0) {
             Marker target = markerMap.get(child.getGid());
             distance = AMapUtils.calculateLineDistance(mLocMarker.getPosition(), target.getPosition());
         }
-        mLatLng = mLocMarker.getPosition();
-        Log.i("info", "===============distance:" + distance);
+        double latitude = mLocMarker.getPosition().latitude;
+        double longitude = mLocMarker.getPosition().longitude;
+        mLatLng = new LatLng(latitude, longitude);
+//        mLatLng = mLocMarker.getPosition();
+//        Log.i("info", "===============distance:" + distance);
         if (topBar.getVisibility() != View.VISIBLE) {
             topBar.setVisibility(View.VISIBLE);
             if (distance > 20 || distance == 0) {
@@ -405,6 +421,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {//移动地图后，停止。开始获取福娃
+        Log.i("info", "============onCameraChangeFinish()");
         childrenRequest(cameraPosition);
     }
 
@@ -420,6 +437,8 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             mlocationClient.setLocationListener(this);
             //设置为高精度定位模式
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //设置定位时间间隔
+            mLocationOption.setInterval(1500);
             //设置定位参数
             mlocationClient.setLocationOption(mLocationOption);
             // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
@@ -460,13 +479,12 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 //                Log.i("info", "errText:" + errText);
 //            }
 //        }
-
         if (mListener != null && amapLocation != null) {
             if (amapLocation != null
                     && amapLocation.getErrorCode() == 0) {
                 this.location = amapLocation;
                 LatLng location = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
-                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+//                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
                 if (isFirst) {
                     isFirst = false;
                     scalePoint(amapLocation);
@@ -477,7 +495,8 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                     mSensorHelper.setCurrentMarker(mLocMarker);//定位图标旋转
                 } else {
                     mCircle.setCenter(location);
-                    mCircle.setRadius(amapLocation.getAccuracy());
+//                    mCircle.setRadius(amapLocation.getAccuracy());
+                    mCircle.setRadius(20);
                     mLocMarker.setPosition(location);
                     mPersonMarker.setPosition(location);
                 }
@@ -492,16 +511,19 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
     private void refreshView(AMapLocation aMapLocation) {
         if (slidingDrawer.isOpened()) {
-            tv_location.setText(aMapLocation.getAddress());
+            tv_location.setText(aMapLocation.getPoiName());
             if (currentChild != null) {
                 tv_num.setText(currentChild.getId() + "号");
                 if (markerMap != null && markerMap.size() != 0) {
                     Marker target = markerMap.get(currentChild.getGid());
-                    float distance = AMapUtils.calculateLineDistance(mLocMarker.getPosition(), target.getPosition());
+                    int distance = (int) AMapUtils.calculateLineDistance(mLocMarker.getPosition(), target.getPosition());
                     tv_distanc_target.setText("还有" + distance + "米");
+                    int minus = (int) (distance / 1.4);
+                    tv_time.setText("" + minus);
                 }
+
                 if (mLatLng != null) {
-                    float distance2 = AMapUtils.calculateLineDistance(mLocMarker.getPosition(), mLatLng);
+                    int distance2 = (int) AMapUtils.calculateLineDistance(mLocMarker.getPosition(), mLatLng);
                     tv_distanc_start.setText("" + distance2);
                 }
             }
@@ -521,11 +543,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 //    }
     private void addMarkerIcon(LatLng latLng) {
         if (aMap != null) {
-//            aMap.clear();
-//            aMap.removecache();
-//            View view = getLayoutInflater().inflate(R.layout.item_map_position, null);
-//            CircleImageView header = (CircleImageView) view.findViewById(R.id.header);
-//            imageLoader.displayImage(account.getAvatar(), header, ImageLoaderUtils.getDisplayImageOptions());
             mPersonMarker = aMap.addMarker(new MarkerOptions().position(latLng).draggable(false).icon(BitmapDescriptorFactory.fromView(view)));
         }
     }
@@ -612,6 +629,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (null != mlocationClient) {
             mlocationClient.onDestroy();
         }
