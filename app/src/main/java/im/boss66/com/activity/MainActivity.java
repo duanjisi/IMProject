@@ -33,7 +33,6 @@ import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
-import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.db.dao.EmoCateHelper;
@@ -196,7 +195,6 @@ public class MainActivity extends BaseActivity implements Observer {
     }
 
     private String groupIcon = "http://pics.sc.chinaz.com/Files/pic/icons128/5858/261.png";
-
     private void insertDatas() {
         EmoCate cate = new EmoCate();
         cate.setCate_name("搞笑");

@@ -51,6 +51,17 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.umeng.socialize.bean.HandlerRequestCode;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.SocializeEntity;
+import com.umeng.socialize.bean.StatusCode;
+import com.umeng.socialize.controller.listener.SocializeListeners;
+import com.umeng.socialize.media.QQShareContent;
+import com.umeng.socialize.media.QZoneShareContent;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMediaObject;
+import com.umeng.socialize.weixin.media.CircleShareContent;
+import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -61,8 +72,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
@@ -78,14 +87,16 @@ import im.boss66.com.entity.BaseResult;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.RoundImageView;
+import im.boss66.com.widget.popupWindows.SharePopup;
 import im.boss66.com.widget.scan.CameraManager;
 import im.boss66.com.widget.scan.CameraPreview;
 
 /**
  * 找福娃
  */
-public class CatchFuwaActivity extends BaseActivity implements View.OnClickListener, SensorEventListener {
-
+public class CatchFuwaActivity extends BaseActivity implements View.OnClickListener, SensorEventListener,
+        SharePopup.OnItemSelectedListener {
+    private SharePopup sharePopup;
     private LinearLayout ll_thread;
     private ImageView iv_click, iv_thread, iv_thread_bg;
     private TextView tv_back, tv_address;
@@ -135,7 +146,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         iv_success_catch = (ImageView) findViewById(R.id.iv_success_catch);
         iv_success = (ImageView) findViewById(R.id.iv_success);
         int sceenH = UIUtils.getScreenHeight(this);
-
+        sharePopup = new SharePopup(context, mController);
+        sharePopup.setOnItemSelectedListener(this);
         iv_thread_bg = (ImageView) findViewById(R.id.iv_thread_bg);
         ll_thread = (LinearLayout) findViewById(R.id.ll_thread);
         iv_thread = (ImageView) findViewById(R.id.iv_thread);
@@ -238,8 +250,126 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.bt_share:
+                title = "嗨萌寻宝";
+                shareContent = getResources().getString(R.string.share_content);
+                targetUrl = "www.baidu.com";
+                imageUrl = "http://bbs.umeng.com/uc_server/data/avatar/000/00/00/90_avatar_middle.jpg";
+                if (!isFinishing()) {
+                    if (sharePopup.isShowing()) {
+                        sharePopup.dismiss();
+                    } else {
+                        sharePopup.show(dialog.getWindow().getDecorView());
+                    }
+                }
                 break;
         }
+    }
+
+    private String shareContent;
+    private String targetUrl;
+    private String title;
+    private String imageUrl;
+
+    @Override
+    public void onItemSelected(SHARE_MEDIA shareMedia) {
+        UMediaObject uMediaObject = null;
+        MycsLog.i("info", "====title:" + title);
+        MycsLog.i("info", "====targetUrl:" + targetUrl);
+        switch (shareMedia) {
+            case WEIXIN:
+                if (!mController.getConfig().getSsoHandler(HandlerRequestCode.WX_REQUEST_CODE).isClientInstalled()) {
+                    showToast(R.string.notice_weixin_not_install, false);
+                    return;
+                }
+                //设置微信好友分享内容
+                WeiXinShareContent weixinContent = new WeiXinShareContent();
+                //设置分享文字
+                weixinContent.setShareContent(shareContent);
+                //设置title
+//                weixinContent.setTitle(TextUtils.isEmpty(title) ? mWebView.getTitle() : title);
+                weixinContent.setTitle(title);
+                //设置分享内容跳转URL
+                weixinContent.setTargetUrl(targetUrl);
+                if (imageUrl != null && !imageUrl.equals("")) {
+                    //设置分享图片
+                    weixinContent.setShareImage(new UMImage(context, imageUrl));
+                } else {
+                    weixinContent.setShareImage(new UMImage(context, R.drawable.logo_circle));
+                }
+                uMediaObject = weixinContent;
+                break;
+            case WEIXIN_CIRCLE:
+                if (!mController.getConfig().getSsoHandler(HandlerRequestCode.WX_REQUEST_CODE).isClientInstalled()) {
+                    showToast(R.string.notice_weixin_not_install, false);
+                    return;
+                }
+                //设置微信朋友圈分享内容
+                CircleShareContent circleMedia = new CircleShareContent();
+                circleMedia.setShareContent(shareContent);
+                //设置朋友圈title
+                circleMedia.setTitle(title);
+                circleMedia.setTargetUrl(targetUrl);
+                if (imageUrl != null) {
+                    //设置分享图片
+                    circleMedia.setShareImage(new UMImage(context, imageUrl));
+                } else {
+                    circleMedia.setShareImage(new UMImage(context, R.drawable.ic_launcher));
+                }
+                uMediaObject = circleMedia;
+                break;
+            case QQ:
+                if (!mController.getConfig().getSsoHandler(HandlerRequestCode.QQ_REQUEST_CODE).isClientInstalled()) {
+                    showToast(R.string.notice_qq_not_install, false);
+                    return;
+                }
+                QQShareContent qqShareContent = new QQShareContent();
+                qqShareContent.setShareContent(shareContent);
+                qqShareContent.setTitle(title);
+                if (imageUrl != null && !imageUrl.equals("")) {
+                    //设置分享图片
+                    qqShareContent.setShareImage(new UMImage(context, imageUrl));
+                } else {
+                    qqShareContent.setShareImage(new UMImage(context, R.drawable.logo_circle));
+                }
+
+                qqShareContent.setTargetUrl(targetUrl);
+                uMediaObject = qqShareContent;
+                break;
+            case QZONE:
+                QZoneShareContent qzone = new QZoneShareContent();
+                // 设置分享文字
+                qzone.setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能 -- QZone");
+                // 设置点击消息的跳转URL
+                qzone.setTargetUrl("http://www.baidu.com");
+                // 设置分享内容的标题
+                qzone.setTitle("QZone title");
+                // 设置分享图片
+//                qzone.setShareContent(shareContent);
+//                qzone.setTitle(title);
+//                qzone.setTargetUrl(targetUrl);
+                if (imageUrl != null && !imageUrl.equals("")) {
+                    //设置分享图片
+                    qzone.setShareImage(new UMImage(context, imageUrl));
+                } else {
+                    qzone.setShareImage(new UMImage(context, R.drawable.logo_circle));
+                }
+                uMediaObject = qzone;
+                break;
+        }
+        mController.setShareMedia(uMediaObject);
+        mController.postShare(context, shareMedia, new SocializeListeners.SnsPostListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
+                if (eCode == StatusCode.ST_CODE_SUCCESSED) {
+                    showToast("分享成功!", true);
+                }
+            }
+        });
     }
 
     @Override

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="137.5dp"
+        android:background="#eeeeee"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/weixin_share_linear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/circle_image_size_common"
+                android:layout_height="@dimen/circle_image_size_common"
+                android:src="@drawable/icon_weixin_share_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_common"
+                android:text="@string/share_weixin"
+                android:textColor="@color/text_gray_darker"
+                android:textSize="@dimen/text_size_common" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/weixin_circle_share_linear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/circle_image_size_common"
+                android:layout_height="@dimen/circle_image_size_common"
+                android:src="@drawable/icon_weixin_circle_share_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_common"
+                android:text="@string/share_weixin_circle"
+                android:textColor="@color/text_gray_darker"
+                android:textSize="@dimen/text_size_common" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/qq_share_linear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/circle_image_size_common"
+                android:layout_height="@dimen/circle_image_size_common"
+                android:src="@drawable/icon_qq_share_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_common"
+                android:text="@string/share_qq"
+                android:textColor="@color/text_gray_darker"
+                android:textSize="@dimen/text_size_common" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/qq_zone_share_linear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/circle_image_size_common"
+                android:layout_height="@dimen/circle_image_size_common"
+                android:src="@drawable/icon_qq_zone_share_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_common"
+                android:text="@string/share_qzone"
+                android:textColor="@color/text_gray_darker"
+                android:textSize="@dimen/text_size_common" />
+
+        </LinearLayout>
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/boss66_share_linear"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical"-->
+        <!--android:visibility="gone">-->
+        <!--<ImageView-->
+        <!--android:layout_width="@dimen/circle_image_size_common"-->
+        <!--android:layout_height="@dimen/circle_image_size_common"-->
+        <!--android:src="@drawable/icon_66boss_share_selector" />-->
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="@dimen/spacing_common"-->
+        <!--android:text="@string/share_boss66"-->
+        <!--android:textColor="@color/text_gray_darker"-->
+        <!--android:textSize="@dimen/text_size_common" />-->
+
+        <!--</LinearLayout>-->
+
+        <LinearLayout
+            android:id="@+id/weibo_share_linear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="@dimen/circle_image_size_common"
+                android:layout_height="@dimen/circle_image_size_common"
+                android:src="@drawable/icon_66boss_share_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_common"
+                android:text="才气"
+                android:textColor="@color/text_gray_darker"
+                android:textSize="@dimen/text_size_common" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@color/white"
+        android:text="取消" />
+</LinearLayout>

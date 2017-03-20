@@ -46,6 +46,8 @@ import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -125,6 +127,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_treasure_children);
         initViews();
         getPermission();
@@ -261,7 +264,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                     Intent intent = new Intent(context, CatchFuwaActivity.class);
                     intent.putExtra("pic", currentChild.getPic());
                     intent.putExtra("gid", currentChild.getGid());
-                    intent.putExtra("id",currentChild.getId());
+                    intent.putExtra("id", currentChild.getId());
                     startActivity(intent);
                 }
                 break;
@@ -418,6 +421,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {//移动地图后，停止。开始获取福娃
+        Log.i("info", "============onCameraChangeFinish()");
         childrenRequest(cameraPosition);
     }
 
@@ -625,6 +629,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (null != mlocationClient) {
             mlocationClient.onDestroy();
         }

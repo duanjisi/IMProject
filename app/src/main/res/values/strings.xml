@@ -233,4 +233,15 @@
     <string name="fuwa_hide_ok">福娃藏好了</string>
     <string name="go_fuwa_address_find">到福娃所在位置，按线索图扫描找福娃</string>
     <string name="giving_system_location_permissions">需要定位权限</string>
+
+
+    <string name="share_weixin">微信</string>
+    <string name="share_weixin_circle">朋友圈</string>
+    <string name="share_weibo">微博</string>
+    <string name="share_qq">QQ</string>
+    <string name="share_qzone">QQ空间</string>
+
+    <string name="notice_weixin_not_install">你未安装微信！</string>
+    <string name="notice_qq_not_install">你未安装QQ！</string>
+    <string name="share_content">我正在嗨萌寻宝,一起来寻宝吧!</string>
 </resources>

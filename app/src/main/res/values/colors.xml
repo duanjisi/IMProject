@@ -141,4 +141,5 @@
     <color name="blue">#4c90f9</color>
     <color name="golden_color">#e7d09a</color>
 
+    <color name="text_gray_darker">#666666</color>
 </resources>
