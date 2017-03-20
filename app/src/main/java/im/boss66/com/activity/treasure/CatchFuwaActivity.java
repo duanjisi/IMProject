@@ -28,6 +28,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -132,6 +133,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private ImageLoader imageLoader;
     private ImageView iv_success;
     private String fuwaNum;
+    private View dialog_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -260,7 +262,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     if (sharePopup.isShowing()) {
                         sharePopup.dismiss();
                     } else {
-                        sharePopup.show(dialog.getWindow().getDecorView());
+//                        sharePopup.show(dialog_view.findViewById(R.id.tv_name));
+                        sharePopup.showAtLocation(dialog_view.findViewById(R.id.tv_name), Gravity.BOTTOM, 0, 0);
+
                     }
                 }
                 break;
@@ -607,28 +611,38 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
     private void showDialog() {
         if (dialog == null) {
-            View view = LayoutInflater.from(context).inflate(
+            dialog_view = LayoutInflater.from(context).inflate(
                     R.layout.dialog_catch_fuwa, null);
             int sceenW = UIUtils.getScreenWidth(this);
             int sceenH = UIUtils.getScreenHeight(this);
 
-            RoundImageView roundImageView = (RoundImageView) view.findViewById(R.id.riv_head);
-            TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
-            TextView tv_fuwa = (TextView) view.findViewById(R.id.tv_fuwa);
-            Button bt_share = (Button) view.findViewById(R.id.bt_share);
-            TextView tv_continue = (TextView) view.findViewById(R.id.tv_continue);
+            RoundImageView roundImageView = (RoundImageView) dialog_view.findViewById(R.id.riv_head);
+            TextView tv_name = (TextView) dialog_view.findViewById(R.id.tv_name);
+            TextView tv_fuwa = (TextView) dialog_view.findViewById(R.id.tv_fuwa);
+            Button bt_share = (Button) dialog_view.findViewById(R.id.bt_share);
+            TextView tv_continue = (TextView) dialog_view.findViewById(R.id.tv_continue);
             tv_continue.setOnClickListener(this);
             bt_share.setOnClickListener(this);
 
             dialog = new Dialog(context, R.style.ActionSheetDialogStyle);
-            dialog.setContentView(view);
+            dialog.setContentView(dialog_view);
+
+            LinearLayout ll_dialog = (LinearLayout) dialog_view.findViewById(R.id.ll_dialog);
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ll_dialog.getLayoutParams();
+            layoutParams.width=(int) (sceenW * 0.8);
+            layoutParams.height = (int) (sceenH * 0.8);
+            ll_dialog.setLayoutParams(layoutParams);
+
             Window dialogWindow = dialog.getWindow();
-            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-            lp.width = (int) (sceenW * 0.8);
-            lp.height = (int) (sceenH * 0.8);
-            dialogWindow.setAttributes(lp);
+            WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+            params.height = sceenH;
+            params.width=sceenW;
+            dialogWindow.setAttributes(params);
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
+
+
+
             AccountEntity sAccount = App.getInstance().getAccount();
             if (sAccount != null) {
                 String head = sAccount.getAvatar();
@@ -664,7 +678,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                         int code = obj.getInt("code");
                         boolean isTrue = obj.getBoolean("data");
                         if (code == 0 && isTrue) {
-                            EventBus.getDefault().post("1");
+//                            EventBus.getDefault().post("1");
                             playSucessGif();
                         } else {
                             previewing = true;

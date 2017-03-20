@@ -113,7 +113,7 @@ public class MyPushIntentService extends UmengBaseIntentService {
 //                    it = new Intent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
                     android.util.Log.i("info", "=====8888888========add()");
                     intent = new Intent(appContext, NewFriendsActivity.class);
-                    EventBus.getDefault().post(new MessageEvent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE));
+//                    EventBus.getDefault().post(new MessageEvent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE));
 //                    ContactBooksFragment.onMessage(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
 //                    App.getInstance().getFragment().onChatMessageReceiver(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
 

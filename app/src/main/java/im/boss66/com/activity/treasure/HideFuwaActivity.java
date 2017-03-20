@@ -44,7 +44,6 @@ import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -596,7 +595,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101 && resultCode == RESULT_OK) {
-            EventBus.getDefault().post("1");
+//            EventBus.getDefault().post("1");
             showSuccessHideDialog();
         } else if (requestCode == 102 && resultCode == RESULT_OK && data != null) {
             address = data.getStringExtra("address");

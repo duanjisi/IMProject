@@ -65,7 +65,6 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                 }else if(!dialog.isShowing()){
                     dialog.show();
                 }
-
                 break;
             case R.id.tv_rank://福娃排行榜
                 openActivity(FuwaTopList.class);

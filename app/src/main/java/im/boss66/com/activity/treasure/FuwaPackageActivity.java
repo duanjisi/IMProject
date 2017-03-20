@@ -110,6 +110,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void initData() {
+        showLoadingDialog();
         uid = App.getInstance().getUid();
 //        String url = HttpUrl.QUERY_MY_FUWA + "john"; //测试数据
         String url = HttpUrl.QUERY_MY_FUWA + uid;
@@ -117,6 +118,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
                 String res = responseInfo.result;
                 if (!TextUtils.isEmpty(res)) {
                     FuwaEntity entity = JSON.parseObject(res, FuwaEntity.class);
@@ -129,12 +131,14 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
             @Override
             public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
                 Log.i("onFailure", s);
             }
         });
     }
 
     private void showData(List<FuwaEntity.Data> data) {
+        fuwaList.clear();
         for (FuwaEntity.Data bill : data) {
             boolean state = false;
             for (FuwaEntity.Data bills : fuwaList) {
@@ -207,6 +211,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onFailure(HttpException e, String s) {
                 Log.i("onFailure", s);
+
             }
         });
 
@@ -380,7 +385,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                 try {
                     JSONObject jsonObject = new JSONObject(res);
                     if(jsonObject.getInt("code")==0){
-
                         handler.obtainMessage(4).sendToTarget();
                     }else{
                         showToast("请填写正确的口令",false);
@@ -410,9 +414,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                         JSONObject jsonObject = new JSONObject(res);
                         if(jsonObject.getInt("code")==0){
                             //出售成功，刷新ui
-
                             handler.obtainMessage(3).sendToTarget();
-
 
                         }
                     } catch (JSONException e) {
@@ -445,9 +447,4 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-    private Drawable getDrawableFromRes(int resId) {
-        Resources res = getResources();
-        Bitmap bmp = BitmapFactory.decodeResource(res, resId);
-        return new BitmapDrawable(bmp);
-    }
 }
