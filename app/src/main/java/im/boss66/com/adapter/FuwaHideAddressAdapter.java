@@ -24,9 +24,11 @@ public class FuwaHideAddressAdapter extends RecyclerView.Adapter<FuwaHideAddress
 
     private List<PoiItem> poiItems;
     private boolean isShow = true;
+    private Context context;
 
-    public FuwaHideAddressAdapter(List<PoiItem> poiItems) {
+    public FuwaHideAddressAdapter(Context context, List<PoiItem> poiItems) {
         this.poiItems = poiItems;
+        this.context = context;
     }
 
     @Override
@@ -44,9 +46,12 @@ public class FuwaHideAddressAdapter extends RecyclerView.Adapter<FuwaHideAddress
             holder.tv_title.setText("" + name);
             holder.tv_content.setText("" + address);
         }
-        if (isShow){
+        if (isShow) {
             holder.iv_left.setVisibility(View.VISIBLE);
-        }else {
+            holder.tv_title.setTextColor(context.getResources().getColor(R.color.white));
+        } else {
+            holder.tv_title.setTextColor(context.getResources().getColor(R.color.black));
+            holder.tv_content.setTextColor(context.getResources().getColor(R.color.hint_text_color));
             holder.iv_left.setVisibility(View.GONE);
         }
     }

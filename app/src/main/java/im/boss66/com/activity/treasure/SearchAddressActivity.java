@@ -1,10 +1,12 @@
 package im.boss66.com.activity.treasure;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -73,6 +75,31 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         //设置布局管理器
         rv_content.setLayoutManager(layoutManager);
+
+        rv_content.addOnItemTouchListener(new FuwaHideAddressAdapter.RecyclerItemClickListener(this,
+                new FuwaHideAddressAdapter.RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        if (poiItems != null) {
+                            PoiItem item = poiItems.get(position);
+                            if (item != null) {
+                                String address = item.getTitle();
+                                String geohash = item.getLatLonPoint().getLongitude() + "-" + item.getLatLonPoint().getLatitude();
+                                Intent intent = new Intent();
+                                intent.putExtra("address", address);
+                                intent.putExtra("geohash", geohash);
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int posotion) {
+
+                    }
+                }));
+
         tv_close.setOnClickListener(this);
         et_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -146,6 +173,9 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
      * 开始进行poi搜索
      */
     protected void doSearchQuery() {
+        if (TextUtils.isEmpty(city) && location != null) {
+            initData(location);
+        }
         currentPage = 0;
         query = new PoiSearch.Query(keyWord, "", city);// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
         query.setPageSize(20);// 设置每页最多返回多少条poiitem
@@ -172,14 +202,12 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
                 if (result.getQuery().equals(query)) {// 是否是同一条
                     poiResult = result;
                     poiItems = poiResult.getPois();// 取得第一页的poiitem数据，页数从数字0开始
-                    if (poiItems != null && poiItems.size() > 0) {
-                        if (addressAdapter == null){
-                            addressAdapter = new FuwaHideAddressAdapter(poiItems);
-                            addressAdapter.setIsShowIcon(false);
-                            rv_content.setAdapter(addressAdapter);
-                        }else {
-                            addressAdapter.onDataChange(poiItems);
-                        }
+                    if (addressAdapter == null) {
+                        addressAdapter = new FuwaHideAddressAdapter(this, poiItems);
+                        addressAdapter.setIsShowIcon(false);
+                        rv_content.setAdapter(addressAdapter);
+                    } else {
+                        addressAdapter.onDataChange(poiItems);
                     }
                 }
             } else {

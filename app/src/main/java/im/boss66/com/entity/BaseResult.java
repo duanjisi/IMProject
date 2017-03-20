@@ -15,6 +15,12 @@ public class BaseResult {
     private int status;
     private String type;
 
+    public String getData() {
+        return data;
+    }
+
+    private String data;
+
     public int getCode() {
         return code;
     }
