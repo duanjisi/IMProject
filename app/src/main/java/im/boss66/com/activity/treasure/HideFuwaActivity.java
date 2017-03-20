@@ -609,7 +609,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     protected void onResume() {
         super.onResume();
         if (isJump) {
-            tv_change_place.setVisibility(View.GONE);
+            tv_change_place.setVisibility(View.INVISIBLE);
             tv_bottom.setVisibility(View.VISIBLE);
             bt_catch.setVisibility(View.GONE);
             previewing = true;

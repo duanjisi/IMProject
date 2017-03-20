@@ -218,22 +218,6 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
         }
     }
 
-    private void printStr(List<PoiItem> poiItems) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < poiItems.size(); i++) {
-            PoiItem item = poiItems.get(i);
-            String s = item.getBusinessArea();
-            Log.i("info", "================title:" + item.getTitle());
-            Log.i("info", "================BusinessArea:" + item.getBusinessArea());
-            Log.i("info", "================CityName:" + item.getCityName());
-            Log.i("info", "================Snippet:" + item.getSnippet());
-            Log.i("info", "================Snippet:" + item.getSnippet());
-            Log.i("info", "================IndoorData:" + item.getIndoorData().getFloorName());
-            sb.append(s);
-            sb.append("\n");
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

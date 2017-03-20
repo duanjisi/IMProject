@@ -215,7 +215,7 @@ public class HttpUrl {
     //随便看看(自定义)
     public static final String RANDOWM_LOOK = MAIN_URL + "api/v1/search/rand";
     //搜索人脉用户
-    public static final String SEARCH_PEOPLE = MAIN_URL+"api/v1/search/user";
+    public static final String SEARCH_PEOPLE = MAIN_URL + "api/v1/search/user";
     //查询所有的福娃出售
     public static final String SEARCH_FUWA_SELL = "http://wsimali.66boss.com:9090/api/querysell";
 
@@ -232,10 +232,10 @@ public class HttpUrl {
     //查自己出售的福娃
     public static final String SEARY_MY_SELL_FUWA = "http://wsimali.66boss.com:9090/msg/querymysell?userid=";
 
-
-
     //藏福娃
     public static final String HIDE_MY_FUWA = BASE_FUWA_URL + "hide?owner=";
     //捉福娃
     public static final String CATCH_MY_FUWA = BASE_FUWA_URL + "capture?user=";
+    //福娃消息
+    public static final String FUWA_MSG = "http://wsimali.66boss.com:9090/msg/myinfo?userid=";
 }

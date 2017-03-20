@@ -16,7 +16,6 @@ import java.util.List;
 import im.boss66.com.R;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.entity.FuwaEntity;
-import im.boss66.com.widget.RoundImageView;
 
 /**
  * Created by GMARUnity on 2017/3/15.
