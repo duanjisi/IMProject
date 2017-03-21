@@ -1,12 +1,15 @@
 package im.boss66.com.activity.treasure;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -47,6 +50,7 @@ import com.amap.api.services.route.WalkRouteResult;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +58,7 @@ import java.util.List;
 import java.util.Map;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
@@ -85,6 +90,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         RouteSearch.OnRouteSearchListener,
         AMap.OnMapClickListener {
     private static final String TAG = FindTreasureChildrenActivity.class.getSimpleName();
+    private LocalBroadcastReceiver mLocalBroadcastReceiver;
     private MapView mMapView = null;
     private AMap aMap;
     //    private MarkerOptions markerOptions;
@@ -127,7 +133,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_treasure_children);
         initViews();
         getPermission();
@@ -170,6 +176,13 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         tvStore.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
         btn_catch.setOnClickListener(this);
+
+        mLocalBroadcastReceiver = new LocalBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.Action.MAP_MARKER_REFRESH);
+        LocalBroadcastManager.getInstance(context)
+                .registerReceiver(mLocalBroadcastReceiver, filter);
+
         view = getLayoutInflater().inflate(R.layout.item_map_position, null);
         CircleImageView header = (CircleImageView) view.findViewById(R.id.header);
         imageLoader.displayImage(account.getAvatar(), header, ImageLoaderUtils.getDisplayImageOptions());
@@ -347,6 +360,22 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         }
     }
 
+    @Subscribe
+    public void onMessageEvent(String gid) {
+        deleteMarker(gid);
+    }
+
+    private void deleteMarker(String gid) {
+        List<Marker> markers = aMap.getMapScreenMarkers();
+        for (Marker marker : markers) {
+            if (marker.getObject().equals(gid)) {
+                marker.remove();
+            }
+        }
+        aMap.invalidate();
+    }
+
+
     private boolean isMarkerClick(LatLng latLng) {
         boolean flag = false;
         if (latMap != null && latMap.size() != 0) {
@@ -519,7 +548,8 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                     int distance = (int) AMapUtils.calculateLineDistance(mLocMarker.getPosition(), target.getPosition());
                     tv_distanc_target.setText("还有" + distance + "米");
                     int minus = (int) (distance / 1.4);
-                    tv_time.setText("" + minus);
+                    String time = UIUtils.changTime(minus);
+                    tv_time.setText("" + time);
                 }
 
                 if (mLatLng != null) {
@@ -573,9 +603,15 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     }
 
 
+//    @Override
+//    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+//        super.onSaveInstanceState(outState, outPersistentState);
+//        mMapView.onSaveInstanceState(outState);
+//    }
+
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         mMapView.onSaveInstanceState(outState);
     }
 
@@ -595,8 +631,16 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         markerOption.title(child.getGid());
         markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
         Marker marker = aMap.addMarker(markerOption);
-        markerMap.put(child.getGid(), marker);
-        latMap.put(child.getGid(), latLng);
+        marker.setObject(child.getGid());
+
+        String key = child.getGid();
+        if (!markerMap.containsKey(key)) {
+            markerMap.put(key, marker);
+        }
+
+        if (!latMap.containsKey(key)) {
+            latMap.put(child.getGid(), latLng);
+        }
     }
 
     private void addCircle(LatLng latlng, double radius) {
@@ -629,7 +673,9 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
+        LocalBroadcastManager.getInstance(context).
+                unregisterReceiver(mLocalBroadcastReceiver);
         if (null != mlocationClient) {
             mlocationClient.onDestroy();
         }
@@ -734,6 +780,20 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 .permissions(
                         PermissionUtil.PERMISSIONS_GROUP_LOACATION //相机权限
                 ).request(permissionListener);
+    }
+
+
+    private class LocalBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (Constants.Action.MAP_MARKER_REFRESH.equals(action)) {
+                String gid = intent.getStringExtra("gid");
+                if (gid != null && !gid.equals("")) {
+                    deleteMarker(gid);
+                }
+            }
+        }
     }
 
 }

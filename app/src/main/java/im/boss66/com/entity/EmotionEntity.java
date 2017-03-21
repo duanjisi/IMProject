@@ -5,13 +5,15 @@ package im.boss66.com.entity;
  * 表情编码解析实体
  */
 public class EmotionEntity {
-    private String emo_id="";
-    private String emo_cate="";
-    private String emo_group="";
-    private String emo_name="";
-    private String emo_code="";
-    private String emo_format="";
-    private String emo_url="";
+    private String emo_id = "";
+    private String emo_cate = "";
+    private String emo_group = "";
+    private String emo_name = "";
+    private String emo_code = "";
+    private String emo_format = "";
+    private String emo_url = "";
+    private String width = "";
+    private String height = "";
 
     public String getEmo_id() {
         return emo_id;
@@ -67,5 +69,21 @@ public class EmotionEntity {
 
     public void setEmo_url(String emo_url) {
         this.emo_url = emo_url;
+    }
+
+    public String getWidth() {
+        return width;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
     }
 }

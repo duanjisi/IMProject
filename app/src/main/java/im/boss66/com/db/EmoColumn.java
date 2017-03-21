@@ -16,6 +16,8 @@ public class EmoColumn extends DatabaseColumn {
     public static final String EMO_GROUP_ID = "emo_group_id";
     public static final String EMO_FORMAT = "emo_format";
     public static final String EMO_CODE = "emo_code";
+    public static final String EMO_WIDTH = "emo_width";
+    public static final String EMO_HEIGHT = "emo_height";
     public static final String USER_ID = "user_id";
     private static final Map<String, String> mColumnMap = new HashMap<String, String>();
 
@@ -28,6 +30,8 @@ public class EmoColumn extends DatabaseColumn {
         mColumnMap.put(EMO_GROUP_ID, "text");
         mColumnMap.put(EMO_FORMAT, "text");
         mColumnMap.put(EMO_CODE, "text");
+        mColumnMap.put(EMO_WIDTH, "text");
+        mColumnMap.put(EMO_HEIGHT, "text");
         mColumnMap.put(USER_ID, "text");
     }
 

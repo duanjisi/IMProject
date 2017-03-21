@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -29,10 +30,10 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -59,7 +60,6 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -68,8 +68,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +77,6 @@ import im.boss66.com.Code;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Session;
-import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.Base64Utils;
 import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
@@ -114,7 +111,13 @@ import im.boss66.com.fragment.FaceLoveFragment;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.services.ChatServices;
+import im.boss66.com.widget.InputDetector;
 import im.boss66.com.xlistview.MsgListView;
+
+//import android.support.v4.app.FragmentManager;
+//import android.support.v4.app.FragmentPagerAdapter;
+//import android.support.v4.app.FragmentTransaction;
+//import android.support.v4.view.ViewPager;
 
 /**
  * Created by Johnny on 2017/1/10.
@@ -220,6 +223,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private LinearLayout ll_input;
     private float mImageHeight;
     private ImageView ivTips;
+    private InputDetector mDetector;
     /**
      * 接收到数据，用来更新listView
      */
@@ -316,7 +320,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mSpUtil = App.getInstance().getSpUtil();
         resources = getResources();
         mSoundUtil = SoundUtil.getInstance();
-
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvTitle = (TextView) findViewById(R.id.tv_chat_title);
 
@@ -367,7 +370,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        tvRed.setOnClickListener(this);
 //        tvCard.setOnClickListener(this);
 
-        ibFace.setOnClickListener(this);
+//        ibFace.setOnClickListener(this);
         mEtMsg.setOnTouchListener(this);
 
 //        mllFace = (LinearLayout) findViewById(R.id.face_ll);
@@ -392,7 +395,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mBtnSend.setClickable(true);
         mBtnSend.setEnabled(true);
         mBtnSend.setOnClickListener(this);
-        mBtnAffix.setOnClickListener(this);
+//        mBtnAffix.setOnClickListener(this);
 
         mLocalBroadcastReceiver = new LocalBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
@@ -402,7 +405,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         filter.addAction(Constants.Action.REFRSH_CHAT_PAGER);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(mLocalBroadcastReceiver, filter);
-
         // 消息
         mApplication = App.getInstance();
         mMsgDB = mApplication.getMessageDB();// 发送数据库
@@ -445,8 +447,27 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
         initCells();
         mTvVoicePreeListener();// 按住录音按钮的事件
+        initDetector();
     }
 
+    private void initDetector() {
+        mDetector = InputDetector.with(this)
+                .setEmotionView(viewFace)
+                .bindToContent(findViewById(R.id.fl_content))
+                .bindToEditText(mEtMsg)
+                .bindToEmotionButton(ibFace)
+                .setMoreView(ll_other)
+                .bindMoreButton(mBtnAffix)
+                .build();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (!mDetector.interceptBackPress()) {
+            super.onBackPressed();
+        }
+    }
 
     private void initEmotionData() {
         initDatas();
@@ -862,10 +883,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.msg_et:
 //                mInputMethodManager.showSoftInput(mEtMsg, 0);
-                viewFace.setVisibility(View.GONE);
-                ll_other.setVisibility(View.GONE);
-                isFaceShow = false;
-                isOther = false;
+
+//                viewFace.setVisibility(View.GONE);
+//                ll_other.setVisibility(View.GONE);
+//                isFaceShow = false;
+//                isOther = false;
                 break;
             default:
                 break;
@@ -1619,10 +1641,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
+            Log.i("info", "==================instantiateItem()");
             if (true) {//根据需求添加更新标示，UI更新完成后改回false，看不懂的回家种田
                 //得到缓存的fragment
                 Fragment fragment = (Fragment) super.instantiateItem(container, position);
-//得到tag，这点很重要
+                //得到tag，这点很重要
                 String fragmentTag = fragment.getTag(); //这里的tag是系统自己生产的，我们直接取就可以
 //如果这个fragment需要更新
                 FragmentTransaction ft = fm.beginTransaction();
@@ -1630,9 +1653,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 ft.remove(fragment);
 //换成新的fragment
                 fragment = fragments.get(position);
-//添加新fragment时必须用前面获得的tag，这点很重要
-
+                Log.i("info", "===============isAdded:" + fragment.isAdded());
+                //添加新fragment时必须用前面获得的tag，这点很重要
                 ft.add(container.getId(), fragment, fragmentTag);
+                Log.i("info", "===============add:");
                 ft.attach(fragment);
                 ft.addToBackStack(null);
                 ft.commit();
@@ -1674,8 +1698,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         public int getCount() {
             return fragments.size();
         }
-
-
     }
 
     private class itemCellClickListener implements AdapterView.OnItemClickListener {

@@ -22,13 +22,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -64,7 +64,6 @@ import com.umeng.socialize.media.UMediaObject;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -77,6 +76,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.MD5Util;
@@ -86,7 +86,6 @@ import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.entity.AccountEntity;
-import im.boss66.com.entity.BaseResult;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.RoundImageView;
@@ -126,6 +125,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
 
     private Dialog dialog;
+    private View dialog_view;
     private ImageView iv_success_catch;
     // private Button bt_catch;
     private String userId, fuwaId;
@@ -133,7 +133,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private ImageLoader imageLoader;
     private ImageView iv_success;
     private String fuwaNum;
-    private View dialog_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -262,9 +261,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     if (sharePopup.isShowing()) {
                         sharePopup.dismiss();
                     } else {
-//                        sharePopup.show(dialog_view.findViewById(R.id.tv_name));
-                        sharePopup.showAtLocation(dialog_view.findViewById(R.id.tv_name), Gravity.BOTTOM, 0, 0);
-
+                        sharePopup.show(dialog.getWindow().getDecorView());
                     }
                 }
                 break;
@@ -629,18 +626,17 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
             LinearLayout ll_dialog = (LinearLayout) dialog_view.findViewById(R.id.ll_dialog);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ll_dialog.getLayoutParams();
-            layoutParams.width=(int) (sceenW * 0.8);
+            layoutParams.width = (int) (sceenW * 0.8);
             layoutParams.height = (int) (sceenH * 0.8);
             ll_dialog.setLayoutParams(layoutParams);
 
             Window dialogWindow = dialog.getWindow();
             WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
             params.height = sceenH;
-            params.width=sceenW;
+            params.width = sceenW;
             dialogWindow.setAttributes(params);
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
-
 
 
             AccountEntity sAccount = App.getInstance().getAccount();
@@ -679,6 +675,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                         boolean isTrue = obj.getBoolean("data");
                         if (code == 0 && isTrue) {
 //                            EventBus.getDefault().post("1");
+                            Intent intent = new Intent(Constants.Action.MAP_MARKER_REFRESH);
+                            intent.putExtra("gid", fuwaId);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             playSucessGif();
                         } else {
                             previewing = true;

@@ -4,6 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
+
     <!--<include layout="@layout/zf_chat_title_bg" />-->
     <RelativeLayout
         android:id="@+id/rl_top_bar"
@@ -45,7 +46,6 @@
     </RelativeLayout>
     <!--android:background="@drawable/chat_bg_01"-->
     <FrameLayout
-        android:id="@+id/fl_content"
         android:layout_width="fill_parent"
         android:layout_height="0.0dip"
         android:layout_weight="1.0"
@@ -327,6 +327,107 @@
             android:verticalSpacing="18dp">
 
         </GridView>
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="32dp"-->
+        <!--android:layout_marginRight="32dp"-->
+        <!--android:layout_marginTop="18dp"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_chat_img"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginRight="29dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:drawablePadding="2dp"-->
+        <!--android:drawableTop="@drawable/hp_ch_photos"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="照片"-->
+        <!--android:textColor="#888888"-->
+        <!--android:textSize="13.5sp" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_chat_photo"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginRight="29dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:drawablePadding="2dp"-->
+        <!--android:drawableTop="@drawable/hp_ch_camera"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="拍摄"-->
+        <!--android:textColor="#888888"-->
+        <!--android:textSize="13.5sp" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_chat_video"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginRight="29dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:drawablePadding="2dp"-->
+        <!--android:drawableTop="@drawable/hp_ch_video"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="小视频"-->
+        <!--android:textColor="#888888"-->
+        <!--android:textSize="13.5sp" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_chat_collect"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:drawablePadding="2dp"-->
+        <!--android:drawableTop="@drawable/hp_ch_collect"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="收藏"-->
+        <!--android:textColor="#888888"-->
+        <!--android:textSize="13.5sp" />-->
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="left"-->
+        <!--android:layout_marginLeft="32dp"-->
+        <!--android:layout_marginRight="32dp"-->
+        <!--android:layout_marginTop="18dp"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_chat_red"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginRight="29dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:drawablePadding="2dp"-->
+        <!--android:drawableTop="@drawable/hp_ch_red"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="红包"-->
+        <!--android:textColor="#888888"-->
+        <!--android:textSize="13.5sp" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_chat_card"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginRight="29dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:drawablePadding="2dp"-->
+        <!--android:drawableTop="@drawable/hp_ch_card"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="个人名片"-->
+        <!--android:textColor="#888888"-->
+        <!--android:textSize="13.5sp" />-->
+        <!--</LinearLayout>-->
     </LinearLayout>
 
     <include
@@ -335,32 +436,91 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"></include>
-
-    <!--<FrameLayout-->
-    <!--android:id="@+id/panelLayout"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="204.0dip"-->
-    <!--android:background="#ff34373c"-->
-    <!--android:visibility="gone">-->
-
-    <!--<GridView-->
-    <!--android:id="@+id/panel"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="204.0dip"-->
-    <!--android:gravity="center"-->
-    <!--android:listSelector="#ff34373c"-->
-    <!--android:numColumns="4"-->
-    <!--android:paddingLeft="11.0dip"-->
-    <!--android:paddingRight="11.0dip"-->
-    <!--android:paddingTop="14.0dip"-->
-    <!--android:scrollbars="none"-->
-    <!--android:stretchMode="columnWidth"-->
-    <!--android:verticalSpacing="14.0dip" />-->
-
-    <!--<ImageView-->
+    <!--<LinearLayout-->
+    <!--android:id="@+id/ll_chat_video"-->
     <!--android:layout_width="fill_parent"-->
     <!--android:layout_height="wrap_content"-->
-    <!--android:background="@drawable/chat_plugin_shadow" />-->
-    <!--</FrameLayout>-->
+    <!--android:background="@drawable/bottombar_bg"-->
+    <!--android:gravity="center"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:visibility="gone">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_chat_video"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="5dp"-->
+    <!--android:layout_marginRight="20dp"-->
+    <!--android:layout_marginTop="5dp"-->
+    <!--android:drawablePadding="2dp"-->
+    <!--android:drawableTop="@drawable/zf_take_camera_btn_bg"-->
+    <!--android:gravity="center_horizontal"-->
+    <!--android:text="拍照"-->
+    <!--android:textColor="#000000" />-->
+    <!--</LinearLayout>-->
+
+    <!-- 表情 begin -->
+
+
+    <!-- 显示每个表情 -->
+
+    <FrameLayout
+        android:id="@+id/panelLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="204.0dip"
+        android:background="#ff34373c"
+        android:visibility="gone">
+
+        <GridView
+            android:id="@+id/panel"
+            android:layout_width="fill_parent"
+            android:layout_height="204.0dip"
+            android:gravity="center"
+            android:listSelector="#ff34373c"
+            android:numColumns="4"
+            android:paddingLeft="11.0dip"
+            android:paddingRight="11.0dip"
+            android:paddingTop="14.0dip"
+            android:scrollbars="none"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="14.0dip" />
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/chat_plugin_shadow" />
+    </FrameLayout>
+
+    <!-- 表情页viewpager -->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/face_ll"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="#fff0f0f0"-->
+    <!--android:orientation="vertical"-->
+    <!--android:paddingBottom="5dip"-->
+    <!--android:paddingTop="5dip"-->
+    <!--android:visibility="gone">-->
+
+    <!--<com.pzf.liaotian.view.JazzyViewPager-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--android:id="@+id/face_pager"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="120.0dip"-->
+    <!--android:layout_marginLeft="5dip"-->
+    <!--android:layout_marginRight="5dip"-->
+    <!--android:background="#0000"-->
+    <!--android:flipInterval="30"-->
+    <!--android:persistentDrawingCache="animation"-->
+    <!--app:style="cubeout" />-->
+
+    <!--<com.pzf.liaotian.view.CirclePageIndicator xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--android:id="@+id/indicator"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:padding="10dip" />-->
+    <!--</LinearLayout>-->
+    <!-- 表情 end -->
 
 </LinearLayout>
