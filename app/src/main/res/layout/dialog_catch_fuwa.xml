@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:gravity="center"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/ll_parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/ll_dialog"
         android:background="@drawable/choose_bg"
-        android:orientation="vertical">
-
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         <im.boss66.com.widget.RoundImageView
             android:id="@+id/riv_head"
             android:layout_width="100dp"
@@ -72,13 +71,15 @@
             android:id="@+id/tv_continue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/bt_share"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="25dp"
+            android:layout_below="@+id/bt_share"
             android:text="继续捕捉"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
     </LinearLayout>
+
+
 
 </LinearLayout>

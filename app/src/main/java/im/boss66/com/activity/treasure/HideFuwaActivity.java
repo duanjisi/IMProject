@@ -596,6 +596,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101 && resultCode == RESULT_OK) {
+//            EventBus.getDefault().post("1");
             showSuccessHideDialog();
         } else if (requestCode == 102 && resultCode == RESULT_OK && data != null) {
             address = data.getStringExtra("address");

@@ -23,6 +23,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -43,6 +46,8 @@ import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.BaseContact;
 import im.boss66.com.entity.ContactEntity;
 import im.boss66.com.entity.FriendState;
+import im.boss66.com.entity.MessageEvent;
+import im.boss66.com.entity.MessageEvent2;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.ContactsRequest;
 import im.boss66.com.http.request.NewFriendNumRequest;
@@ -80,6 +85,7 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        EventBus.getDefault().register(this);
         initViews(view);
     }
 
@@ -297,6 +303,7 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
     private class LocalBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i("info","onReceiver():action:"+intent.getAction());
             String action = intent.getAction();
             if (Constants.Action.CONTACTS_REMOVE_CURRETN_ITEM.equals(action)) {
                 String userid = intent.getStringExtra("userid");
@@ -412,7 +419,14 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         LocalBroadcastManager.getInstance(getActivity()).
                 unregisterReceiver(mLocalBroadcastReceiver);
+    }
+
+    @Subscribe
+    public void onEvent(MessageEvent2 msg){
+        showToast("hahaha",false);
+        android.util.Log.i("liwya","EventBus.getDefault()2");
     }
 }

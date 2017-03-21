@@ -18,8 +18,6 @@ import com.umeng.message.IUmengUnregisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -92,17 +90,11 @@ public class MainActivity extends BaseActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Session.getInstance().addObserver(this);
-        EventBus.getDefault().register(this);
         Fresco.initialize(MainActivity.this);//注册，在setContentView之前。
         setContentView(R.layout.activity_main);
         initViews();
     }
 
-    @Subscribe
-    public void onMessageEvent(MessageEvent messageEvent) {
-        Log.i("info", "=============onMessageEvent");
-        showToast("action:" + messageEvent.getAction(), true);
-    }
 
     private void initViews() {
         account = App.getInstance().getAccount();
@@ -606,7 +598,6 @@ public class MainActivity extends BaseActivity implements Observer {
         contactBooksFragment = null;
         discoverFragment = null;
         mineFragment = null;
-        EventBus.getDefault().unregister(this);
         if (mPushAgent.isEnabled() || UmengRegistrar.isRegistered(MainActivity.this)) {
             //开启推送并设置注册的回调处理
             mPushAgent.disable(mUnregisterCallback);

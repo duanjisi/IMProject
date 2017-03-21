@@ -65,7 +65,6 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                 } else if (!dialog.isShowing()) {
                     dialog.show();
                 }
-
                 break;
             case R.id.tv_rank://福娃排行榜
                 openActivity(FuwaTopList.class);
@@ -101,7 +100,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         dialog = new Dialog(context, R.style.dialog_ios_style);
         dialog.setContentView(view);
         dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCanceledOnTouchOutside(true);
 
         TextView tv_word = (TextView) dialog.findViewById(R.id.tv_word);
         tv_word.setText(Base64Utils.encodeBase64(App.getInstance().getUid()));

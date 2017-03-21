@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,7 +100,8 @@ public class FuwaMySellFragment extends BaseFragment {
 
     private void initViews(View view) {
         rcv_fuwalist = (RecyclerView) view.findViewById(R.id.rcv_fuwalist);
-        rcv_fuwalist.setLayoutManager(new GridLayoutManager(getActivity(), 2, GridLayoutManager.HORIZONTAL, false));
+        rcv_fuwalist.setLayoutManager(new GridLayoutManager(getActivity(), 3, GridLayoutManager.VERTICAL, false));
+//        rcv_fuwalist.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new FuwaSellAdapter(getActivity());
         adapter.setItemListener(new RecycleViewItemListener() {
             @Override

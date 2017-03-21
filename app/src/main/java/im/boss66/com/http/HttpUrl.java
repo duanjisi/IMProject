@@ -224,7 +224,7 @@ public class HttpUrl {
     //福娃详情
     public static final String FUWA_DETAIL = "http://wsimali.66boss.com:9090/api/querydetail?fuwagid=";
     //出售福娃
-    public static final String SELL_FUWA = "http://wsimali.66boss.com:9090/api/sell";
+    public static final String SELL_FUWA = "http://wsimali.66boss.com:9090/msg/sell";
     //赠送福娃
     public static final String GIVE_FUWA = "http://wsimali.66boss.com:9090/api/donate";
     //福娃排行榜
