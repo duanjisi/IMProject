@@ -64,6 +64,7 @@ import com.umeng.socialize.media.UMediaObject;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -120,12 +121,12 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private Camera mCamera;
     private im.boss66.com.widget.scan.CameraManager mCameraManager;
     private Handler autoFocusHandler;
-    private boolean previewing = true, isTakePic = false;
+    private boolean previewing = true, isTakePic = false, isHideOk = true;
+    ;
     private PermissionListener permissionListener;
     private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
 
     private Dialog dialog;
-    private View dialog_view;
     private ImageView iv_success_catch;
     // private Button bt_catch;
     private String userId, fuwaId;
@@ -133,6 +134,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private ImageLoader imageLoader;
     private ImageView iv_success;
     private String fuwaNum;
+    private View dialog_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -506,6 +508,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        iv_success = null;
         releaseCamera();
     }
 
@@ -626,17 +629,18 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
             LinearLayout ll_dialog = (LinearLayout) dialog_view.findViewById(R.id.ll_dialog);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ll_dialog.getLayoutParams();
-            layoutParams.width = (int) (sceenW * 0.8);
+            layoutParams.width=(int) (sceenW * 0.8);
             layoutParams.height = (int) (sceenH * 0.8);
             ll_dialog.setLayoutParams(layoutParams);
 
             Window dialogWindow = dialog.getWindow();
             WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
             params.height = sceenH;
-            params.width = sceenW;
+            params.width=sceenW;
             dialogWindow.setAttributes(params);
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
+
 
 
             AccountEntity sAccount = App.getInstance().getAccount();
@@ -661,7 +665,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         String sign = MD5Util.getStringMD5(signUrl);
         String url = HttpUrl.CATCH_MY_FUWA + userId + "&gid=" +
                 fuwaId + "&sign=" + sign;
-        HttpUtils httpUtils = new HttpUtils(60 * 1000);
+        HttpUtils httpUtils = new HttpUtils(15 * 1000);
         RequestParams params = new RequestParams();
         params.addBodyParameter("file", imgFile);
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
@@ -683,7 +687,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             previewing = true;
                             mCamera.startPreview();
                             autoFocusHandler.postDelayed(doAutoFocus, 1000);
-                            showToast("捕捉失败TAT，再试下吧", false);
+                            showToast("图片匹配失败TAT，再试下吧", false);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -692,7 +696,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     previewing = true;
                     mCamera.startPreview();
                     autoFocusHandler.postDelayed(doAutoFocus, 1000);
-                    showToast("捕捉失败TAT，再试下吧", false);
+                    showToast("图片匹配失败TAT，再试下吧", false);
                 }
             }
 
@@ -701,7 +705,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 previewing = true;
                 mCamera.startPreview();
                 autoFocusHandler.postDelayed(doAutoFocus, 1000);
-                showToast("捕捉失败TAT，再试下吧", false);
+                showToast("图片匹配失败TAT，再试下吧", false);
             }
         });
     }

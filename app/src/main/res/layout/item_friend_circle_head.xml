@@ -51,8 +51,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/bg_round_light_black"
-        android:visibility="gone"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_new"
@@ -91,40 +91,41 @@
         android:id="@+id/tv_signature"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="@dimen/dp_18"
         android:paddingLeft="@dimen/dp_18"
         android:paddingRight="9dp"
         android:paddingTop="8dp"
-        android:paddingBottom="@dimen/dp_18"
-        android:visibility="gone"
-        android:gravity="center"
         android:textColor="@color/grey"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/ll_personal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="@dimen/dp_10"
-        android:visibility="gone"
-        android:orientation="horizontal">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="3"
             android:layout_height="wrap_content"
+            android:layout_weight="3"
             android:text="今天"
-            android:textSize="30sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textSize="30sp" />
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_weight="8"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="8">
 
             <ImageView
+                android:id="@+id/iv_today"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/hp_addmore_photo"/>
+                android:src="@drawable/hp_addmore_photo" />
 
         </RelativeLayout>
 
