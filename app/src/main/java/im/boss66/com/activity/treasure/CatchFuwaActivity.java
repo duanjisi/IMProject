@@ -120,7 +120,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private Camera mCamera;
     private im.boss66.com.widget.scan.CameraManager mCameraManager;
     private Handler autoFocusHandler;
-    private boolean previewing = true, isTakePic = false;
+    private boolean previewing = true, isTakePic = false, isHideOk = true;
+    ;
     private PermissionListener permissionListener;
     private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
 
@@ -260,7 +261,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     if (sharePopup.isShowing()) {
                         sharePopup.dismiss();
                     } else {
-                        sharePopup.show(dialog.getWindow().getDecorView());
+                        sharePopup.show(view);
                     }
                 }
                 break;
@@ -505,6 +506,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        iv_success = null;
         releaseCamera();
     }
 
@@ -611,7 +613,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     R.layout.dialog_catch_fuwa, null);
             int sceenW = UIUtils.getScreenWidth(this);
             int sceenH = UIUtils.getScreenHeight(this);
-
+            LinearLayout ll_parent = (LinearLayout) view.findViewById(R.id.ll_parent);
             RoundImageView roundImageView = (RoundImageView) view.findViewById(R.id.riv_head);
             TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
             TextView tv_fuwa = (TextView) view.findViewById(R.id.tv_fuwa);
@@ -620,13 +622,17 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             tv_continue.setOnClickListener(this);
             bt_share.setOnClickListener(this);
 
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ll_parent.getLayoutParams();
+            layoutParams.height = (int) (sceenH * 0.8);
+            ll_parent.setLayoutParams(layoutParams);
+
             dialog = new Dialog(context, R.style.ActionSheetDialogStyle);
             dialog.setContentView(view);
             Window dialogWindow = dialog.getWindow();
-            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-            lp.width = (int) (sceenW * 0.8);
-            lp.height = (int) (sceenH * 0.8);
-            dialogWindow.setAttributes(lp);
+//            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+//            lp.width = LinearLayout.;
+//            lp.height = (int) (sceenH * 0.8);
+//            dialogWindow.setAttributes(lp);
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
             AccountEntity sAccount = App.getInstance().getAccount();
@@ -651,7 +657,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         String sign = MD5Util.getStringMD5(signUrl);
         String url = HttpUrl.CATCH_MY_FUWA + userId + "&gid=" +
                 fuwaId + "&sign=" + sign;
-        HttpUtils httpUtils = new HttpUtils(60 * 1000);
+        HttpUtils httpUtils = new HttpUtils(15 * 1000);
         RequestParams params = new RequestParams();
         params.addBodyParameter("file", imgFile);
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
@@ -664,13 +670,13 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                         int code = obj.getInt("code");
                         boolean isTrue = obj.getBoolean("data");
                         if (code == 0 && isTrue) {
-                            EventBus.getDefault().post("1");
+                            EventBus.getDefault().post(fuwaId);
                             playSucessGif();
                         } else {
                             previewing = true;
                             mCamera.startPreview();
                             autoFocusHandler.postDelayed(doAutoFocus, 1000);
-                            showToast("捕捉失败TAT，再试下吧", false);
+                            showToast("图片匹配失败TAT，再试下吧", false);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -679,7 +685,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     previewing = true;
                     mCamera.startPreview();
                     autoFocusHandler.postDelayed(doAutoFocus, 1000);
-                    showToast("捕捉失败TAT，再试下吧", false);
+                    showToast("图片匹配失败TAT，再试下吧", false);
                 }
             }
 
@@ -688,7 +694,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 previewing = true;
                 mCamera.startPreview();
                 autoFocusHandler.postDelayed(doAutoFocus, 1000);
-                showToast("捕捉失败TAT，再试下吧", false);
+                showToast("图片匹配失败TAT，再试下吧", false);
             }
         });
     }

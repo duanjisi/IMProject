@@ -407,7 +407,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             rv_address = (RecyclerView) popupView.findViewById(R.id.rv_address);
             rl_search.setOnClickListener(this);
             int sceenH = UIUtils.getScreenHeight(this);
-            popWindow = new PopupWindow(popupView, WindowManager.LayoutParams.WRAP_CONTENT, sceenH / 2, true);
+            popWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, sceenH / 2, true);
             popWindow.setAnimationStyle(R.style.PopupTitleBarAnim1);
             popWindow.setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
             popWindow.setFocusable(true);
@@ -596,7 +596,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101 && resultCode == RESULT_OK) {
-            EventBus.getDefault().post("1");
             showSuccessHideDialog();
         } else if (requestCode == 102 && resultCode == RESULT_OK && data != null) {
             address = data.getStringExtra("address");

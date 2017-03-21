@@ -60,9 +60,9 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_command://我的口令
-                if(dialog==null){
+                if (dialog == null) {
                     showFuwaDialog(this);
-                }else if(!dialog.isShowing()){
+                } else if (!dialog.isShowing()) {
                     dialog.show();
                 }
 
@@ -72,7 +72,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
                 break;
             case R.id.iv_msg://消息
-                openActivity(AroundPosActivity.class);
+                openActivity(FuwaMessageActivity.class);
                 break;
             case R.id.iv_bag://背包
                 openActivity(FuwaPackageActivity.class);
@@ -90,6 +90,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                 break;
         }
     }
+
     //弹第一个福娃dialog
     private void showFuwaDialog(final Context context) {
 

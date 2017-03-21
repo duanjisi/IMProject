@@ -25,6 +25,8 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -230,6 +232,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
                     if (data != null) {
                         int code = data.getCode();
                         if (code == 0) {
+                            EventBus.getDefault().post(selectId);
                             setResult(RESULT_OK);
                             finish();
                         }
