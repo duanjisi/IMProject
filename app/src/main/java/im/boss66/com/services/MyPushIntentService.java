@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import im.boss66.com.Constants;
 import im.boss66.com.activity.book.NewFriendsActivity;
 import im.boss66.com.entity.MessageEvent;
+import im.boss66.com.entity.MessageEvent2;
 
 /**
  * Developer defined push intent service.
@@ -114,6 +115,9 @@ public class MyPushIntentService extends UmengBaseIntentService {
                     android.util.Log.i("info", "=====8888888========add()");
                     intent = new Intent(appContext, NewFriendsActivity.class);
 //                    EventBus.getDefault().post(new MessageEvent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE));
+
+                    EventBus.getDefault().post(new MessageEvent2("哈哈"));
+                    android.util.Log.i("liwya","EventBus.getDefault()");
 //                    ContactBooksFragment.onMessage(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
 //                    App.getInstance().getFragment().onChatMessageReceiver(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
 
@@ -122,7 +126,7 @@ public class MyPushIntentService extends UmengBaseIntentService {
 //                        pushCallback.onMessageReceiver(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
 //                    }
 //                    Session.getInstance().refreshContacts(null, Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
-//                    senBroadCast(appContext, Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
+                    senBroadCast(appContext, Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
 //                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE));
                 }
 //                if (it != null) {
