@@ -59,6 +59,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -1630,8 +1631,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //换成新的fragment
                 fragment = fragments.get(position);
 //添加新fragment时必须用前面获得的tag，这点很重要
+
                 ft.add(container.getId(), fragment, fragmentTag);
                 ft.attach(fragment);
+                ft.addToBackStack(null);
                 ft.commit();
                 return fragment;
             } else {

@@ -529,7 +529,7 @@
         <!--<service android:name="com.atgc.cotton.services.NotificationService" />-->
         <service
             android:name="im.boss66.com.services.MyPushIntentService"
-            android:process=":push" />
+             />
 
         <service android:name="im.boss66.com.services.NotificationService"></service>
 
