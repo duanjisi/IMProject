@@ -453,8 +453,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onPictureTaken(byte[] bytes, Camera camera) {
             try {
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
                 if (bm != null) {
                     bm = rotateBitmap(bm, 90);
                     if (bm != null) {
@@ -631,18 +632,17 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
             LinearLayout ll_dialog = (LinearLayout) dialog_view.findViewById(R.id.ll_dialog);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ll_dialog.getLayoutParams();
-            layoutParams.width=(int) (sceenW * 0.8);
+            layoutParams.width = (int) (sceenW * 0.8);
             layoutParams.height = (int) (sceenH * 0.8);
             ll_dialog.setLayoutParams(layoutParams);
 
             Window dialogWindow = dialog.getWindow();
             WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
             params.height = sceenH;
-            params.width=sceenW;
+            params.width = sceenW;
             dialogWindow.setAttributes(params);
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
-
 
 
             AccountEntity sAccount = App.getInstance().getAccount();
