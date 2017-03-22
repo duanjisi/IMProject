@@ -3,9 +3,11 @@ package im.boss66.com.activity.base;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import im.boss66.com.R;
@@ -18,6 +20,7 @@ public abstract class WebBaseActivity extends ABaseActivity implements View.OnCl
     protected WebView webview;
     protected String url;
     protected String title;
+    protected ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,7 @@ public abstract class WebBaseActivity extends ABaseActivity implements View.OnCl
     }
 
     private void initViews() {
+        progressBar = (ProgressBar) findViewById(R.id.pergress);
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
         tv_headlift_view.setOnClickListener(this);
@@ -36,6 +40,20 @@ public abstract class WebBaseActivity extends ABaseActivity implements View.OnCl
         webview.setWebViewClient(new WebBaseActivity.MyWebViewClient());
         //加载需要显示的网页
 
+        webview.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                // TODO Auto-generated method stub
+                super.onProgressChanged(view, newProgress);
+                if(newProgress ==100){
+                    progressBar.setVisibility(View.GONE);
+                    //progressBar.setProgress(newProgress);
+                }else {
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setProgress(newProgress);//设置加载进度
+                }
+            }
+        });
         //设置Web视图
         webview.getSettings().setJavaScriptEnabled(true);
         webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
