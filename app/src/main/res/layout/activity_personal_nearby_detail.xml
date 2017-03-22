@@ -32,7 +32,7 @@
                     android:id="@+id/iv_head"
                     android:layout_width="70.4dp"
                     android:layout_height="70.4dp"
-                    android:src="@drawable/person" />
+                    android:src="@drawable/zf_default_album_grid_image" />
 
                 <TextView
                     android:id="@+id/tv_name"
@@ -40,7 +40,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="11dp"
                     android:layout_toRightOf="@+id/iv_head"
-                    android:text="test"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
@@ -52,7 +51,6 @@
                     android:layout_marginBottom="2dp"
                     android:layout_marginLeft="4.4dp"
                     android:layout_toRightOf="@+id/tv_name"
-                    android:text="男"
                     android:textColor="@color/text_light_blue_font"
                     android:textSize="13.2sp" />
 
@@ -64,7 +62,6 @@
                     android:layout_below="@+id/tv_name"
                     android:layout_marginLeft="4.4dp"
                     android:layout_marginTop="15.4dp"
-                    android:text="200米以内"
                     android:textColor="@color/text_light_gray"
                     android:textSize="13.2sp" />
 

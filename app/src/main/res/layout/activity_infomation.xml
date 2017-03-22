@@ -55,15 +55,13 @@
                     android:layout_width="70.4dp"
                     android:layout_height="70.4dp"
                     android:layout_marginRight="11dp"
-                    android:layout_toLeftOf="@+id/iv_go"
-                    android:src="@drawable/person" />
+                    android:layout_toLeftOf="@+id/iv_go" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:layout_below="@+id/rl_richScan"
                 android:layout_marginLeft="17dp"
                 android:background="@color/line_color_gray_d1" />
 
@@ -82,7 +80,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:layout_toRightOf="@+id/iv_richScan"
                     android:text="名字"
                     android:textColor="@color/black"
                     android:textSize="18.7sp" />
@@ -101,7 +98,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="11dp"
                     android:layout_toLeftOf="@+id/iv_go_1"
-                    android:text="测试"
                     android:textColor="@color/text_color_gray_b"
                     android:textSize="17.6sp" />
 
@@ -110,7 +106,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:layout_below="@+id/rl_richScan"
                 android:layout_marginLeft="17dp"
                 android:background="@color/line_color_gray_d1" />
 
@@ -121,6 +116,7 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
                 android:paddingRight="8.8dp"
+                android:visibility="gone"
                 android:paddingTop="10dp">
 
                 <TextView
@@ -128,7 +124,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:layout_toRightOf="@+id/iv_richScan"
                     android:text="@string/app_num"
                     android:textColor="@color/black"
                     android:textSize="18.7sp" />
@@ -138,7 +133,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="123456"
                     android:textColor="@color/text_color_gray_b"
                     android:textSize="17.6sp" />
 
@@ -147,8 +141,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:layout_below="@+id/rl_richScan"
                 android:layout_marginLeft="17dp"
+                android:visibility="gone"
                 android:background="@color/line_color_gray_d1" />
 
             <RelativeLayout
@@ -243,7 +237,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:layout_below="@+id/rl_richScan"
                 android:layout_marginLeft="17dp"
                 android:background="@color/line_color_gray_d1" />
 
@@ -262,7 +255,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:layout_toRightOf="@+id/iv_richScan"
                     android:text="地区"
                     android:textColor="@color/black"
                     android:textSize="18.7sp" />
@@ -292,7 +284,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:layout_below="@+id/rl_richScan"
                 android:layout_marginLeft="17dp"
                 android:background="@color/line_color_gray_d1" />
 
@@ -311,7 +302,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:layout_toRightOf="@+id/iv_richScan"
                     android:text="个性签名"
                     android:textColor="@color/black"
                     android:textSize="18.7sp" />

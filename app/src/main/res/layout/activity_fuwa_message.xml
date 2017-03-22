@@ -6,26 +6,27 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@color/red_fuwa">
 
         <TextView
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/dp_10"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:paddingLeft="@dimen/dp_14"
             android:paddingRight="@dimen/dp_10"
-            android:paddingTop="@dimen/dp_10"
             android:text="返回"
-            android:textColor="@color/golden_color" />
+            android:textColor="@color/golden_color"
+            android:textSize="@dimen/text_size_32" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="消息"
-            android:textColor="@color/golden_color" />
+            android:textColor="@color/golden_color"
+            android:textSize="@dimen/text_size_32" />
 
     </RelativeLayout>
 
@@ -39,4 +40,16 @@
         slide:slideLeftAction="reveal"
         slide:slideMode="right"
         slide:slideRightAction="scroll" />
+
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_40"
+        android:visibility="gone"
+        android:text="空空如也~"
+        android:textColor="@color/text_gray_darker"
+        android:textSize="30sp" />
+
 </LinearLayout>

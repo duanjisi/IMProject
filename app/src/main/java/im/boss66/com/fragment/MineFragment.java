@@ -16,6 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.activity.im.EmojiSelectWellActivity;
 import im.boss66.com.activity.personage.PersonalInformationActivity;
 import im.boss66.com.activity.personage.PersonalPhotoAlbumActivity;
 import im.boss66.com.activity.personage.PersonalSetActivity;
@@ -103,6 +104,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(intent0);
                 break;
             case R.id.rl_expression://表情
+                openActivity(EmojiSelectWellActivity.class, null);
                 break;
             case R.id.rl_set://设置
                 openActivity(PersonalSetActivity.class, null);
