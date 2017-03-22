@@ -37,8 +37,8 @@ public class SharkItOffActivity extends BaseActivity implements SensorEventListe
 
     private final static String TAG = SharkItOffActivity.class.getSimpleName();
 
-    private TextView tv_back, tv_bottom,tv_name,tv_sex,tv_distance;
-    private ImageView iv_set,iv_head;
+    private TextView tv_back, tv_bottom, tv_name, tv_sex, tv_distance;
+    private ImageView iv_set, iv_head;
     private ProgressBar pb_shark;
     private LinearLayout ll_people;
 
@@ -243,57 +243,61 @@ public class SharkItOffActivity extends BaseActivity implements SensorEventListe
                 break;
             case R.id.ll_people:
                 Bundle bundle = new Bundle();
-                bundle.putString("classType","SharkItOffActivity");
-                bundle.putSerializable("people",nearByChild);
-                openActivity(PersonalNearbyDetailActivity.class,bundle);
+                bundle.putString("classType", "SharkItOffActivity");
+                bundle.putSerializable("people", nearByChild);
+                openActivity(PersonalNearbyDetailActivity.class, bundle);
                 break;
         }
     }
 
-    private void getServerData(){
+    private void getServerData() {
         showLoadingDialog();
-        SharkItOffRequest request = new SharkItOffRequest(TAG,access_token);
+        SharkItOffRequest request = new SharkItOffRequest(TAG, access_token);
         request.send(new BaseDataRequest.RequestCallback<SharkIfOffEntity>() {
             @Override
             public void onSuccess(SharkIfOffEntity pojo) {
                 cancelLoadingDialog();
-                if (pojo != null){
+                if (pojo != null) {
                     NearByChildEntity result = pojo.getResult();
-                    if (result != null){
+                    if (result != null) {
                         showPeople(result);
                     }
-                }else {
-                    ToastUtil.showShort(SharkItOffActivity.this,"暂无同一时刻摇的人");
+                } else {
+                    ToastUtil.showShort(SharkItOffActivity.this, "暂无同一时刻摇的人");
                 }
             }
 
             @Override
             public void onFailure(String msg) {
                 cancelLoadingDialog();
+                if (!TextUtils.isEmpty(msg) && "success".equals(msg)) {
+                    ToastUtil.showShort(SharkItOffActivity.this, "暂无同一时刻摇的人");
+                } else {
+                    ToastUtil.showShort(SharkItOffActivity.this, msg);
+                }
                 pb_shark.setVisibility(View.GONE);
                 ll_people.setVisibility(View.GONE);
                 tv_bottom.setText(getResources().getString(R.string.shark_it_off));
-                ToastUtil.showShort(SharkItOffActivity.this,msg);
             }
         });
     }
 
-    private void showPeople(NearByChildEntity result){
+    private void showPeople(NearByChildEntity result) {
         nearByChild = result;
         ll_people.setVisibility(View.VISIBLE);
         tv_bottom.setVisibility(View.GONE);
         pb_shark.setVisibility(View.GONE);
         tv_name.setText("" + result.getUser_name());
         int sex = result.getSex();
-        if (sex == 1){
+        if (sex == 1) {
             tv_sex.setText("" + "男");
-        }else if(sex == 2){
+        } else if (sex == 2) {
             tv_sex.setText("" + "女");
         }
         tv_distance.setText("相距" + result.getDistance() + "米");
         String avatar = result.getAvatar();
-        if (!TextUtils.isEmpty(avatar)){
-            imageLoader.displayImage(avatar,iv_head,
+        if (!TextUtils.isEmpty(avatar)) {
+            imageLoader.displayImage(avatar, iv_head,
                     ImageLoaderUtils.getDisplayImageOptions());
         }
     }

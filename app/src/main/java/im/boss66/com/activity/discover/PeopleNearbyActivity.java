@@ -48,7 +48,7 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
     //定位都要通过LocationManager这个类实现
     private LocationManager locationManager;
     private String provider;
-    private String lat,lng,access_token;
+    private String lat, lng, access_token;
     private String sexType = "0";//0:全部 1：男 2：女
     private List<NearByChildEntity> list;
 
@@ -109,7 +109,7 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
         }
         try {
             Location location = locationManager.getLastKnownLocation(provider);
-            if (location == null){
+            if (location == null) {
                 provider = LocationManager.PASSIVE_PROVIDER;
             }
             location = locationManager.getLastKnownLocation(provider);
@@ -118,9 +118,9 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
                 lat = String.valueOf(location.getLatitude());
                 lng = String.valueOf(location.getLongitude());
                 updateServerLocation();
-            }else {
-               // ToastUtil.showShort(this,getString(R.string.giving_orientation_privileges_fail));
-                if (TextUtils.isEmpty(lat) && TextUtils.isEmpty(lng)){
+            } else {
+                // ToastUtil.showShort(this,getString(R.string.giving_orientation_privileges_fail));
+                if (TextUtils.isEmpty(lat) && TextUtils.isEmpty(lng)) {
                     lat = "23.089474";
                     lng = "113.306867";
                     updateServerLocation();
@@ -131,15 +131,15 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    private void getServerData(){
+    private void getServerData() {
         showLoadingDialog();
-        PeopleNearbyRequest request = new PeopleNearbyRequest(TAG1,access_token,lng,lat,sexType);
+        PeopleNearbyRequest request = new PeopleNearbyRequest(TAG1, access_token, lng, lat, sexType);
         request.send(new BaseDataRequest.RequestCallback<PeopleNearbyEntity>() {
             @Override
             public void onSuccess(PeopleNearbyEntity pojo) {
-                if (pojo != null){
+                if (pojo != null) {
                     list = pojo.getResult();
-                    if (list != null && list.size() > 0){
+                    if (list != null && list.size() > 0) {
                         showData(list);
                     }
                 }
@@ -149,7 +149,7 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onFailure(String msg) {
                 cancelLoadingDialog();
-                ToastUtil.showShort(PeopleNearbyActivity.this,msg);
+                ToastUtil.showShort(PeopleNearbyActivity.this, msg);
             }
         });
     }
@@ -158,9 +158,9 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
         adapter.onDataChange(result);
     }
 
-    private void updateServerLocation(){
+    private void updateServerLocation() {
         showLoadingDialog();
-        UpdateLocationRequest request = new UpdateLocationRequest(TAG1,access_token,lng,lat);
+        UpdateLocationRequest request = new UpdateLocationRequest(TAG1, access_token, lng, lat);
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String pojo) {
@@ -171,7 +171,7 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onFailure(String msg) {
                 cancelLoadingDialog();
-                ToastUtil.showShort(PeopleNearbyActivity.this,msg);
+                ToastUtil.showShort(PeopleNearbyActivity.this, msg);
             }
         });
     }
@@ -189,12 +189,13 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
         adapter.setOnItemClickListener(new PeopleNearbyAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int postion) {
-                if (list != null && list.size() > postion){
-                    NearByChildEntity item = list.get(postion);
+                int curPos = postion - 1;
+                if (list != null && list.size() > curPos) {
+                    NearByChildEntity item = list.get(curPos);
                     Bundle bundle = new Bundle();
-                    bundle.putString("classType","PeopleNearbyActivity");
-                    bundle.putSerializable("people",item);
-                    openActivity(PersonalNearbyDetailActivity.class,bundle);
+                    bundle.putString("classType", "PeopleNearbyActivity");
+                    bundle.putSerializable("people", item);
+                    openActivity(PersonalNearbyDetailActivity.class, bundle);
                 }
             }
         });
@@ -233,7 +234,7 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(int which) {
         ToastUtil.showShort(this, "" + which);
-        switch (which){
+        switch (which) {
             case 1:
                 sexType = "2";
                 break;
