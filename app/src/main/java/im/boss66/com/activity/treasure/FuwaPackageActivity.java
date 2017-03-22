@@ -212,7 +212,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast("网络异常",false);
+                showToast(e.getMessage(),false);
                 Log.i("onFailure", s);
 
             }
@@ -405,7 +405,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onFailure(HttpException e, String s) {
                 Log.i("onFailure", s);
-                showToast("请填写正确的口令",false);
+                showToast(e.getMessage(),false);
             }
         });
     }
@@ -441,7 +441,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onFailure(HttpException e, String s) {
                 Log.i("onFailure", s);
-                showToast(s,false);
+                showToast(e.getMessage(),false);
             }
         });
 
