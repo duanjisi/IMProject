@@ -46,6 +46,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private MySchoolAdapter mySchoolAdapter;
     private MyHometownAdapter myHometownAdapter;
     private MyInfo myInfo;
+    private boolean flag = true;
 
     private PeopleDataDialog peopleDataDialog;
 
@@ -55,7 +56,11 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
-                    if(school_list==null&&hometown_list==null){
+                    //如果有数据
+                    if (school_list != null && school_list.size() > 0 && hometown_list != null && hometown_list.size() > 0) {
+                        flag=false;
+                        //只要有一样没数据
+                    } else {
                         if (peopleDataDialog == null) {
                             peopleDataDialog = new PeopleDataDialog(getActivity());
                             peopleDataDialog.show();
@@ -70,6 +75,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                     mySchoolAdapter.notifyDataSetChanged();
                     myHometownAdapter.setDatas(hometown_list);
                     myHometownAdapter.notifyDataSetChanged();
+
                     break;
             }
 
@@ -170,10 +176,9 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         peopleConnectionPop.showAsDropDown(parent);
     }
 
-        @Override
-        public void onResume() {
-            super.onResume();
-            initData();
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void initData() {
@@ -197,4 +202,13 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
 
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && flag) {
+            initData();
+        }
+    }
+
 }

@@ -31,6 +31,7 @@ import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
+import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.db.dao.EmoCateHelper;
@@ -479,8 +480,6 @@ public class MainActivity extends BaseActivity implements Observer {
                     break;
                 case R.id.rb_contact:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_3);
-//                    设置成功不弹窗
-
                     break;
                 case R.id.rb_discover:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_4);
