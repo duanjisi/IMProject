@@ -121,7 +121,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private Camera mCamera;
     private im.boss66.com.widget.scan.CameraManager mCameraManager;
     private Handler autoFocusHandler;
-    private boolean previewing = true, isTakePic = false;
+    private boolean previewing = true, isTakePic = false, isHideOk = true;
+    ;
     private PermissionListener permissionListener;
     private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
 
@@ -509,6 +510,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        iv_success = null;
         releaseCamera();
     }
 
@@ -665,7 +667,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         String sign = MD5Util.getStringMD5(signUrl);
         String url = HttpUrl.CATCH_MY_FUWA + userId + "&gid=" +
                 fuwaId + "&sign=" + sign;
-        HttpUtils httpUtils = new HttpUtils(60 * 1000);
+        HttpUtils httpUtils = new HttpUtils(15 * 1000);
         RequestParams params = new RequestParams();
         params.addBodyParameter("file", imgFile);
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
@@ -678,13 +680,13 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                         int code = obj.getInt("code");
                         boolean isTrue = obj.getBoolean("data");
                         if (code == 0 && isTrue) {
-//                            EventBus.getDefault().post("1");
+                            EventBus.getDefault().post(fuwaId);
                             playSucessGif();
                         } else {
                             previewing = true;
                             mCamera.startPreview();
                             autoFocusHandler.postDelayed(doAutoFocus, 1000);
-                            showToast("捕捉失败TAT，再试下吧", false);
+                            showToast("图片匹配失败TAT，再试下吧", false);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -693,7 +695,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     previewing = true;
                     mCamera.startPreview();
                     autoFocusHandler.postDelayed(doAutoFocus, 1000);
-                    showToast("捕捉失败TAT，再试下吧", false);
+                    showToast("图片匹配失败TAT，再试下吧", false);
                 }
             }
 
@@ -702,7 +704,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 previewing = true;
                 mCamera.startPreview();
                 autoFocusHandler.postDelayed(doAutoFocus, 1000);
-                showToast("捕捉失败TAT，再试下吧", false);
+                showToast("图片匹配失败TAT，再试下吧", false);
             }
         });
     }

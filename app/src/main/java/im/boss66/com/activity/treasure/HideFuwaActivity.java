@@ -44,6 +44,7 @@ import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -406,7 +407,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             rv_address = (RecyclerView) popupView.findViewById(R.id.rv_address);
             rl_search.setOnClickListener(this);
             int sceenH = UIUtils.getScreenHeight(this);
-            popWindow = new PopupWindow(popupView, WindowManager.LayoutParams.WRAP_CONTENT, sceenH / 2, true);
+            popWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, sceenH / 2, true);
             popWindow.setAnimationStyle(R.style.PopupTitleBarAnim1);
             popWindow.setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
             popWindow.setFocusable(true);
