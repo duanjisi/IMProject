@@ -64,7 +64,6 @@ import com.umeng.socialize.media.UMediaObject;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -629,18 +628,17 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
             LinearLayout ll_dialog = (LinearLayout) dialog_view.findViewById(R.id.ll_dialog);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ll_dialog.getLayoutParams();
-            layoutParams.width=(int) (sceenW * 0.8);
+            layoutParams.width = (int) (sceenW * 0.8);
             layoutParams.height = (int) (sceenH * 0.8);
             ll_dialog.setLayoutParams(layoutParams);
 
             Window dialogWindow = dialog.getWindow();
             WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
             params.height = sceenH;
-            params.width=sceenW;
+            params.width = sceenW;
             dialogWindow.setAttributes(params);
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
-
 
 
             AccountEntity sAccount = App.getInstance().getAccount();

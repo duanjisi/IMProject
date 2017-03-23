@@ -306,15 +306,15 @@
     </LinearLayout>
     <!-- 拍照和相册 -->
     <!--android:background="@drawable/bottombar_bg"-->
+    <!--android:layout_height="250dp"-->
     <LinearLayout
         android:id="@+id/ll_chatmain_affix"
         android:layout_width="fill_parent"
-        android:layout_height="250dp"
+        android:layout_height="0dp"
         android:background="#f5f5f6"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
-
         <GridView
             android:id="@+id/gridMore"
             android:layout_width="match_parent"
@@ -332,8 +332,6 @@
     <include
         android:id="@+id/view_face"
         layout="@layout/view_chat_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:visibility="gone"></include>
 
     <!--<FrameLayout-->

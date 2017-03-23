@@ -6,6 +6,7 @@ package im.boss66.com.http;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.squareup.okhttp.Callback;
@@ -24,6 +25,7 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.NetworkUtil;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.db.dao.JsonDao;
 import im.boss66.com.entity.JsonEntity;
 
@@ -111,9 +113,9 @@ public abstract class BaseDataRequest<T> {
                                 }
                             });
                             break;
-                        case 403://token无效，注销当前登录
-                            deviceOutLine();
-                            break;
+//                        case 401://token无效，注销当前登录
+//                            deviceOutLine(preRspPojo.message);
+//                            break;
                         case 10011:
                             //新增错误返回码：10011，通知移动端最近登录设备改变取消用户登录状态
                             MycsLog.d("收到了退出消息");
@@ -121,15 +123,20 @@ public abstract class BaseDataRequest<T> {
                             break;
                         default:
                             final PreRspPojo finalPreRspPojo = preRspPojo;
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    callback.onFailure(finalPreRspPojo.message);
-                                }
-                            });
+                            if (finalPreRspPojo.status == 401) {
+                                deviceOutLine(finalPreRspPojo.message);
+                            } else {
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        callback.onFailure(finalPreRspPojo.message);
+                                    }
+                                });
+                            }
                             break;
                     }
                 } catch (Exception e) {
+                    Log.i("info", "===============Exception:" + e.getMessage());
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -146,11 +153,19 @@ public abstract class BaseDataRequest<T> {
     /**
      * 本地数据库请求（获取JSON文本）
      */
-    private void deviceOutLine() {
+    private void deviceOutLine(String msg) {
 //        logoutRequest();
+//        ToastUtil.showLong(App.getInstance().getApplicationContext(), msg);
         Intent intent = new Intent();
         intent.setAction(Constants.ACTION_LOGOUT_RESETING);
         App.getInstance().sendBroadcast(intent);
+    }
+
+    /**
+     * 本地数据库请求（获取JSON文本）
+     */
+    private void showToast(String msg) {
+        ToastUtil.showLong(App.getInstance().getApplicationContext(), msg);
     }
 
     private String dbRequest() {

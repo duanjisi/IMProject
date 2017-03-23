@@ -73,6 +73,37 @@ public class InputDetector {
         return this;
     }
 
+    public InputDetector bindToET(EditText editText) {
+        mEditText = editText;
+        mEditText.requestFocus();
+        mEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    showSoftInput();
+                    if (!isSoftInputShown()) {
+                        showSoftInput();
+                    }
+                    mEditText.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getSupportSoftInputHeight();
+                        }
+                    }, 200L);
+
+//                    mEditText.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            unlockContentHeightDelayed();
+//                        }
+//                    }, 200L);
+                }
+                return false;
+            }
+        });
+        return this;
+    }
+
     public InputDetector bindToEmotionButton(View emotionButton) {
         emotionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +121,6 @@ public class InputDetector {
 //                        showEmotionLayout();
 //                    }
 //                }
-                Log.i("info", "===================isShown:" + mEmotionLayout.isShown());
                 if (!mEmotionLayout.isShown()) {
                     if (isSoftInputShown()) {
                         lockContentHeight();
@@ -170,6 +200,8 @@ public class InputDetector {
     private void showEmotionLayout() {
         int softInputHeight = getSupportSoftInputHeight();
         if (softInputHeight == 0) {
+//            int height = UIUtils.getScreenHeight(mActivity) / 2 - 50;
+//            Log.i("info", "=======================height:" + height);
             softInputHeight = sp.getInt(SHARE_PREFERENCE_TAG, 400);
         }
         hideSoftInput();
@@ -179,9 +211,12 @@ public class InputDetector {
 
     private void showMoreLayout() {
         int softInputHeight = getSupportSoftInputHeight();
+        Log.i("info", "==============softInputHeight1:" + softInputHeight);
         if (softInputHeight == 0) {
+//            int height = UIUtils.getScreenHeight(mActivity) / 2 - 50;
             softInputHeight = sp.getInt(SHARE_PREFERENCE_TAG, 400);
         }
+        Log.i("info", "==============softInputHeight2:" + softInputHeight);
         hideSoftInput();
         mMoreLayout.getLayoutParams().height = softInputHeight;
         mMoreLayout.setVisibility(View.VISIBLE);
@@ -253,6 +288,7 @@ public class InputDetector {
         if (softInputHeight > 0) {
             sp.edit().putInt(SHARE_PREFERENCE_TAG, softInputHeight).apply();
         }
+        Log.i("info", "=====softInputHeight:" + softInputHeight);
         return softInputHeight;
     }
 

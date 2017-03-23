@@ -366,10 +366,23 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     }
 
     private void deleteMarker(String gid) {
+        Log.i("info", "==============gid:" + gid);
         List<Marker> markers = aMap.getMapScreenMarkers();
         for (Marker marker : markers) {
-            if (marker.getObject().equals(gid)) {
-                marker.remove();
+            Object object = marker.getObject();
+            if (object != null) {
+                Log.i("info", "==============object:" + object.toString());
+                if (object.toString().equals(gid)) {
+                    Log.i("info", "==============delete");
+                    marker.remove();
+                    if (slidingDrawer.getVisibility() != View.GONE) {
+                        UIUtils.hindView(slidingDrawer);
+                        if (walkRouteOverlay != null) {
+                            walkRouteOverlay.removeFromMap();
+                            walkRouteOverlay = null;
+                        }
+                    }
+                }
             }
         }
         aMap.invalidate();
