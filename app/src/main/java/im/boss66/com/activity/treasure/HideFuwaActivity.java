@@ -11,12 +11,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +27,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,8 +40,9 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
-
-import org.greenrobot.eventbus.EventBus;
+import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
+import com.umeng.message.proguard.T;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -54,11 +52,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
@@ -125,6 +123,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private TextView tv_dialog_address, bt_hide_ok;
     private Bitmap bitmapImg;
     private boolean isJump = false, isHideOk = true;
+    private int sceenW, sceenH;
+    private byte[] imgByte;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +135,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
+        sceenH = UIUtils.getScreenHeight(this);
+        sceenW = UIUtils.getScreenWidth(this);
         userId = App.getInstance().getAccount().getUser_id();
         autoFocusHandler = new Handler();
 
@@ -169,6 +171,16 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         }
         mCamera = mCameraManager.getCamera();
         mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
+        Camera.Parameters parameters = mCamera.getParameters();
+        // 设置预览照片的大小
+        List<Camera.Size> supportedPictureSizes =
+                parameters.getSupportedPictureSizes();// 获取支持保存图片的尺寸
+        if (supportedPictureSizes != null && supportedPictureSizes.size() > 0) {
+            Camera.Size pictureSize = UIUtils.getPictureSize(this, supportedPictureSizes);
+            parameters.setRotation(90);
+            parameters.setPictureSize(pictureSize.width, pictureSize.height);
+            mCamera.setParameters(parameters);
+        }
         rl_preciew.addView(mPreview);
     }
 
@@ -185,27 +197,20 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         @Override
         public void onPictureTaken(byte[] bytes, Camera camera) {
             try {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 4;
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-                if (bm != null) {
-                    bitmapImg = UIUtils.getRotateBitmap(bm, 90);
-                    if (bitmapImg != null) {
-                        if (bitmapImg != null) {
-                            String imageName = getNowTime() + ".jpg";
-                            // 指定调用相机拍照后照片的储存路径
-                            File dir = new File(savePath);
-                            if (!dir.exists()) {
-                                dir.mkdirs();
-                            }
-                            imgFile = new File(dir, imageName);
-                            BufferedOutputStream bos
-                                    = new BufferedOutputStream(new FileOutputStream(imgFile));
-                            bitmapImg.compress(Bitmap.CompressFormat.JPEG, 40, bos);
-                            bos.flush();
-                            bos.close();
-                        }
+                bitmapImg = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                if (bitmapImg != null) {
+                    String imageName = "hai_meng_fuwa.jpg";
+                    // 指定调用相机拍照后照片的储存路径
+                    File dir = new File(savePath);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
                     }
+                    imgFile = new File(dir, imageName);
+                    BufferedOutputStream bos
+                            = new BufferedOutputStream(new FileOutputStream(imgFile));
+                    bitmapImg.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+                    bos.flush();
+                    bos.close();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -248,6 +253,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             mlocationClient.onDestroy();
         }
         mlocationClient = null;
+        if (bitmapImg != null && !bitmapImg.isRecycled()) {
+            bitmapImg.recycle();
+        }
     }
 
     @Override
@@ -340,7 +348,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                                     mCamera.takePicture(null, null, mPictureCallback);
                                     isTakePic = false;
                                     tv_change_place.setVisibility(View.VISIBLE);
-                                    bt_catch.setVisibility(View.VISIBLE);
+                                    // bt_catch.setVisibility(View.VISIBLE);
                                     tv_bottom.setVisibility(View.GONE);
                                     Log.i("onSensorChanged", "拍照");
                                 }
@@ -586,8 +594,17 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
         }
-        if (bitmapImg != null) {
-            iv_dialog_icon.setImageBitmap(bitmapImg);
+
+        Glide.with(this).load(imgByte)
+                .into(iv_dialog_icon);
+        if (imgFile != null) {
+//            Picasso
+//                    .with(this)
+//                    .load(imgFile)
+//                    .into(iv_dialog_icon);
+
+
+            //iv_dialog_icon.setImageBitmap(bitmapImg);
         }
         tv_dialog_address.setText("" + address);
         dialog.show();

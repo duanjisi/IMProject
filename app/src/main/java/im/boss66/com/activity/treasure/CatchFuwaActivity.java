@@ -74,10 +74,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.MD5Util;
 import im.boss66.com.Utils.MycsLog;
@@ -134,6 +136,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private ImageView iv_success;
     private String fuwaNum;
     private View dialog_view;
+    private int sceenW, sceenH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,12 +147,12 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initView() {
-
         imageLoader = ImageLoaderUtils.createImageLoader(this);
         userId = App.getInstance().getUid();
         iv_success_catch = (ImageView) findViewById(R.id.iv_success_catch);
         iv_success = (ImageView) findViewById(R.id.iv_success);
-        int sceenH = UIUtils.getScreenHeight(this);
+        sceenH = UIUtils.getScreenHeight(this);
+        sceenW = UIUtils.getScreenWidth(this);
         sharePopup = new SharePopup(context, mController);
         sharePopup.setOnItemSelectedListener(this);
         iv_thread_bg = (ImageView) findViewById(R.id.iv_thread_bg);
@@ -218,6 +221,16 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         }
         mCamera = mCameraManager.getCamera();
         mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
+        Camera.Parameters parameters = mCamera.getParameters();
+        // 设置预览照片的大小
+        List<Camera.Size> supportedPictureSizes =
+                parameters.getSupportedPictureSizes();// 获取支持保存图片的尺寸
+        if (supportedPictureSizes != null && supportedPictureSizes.size() > 0) {
+            Camera.Size pictureSize = UIUtils.getPictureSize(this, supportedPictureSizes);
+            parameters.setRotation(90);
+            parameters.setPictureSize(pictureSize.width, pictureSize.height);
+            mCamera.setParameters(parameters);
+        }
         rl_preciew.addView(mPreview);
     }
 
@@ -450,28 +463,24 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onPictureTaken(byte[] bytes, Camera camera) {
             try {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 4;
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 if (bm != null) {
-                    bm = rotateBitmap(bm, 90);
-                    if (bm != null) {
-                        if (bm != null) {
-                            String imageName = getNowTime() + ".jpg";
-                            // 指定调用相机拍照后照片的储存路径
-                            File dir = new File(savePath);
-                            if (!dir.exists()) {
-                                dir.mkdirs();
-                            }
-                            imgFile = new File(dir, imageName);
-                            BufferedOutputStream bos
-                                    = new BufferedOutputStream(new FileOutputStream(imgFile));
-                            bm.compress(Bitmap.CompressFormat.JPEG, 40, bos);
-                            bos.flush();
-                            bos.close();
-                            getServerData();
-                        }
+                    String imageName = "hai_meng_fuwa.jpg";
+                    // 指定调用相机拍照后照片的储存路径
+                    File dir = new File(savePath);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
                     }
+                    imgFile = new File(dir, imageName);
+                    BufferedOutputStream bos
+                            = new BufferedOutputStream(new FileOutputStream(imgFile));
+                    bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+                    bos.flush();
+                    bos.close();
+                    if (!bm.isRecycled()) {
+                        bm.recycle();
+                    }
+                    getServerData();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -664,7 +673,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         String sign = MD5Util.getStringMD5(signUrl);
         String url = HttpUrl.CATCH_MY_FUWA + userId + "&gid=" +
                 fuwaId + "&sign=" + sign;
-        HttpUtils httpUtils = new HttpUtils(15 * 1000);
+        HttpUtils httpUtils = new HttpUtils(12 * 1000);
         RequestParams params = new RequestParams();
         params.addBodyParameter("file", imgFile);
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
