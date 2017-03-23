@@ -16,6 +16,15 @@ public class AccountEntity {
     private String city = "";
     private String district = "";
     private String district_str = "";
+    private String cover_pic;
+
+    public String getCover_pic() {
+        return cover_pic;
+    }
+
+    public void setCover_pic(String cover_pic) {
+        this.cover_pic = cover_pic;
+    }
 
     public String getUser_id() {
         return user_id;

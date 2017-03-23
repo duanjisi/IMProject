@@ -39,6 +39,7 @@ import com.github.jdsjlzx.interfaces.OnLoadMoreListener;
 import com.github.jdsjlzx.interfaces.OnRefreshListener;
 import com.github.jdsjlzx.recyclerview.LRecyclerView;
 import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
+import com.github.jdsjlzx.recyclerview.ProgressStyle;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -214,8 +215,11 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 ImageLoaderUtils.getDisplayImageOptions());
 
         SharedPreferences mPreferences = context.getSharedPreferences("albumCover", MODE_PRIVATE);
-        String albumCover = mPreferences.getString("albumCover", "");
-        imageLoader.displayImage(albumCover, iv_bg,
+        String cover = sAccount.getCover_pic();
+        if (TextUtils.isEmpty(cover)) {
+            cover = mPreferences.getString("albumCover", "");
+        }
+        imageLoader.displayImage(cover, iv_bg,
                 ImageLoaderUtils.getDisplayImageOptions());
 
         String user_name = sAccount.getUser_name();
@@ -229,6 +233,10 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         ;
         iv_bg.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
         mLRecyclerViewAdapter.addHeaderView(header);
+        //设置头部加载颜色
+        rv_friend.setHeaderViewColor(R.color.red_fuwa, R.color.red_fuwa_alpa_stroke, android.R.color.white);
+        rv_friend.setRefreshProgressStyle(ProgressStyle.Pacman); //设置下拉刷新Progress的样式
+        rv_friend.setFooterViewHint("拼命加载中", "我是有底线的", "网络不给力啊，点击再试一次吧");
         rv_friend.setAdapter(mLRecyclerViewAdapter);
         rv_friend.setLoadMoreEnabled(true);
         rv_friend.setOnRefreshListener(new OnRefreshListener() {

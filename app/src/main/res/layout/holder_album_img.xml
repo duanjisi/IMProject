@@ -30,36 +30,43 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="8"
+        android:orientation="horizontal"
         android:paddingTop="@dimen/dp_10">
 
         <im.boss66.com.widget.MultiImageView
             android:id="@+id/multiImagView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></im.boss66.com.widget.MultiImageView>
-
-        <TextView
-            android:id="@+id/tv_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/multiImagView"
-            android:layout_toRightOf="@+id/multiImagView"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:padding="@dimen/dp_4"
-            android:textColor="@color/black" />
+            android:layout_weight="2"></im.boss66.com.widget.MultiImageView>
 
-        <TextView
-            android:id="@+id/tv_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/tv_content"
-            android:layout_alignParentBottom="true"
-            android:textColor="@color/gray_normal" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:padding="@dimen/dp_4"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_content"
+                android:layout_alignParentBottom="true"
+                android:textColor="@color/gray_normal" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

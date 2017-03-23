@@ -214,7 +214,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                     String file = files.get(0).file_url;
                     if (TextUtils.isEmpty(file)) {
                         multiImagView.setVisibility(View.GONE);
-                    } else if (!file.contains("jpg") && !file.contains("png")) {
+                    } else if (!file.contains(".jpg") && !file.contains(".png") && !file.contains(".jpeg")) {
                         multiImagView.setVisibility(View.GONE);
                     } else {
                         multiImagView.setSceenW(sceenW);

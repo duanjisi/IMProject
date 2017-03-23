@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -55,7 +56,7 @@ import im.boss66.com.widget.wheel.WheelView;
 
 /**
  * 完善资料
- * Created by admin on 2017/2/20.
+ * Created by liw on 2017/2/20.
  */
 public class PersonalDataActivity extends ABaseActivity implements View.OnClickListener, ChooseYourLikeDialog.IFinishCallBack
         , OnWheelChangedListener {
@@ -162,7 +163,6 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
     private String sexType;
     private String millionSecnds;
     private String youLike;
-    private boolean isEdit;    //是否编辑页面
     private UserInfoEntity userInfoEntity;
     private HashMap<String, String> map1;
     private HashMap<String, String> map2;
@@ -176,7 +176,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     showAddressSelection2();
                     break;
                 case 2: //更新成功
-                    showToast("保存成功",false);
+                    showToast("保存成功", false);
                     finish();
                     SharedPreferencesMgr.setBoolean("setSuccess", true);
                     break;
@@ -212,17 +212,17 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     int user_city = result.getCity();//市
                     int user_district = result.getDistrict();//区
 
-                    String user_ht_province = result.getHt_province(); //家乡
-                    String user_ht_city = result.getHt_city();
-                    String user_ht_district = result.getHt_district();
+                    String user_ht_province = result.getHt_province()+""; //家乡
+                    String user_ht_city = result.getHt_city()+"";
+                    String user_ht_district = result.getHt_district()+"";
 
                     tv_sex2.setText(user_sex);
                     tv_name2.setText(user_name);
 
-                    if(map1.get(user_province + "")==null
-                            &&map1.get(user_ht_province)==null){
+                    if (map1.get(user_province + "") == null
+                            && map1.get(user_ht_province) == null) {
 
-                    }else{
+                    } else {
                         tv_school3.setVisibility(View.GONE);
                         tv_hometown3.setVisibility(View.GONE);
                         tv_location2.setText(map1.get(user_province + "") + map2.get(user_city + "") + map3.get(user_district + ""));
@@ -239,20 +239,25 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     String user_interest = result.getInterest();
                     tv_like2.setText(user_interest);
 
-                    String signature = result.getSignature();
-//                    String dateTime = TimeUtil.getDateTime(Long.parseLong(signature));
-//                    tv_time2.setText(dateTime);
-                    String time = SharedPreferencesMgr.getString("millionSecnds", "");
-                    try{
-                        if(!TextUtils.isEmpty(time)){
-                            tv_time2.setText(TimeUtil.getDateTime(Long.parseLong(time) * 1000));
-                        }
-                    }catch (Exception e){
+                    String birthday = result.getBirthday()+"";
+                    try {
+                        String dateTime = TimeUtil.getDateTime(Long.parseLong(birthday) * 1000);
+                        tv_time2.setText(dateTime);
+                    } catch (Exception e) {
 
                     }
+//
+//                    String time = SharedPreferencesMgr.getString("millionSecnds", "");
+//                    try{
+//                        if(!TextUtils.isEmpty(time)){
+//                            tv_time2.setText(TimeUtil.getDateTime(Long.parseLong(time) * 1000));
+//                        }
+//                    }catch (Exception e){
+//
+//                    }
 
                     sexType = user_sex.equals("男") ? "1" : "2";
-                    millionSecnds = time;
+                    millionSecnds = birthday;
                     province_id = user_province + "";
                     city_id = user_city + "";
                     county_id = user_district + "";
@@ -284,7 +289,6 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                 //时间戳
                 long time = sdf.parse(str).getTime();
                 millionSecnds = time / 1000 + "";
-                SharedPreferencesMgr.setString("millionSecnds", millionSecnds);
                 tv_time2.setText(s1 + "-" + s2 + "-" + s3);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -297,16 +301,10 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_data);
-        Intent intent = getIntent();
-        if (intent != null) {
-            isEdit = intent.getBooleanExtra("isEdit", false);
-        }
+
         initCityData();
         initViews();
-//        if (isEdit) {
-            initData();
-
-//        }
+        initData();
     }
 
     private void initData() {
@@ -427,9 +425,8 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                         || TextUtils.isEmpty(tv_time2.getText())
                         || TextUtils.isEmpty(tv_location2.getText())
                         || TextUtils.isEmpty(tv_hometown2.getText())
-                        || TextUtils.isEmpty(tv_job2.getText())
                         || TextUtils.isEmpty(tv_school2.getText())
-                        || TextUtils.isEmpty(tv_like2.getText())) {
+                        ) {
 
                     showToast("请完善资料", false);
                 } else {
@@ -489,6 +486,9 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                 break;
             case R.id.rl_name:
                 Intent intent1 = new Intent(this, EditNameActivity.class);
+                String name = tv_name2.getText().toString();
+                Log.i("liwya", name);
+                intent1.putExtra("name", name);
                 startActivityForResult(intent1, 1);
                 break;
             case R.id.btn_confirm:
@@ -519,6 +519,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                 try {
                     JSONObject jsonObject = new JSONObject(str);
                     if (jsonObject.getInt("code") == 1) {
+                        //把所在地城市和大学存起来
                         handler.obtainMessage(2).sendToTarget();
                     } else {
                         showToast(jsonObject.getString("message"), false);

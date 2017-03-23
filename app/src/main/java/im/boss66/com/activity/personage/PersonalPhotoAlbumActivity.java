@@ -181,7 +181,7 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                                             if (feedType == 1) {
                                                 if (TextUtils.isEmpty(file)) {
                                                     isJumpLookPic = false;
-                                                } else if (!file.contains(".jpg") && !file.contains(".png")) {
+                                                } else if (!file.contains(".jpg") && !file.contains(".png") && !file.contains("jpeg")) {
                                                     isJumpLookPic = false;
                                                 } else {
                                                     isJumpLookPic = true;

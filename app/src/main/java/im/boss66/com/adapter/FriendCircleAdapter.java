@@ -115,7 +115,17 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
 
         Glide.with(context).load(headImg).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.color.bg_gray).
                 transform(new GlideCircleTransform(context)).into(holder.headIv);
-
+        holder.headIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String uid = entity.getFeed_uid();
+                Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
+                intent.putExtra("classType", "QureAccountActivity");
+                intent.putExtra("userid", uid);
+                intent.putExtra("from", "friendcircle");
+                context.startActivity(intent);
+            }
+        });
         holder.nameTv.setText(name);
         holder.timeTv.setText(createTime);
 

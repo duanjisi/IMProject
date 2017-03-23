@@ -94,6 +94,10 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                     tv_distance.setText("" + dis + "米以内");
                     rl_general.setVisibility(View.VISIBLE);
                 }
+                String from = bundle.getString("from");
+                if (!TextUtils.isEmpty(from) && "friendcircle".equals(from)) {
+                    rl_general.setVisibility(View.GONE);
+                }
             }
         }
     }

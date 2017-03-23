@@ -7,8 +7,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.hardware.Camera;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -25,9 +27,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -722,6 +729,74 @@ public final class UIUtils {
         float H = P.y;
         float W = P.x;
         return (H / W);
+    }
+
+    public static Bitmap byteToBitmap(byte[] imgByte, int reqWidth, int reqHeight) {
+        InputStream input = null;
+        Bitmap bitmap = null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inJustDecodeBounds = true;
+//        BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length, options);
+//        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+////        options.inPurgeable = true;
+////        options.inInputShareable = true;
+//        input = new ByteArrayInputStream(imgByte);
+//        options.inJustDecodeBounds = false;
+//        SoftReference softRef = new SoftReference(BitmapFactory.decodeStream(
+//                input, null, options));
+//        bitmap = (Bitmap) softRef.get();
+        bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length, options);
+        if (imgByte != null) {
+            imgByte = null;
+        }
+
+        try {
+            if (input != null) {
+                input.close();
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int width = options.outWidth;
+        final int height = options.outHeight;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            //使用需要的宽高的最大值来计算比率
+            final int suitedValue = reqHeight > reqWidth ? reqHeight : reqWidth;
+            final int heightRatio = Math.round((float) height / (float) suitedValue);
+            final int widthRatio = Math.round((float) width / (float) suitedValue);
+
+            inSampleSize = heightRatio > widthRatio ? heightRatio : widthRatio;//用最大
+        }
+
+        return inSampleSize;
+    }
+
+    /*
+    *获取拍照之后的尺寸
+    */
+    public static Camera.Size getPictureSize(Context context, List<Camera.Size> sizes) {
+
+        int screenWidth = getScreenWidth(context);
+        int index = -1;
+
+        for (int i = 0; i < sizes.size(); i++) {
+            if (Math.abs(screenWidth - sizes.get(i).width) == 0) {
+                index = i;
+                break;
+            }
+        }
+        // 当未找到与手机分辨率相等的数值,取列表中间的分辨率
+        if (index == -1) {
+            index = sizes.size() / 2;
+        }
+        return sizes.get(index);
     }
 
 }

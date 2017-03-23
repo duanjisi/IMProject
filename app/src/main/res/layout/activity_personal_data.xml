@@ -270,7 +270,7 @@
                     android:layout_centerVertical="true"
                     android:id="@+id/tv_job"
                     style="@style/personal_data_tv_style"
-                    android:text="工作*" />
+                    android:text="工作" />
                 <ImageView
                     android:layout_centerVertical="true"
                     android:src="@drawable/zf_album_arrow"
@@ -304,7 +304,7 @@
                     android:layout_centerVertical="true"
                     android:id="@+id/tv_like"
                     style="@style/personal_data_tv_style"
-                    android:text="兴趣爱好*" />
+                    android:text="兴趣爱好" />
                 <ImageView
                     android:layout_centerVertical="true"
 
