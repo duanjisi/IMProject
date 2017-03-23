@@ -214,8 +214,11 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 ImageLoaderUtils.getDisplayImageOptions());
 
         SharedPreferences mPreferences = context.getSharedPreferences("albumCover", MODE_PRIVATE);
-        String albumCover = mPreferences.getString("albumCover", "");
-        imageLoader.displayImage(albumCover, iv_bg,
+        String cover = sAccount.getCover_pic();
+        if (TextUtils.isEmpty(cover)){
+            cover = mPreferences.getString("albumCover", "");
+        }
+        imageLoader.displayImage(cover, iv_bg,
                 ImageLoaderUtils.getDisplayImageOptions());
 
         String user_name = sAccount.getUser_name();

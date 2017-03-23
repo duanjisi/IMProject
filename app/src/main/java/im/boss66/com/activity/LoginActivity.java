@@ -1,4 +1,5 @@
 package im.boss66.com.activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -25,6 +26,8 @@ import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.LoginRequest;
 import im.boss66.com.http.request.QQLoginRequest;
 import im.boss66.com.http.request.WXLoginRequest;
+import im.boss66.com.widget.InputDetector;
+
 /**
  * Created by Johnny on 2017/1/16.
  */
@@ -34,6 +37,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private Button btnLogin;
     private TextView tvRegister, tvForget;
     private ImageView ivQQ, ivWX;
+    private InputDetector detector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         tvForget.setOnClickListener(this);
         ivWX.setOnClickListener(this);
         ivQQ.setOnClickListener(this);
-
+        detector.with(this).bindToET(etAccount).build();
         addQQQZonePlatform();
         addWXPlatform();
 
@@ -130,16 +134,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     @Override
                     public void onComplete(Bundle value, SHARE_MEDIA platform) {
                         // 获取uid
-                        Log.i("info", "Bundle:" + printBundle(value));
+//                        Log.i("info", "Bundle:" + printBundle(value));
                         String uid = value.getString("uid");
                         String openid = value.getString("openid");
                         String access_token = value.getString("access_token");
-                        String unionid = value.getString("unionid");
+//                        String unionid = value.getString("unionid");
                         if (!TextUtils.isEmpty(uid)
                                 && !TextUtils.isEmpty(openid)
                                 && !TextUtils.isEmpty(access_token)) {
                             // uid不为空，获取用户信息
-                            getUserInfo(platform, openid, unionid, access_token, type);
+                            getUserInfo(platform, openid, access_token, type);
                         } else {
                             Toast.makeText(LoginActivity.this, "授权失败...",
                                     Toast.LENGTH_LONG).show();
@@ -156,7 +160,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private void getUserInfo(SHARE_MEDIA platform
             , final String openid
-            , final String unionid
             , final String access_token
             , final String type) {
         mController.getPlatformInfo(LoginActivity.this, platform,
@@ -172,6 +175,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (info != null) {
                             String thusername = "";
                             String avatar = "";
+                            String unionid = "";
                             if (info.containsKey("nickname")) {
                                 thusername = (String) info.get("nickname");
                             } else if (info.containsKey("screen_name")) {
@@ -181,6 +185,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 avatar = (String) info.get("profile_image_url");
                             } else if (info.containsKey("headimgurl")) {
                                 avatar = (String) info.get("headimgurl");
+                            }
+                            if (info.containsKey("unionid")) {
+                                unionid = (String) info.get("unionid");
                             }
                             Log.i("info", "===info:" + info.toString());
                             Log.i("info", "===thusername:" + thusername + "\n" + "avatar:" + avatar);
@@ -193,10 +200,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void ThirdLoginPathform(String from, String token, String avatar, String open_id, String unionid, String user_name) {
-        Log.i("info", "=====from:" + from + "\n" + "token:" + token + "\n" + "avatar:" + avatar + "\n" + "open_id:" + open_id + "\n" + "user_name:" + user_name);
+        Log.i("info", "=====from:" +
+                from + "\n" + "token:" +
+                token + "\n" + "avatar:" +
+                avatar + "\n" + "open_id:" +
+                open_id + "\n" + "unionid:" +
+                unionid + "\n" + "user_name:" +
+                user_name);
         BaseDataRequest request = null;
         if (from.equals("wx")) {
-            request = new WXLoginRequest(TAG, unionid, user_name, avatar);
+            if (unionid != null && !unionid.equals("")) {
+                request = new WXLoginRequest(TAG, unionid, user_name, avatar);
+            } else {
+                return;
+            }
         } else {
             request = new QQLoginRequest(TAG, token, user_name, avatar);
         }

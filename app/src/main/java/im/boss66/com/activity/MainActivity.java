@@ -44,7 +44,6 @@ import im.boss66.com.entity.EmoCate;
 import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmoGroup;
 import im.boss66.com.entity.EmoLove;
-import im.boss66.com.entity.MessageEvent;
 import im.boss66.com.fragment.ContactBooksFragment;
 import im.boss66.com.fragment.ContactsFragment;
 import im.boss66.com.fragment.DiscoverFragment;

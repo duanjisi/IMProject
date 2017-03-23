@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.os.Build;
@@ -25,6 +26,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -505,6 +510,14 @@ public final class UIUtils {
         return TimeUtil.getDateTimeEN(b);
     }
 
+    //将秒转换成时分秒
+    public static String changTime(int time) {
+        int h = time / 3600;
+        int m = (time - h * 3600) / 60;
+        int s = (time - h * 3600) % 60;
+        String str = h + "时" + m + "分" + s + "秒";
+        return str;
+    }
 
     public static String getDateTime(String time) {
         long a = Long.parseLong(time);
@@ -698,6 +711,7 @@ public final class UIUtils {
         }
         return null;
     }
+
     /**
      * 旋转Bitmap
      */
@@ -708,11 +722,58 @@ public final class UIUtils {
         return rotaBitmap;
     }
 
-    public static float getScreenRate(Context context){
+    public static float getScreenRate(Context context) {
         Point P = getScreenSize(context);
         float H = P.y;
         float W = P.x;
-        return (H/W);
+        return (H / W);
+    }
+
+    public static Bitmap byteToBitmap(byte[] imgByte, int reqWidth, int reqHeight) {
+        InputStream input = null;
+        Bitmap bitmap = null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inJustDecodeBounds = true;
+//        BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length, options);
+//        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+////        options.inPurgeable = true;
+////        options.inInputShareable = true;
+//        input = new ByteArrayInputStream(imgByte);
+//        options.inJustDecodeBounds = false;
+//        SoftReference softRef = new SoftReference(BitmapFactory.decodeStream(
+//                input, null, options));
+//        bitmap = (Bitmap) softRef.get();
+        bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length, options);
+        if (imgByte != null) {
+            imgByte = null;
+        }
+
+        try {
+            if (input != null) {
+                input.close();
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int width = options.outWidth;
+        final int height = options.outHeight;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            //使用需要的宽高的最大值来计算比率
+            final int suitedValue = reqHeight > reqWidth ? reqHeight : reqWidth;
+            final int heightRatio = Math.round((float) height / (float) suitedValue);
+            final int widthRatio = Math.round((float) width / (float) suitedValue);
+
+            inSampleSize = heightRatio > widthRatio ? heightRatio : widthRatio;//用最大
+        }
+
+        return inSampleSize;
     }
 
 }

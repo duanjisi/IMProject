@@ -5,7 +5,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import im.boss66.com.R;
+import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.MakeQRCodeUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
@@ -16,10 +19,12 @@ import im.boss66.com.activity.base.BaseActivity;
  */
 public class ChatGroupCodeActivity extends BaseActivity {
 
+    private ImageLoader imageLoader;
     private TextView tvBack, tvName;
     private ImageView ivMore, ivIcon, ivCode;
     private int screenW;
     private String groupid;
+    private String name, imageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +34,13 @@ public class ChatGroupCodeActivity extends BaseActivity {
     }
 
     private void initViews() {
-        groupid = getIntent().getExtras().getString("groupid", "");
+        imageLoader = ImageLoaderUtils.createImageLoader(context);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            groupid = bundle.getString("groupid", "");
+            name = bundle.getString("name", "");
+            imageUrl = bundle.getString("snap", "");
+        }
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvName = (TextView) findViewById(R.id.tv_name);
         screenW = UIUtils.getScreenWidth(context) * 3 / 5;
@@ -50,6 +61,11 @@ public class ChatGroupCodeActivity extends BaseActivity {
                 finish();
             }
         });
+
+        tvName.setText(name);
+        if (imageUrl != null && !imageUrl.equals("")) {
+            imageLoader.displayImage(imageUrl, ivIcon, ImageLoaderUtils.getDisplayImageOptions());
+        }
         if (!groupid.equals("")) {
             MakeQRCodeUtil.createQRImage("add_group:" + groupid, screenW, screenW, ivCode);
         }

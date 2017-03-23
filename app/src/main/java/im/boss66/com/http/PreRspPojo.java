@@ -9,7 +9,7 @@ public class PreRspPojo {
     public String msg;
 
     public Integer state;
-
+    public Integer status;
     public String result;
 
     public String message;
