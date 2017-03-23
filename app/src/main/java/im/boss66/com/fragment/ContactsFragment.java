@@ -179,6 +179,11 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onResume() {
         super.onResume();
+        //修改完后请求接口
+        if(SharedPreferencesMgr.getBoolean("setSuccess",false)){
+            SharedPreferencesMgr.setBoolean("setSuccess",false);
+            initData();
+        }
     }
 
     private void initData() {
@@ -206,9 +211,11 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        //不能再onresume里，否则会在activity里就弹dialog
         if (isVisibleToUser && flag) {
             initData();
         }
+
     }
 
 }

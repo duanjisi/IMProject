@@ -63,6 +63,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <ImageView
+            android:id="@+id/img_close"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/close_s"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+
 
         <View
             style="@style/personal_data_view_style"

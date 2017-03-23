@@ -7,15 +7,16 @@ package im.boss66.com.entity;
 public class UserInfoEntity {
 
     /**
-     * name : ucenter api
+     * name : INDEX
+     * version : v1
      * message : succ
      * code : 1
      * status : 200
-     * type : yii\Response
-     * result : {"user_id":"100000000","user_name":"无怨无悔1","avatar":"https://imgcdn.66boss.com/imagesu/avatar/20170226093144170500.jpeg","mobile_phone":"18202093752","sex":"男","signature":"1351515","cover_pic":"https://imgcdn.66boss.com/imagesu/cofriend_cover/20170213152307815130.jpeg","province":6,"city":76,"district":676,"district_str":"广东 广州","ht_province":"","ht_city":"","ht_district":"","ht_district_str":"","industry":"","interest":"","school":"北大"}
+     * result : {"user_id":"100000052","user_name":"哈哈","avatar":"https://imgcdn.66boss.com/imagesu/avatar_temp/default.jpg","mobile_phone":"15323339887","sex":"男","signature":"","birthday":825004800,"cover_pic":"https://imgcdn.66boss.com/imagesu/cofriend_cover/surface.png","province":6,"city":76,"district":693,"district_str":"广东 广州","ht_province":6,"ht_city":76,"ht_district":693,"ht_district_str":"广东 广州","industry":"其他","interest":"","school":"北京信息科技大学"}
      */
 
     private String name;
+    private String version;
     private String message;
     private int code;
     private int status;
@@ -28,6 +29,14 @@ public class UserInfoEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public String getMessage() {
@@ -72,24 +81,25 @@ public class UserInfoEntity {
 
     public static class ResultBean {
         /**
-         * user_id : 100000000
-         * user_name : 无怨无悔1
-         * avatar : https://imgcdn.66boss.com/imagesu/avatar/20170226093144170500.jpeg
-         * mobile_phone : 18202093752
+         * user_id : 100000052
+         * user_name : 哈哈
+         * avatar : https://imgcdn.66boss.com/imagesu/avatar_temp/default.jpg
+         * mobile_phone : 15323339887
          * sex : 男
-         * signature : 1351515
-         * cover_pic : https://imgcdn.66boss.com/imagesu/cofriend_cover/20170213152307815130.jpeg
+         * signature :
+         * birthday : 825004800
+         * cover_pic : https://imgcdn.66boss.com/imagesu/cofriend_cover/surface.png
          * province : 6
          * city : 76
-         * district : 676
+         * district : 693
          * district_str : 广东 广州
-         * ht_province :
-         * ht_city :
-         * ht_district :
-         * ht_district_str :
-         * industry :
+         * ht_province : 6
+         * ht_city : 76
+         * ht_district : 693
+         * ht_district_str : 广东 广州
+         * industry : 其他
          * interest :
-         * school : 北大
+         * school : 北京信息科技大学
          */
 
         private String user_id;
@@ -98,14 +108,15 @@ public class UserInfoEntity {
         private String mobile_phone;
         private String sex;
         private String signature;
+        private int birthday;
         private String cover_pic;
         private int province;
         private int city;
         private int district;
         private String district_str;
-        private String ht_province;
-        private String ht_city;
-        private String ht_district;
+        private int ht_province;
+        private int ht_city;
+        private int ht_district;
         private String ht_district_str;
         private String industry;
         private String interest;
@@ -159,6 +170,14 @@ public class UserInfoEntity {
             this.signature = signature;
         }
 
+        public int getBirthday() {
+            return birthday;
+        }
+
+        public void setBirthday(int birthday) {
+            this.birthday = birthday;
+        }
+
         public String getCover_pic() {
             return cover_pic;
         }
@@ -199,27 +218,27 @@ public class UserInfoEntity {
             this.district_str = district_str;
         }
 
-        public String getHt_province() {
+        public int getHt_province() {
             return ht_province;
         }
 
-        public void setHt_province(String ht_province) {
+        public void setHt_province(int ht_province) {
             this.ht_province = ht_province;
         }
 
-        public String getHt_city() {
+        public int getHt_city() {
             return ht_city;
         }
 
-        public void setHt_city(String ht_city) {
+        public void setHt_city(int ht_city) {
             this.ht_city = ht_city;
         }
 
-        public String getHt_district() {
+        public int getHt_district() {
             return ht_district;
         }
 
-        public void setHt_district(String ht_district) {
+        public void setHt_district(int ht_district) {
             this.ht_district = ht_district;
         }
 
