@@ -38,6 +38,7 @@ public class MultiImageView extends LinearLayout {
     private LinearLayout.LayoutParams onePicPara;
     private LinearLayout.LayoutParams morePara, moreParaColumnFirst;
     private LinearLayout.LayoutParams rowPara;
+    private LinearLayout.LayoutParams albumPara;
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -117,8 +118,10 @@ public class MultiImageView extends LinearLayout {
         int wrap = LinearLayout.LayoutParams.WRAP_CONTENT;
         int match = LinearLayout.LayoutParams.MATCH_PARENT;
         int wrap_1 = (int) (sceenW / 3 * 0.7);
-
-
+        int w_album = sceenW / 55 * 8;
+        pxMoreWandH = sceenW / 4;
+        pxMoreWandH = sceenW / 4;
+        albumPara = new LinearLayout.LayoutParams(w_album, w_album);
         moreParaColumnFirst = new LinearLayout.LayoutParams(pxMoreWandH, pxMoreWandH);
         if (fromType == 1) {
             morePara = new LinearLayout.LayoutParams(sceenW / 7, pxMoreWandH);
@@ -209,16 +212,20 @@ public class MultiImageView extends LinearLayout {
             imageView = new ColorFilterImageView(getContext());
         }
         if (isMultiImage) {
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setLayoutParams(position % MAX_PER_ROW_COUNT == 0 ? moreParaColumnFirst : morePara);
+            if (fromType == 1) {
+                imageView.setLayoutParams(albumPara);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            } else {
+                imageView.setLayoutParams(position % MAX_PER_ROW_COUNT == 0 ? moreParaColumnFirst : morePara);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
         } else {
             imageView.setAdjustViewBounds(true);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             //imageView.setMaxHeight(pxOneMaxWandH);
 
             int expectW = photoInfo.w;
             int expectH = photoInfo.h;
-
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             if (expectW == 0 || expectH == 0) {
                 imageView.setLayoutParams(onePicPara);
             } else {
@@ -240,10 +247,10 @@ public class MultiImageView extends LinearLayout {
         }
         if (photoInfo.type == 0) {
             String url;
-            if (!TextUtils.isEmpty(photoInfo.file_thumb)) {
-                url = photoInfo.file_thumb;
-            } else {
+            if (!TextUtils.isEmpty(photoInfo.file_url)) {
                 url = photoInfo.file_url;
+            } else {
+                url = photoInfo.file_thumb;
             }
             imageView.setId(url.hashCode());
             Glide.with(getContext()).load(url).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);

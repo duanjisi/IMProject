@@ -185,6 +185,7 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         //设置布局管理器
         rv_content.setLayoutManager(layoutManager);
+        rv_content.setPullRefreshEnabled(false);
         adapter = new PeopleNearbyAdapter(this, list);
         adapter.setOnItemClickListener(new PeopleNearbyAdapter.MyItemClickListener() {
             @Override
