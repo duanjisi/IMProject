@@ -241,5 +241,14 @@
         <!--<item name="android:windowBackground">@null</item><!–除去背景色–>-->
     </style>
 
+    <!--自定义横向精度条style-->
+    <style name="mProgress_horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/progressbar_horizontal_1</item><!-- progress_horizontal -->
+        <item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>
+        <item name="android:minHeight">20dip</item>
+        <item name="android:maxHeight">20dip</item>
+    </style>
+
 
 </resources>

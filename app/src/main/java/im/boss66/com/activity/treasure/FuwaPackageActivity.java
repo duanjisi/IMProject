@@ -42,6 +42,7 @@ import java.util.List;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.MD5Util;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.FuwaListAdaper;
 import im.boss66.com.entity.FuwaDetailEntity;
@@ -204,12 +205,14 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                 if (!TextUtils.isEmpty(res)) {
                     fuwaDetailEntity = JSON.parseObject(res, FuwaDetailEntity.class);
                     handler.obtainMessage(2).sendToTarget();
-
+                }else{
+                    showToast(fuwaDetailEntity.getMessage(),false);
                 }
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
+                showToast(e.getMessage(),false);
                 Log.i("onFailure", s);
 
             }
@@ -375,8 +378,13 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         dialog2.show();
     }
 
+    //赠送福娃
     private void giveFuwa(String string) {
         String url = HttpUrl.GIVE_FUWA +"?token="+string+"&fuwagid="+fuwa_gid+"&fromuser="+uid;
+        String sigh ="/donate"+"?token="+string+"&fuwagid="+fuwa_gid+"&fromuser="+uid+"&platform=boss66";
+
+        sigh = MD5Util.getStringMD5(sigh);
+        url = url+"&sign="+sigh;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
@@ -397,13 +405,17 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onFailure(HttpException e, String s) {
                 Log.i("onFailure", s);
-                showToast("请填写正确的口令",false);
+                showToast(e.getMessage(),false);
             }
         });
     }
 
+    //出售福娃
     private void sellFuwa(Double price) {
         String url = HttpUrl.SELL_FUWA +"?id="+fuwa_id+"&owner="+uid+"&amount="+price+"&fuwagid="+fuwa_gid;
+        String sigh ="/sell"+"?id="+fuwa_id+"&owner="+uid+"&amount="+price+"&fuwagid="+fuwa_gid+"&platform=boss66";
+        sigh = MD5Util.getStringMD5(sigh);
+        url = url+"&sign="+sigh;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
@@ -415,7 +427,8 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                         if(jsonObject.getInt("code")==0){
                             //出售成功，刷新ui
                             handler.obtainMessage(3).sendToTarget();
-
+                        }else{
+                            showToast(jsonObject.getString("message"),false);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -428,6 +441,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onFailure(HttpException e, String s) {
                 Log.i("onFailure", s);
+                showToast(e.getMessage(),false);
             }
         });
 

@@ -52,7 +52,7 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
                     result = searchSchoolListEntity.getResult();
                     adapter.setDatas(result);
                     adapter.notifyDataSetChanged();
-                    et_school.setFocusable(false);
+//                    et_school.setFocusable(false);     还是让他继续修改好了
                     break;
 
             }

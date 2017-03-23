@@ -34,7 +34,7 @@ import im.boss66.com.widget.slideListView.SlideListView;
  */
 public class FuwaMessageActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView tv_back;
+    private TextView tv_back, tv_empty;
     private SlideListView lv_listview;
     private FuwaMessageAdapter adapter;
     private List<FuwaMsgItem> list;
@@ -51,17 +51,31 @@ public class FuwaMessageActivity extends BaseActivity implements View.OnClickLis
         mDbUtils = DbUtils.create(this);
         try {
             list = mDbUtils.findAll(FuwaMsgItem.class);
+            mDbUtils.deleteAll(list);
         } catch (DbException e) {
             e.printStackTrace();
         }
+        tv_empty = (TextView) findViewById(R.id.tv_empty);
         tv_back = (TextView) findViewById(R.id.tv_back);
         lv_listview = (SlideListView) findViewById(R.id.lv_listview);
 
         tv_back.setOnClickListener(this);
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
         adapter = new FuwaMessageAdapter(this, list);
         adapter.getDb(mDbUtils);
         lv_listview.setAdapter(adapter);
         getServerData();
+        int num = adapter.getCount();
+        if (num > 0) {
+            lv_listview.setVisibility(View.VISIBLE);
+            tv_empty.setVisibility(View.GONE);
+        } else {
+            lv_listview.setVisibility(View.GONE);
+            tv_empty.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getServerData() {
@@ -80,14 +94,17 @@ public class FuwaMessageActivity extends BaseActivity implements View.OnClickLis
                         if (code == 0) {
                             FuwaMsg fuwaMsg = JSON.parseObject(res, FuwaMsg.class);
                             if (fuwaMsg != null) {
-                                list = fuwaMsg.data;
-                                if (list != null && list.size() > 0) {
+                                List<FuwaMsgItem> list_ = fuwaMsg.data;
+                                if (list_ != null && list_.size() > 0) {
                                     try {
-                                        mDbUtils.saveAll(list);
+                                        if (list != null && list.size() > 0) {
+                                            list_.addAll(list);
+                                        }
+                                        adapter.onDataChange(list_);
+                                        mDbUtils.saveAll(list_);
                                     } catch (DbException e) {
                                         e.printStackTrace();
                                     }
-                                    adapter.onDataChange(list);
                                 }
                             }
                         }

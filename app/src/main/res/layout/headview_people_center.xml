@@ -106,7 +106,7 @@
             android:layout_alignBottom="@id/tv_name"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/tv_name"
-            android:src="@drawable/arrow_normal" />
+            android:src="@drawable/rightw_arrows" />
 
     </RelativeLayout>
 

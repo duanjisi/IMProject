@@ -185,8 +185,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         @Override
         public void onPictureTaken(byte[] bytes, Camera camera) {
             try {
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
                 if (bm != null) {
                     bitmapImg = UIUtils.getRotateBitmap(bm, 90);
                     if (bitmapImg != null) {

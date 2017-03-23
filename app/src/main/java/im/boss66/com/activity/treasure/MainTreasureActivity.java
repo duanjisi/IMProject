@@ -1,6 +1,7 @@
 package im.boss66.com.activity.treasure;
 
 import android.app.Dialog;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Display;
@@ -102,8 +103,17 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
 
-        TextView tv_word = (TextView) dialog.findViewById(R.id.tv_word);
+        final TextView tv_word = (TextView) dialog.findViewById(R.id.tv_word);
         tv_word.setText(Base64Utils.encodeBase64(App.getInstance().getUid()));
+        tv_word.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+                cmb.setText(tv_word.getText());
+                showToast("已复制",false);
+                return false;
+            }
+        });
 
 
         //设置dialog大小

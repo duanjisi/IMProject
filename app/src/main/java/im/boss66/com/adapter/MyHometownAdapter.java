@@ -38,7 +38,7 @@ public class MyHometownAdapter extends BaseRecycleViewAdapter{
         MyInfo.ResultBean.HometownListBean item = (MyInfo.ResultBean.HometownListBean) datas.get(position);
         holder1.tv_school_name.setText(item.getName());
         holder1.tv_school_info.setText(item.getBrief_desc());
-        Glide.with(context).load(item.getBanner()).into(holder1.img_school);
+        Glide.with(context).load(item.getLogo()).into(holder1.img_school);
         holder1.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

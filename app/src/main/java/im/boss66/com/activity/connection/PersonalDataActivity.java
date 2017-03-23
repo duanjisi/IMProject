@@ -218,11 +218,18 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 
                     tv_sex2.setText(user_sex);
                     tv_name2.setText(user_name);
-                    tv_school3.setVisibility(View.GONE);
-                    tv_hometown3.setVisibility(View.GONE);
 
-                    tv_location2.setText(map1.get(user_province + "") + map2.get(user_city + "") + map3.get(user_district + ""));
-                    tv_hometown2.setText(map1.get(user_ht_province) + map2.get(user_ht_city) + map3.get(user_ht_district));
+                    if(map1.get(user_province + "")==null
+                            &&map1.get(user_ht_province)==null){
+
+                    }else{
+                        tv_school3.setVisibility(View.GONE);
+                        tv_hometown3.setVisibility(View.GONE);
+                        tv_location2.setText(map1.get(user_province + "") + map2.get(user_city + "") + map3.get(user_district + ""));
+                        tv_hometown2.setText(map1.get(user_ht_province) + map2.get(user_ht_city) + map3.get(user_ht_district));
+                    }
+
+
                     String user_industry = result.getIndustry();
                     tv_job2.setText(user_industry);
 
@@ -296,10 +303,10 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
         }
         initCityData();
         initViews();
-        if (isEdit) {
+//        if (isEdit) {
             initData();
 
-        }
+//        }
     }
 
     private void initData() {

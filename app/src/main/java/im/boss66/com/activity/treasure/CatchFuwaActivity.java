@@ -450,8 +450,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onPictureTaken(byte[] bytes, Camera camera) {
             try {
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
                 if (bm != null) {
                     bm = rotateBitmap(bm, 90);
                     if (bm != null) {
