@@ -510,6 +510,14 @@ public final class UIUtils {
         return TimeUtil.getDateTimeEN(b);
     }
 
+    //将秒转换成时分秒
+    public static String changTime(int time) {
+        int h = time / 3600;
+        int m = (time - h * 3600) / 60;
+        int s = (time - h * 3600) % 60;
+        String str = h + "时" + m + "分" + s + "秒";
+        return str;
+    }
 
     public static String getDateTime(String time) {
         long a = Long.parseLong(time);

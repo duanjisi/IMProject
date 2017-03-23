@@ -194,10 +194,13 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
                 }
                 break;
             case R.id.rl_qr_code://群二维码
-                Intent intent = new Intent(context, ChatGroupCodeActivity.class);
-                intent.putExtra("groupid", groupid);
-                startActivity(intent);
-//                openActivity(ChatGroupCodeActivity.class);
+                if (groupInform != null) {
+                    Intent intent = new Intent(context, ChatGroupCodeActivity.class);
+                    intent.putExtra("groupid", groupid);
+                    intent.putExtra("snap", groupInform.getSnap());
+                    intent.putExtra("name", groupInform.getName());
+                    startActivity(intent);
+                }
                 break;
             case R.id.rl_group_info://群聊公告
                 if (groupInform != null) {

@@ -305,8 +305,10 @@ public class MessageAdapter extends BaseAdapter {
         EmoEntity entity = EmoHelper.getInstance().queryByCode(emo_code);
         Log.i("info", "==========emotion:  " + "EmoEntity:" + entity);
         if (entity != null) {
+            int width = Integer.parseInt(entity.getWidth());
+            int height = Integer.parseInt(entity.getHeight());
+            scaleSize(holder.gifView, width, height);
             String format = entity.getEmo_format();
-            Log.i("info", "==========emotion:  " + "format:" + format);
             if (format.equals("gif")) {
 //                try {
 //                    GifDrawable drawable = new GifDrawable(getPath(entity));
@@ -319,7 +321,7 @@ public class MessageAdapter extends BaseAdapter {
                 File file = FileUtil.getFileByPath(getPath(entity));
                 if (file != null) {
                     Glide.with(mContext).load(FileUtil.getBytesFromFile(file)).
-                            override(mImageHeight, mImageHeight).placeholder(R.drawable.zf_default_message_image)
+                            placeholder(R.drawable.zf_default_message_image)
                             .crossFade().into(holder.gifView);
                 }
             } else {
@@ -375,9 +377,11 @@ public class MessageAdapter extends BaseAdapter {
         if (entity != null) {
             String emo_url = entity.getEmo_url();
             String name = FileUtils.getFileNameFromPath(emo_url);
+            int width = Integer.parseInt(entity.getWidth());
+            int height = Integer.parseInt(entity.getHeight());
+            scaleSize(holder.gifView, width, height);
             if (name.contains(".gif")) {
                 Glide.with(mContext).load(entity.getEmo_url()).
-                        override(mImageHeight, mImageHeight).
                         placeholder(R.drawable.zf_default_message_image).
                         crossFade().into(holder.gifView);
 //                final String cachePath = Constants.EMO_DIR_PATH + "emotion" + File.separator + name;

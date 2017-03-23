@@ -49,6 +49,8 @@ public class EmoHelper extends ColumnHelper<EmoEntity> {
         values.put(EmoColumn.EMO_CATE_ID, bean.getEmo_cate_id());
         values.put(EmoColumn.EMO_CODE, bean.getEmo_code());
         values.put(EmoColumn.EMO_DESC, bean.getEmo_desc());
+        values.put(EmoColumn.EMO_WIDTH, bean.getWidth());
+        values.put(EmoColumn.EMO_HEIGHT, bean.getHeight());
         values.put(EmoColumn.USER_ID, userId);
         return values;
     }
@@ -61,6 +63,8 @@ public class EmoHelper extends ColumnHelper<EmoEntity> {
         cate.setEmo_group_id(getString(c, EmoColumn.EMO_GROUP_ID));
         cate.setEmo_format(getString(c, EmoColumn.EMO_FORMAT));
         cate.setEmo_cate_id(getString(c, EmoColumn.EMO_CATE_ID));
+        cate.setWidth(getString(c, EmoColumn.EMO_WIDTH));
+        cate.setHeight(getString(c, EmoColumn.EMO_HEIGHT));
         cate.setEmo_code(getString(c, EmoColumn.EMO_CODE));
         return cate;
     }

@@ -217,7 +217,7 @@ public class HttpUrl {
     //搜索人脉用户
     public static final String SEARCH_PEOPLE = MAIN_URL + "api/v1/search/user";
     //查询所有的福娃出售
-    public static final String SEARCH_FUWA_SELL = "http://wsimali.66boss.com:9090/api/querysell";
+    public static final String SEARCH_FUWA_SELL = "http://wsimali.66boss.com:9090/msg/querysell";
 
     //查自己的福娃
     public static final String QUERY_MY_FUWA = "http://wsimali.66boss.com:9090/api/querymy?user=";

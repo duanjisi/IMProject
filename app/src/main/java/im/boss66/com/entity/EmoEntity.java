@@ -13,6 +13,8 @@ public class EmoEntity {
     private String emo_code = "";
     private String url = "";
     private String emo_url = "";
+    private String width = "";
+    private String height = "";
 
     public String getEmo_id() {
         return emo_id;
@@ -84,5 +86,21 @@ public class EmoEntity {
 
     public void setEmo_url(String emo_url) {
         this.emo_url = emo_url;
+    }
+
+    public String getWidth() {
+        return width;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
     }
 }

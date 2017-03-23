@@ -47,7 +47,6 @@ import im.boss66.com.entity.BaseContact;
 import im.boss66.com.entity.ContactEntity;
 import im.boss66.com.entity.FriendState;
 import im.boss66.com.entity.MessageEvent;
-import im.boss66.com.entity.MessageEvent2;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.ContactsRequest;
 import im.boss66.com.http.request.NewFriendNumRequest;
@@ -90,20 +89,6 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
     }
 
     private void initViews(View view) {
-//        MyPushIntentService.getInstance().setPushCallback(new MyPushIntentService.pushCallback() {
-//            @Override
-//            public void onMessageReceiver(String action) {
-//                android.util.Log.i("info", "==================action");
-//                if (action.equals(Constants.Action.CHAT_NEW_MESSAGE_NOTICE)) {
-//                    Log.i("info", "=============requestNewNums()");
-//                    requestNewNums();
-//                } else if (action.equals(Constants.Action.CHAT_AGREE_FRIENDSHIP)) {
-//                    Log.i("info", "=============refreshPagerDatas()");
-//                    refreshPagerDatas();
-//                    requestNewNums();
-//                }
-//            }
-//        });
         contactList = new ArrayList<EaseUser>();
         inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         header = getActivity().getLayoutInflater().inflate(R.layout.item_contact_header, null);
@@ -126,7 +111,6 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
         iv_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                EventBus.getDefault().post(new MessageEvent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE));
                 Intent intent = new Intent(getActivity(), AddFriendActivity.class);
                 startActivity(intent);
             }
@@ -303,7 +287,7 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
     private class LocalBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i("info","onReceiver():action:"+intent.getAction());
+            Log.i("info", "onReceiver():action:" + intent.getAction());
             String action = intent.getAction();
             if (Constants.Action.CONTACTS_REMOVE_CURRETN_ITEM.equals(action)) {
                 String userid = intent.getStringExtra("userid");
@@ -403,8 +387,7 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
         }
     }
 
-
-    public static void onMessage(String action) {
+    public void onMessage(String action) {
         Log.i("info", "=============onMessage中action:" + action);
         if (action.equals(Constants.Action.CHAT_NEW_MESSAGE_NOTICE)) {
             Log.i("info", "=============requestNewNums()");
@@ -425,8 +408,10 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
     }
 
     @Subscribe
-    public void onEvent(MessageEvent2 msg){
-        showToast("hahaha",false);
-        android.util.Log.i("liwya","EventBus.getDefault()2");
+    public void onEvent(MessageEvent msg) {
+        String action = msg.getAction();
+        if (!action.equals("")) {
+            onMessage(action);
+        }
     }
 }
