@@ -18,7 +18,6 @@ import com.umeng.message.IUmengUnregisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 
-
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -31,8 +30,6 @@ import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
-import im.boss66.com.Utils.SharedPreferencesMgr;
-import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
@@ -126,10 +123,8 @@ public class MainActivity extends BaseActivity implements Observer {
         mPushAgent = PushAgent.getInstance(this);
         mPushAgent.enable(mRegisterCallback);
         mPushAgent.setPushIntentServiceClass(MyPushIntentService.class);
-
-        String sha1 = UIUtils.getSHA1(context);
-        Log.i("info", "=======sha1:" + sha1);
-
+//        String sha1 = UIUtils.getSHA1(context);
+//        Log.i("info", "=======sha1:" + sha1);
         Intent intent = new Intent(context, ChatServices.class);
         intent.putExtra("userid", account.getUser_id());
         startService(intent);
@@ -187,6 +182,7 @@ public class MainActivity extends BaseActivity implements Observer {
     }
 
     private String groupIcon = "http://pics.sc.chinaz.com/Files/pic/icons128/5858/261.png";
+
     private void insertDatas() {
         EmoCate cate = new EmoCate();
         cate.setCate_name("搞笑");

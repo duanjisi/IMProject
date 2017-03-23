@@ -16,11 +16,13 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Gallery;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -82,6 +84,8 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     private String groupid;
     private String classType, memberUserNames;
     private List<String> userIdList;
+    private HorizontalScrollView horizontalScrollView;
+    private boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +116,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         linearLayout = (LinearLayout) findViewById(R.id.ll_image);
         ll_search = (LinearLayout) findViewById(R.id.rl_search);
         iv_tag = (ImageView) findViewById(R.id.iv_tag);
+        horizontalScrollView = (HorizontalScrollView) findViewById(R.id.horizontalScrollView);
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_search.getLayoutParams();
         params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
@@ -514,6 +519,35 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 //            params.height = FrameLayout.LayoutParams.WRAP_CONTENT;
 //            linearLayout.setLayoutParams(params);
 //        }
+        scaleMaxWidth();
+    }
+
+    private void scaleMaxWidth() {
+        flag = true;
+        linearLayout.getViewTreeObserver().addOnDrawListener(new ViewTreeObserver.OnDrawListener() {
+            @Override
+            public void onDraw() {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) horizontalScrollView.getLayoutParams();
+                int width = linearLayout.getWidth();
+                if (width >= mImageHeight * 6) {
+//            int distance = width - mImageHeight * 6;
+                    params.width = mImageHeight * 6;
+                    horizontalScrollView.setLayoutParams(params);
+                    if (flag) {
+                        flag = false;
+                        horizontalScrollView.scrollTo(linearLayout.getMeasuredWidth() - horizontalScrollView.getWidth(), 0);
+                    }
+//                    horizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+                } else {
+                    params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                    horizontalScrollView.setLayoutParams(params);
+                }
+            }
+        });
+//        Log.i("info", "==============width:" +
+//                width + "\n" + "最大宽:" +
+//                mImageHeight * 6 + "\n" + "单个宽：" +
+//                mImageHeight);
     }
 
     int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -543,6 +577,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 //            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 //            query.setCompoundDrawables(drawable, null, null, null);
 //        }
+        scaleMaxWidth();
     }
 
     private void deleteLastView() {
@@ -574,6 +609,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 //                    contactListLayout.refresh();
 //                }
 //            });
+            scaleMaxWidth();
         }
     }
 

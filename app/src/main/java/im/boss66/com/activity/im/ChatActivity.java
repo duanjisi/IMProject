@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -33,7 +32,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -789,7 +787,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.tv_edit://编辑
                 if (editUrl.equals("")) {
-                    if (!emoCode.equals("")) {
+                    if (!TextUtils.isEmpty(emoCode)) {
                         Intent it0 = new Intent(context, EmojiEditActivity.class);
                         it0.putExtra("emoCode", emoCode);
                         it0.putExtra("fromChat", true);
@@ -1471,7 +1469,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    private String editUrl;
+    private String editUrl = "";
     private String emoCode;
 
     @Override
