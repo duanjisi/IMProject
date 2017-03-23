@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.hardware.Camera;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -33,6 +34,7 @@ import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -774,6 +776,27 @@ public final class UIUtils {
         }
 
         return inSampleSize;
+    }
+
+    /*
+    *获取拍照之后的尺寸
+    */
+    public static Camera.Size getPictureSize(Context context, List<Camera.Size> sizes) {
+
+        int screenWidth = getScreenWidth(context);
+        int index = -1;
+
+        for (int i = 0; i < sizes.size(); i++) {
+            if (Math.abs(screenWidth - sizes.get(i).width) == 0) {
+                index = i;
+                break;
+            }
+        }
+        // 当未找到与手机分辨率相等的数值,取列表中间的分辨率
+        if (index == -1) {
+            index = sizes.size() / 2;
+        }
+        return sizes.get(index);
     }
 
 }

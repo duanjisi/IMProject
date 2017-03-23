@@ -115,16 +115,13 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private List<PoiItem> poiItems;// poi数据
     private AMapLocation location;
     private FuwaHideAddressAdapter addressAdapter;
-    private String userId, geohash, address;
+    private String geohash, address;
     private File imgFile;
-    private String classType;
     private Dialog dialog;
     private ImageView iv_dialog_icon;
     private TextView tv_dialog_address, bt_hide_ok;
     private Bitmap bitmapImg;
     private boolean isJump = false, isHideOk = true;
-    private int sceenW, sceenH;
-    private byte[] imgByte;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +132,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
-        sceenH = UIUtils.getScreenHeight(this);
-        sceenW = UIUtils.getScreenWidth(this);
-        userId = App.getInstance().getAccount().getUser_id();
         autoFocusHandler = new Handler();
 
         rl_address = (RelativeLayout) findViewById(R.id.rl_address);
@@ -348,7 +342,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                                     mCamera.takePicture(null, null, mPictureCallback);
                                     isTakePic = false;
                                     tv_change_place.setVisibility(View.VISIBLE);
-                                    // bt_catch.setVisibility(View.VISIBLE);
+                                    bt_catch.setVisibility(View.VISIBLE);
                                     tv_bottom.setVisibility(View.GONE);
                                     Log.i("onSensorChanged", "拍照");
                                 }
@@ -594,17 +588,11 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
         }
-
-        Glide.with(this).load(imgByte)
-                .into(iv_dialog_icon);
         if (imgFile != null) {
-//            Picasso
-//                    .with(this)
-//                    .load(imgFile)
-//                    .into(iv_dialog_icon);
-
-
-            //iv_dialog_icon.setImageBitmap(bitmapImg);
+            Picasso
+                    .with(this)
+                    .load(imgFile)
+                    .into(iv_dialog_icon);
         }
         tv_dialog_address.setText("" + address);
         dialog.show();
