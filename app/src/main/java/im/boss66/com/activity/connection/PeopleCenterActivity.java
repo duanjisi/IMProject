@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -70,6 +71,7 @@ import im.boss66.com.entity.FriendCircleEntity;
 import im.boss66.com.entity.FriendCircleItem;
 import im.boss66.com.entity.FriendCirclePraiseEntity;
 import im.boss66.com.entity.FriendState;
+import im.boss66.com.entity.UserInfoEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.AddFriendRequest;
@@ -106,6 +108,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
     private String CuiUid, name, address, avatar;
     private RoundImageView user_head;
     private TextView tv_name;
+    private TextView tv_name2;
     private TextView tv_address;
     private Button bt_add;
     private LinearLayout rl_msg;
@@ -117,11 +120,96 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
 
     private RelativeLayout rl_edit_info;
 
+    private UserInfoEntity userInfoEntity;
+
+    private ImageView img_hasschool;
+    private ImageView img_noschool;
+
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:
+                    String district_str = userInfoEntity.getResult().getDistrict_str();
+                    String school = userInfoEntity.getResult().getSchool();
+                    String user_name = userInfoEntity.getResult().getUser_name();
+
+                    if(TextUtils.isEmpty(district_str)&&TextUtils.isEmpty(school)){
+                        //只显示名字
+                       img_noschool.setVisibility(View.VISIBLE);
+                        tv_name2.setVisibility(View.VISIBLE);
+                        tv_name2.setText(user_name);
+
+                    }else {
+                        //有学校家乡
+
+                        tv_address.setText(district_str+"  "+school);
+                        img_hasschool.setVisibility(View.VISIBLE);
+
+                        tv_name.setVisibility(View.VISIBLE);
+                        tv_name.setText(user_name);
+                    }
+
+                    if(other){ //别人的页面
+                        rl_edit_info.setClickable(false);
+                        img_noschool.setVisibility(View.GONE);
+                        img_hasschool.setVisibility(View.GONE);
+
+                    }
+                    break;
+
+            }
+        }
+    };
+    private boolean other;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people_center);
         initViews();
+        initData();
+    }
+
+    private void initData() {
+        showLoadingDialog();
+        String url = HttpUrl.SEARCH_USER_INFO;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                if (result != null) {
+                    userInfoEntity = JSON.parseObject(result, UserInfoEntity.class);
+                    if (userInfoEntity != null) {
+                        if (userInfoEntity.getCode() == 1) {
+
+                            handler.obtainMessage(1).sendToTarget();
+                        } else {
+                            showToast(userInfoEntity.getMessage(), false);
+                        }
+
+                    }
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
+                showToast(e.getMessage(), false);
+            }
+        });
     }
 
     protected void initViews() {
@@ -161,10 +249,13 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         RelativeLayout rl_head = (RelativeLayout) header.findViewById(R.id.rl_head);
         user_head = (RoundImageView) header.findViewById(R.id.user_head);
         tv_name = (TextView) header.findViewById(R.id.tv_name);
+        tv_name2 = (TextView) header.findViewById(R.id.tv_name2);
         tv_address = (TextView) header.findViewById(R.id.tv_address);
         bt_add = (Button) header.findViewById(R.id.bt_add);
         rl_msg = (LinearLayout) header.findViewById(R.id.rl_msg);
         iv_msg = (ImageView) header.findViewById(R.id.iv_msg);
+        img_noschool = (ImageView) header.findViewById(R.id.img_noschool);
+        img_hasschool = (ImageView) header.findViewById(R.id.img_hasschool);
         bt_add.setOnClickListener(this);
         rl_msg.setOnClickListener(this);
         rl_edit_info.setOnClickListener(this);
@@ -190,6 +281,8 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 name = intent.getStringExtra("name");
                 address = intent.getStringExtra("address");
                 avatar = intent.getStringExtra("avatar");
+                other = intent.getBooleanExtra("other", false);
+
                 bt_add.setVisibility(View.VISIBLE);
                 rl_msg.setVisibility(View.GONE);
                 requestFriendShip();
@@ -214,11 +307,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
             avatar = sAccount.getAvatar();
             name = sAccount.getUser_name();
         }
-        if (!TextUtils.isEmpty(name)) {
-            tv_name.setText(name);
-        } else {
-            tv_name.setText(CuiUid);
-        }
+
         if (!TextUtils.isEmpty(address)) {
             tv_address.setText(address);
         }

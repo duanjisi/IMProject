@@ -121,6 +121,7 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
                     Intent intent = new Intent(context, PeopleCenterActivity.class);
+                    intent.putExtra("other",true);
                     intent.putExtra("name", entity.getUser_name());
                     intent.putExtra("address", entity.getFeed_to());
                     intent.putExtra("uid", entity.getUser_id());

@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +35,7 @@ import im.boss66.com.http.HttpUrl;
 public class EditNameActivity extends BaseActivity implements View.OnClickListener {
     private EditText et_name;
     private TextView tv_headright_view,tv_headlift_view;
+    private ImageView img_close;
 
     private Handler handler = new Handler(){
         @Override
@@ -50,20 +54,63 @@ public class EditNameActivity extends BaseActivity implements View.OnClickListen
         }
 
     };
+    private String name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_name);
+        Intent intent = getIntent();
+        if(intent!=null){
+            name = intent.getStringExtra("name");
+        }
 
         initViews();
     }
 
     private void initViews() {
         et_name = (EditText) findViewById(R.id.et_name);
+        et_name.setText(name);
+        et_name.setSelection(name.length());
         tv_headright_view = (TextView) findViewById(R.id.tv_headright_view);
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headlift_view.setOnClickListener(this);
         tv_headright_view.setOnClickListener(this);
+
+
+        et_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (et_name.getText().toString().length() > 0) {
+                   img_close.setVisibility(View.VISIBLE);
+
+                }else{
+                    img_close.setVisibility(View.GONE);
+                }
+
+//                if (editable.length() > 0) {
+//                    img_close.setVisibility(View.VISIBLE);
+//
+//                }else{
+//                    img_close.setVisibility(View.GONE);
+//                }
+
+            }
+        });
+
+        img_close = (ImageView) findViewById(R.id.img_close);
+        img_close.setOnClickListener(this);
     }
 
     @Override
@@ -79,8 +126,9 @@ public class EditNameActivity extends BaseActivity implements View.OnClickListen
 
                     initData();
                 }
-
-
+                break;
+            case R.id.img_close:
+                et_name.setText("");
                 break;
 
         }
