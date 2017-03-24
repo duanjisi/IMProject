@@ -150,7 +150,7 @@ public class ChooseYourLikeDialog extends BaseDialog implements View.OnClickList
                     isChoose.set(postion, !aBoolean);
                     adapter.notifyDataSetChanged();
                 } else {
-                    ToastUtil.show(context, "只能选择3个", Toast.LENGTH_SHORT);
+                    ToastUtil.showShort(context,"只能选择3个");
                 }
 
             }
