@@ -321,6 +321,7 @@ public class App extends Application {
         sAccount.setCity(loginStatus.getCity());
         sAccount.setDistrict(loginStatus.getDistrict());
         sAccount.setDistrict_str(loginStatus.getDistrict_str());
+        sAccount.setCover_pic(loginStatus.getCoverPic());
         return sAccount;
     }
 

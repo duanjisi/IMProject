@@ -315,7 +315,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                             if (files != null && files.size() > 0) {
                                 String url = files.get(0).file_url;
                                 String url_img = files.get(0).file_thumb;
-                                if (!TextUtils.isEmpty(url) && url.contains(".mp4")) {
+                                if (!TextUtils.isEmpty(url)) {
                                     Intent intent = new Intent(context, VideoPlayerActivity.class);
                                     intent.putExtra("url", url);
                                     intent.putExtra("imgurl", url_img);
