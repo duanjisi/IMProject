@@ -910,7 +910,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        }
 //        ChatServices.sendMessage(getString(MESSAGE_TYPE_EMOTION, faceCode));
         Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_EMOTION, faceCode));
-//        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_EMOTION, "");
+        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_EMOTION, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_EMOTION, mSpUtil.getUserId(),
@@ -974,7 +974,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
 //        ChatServices.sendMessage(getString(MESSAGE_TYPE_IMG, photoPath));
         Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_IMG, photoPath));
-//        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_IMG, "");
+        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_IMG, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_IMG, mSpUtil.getUserId(),
@@ -999,7 +999,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        }
 //        ChatServices.sendMessage(getString(MESSAGE_TYPE_TXT, msg));
         Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_TXT, msg));
-//        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_TXT, msg);
+        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_TXT, msg);
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_TXT, mSpUtil.getUserId(),
@@ -1024,7 +1024,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        }
 //        ChatServices.sendMessage(getString(MESSAGE_TYPE_AUDIO, photoPath));
         Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_AUDIO, photoPath));
-//        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_AUDIO, "");
+        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_AUDIO, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_AUDIO, mSpUtil.getUserId(),
@@ -1081,10 +1081,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
         String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + userid;
         PreferenceUtils.putString(this, noticeKey, msg);
-        String key = PrefKey.UN_READ_NEWS_KEY + "/" + userid;
-        int num = PreferenceUtils.getInt(this, key, 0);
-        num++;
-        PreferenceUtils.putInt(this, key, num);
+//        String key = PrefKey.UN_READ_NEWS_KEY + "/" + userid;
+//        int num = PreferenceUtils.getInt(this, key, 0);
+//        num++;
+//        PreferenceUtils.putInt(this, key, num);
     }
 
     private void sendVideoMessage(String faceCode) {
@@ -1105,7 +1105,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //        }
 //        ChatServices.sendMessage(getString(MESSAGE_TYPE_VIDEO, faceCode));
         Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_VIDEO, faceCode));
-//        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_VIDEO, "");
+        saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_VIDEO, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
                 MessageItem.MESSAGE_TYPE_VIDEO, mSpUtil.getUserId(),

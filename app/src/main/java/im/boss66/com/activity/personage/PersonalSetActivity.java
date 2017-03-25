@@ -92,8 +92,8 @@ public class PersonalSetActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onClick(int which) {//退出登录
-        Session.getInstance().stopChatService();
         App.getInstance().logout();
+        Session.getInstance().stopChatService();
 //        ChatServices.stopChatService(context);
 
 //        Session.getInstance().exitActivitys();

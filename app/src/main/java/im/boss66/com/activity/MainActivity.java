@@ -1,6 +1,5 @@
 package im.boss66.com.activity;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -125,9 +124,9 @@ public class MainActivity extends BaseActivity implements Observer {
         mPushAgent.setPushIntentServiceClass(MyPushIntentService.class);
 //        String sha1 = UIUtils.getSHA1(context);
 //        Log.i("info", "=======sha1:" + sha1);
-        Intent intent = new Intent(context, ChatServices.class);
-        intent.putExtra("userid", account.getUser_id());
-        startService(intent);
+//        Intent intent = new Intent(context, ChatServices.class);
+//        intent.putExtra("userid", account.getUser_id());
+//        startService(intent);
         ChatServices.startChatService(context);
         getPermission(PermissionUtil.PERMISSIONS_SYSTEM_SETTING);
         requestLoveStore();

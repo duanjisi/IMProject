@@ -82,9 +82,9 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"></activity>
         <activity
-            android:windowSoftInputMode="adjustResize"
             android:name=".activity.im.ChatActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".activity.ImageGridActivity"
             android:screenOrientation="portrait"></activity>
@@ -490,6 +490,18 @@
         <!--福娃排行榜-->
         <activity android:name=".activity.treasure.FuwaTopList"></activity>
 
+        <!--支付宝start-->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"></activity>
+        <activity
+            android:name="com.alipay.sdk.auth.AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"></activity>
+        <!-- 支付宝end -->
 
         <!-- 微信入口 -->
         <activity
@@ -498,7 +510,12 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop" />
         <!-- 分享编辑页 -->
+
         <!-- QQ第三方登录 start -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -556,6 +573,13 @@
                 <action android:name="im.boss66.com.logout.reseting"></action>
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".receiver.BootReceiver">
+            <intent-filter>
+                <action android:name="local.chat.service.close"></action>
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".services.ChatServices"
             android:enabled="true"
