@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -80,6 +81,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
 
     private Dialog dialog2;
+    private Dialog dialog3;
     private WheelView id_sex;
     private TextView mBtnConfirm2;
     private TextView btn_cancle2;
@@ -403,7 +405,8 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onClick(View view) {
 //                showToast("buy", false);
-                    showPop();
+//                showPop();
+                showDialog();
             }
         });
 
@@ -425,22 +428,23 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         dialog.show();
     }
 
-    private void showPop() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        final View view = inflater.inflate(R.layout.pop_pay, null);
-        int screenWidth = UIUtils.getScreenWidth(getActivity());
-        popupWindow = new PopupWindow(view, screenWidth,
-                ViewGroup.LayoutParams.WRAP_CONTENT, false);
-        popupWindow.setFocusable(true);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(0xb0000000));
-        popupWindow.getBackground().setAlpha(150);
-        popupWindow.setAnimationStyle(R.style.ActionSheetDialogAnimation);
-        popupWindow.showAtLocation(dialog_view.findViewById(R.id.tv_price),Gravity.BOTTOM,0,0);
-        final ImageView img_zhifubao_choose = (ImageView) view.findViewById(R.id.img_zhifubao_choose);
-        final ImageView img_wx_choose = (ImageView) view.findViewById(R.id.img_wx_choose);
-        final TextView tv_count = (TextView) view.findViewById(R.id.tv_count);
-        tv_count.setText(fuwa_price+"元");
-        view.findViewById(R.id.rl_zhifubao).setOnClickListener(new View.OnClickListener() {
+
+    private void showDialog() {
+        dialog3 = new Dialog(getActivity(), R.style.Dialog_full);
+        View view_dialog = View.inflate(getActivity(),
+                R.layout.pop_pay, null);
+
+
+        dialog3.setContentView(view_dialog);
+
+
+        Window dialogWindow = dialog3.getWindow();
+
+        final ImageView img_zhifubao_choose = (ImageView) view_dialog.findViewById(R.id.img_zhifubao_choose);
+        final ImageView img_wx_choose = (ImageView) view_dialog.findViewById(R.id.img_wx_choose);
+        final TextView tv_count = (TextView) view_dialog.findViewById(R.id.tv_count);
+        tv_count.setText(fuwa_price + "元");
+        view_dialog.findViewById(R.id.rl_zhifubao).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 img_zhifubao_choose.setImageResource(R.drawable.money_choose);
@@ -449,7 +453,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                 zhifubao = true;
             }
         });
-        view.findViewById(R.id.rl_weixin).setOnClickListener(new View.OnClickListener() {
+        view_dialog.findViewById(R.id.rl_weixin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 img_wx_choose.setImageResource(R.drawable.money_choose);
@@ -458,40 +462,37 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                 zhifubao = false;
             }
         });
-        view.findViewById(R.id.tv_buy).setOnClickListener(new View.OnClickListener() {
+        view_dialog.findViewById(R.id.tv_buy).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(zhifubao){
-                    showToast("支付宝",false);
-                }else{
-                    showToast("微信",false);
+                if (zhifubao) {
+                    showToast("支付宝", false);
+                } else {
+                    showToast("微信", false);
                 }
             }
         });
-
-        view.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                int top = view.findViewById(R.id.pop_layout).getTop();
-                int Bottom = view.findViewById(R.id.pop_layout).getBottom();
-                int left = view.findViewById(R.id.pop_layout).getLeft();
-                int right = view.findViewById(R.id.pop_layout).getRight();
-                int y = (int) event.getY();
-                int x = (int) event.getX();
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (y < top || y > Bottom) {
-                            popupWindow.dismiss();
-                        }
-                        if (x < left || x > right) {
-                            popupWindow.dismiss();
-                        }
-                        break;
-                }
-
-                return true;
+        view_dialog.findViewById(R.id.img_xx).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog3.dismiss();
             }
         });
+
+
+        dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent); //加上可以在底部对其屏幕底部
+
+
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity = Gravity.BOTTOM;
+        dialogWindow.setAttributes(lp);
+        dialog3.setCanceledOnTouchOutside(true);
+        dialog3.show();
+
     }
 
 }

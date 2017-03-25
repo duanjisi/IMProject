@@ -144,10 +144,8 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
 
                     }else {
                         //有学校家乡
-
                         tv_address.setText(district_str+"  "+school);
                         img_hasschool.setVisibility(View.VISIBLE);
-
                         tv_name.setVisibility(View.VISIBLE);
                         tv_name.setText(user_name);
                     }

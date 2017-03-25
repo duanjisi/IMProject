@@ -5,7 +5,6 @@
     
     <RelativeLayout
         android:id="@+id/pop_layout"
-        android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="350dp">
@@ -16,7 +15,7 @@
             android:src="@drawable/fuwa_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView2" />
+            android:id="@+id/img_xx" />
 
 
         <TextView
@@ -25,7 +24,7 @@
             android:text="付款详情"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imageView2"
+            android:layout_alignTop="@+id/img_xx"
             android:layout_centerHorizontal="true"
             android:id="@+id/textView" />
         <View
