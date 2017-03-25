@@ -464,7 +464,6 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
         dialog3.setContentView(view_dialog);
 
-        dialog3.setCanceledOnTouchOutside(true);
 
         Window dialogWindow = dialog3.getWindow();
 
