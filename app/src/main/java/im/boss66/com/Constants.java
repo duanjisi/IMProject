@@ -16,6 +16,7 @@ public class Constants {
         public static final String CONTACTS_REMOVE_CURRETN_ITEM = "local.contact.remove.current.item";
         public static final String CHAT_NEW_MESSAGE_NOTICE = "local.chat.new.message.notice";
         public static final String CHAT_AGREE_FRIENDSHIP = "local.agree.us.friendship";
+        public static final String CHAT_SERVICE_CLOSE = "local.chat.service.close";
         public static final String MAP_MARKER_REFRESH = "local.mapview.marker.refresh";
     }
 }

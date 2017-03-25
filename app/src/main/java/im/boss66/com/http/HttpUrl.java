@@ -238,4 +238,10 @@ public class HttpUrl {
     public static final String CATCH_MY_FUWA = BASE_FUWA_URL + "capture?user=";
     //福娃消息
     public static final String FUWA_MSG = "http://wsimali.66boss.com:9090/msg/myinfo?userid=";
+    //微信支付购买福娃
+    public static final String FUWA_PAY_WX = MAIN_URL + "api/pay/weixin";
+    //支付宝购买福娃
+    public static final String FUWA_PAY_ALIPAY = MAIN_URL + "api/pay/alipay";
+    //支付系统通知购买成功
+    public static final String SYSTEM_PAY_NOTICE = "http://wsimali.66boss.com:9090/msg/notice?";
 }

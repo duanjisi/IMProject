@@ -168,14 +168,16 @@
     <string name="mis_permission_dialog_cancel">取消</string>
     <string name="mis_permission_rationale">存储器读权限需要选择文件.</string>
     <string name="mis_permission_rationale_write_storage">存储写入权限需要保存图像.</string>
-
+    <string name="pay_result_tip">这个界面用于显示第三方app通过微信支付的结果</string>
 
     <!--QQ,微信开放平台-->
+    <string name="weixin_app_id2">wxac34006c18243289</string>
     <string name="weixin_app_id">wxcd7d86f3f2c04077</string>
     <string name="weixin_app_secret">dd51e4ff815cfe313551a86a6402e886</string>
 
     <string name="qq_app_id">1105914390</string>
     <string name="qq_app_key">SbGk2WdT16aUKe4Z</string>
+    <string name="alipay_app_id">2016092201948966</string>
 
     <string name="giving_orientation_privileges">请给予定位权限，否则获取不了附近的人.</string>
     <string name="giving_orientation_privileges_fail">抱歉，定位失败TAT</string>

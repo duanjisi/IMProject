@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="vertical"
-    android:rotation="180">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,32 +79,32 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.0">
-
+            <!--android:layout_toLeftOf="@+id/tv2"-->
             <TextView
                 android:id="@+id/tv_minus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="23dp"
-                android:layout_toLeftOf="@+id/tv2"
                 android:text="12"
                 android:textColor="#d3000f"
                 android:textSize="15.4sp" />
 
-            <TextView
-                android:id="@+id/tv2"
-                android:layout_width="1px"
-                android:layout_height="1px"
-                android:layout_centerHorizontal="true" />
+            <!--<TextView-->
+            <!--android:id="@+id/tv2"-->
+            <!--android:layout_width="1px"-->
+            <!--android:layout_height="1px"-->
+            <!--android:layout_centerHorizontal="true" />-->
 
-            <TextView
-                android:id="@+id/tag2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tv_minus"
-                android:layout_marginLeft="5.5dp"
-                android:layout_toRightOf="@+id/tv2"
-                android:text="分钟"
-                android:textSize="13.2sp" />
+            <!--<TextView-->
+            <!--android:id="@+id/tag2"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignBottom="@+id/tv_minus"-->
+            <!--android:layout_marginLeft="5.5dp"-->
+            <!--android:layout_toRightOf="@+id/tv2"-->
+            <!--android:text="分钟"-->
+            <!--android:textSize="13.2sp" />-->
 
             <TextView
                 android:layout_width="wrap_content"

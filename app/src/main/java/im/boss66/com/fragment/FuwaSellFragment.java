@@ -3,40 +3,35 @@ package im.boss66.com.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alipay.sdk.app.PayTask;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,12 +40,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
-import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.Utils.OrderInfoUtil2_0;
 import im.boss66.com.activity.treasure.FuwaDealActivity;
 import im.boss66.com.adapter.FuwaSellAdapter;
+import im.boss66.com.entity.AlipayOrder;
 import im.boss66.com.entity.FuwaSellEntity;
+import im.boss66.com.entity.PayResult;
+import im.boss66.com.entity.PayWx;
+import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.BaseModelRequest;
 import im.boss66.com.http.HttpUrl;
+import im.boss66.com.http.request.OrderAlipayRequest;
+import im.boss66.com.http.request.OrderSystemNoticeRequest;
+import im.boss66.com.http.request.OrderWxRequest;
 import im.boss66.com.listener.RecycleViewItemListener;
 import im.boss66.com.widget.wheel.ArrayWheelAdapter;
 import im.boss66.com.widget.wheel.OnWheelChangedListener;
@@ -61,10 +65,12 @@ import im.boss66.com.widget.wheel.WheelView;
  */
 
 public class FuwaSellFragment extends BaseFragment implements View.OnClickListener {
+    private final static String TAG = FuwaSellFragment.class.getSimpleName();
+    private static final int SDK_PAY_FLAG = 2;
+    private IWXAPI api;
+    private Resources resources;
     private TextView tv_choose;
     private TextView tv_price;
-
-
     private ImageView img_choose;
     private ImageView img_price;
 
@@ -97,7 +103,26 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                     adapter.setChooses();
                     adapter.notifyDataSetChanged();
                     break;
-
+                case SDK_PAY_FLAG: {
+                    @SuppressWarnings("unchecked")
+                    PayResult payResult = new PayResult(
+                            (Map<String, String>) msg.obj);
+                    /**
+                     * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                     */
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+//                        showToast("支付成功", true);
+                        requesResult();
+                    } else {
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                        showToast("支付失败", true);
+                    }
+                    break;
+                }
             }
         }
     };
@@ -110,8 +135,8 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
     private PopupWindow popupWindow;
     private View dialog_view;
     private Double fuwa_price;
-
     private boolean zhifubao = true; //支付宝购买
+    private String userid;
 
     @Nullable
     @Override
@@ -164,9 +189,11 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
 
     private void initViews(View view) {
+        userid = App.getInstance().getUid();
+        resources = getResources();
         view.findViewById(R.id.ll_left).setOnClickListener(this);
         view.findViewById(R.id.ll_right).setOnClickListener(this);
-
+        api = WXAPIFactory.createWXAPI(getActivity(), resources.getString(R.string.weixin_app_id2));
         tv_choose = (TextView) view.findViewById(R.id.tv_choose);
         tv_price = (TextView) view.findViewById(R.id.tv_price);
         img_choose = (ImageView) view.findViewById(R.id.img_choose);
@@ -449,7 +476,6 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             public void onClick(View view) {
                 img_zhifubao_choose.setImageResource(R.drawable.money_choose);
                 img_wx_choose.setImageResource(R.drawable.money_nochoose);
-
                 zhifubao = true;
             }
         });
@@ -458,17 +484,17 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             public void onClick(View view) {
                 img_wx_choose.setImageResource(R.drawable.money_choose);
                 img_zhifubao_choose.setImageResource(R.drawable.money_nochoose);
-
                 zhifubao = false;
             }
         });
         view_dialog.findViewById(R.id.tv_buy).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (zhifubao) {
+                    requestAlipayTrade();
                     showToast("支付宝", false);
                 } else {
+                    requestWxTrade();
                     showToast("微信", false);
                 }
             }
@@ -492,7 +518,141 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         dialogWindow.setAttributes(lp);
         dialog3.setCanceledOnTouchOutside(true);
         dialog3.show();
-
     }
 
+    private void requestWxTrade() {
+        if (chooseFuwa != null) {
+            Log.i("info", "=========0000000000");
+            OrderWxRequest request = new OrderWxRequest(TAG,
+                    "" + chooseFuwa.getOrderid(),
+                    "0.01",
+                    chooseFuwa.getFuwagid());
+            request.send(new BaseDataRequest.RequestCallback<PayWx>() {
+                @Override
+                public void onSuccess(PayWx pojo) {
+                    bindDataWx(pojo);
+                }
+
+                @Override
+                public void onFailure(String msg) {
+                    Log.i("info", "=========msg:" + msg);
+                    showToast(msg, true);
+                }
+            });
+        }
+    }
+
+    private void bindDataWx(PayWx entity) {
+        if (entity != null) {
+            Log.i("info", "=========1111111111111");
+            PayReq req = new PayReq();
+            req.appId = resources.getString(R.string.weixin_app_id2);
+            req.partnerId = entity.getPartnerid();
+            req.prepayId = entity.getPrepayid();
+            req.packageValue = entity.getPackageValue();
+            req.nonceStr = entity.getNoncestr();
+            req.timeStamp = entity.getTimestamp();
+            req.sign = entity.getSign();
+            // req.extData = "app data"; // optional
+            // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+            api.registerApp(resources.getString(R.string.weixin_app_id2));
+            api.sendReq(req);
+        }
+    }
+
+    private void requestAlipayTrade() {
+        if (chooseFuwa != null) {
+            OrderAlipayRequest request = new OrderAlipayRequest(TAG,
+                    "" + chooseFuwa.getOrderid(),
+                    "0.01",
+                    chooseFuwa.getFuwagid());
+            request.send(new BaseDataRequest.RequestCallback<AlipayOrder>() {
+                @Override
+                public void onSuccess(AlipayOrder pojo) {
+                    bindDataAlipay(pojo);
+                }
+
+                @Override
+                public void onFailure(String msg) {
+                    showToast(msg, true);
+                }
+            });
+        }
+    }
+
+    private void bindDataAlipay(AlipayOrder order) {
+        if (order != null) {
+            /**
+             * 这里只是为了方便直接向商户展示支付宝的整个支付流程；所以Demo中加签过程直接放在客户端完成；
+             * 真实App里，privateKey等数据严禁放在客户端，加签过程务必要放在服务端完成；
+             * 防止商户私密数据泄露，造成不必要的资金损失，及面临各种安全风险；
+             *
+             * orderInfo的获取必须来自服务端；
+             */
+            Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(resources.getString(R.string.alipay_app_id));
+            String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
+//        String sign = OrderInfoUtil2_0.getSign(params, privateKey);
+//        final String orderInfo = orderParam + "&" + sign;
+            final String orderInfo = order.getOrder_str();
+//            App.getInstance().setTrade_no(entity.getOut_trade_no());
+            Runnable payRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    PayTask alipay = new PayTask(getActivity());
+                    Map<String, String> result = alipay.payV2(orderInfo, true);
+                    Log.i("msp", result.toString());
+
+                    Message msg = new Message();
+                    msg.what = SDK_PAY_FLAG;
+                    msg.obj = result;
+                    handler.sendMessage(msg);
+                }
+            };
+            Thread payThread = new Thread(payRunnable);
+            payThread.start();
+        }
+    }
+
+    private void requesResult() {
+        showLoadingDialog();
+        if (chooseFuwa != null) {
+            OrderSystemNoticeRequest request = new OrderSystemNoticeRequest(TAG,
+                    "" + chooseFuwa.getOrderid(),
+                    userid,
+                    chooseFuwa.getFuwagid());
+            request.send(new BaseModelRequest.RequestCallback<String>() {
+                @Override
+                public void onSuccess(String pojo) {
+                    cancelLoadingDialog();
+                    showToast("支付成功!", true);
+                }
+
+                @Override
+                public void onFailure(String msg) {
+                    cancelLoadingDialog();
+                    showToast(msg, true);
+                }
+            });
+        }
+
+//        String tradeNo = App.getInstance().getTrade_no();
+//        if (tradeNo != null && !tradeNo.equals("")) {
+//            ChargeStatusRequest request = new ChargeStatusRequest(TAG, tradeNo);
+//            request.send(new BaseDataRequest.RequestCallback() {
+//                @Override
+//                public void onSuccess(Object pojo) {
+//                    cancelLoadingDialog();
+//                    Session.getInstance().refreshCashesPager();
+//                    showToast("支付成功!", true);
+//                    finish();
+//                }
+//
+//                @Override
+//                public void onFailure(String msg) {
+//                    cancelLoadingDialog();
+//                    showToast("支付失败!", true);
+//                }
+//            });
+//        }
+    }
 }

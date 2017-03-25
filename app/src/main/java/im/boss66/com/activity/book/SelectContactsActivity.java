@@ -284,12 +284,10 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         showLoadingDialog();
         GroupAddMemsRequest request = new GroupAddMemsRequest(TAG, groupid, member_ids);
         request.send(new BaseModelRequest.RequestCallback<String>() {
-
             @Override
             public void onSuccess(String pojo) {
                 onAddMember();
             }
-
             @Override
             public void onFailure(String msg) {
                 cancelLoadingDialog();

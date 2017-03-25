@@ -6,6 +6,15 @@
     <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
     <!--<item name="colorAccent">@color/colorAccent</item>-->
     <!--</style>-->
+    <!-- Navigation Header -->
+    <style name="NavPage">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center_horizontal</item>
+        <!-- <item name="android:background">@drawable/nav_page</item> -->
+        <item name="android:background">@color/navpage</item>
+    </style>
 
     <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -244,8 +253,11 @@
     <!--自定义横向精度条style-->
     <style name="mProgress_horizontal">
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressDrawable">@drawable/progressbar_horizontal_1</item><!-- progress_horizontal -->
-        <item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>
+        <item name="android:progressDrawable">@drawable/progressbar_horizontal_1
+        </item><!-- progress_horizontal -->
+        <item name="android:indeterminateDrawable">
+            @android:drawable/progress_indeterminate_horizontal
+        </item>
         <item name="android:minHeight">20dip</item>
         <item name="android:maxHeight">20dip</item>
     </style>

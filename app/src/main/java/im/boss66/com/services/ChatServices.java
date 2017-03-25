@@ -8,6 +8,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -20,6 +21,7 @@ import java.util.Observer;
 import de.tavendo.autobahn.WebSocket;
 import de.tavendo.autobahn.WebSocketConnectionHandler;
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.Base64Utils;
@@ -67,7 +69,9 @@ public class ChatServices extends Service implements Observer {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        flags = START_STICKY;
         return super.onStartCommand(intent, flags, startId);
+//        return START_STICKY;
     }
 
     public interface receiveMessageCallback {
@@ -110,8 +114,9 @@ public class ChatServices extends Service implements Observer {
                 @Override
                 public void onClose(int code, String reason) {
                     MycsLog.i("info", "======reason:" + reason);
-                    for (int i = 0; i < callbacks.size(); i++)
-                        ((receiveMessageCallback) callbacks.get(i)).onNotify("", reason);
+                    startConnection();
+//                    for (int i = 0; i < callbacks.size(); i++)
+//                        ((receiveMessageCallback) callbacks.get(i)).onNotify("", reason);
                 }
             });
         } catch (Exception e) {
@@ -122,7 +127,6 @@ public class ChatServices extends Service implements Observer {
 
     public void sendMessage(String msg) {
         Log.i("info", "===================IM发消息:" + msg);
-        Log.i("info", "===================mConnection:" + mConnection);
         if (mConnection != null && msg != null && !msg.equals("")) {
             mConnection.sendTextMessage(msg);
         }
@@ -282,6 +286,7 @@ public class ChatServices extends Service implements Observer {
         if (sin.getAction() == Session.ACTION_SEND_IM_MESSAGE) {
             String msg = (String) sin.getData();
             if (msg != null && !msg.equals("")) {
+                Log.i("info", "===================url:" + msg);
                 sendMessage(msg);
             }
         } else if (sin.getAction() == Session.ACTION_STOP_CHAT_SERVICE) {
@@ -296,6 +301,9 @@ public class ChatServices extends Service implements Observer {
         if (mConnection.isConnected()) {
             logout();
             mConnection.disconnect();
+        }
+        if (App.getInstance().isLogin()) {
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Action.CHAT_SERVICE_CLOSE));
         }
         Log.i("info", "========ChatServices中onDestroy()");
     }
