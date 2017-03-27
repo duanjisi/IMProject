@@ -115,6 +115,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                             String url = result.getAvatar();
                             Intent intent = new Intent();
                             intent.putExtra("icon_url", url);
+                            App.getInstance().getAccount().setCover_pic(url);
                             SharedPreferences mPreferences = context.getSharedPreferences("albumCover", MODE_PRIVATE);
                             SharedPreferences.Editor editor = mPreferences.edit();
                             editor.putString("albumCover", url);

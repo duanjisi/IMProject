@@ -54,8 +54,8 @@ public class CircleMessageListAdapter extends BaseRecycleViewAdapter {
             imageLoader.displayImage(item.getAvatar(), holderView.iv_head,
                     ImageLoaderUtils.getDisplayImageOptions());
             String circleMsg = item.getFeed_file();
-            if (!TextUtils.isEmpty(circleMsg)) {
-                if (circleMsg.contains(".mp4")) {
+            if (!TextUtils.isEmpty(circleMsg) && circleMsg.contains(".")) {
+                if (!circleMsg.contains(".png") && !circleMsg.contains(".jpg") && !circleMsg.contains(".jpeg")) {
                     holderView.iv_video_play.setVisibility(View.VISIBLE);
                 } else {
                     holderView.iv_video_play.setVisibility(View.GONE);

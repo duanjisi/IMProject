@@ -1,17 +1,16 @@
 package im.boss66.com.activity.discover;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -32,6 +31,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -53,10 +53,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -69,7 +67,7 @@ import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
-import im.boss66.com.activity.personage.ClipImageActivity;
+import im.boss66.com.activity.personage.PersonalPhotoAlbumActivity;
 import im.boss66.com.adapter.FriendCircleAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.CircleCommentListEntity;
@@ -81,13 +79,11 @@ import im.boss66.com.entity.FriendCircleCommentEntity;
 import im.boss66.com.entity.FriendCircleEntity;
 import im.boss66.com.entity.FriendCircleItem;
 import im.boss66.com.entity.FriendCirclePraiseEntity;
-import im.boss66.com.entity.FriendCircleTestData;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.CircleCommentCreateRequest;
 import im.boss66.com.http.request.CircleCommentDeleteRequest;
 import im.boss66.com.http.request.DoPraiseRequest;
-import im.boss66.com.http.request.FriendCircleRequest;
 import im.boss66.com.listener.CircleContractListener;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.util.Utils;
@@ -100,6 +96,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         CircleContractListener.View, ActionSheet.OnSheetItemClickListener {
     private final static String TAG = FriendCircleActivity.class.getSimpleName();
 
+    private RelativeLayout rl_title;
     private LinearLayout ll_edit_text;
     private EditText et_send;
     private Button bt_send;
@@ -142,6 +139,8 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     private String CurUid;
     private final int CHANGE_ALBUM_COVER = 5;//封面
     private ImageView iv_bg;
+    private AccountEntity sAccount;
+    private long[] mHits;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,13 +150,16 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void initView() {
+        mHits = new long[2];
         sceenW = UIUtils.getScreenWidth(context);
+        rl_title = (RelativeLayout) findViewById(R.id.rl_title);
         ll_edit_text = (LinearLayout) findViewById(R.id.ll_edit_text);
         et_send = (EditText) findViewById(R.id.et_send);
         bt_send = (Button) findViewById(R.id.bt_send);
         tv_back = (TextView) findViewById(R.id.tv_back);
         iv_set = (ImageView) findViewById(R.id.iv_set);
         rv_friend = (LRecyclerView) findViewById(R.id.rv_friend);
+        rl_title.setOnClickListener(this);
         ((DefaultItemAnimator) rv_friend.getItemAnimator()).setSupportsChangeAnimations(false);
 
         rv_friend.setOnTouchListener(new View.OnTouchListener() {
@@ -190,7 +192,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         tv_back.setOnClickListener(this);
         presenter = new CirclePresenter(this);
         adapter = new FriendCircleAdapter(this);
-        AccountEntity sAccount = App.getInstance().getAccount();
+        sAccount = App.getInstance().getAccount();
         CurUid = sAccount.getUser_id();
         access_token = sAccount.getAccess_token();
         adapter.getCurUserId(CurUid);
@@ -330,6 +332,19 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                             feed_uid = commentFromId;
                         }
                         createComment(content, pid, feed_uid);
+                    }
+                }
+                break;
+            case R.id.iv_head:
+                openActivity(PersonalPhotoAlbumActivity.class);
+                break;
+            case R.id.rl_title:
+                System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
+                mHits[mHits.length - 1] = SystemClock.uptimeMillis();//获取手机开机时间
+                if (mHits[mHits.length - 1] - mHits[0] < 500) {
+                    boolean top = rv_friend.isOnTop();
+                    if (!top) {
+                        rv_friend.scrollToPosition(0);
                     }
                 }
                 break;
@@ -568,7 +583,6 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 bundle.putString("sendType", "video");
                 bundle.putString("videoPath", videoPath);
                 openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }

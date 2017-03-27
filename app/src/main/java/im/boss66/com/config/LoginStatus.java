@@ -72,6 +72,7 @@ public class LoginStatus {
         editor.putString(CITY, account.getCity());
         editor.putString(DISTRICT, account.getDistrict());
         editor.putString(DISTRICT_STR, account.getDistrict_str());
+        editor.putString("cover_pic", account.getCover_pic());
         editor.apply();
     }
 
@@ -310,6 +311,10 @@ public class LoginStatus {
 
     public String getLogin_supplier_qrcode() {
         return mPreferences.getString(LOGIN_SUPPLIER_QRCODE, "");
+    }
+
+    public String getCoverPic() {
+        return mPreferences.getString("cover_pic", "");
     }
 
     public String getMember_rank() {
