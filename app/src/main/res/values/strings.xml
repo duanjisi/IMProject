@@ -246,4 +246,21 @@
     <string name="notice_weixin_not_install">你未安装微信！</string>
     <string name="notice_qq_not_install">你未安装QQ！</string>
     <string name="share_content">我正在嗨萌寻宝,一起来寻宝吧!</string>
+
+    <!-- 视频相关 start -->
+    <string name="video_input_verification_code_to_watch">输入正确验证码即可马上观看视频</string>
+    <string name="video_verification_code">验证码</string>
+    <string name="video_videoview_error_title">视频不能播放</string>
+    <string name="video_videoview_error_text_invalid_progressive_playback">这是非法的流媒体视频！</string>
+    <string name="video_videoview_error_text_unknown">视频无法播放!</string>
+    <string name="video_buffering">加载中...</string>
+
+    <string name="error_network_unavailable">网络连接不可用！</string>
+    <string name="opera_confirm">确定</string>
+    <!-- 视频播放 start -->
+    <string name="player_video_title1">第%1$s节：%2$s视频%3$s</string>
+    <string name="player_video_title">视频名字</string>
+    <string name="player_video_answer_qustion">你问我答</string>
+    <string name="player_video_list">视频列表</string>
+    <string name="error_video_play_error">视频播放出错！</string>
 </resources>

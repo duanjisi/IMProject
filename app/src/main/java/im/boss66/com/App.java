@@ -61,7 +61,10 @@ public class App extends Application {
     private WebSocket webSocket;
     private List<Activity> tempActivityList;
     private PushAgent mPushAgent;
-//    private LocalAddressEntity.SecondChild localAddress;
+    //    private LocalAddressEntity.SecondChild localAddress;
+    private static int sSeekPos;
+    private static int sMaxVolume;
+    private static double dVolume;
 
     public synchronized static App getInstance() {
         return mApplication;
@@ -103,9 +106,8 @@ public class App extends Application {
 //        mNotificationManager = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
         SharedPreferencesMgr.init(this, "liw");
         //异常捕捉
-        CrashHandler crashHandler = CrashHandler.getInstance();
-        crashHandler.init(getApplicationContext());
-
+//        CrashHandler crashHandler = CrashHandler.getInstance();
+//        crashHandler.init(getApplicationContext());
     }
 
     @Override
@@ -197,6 +199,30 @@ public class App extends Application {
         if (mUserDB == null)
             mUserDB = new UserDB(this);
         return mUserDB;
+    }
+
+    public void setCurrentProgress(int pos) {
+        sSeekPos = pos;
+    }
+
+    public int getCurrentProgress() {
+        return sSeekPos;
+    }
+
+    public void setMaxVolume(int maxVolume) {
+        sMaxVolume = maxVolume;
+    }
+
+    public int getMaxVolume() {
+        return sMaxVolume;
+    }
+
+    public void setDoubleVolume(double currentVolume) {
+        dVolume = currentVolume;
+    }
+
+    public double getDoubleVolume() {
+        return dVolume;
     }
 
 //    public synchronized BaiduPush getBaiduPush() {

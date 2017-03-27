@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,13 +49,16 @@ import im.boss66.com.entity.MessageEvent;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.ContactsRequest;
 import im.boss66.com.http.request.NewFriendNumRequest;
-import im.boss66.com.widget.EaseContactList;
+import im.boss66.com.widget.EaseBookList;
+import im.boss66.com.widget.RefreshListView;
 import im.boss66.com.widget.TopNavigationBar;
 
 /**
  * Created by Johnny on 2017/1/14.
  */
-public class ContactBooksFragment extends BaseFragment implements Observer {
+public class ContactBooksFragment extends BaseFragment implements
+        Observer,
+        RefreshListView.OnRefreshListener {
     private final static String TAG = ContactBooksFragment.class.getSimpleName();
     private LocalBroadcastReceiver mLocalBroadcastReceiver;
     private TopNavigationBar topNavigationBar;
@@ -66,8 +68,8 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
     private TextView tvSearch;
     protected ImageButton clearSearch;
     protected EditText query;
-    private static EaseContactList contactListLayout;
-    protected ListView listView;
+    private static EaseBookList contactListLayout;
+    protected RefreshListView listView;
     private ImageView iv_add;
     private View viewSearch;
     private View header;
@@ -123,8 +125,9 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
                 startActivity(intent);
             }
         });
-        contactListLayout = (EaseContactList) view.findViewById(R.id.contact_list);
+        contactListLayout = (EaseBookList) view.findViewById(R.id.contact_list);
         listView = contactListLayout.getListView();
+        listView.setOnRefreshListener(this);
         rl_new_friend = (RelativeLayout) header.findViewById(R.id.rl_add_friends);
         rl_chat_group = (RelativeLayout) header.findViewById(R.id.rl_chat_group);
         tv_new_nums = (TextView) header.findViewById(R.id.tv_notify);
@@ -248,6 +251,12 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
 //        });
     }
 
+    @Override
+    public void onRefresh() {
+        refreshPagerDatas();
+        requestNewNums();
+    }
+
     private static void requestNewNums() {
         NewFriendNumRequest request = new NewFriendNumRequest(TAG);
         request.send(new BaseDataRequest.RequestCallback<FriendState>() {
@@ -307,7 +316,7 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
         }
     }
 
-    private static void refreshPagerDatas() {
+    private void refreshPagerDatas() {
         ContactsRequest request = new ContactsRequest(TAG);
         request.send(new BaseDataRequest.RequestCallback<BaseContact>() {
             @Override
@@ -319,11 +328,12 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
             public void onFailure(String msg) {
 //                showToast(msg, true);
                 UIUtils.Toast(App.getInstance().getApplicationContext(), msg);
+                listView.refreshComplete();
             }
         });
     }
 
-    private static void refreshDatas(BaseContact baseContact) {
+    private void refreshDatas(BaseContact baseContact) {
         if (contactList != null) {
             contactList.clear();
         }
@@ -344,6 +354,7 @@ public class ContactBooksFragment extends BaseFragment implements Observer {
 //            contactListLayout.notifyDataSetChanged();
             contactListLayout.init(contactList);
         }
+        listView.refreshComplete();
     }
 
     @Override

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="PlaySeekBar" parent="@android:style/Widget.SeekBar">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/style_seekbar_play</item>
+        <item name="android:indeterminateDrawable">@drawable/style_seekbar_play</item>
+        <item name="android:thumb">@drawable/sel_seekbar_play_thumb</item>
+        <item name="android:minHeight">0.4dip</item>
+        <item name="android:maxHeight">0.4dip</item>
+    </style>
+
+    <declare-styleable name="DragProgress">
+        <attr name="isDrag" format="boolean" />
+    </declare-styleable>
+
+    <!--<style name="SoundSeekBar" parent="@android:style/Widget.SeekBar">-->
+    <!--<item name="android:indeterminateOnly">false</item>-->
+    <!--<item name="android:progressDrawable">@drawable/style_seekbar_sound</item>-->
+    <!--<item name="android:indeterminateDrawable">@drawable/style_seekbar_sound</item>-->
+    <!--<item name="android:thumb">@drawable/sel_seekbar_sound_thumb</item>-->
+    <!--<item name="android:minHeight">6dip</item>-->
+    <!--<item name="android:maxHeight">6dip</item>-->
+    <!--</style>-->
+
+
+    <!--<style name="LightProgressBar" parent="@android:style/Widget.ProgressBar.Horizontal">-->
+    <!--<item name="android:indeterminateOnly">false</item>-->
+    <!--<item name="android:progressDrawable">@drawable/style_progressbar_light</item>-->
+    <!--<item name="android:indeterminateDrawable">@drawable/style_progressbar_light</item>-->
+    <!--<item name="android:thumb">@null</item>-->
+    <!--<item name="android:minHeight">10dip</item>-->
+    <!--<item name="android:maxHeight">10dip</item>-->
+    <!--</style>-->
+
+    <!--<style name="CardDialogTv" parent="@style/WrapContent">-->
+    <!--<item name="android:layout_marginTop">10dp</item>-->
+    <!--<item name="android:textColor">@color/black</item>-->
+    <!--<item name="android:textSize">17sp</item>-->
+    <!--</style>-->
+
+    <style name="CardDialogRL">
+        <item name="android:layout_width">240dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <!--<style name="CardDialogLL">-->
+    <!--<item name="android:layout_width">match_parent</item>-->
+    <!--<item name="android:layout_height">wrap_content</item>-->
+    <!--<item name="android:layout_centerHorizontal">true</item>-->
+    <!--<item name="android:layout_margin">15dp</item>-->
+    <!--<item name="android:background">@drawable/shape_layout_corner</item>-->
+    <!--<item name="android:gravity">center_horizontal</item>-->
+    <!--<item name="android:orientation">vertical</item>-->
+    <!--<item name="android:padding">5dp</item>-->
+    <!--</style>-->
+
+    <!--<style name="CardBtn">-->
+    <!--<item name="android:layout_width">wrap_content</item>-->
+    <!--<item name="android:layout_height">30dp</item>-->
+    <!--<item name="android:layout_marginBottom">5dp</item>-->
+    <!--<item name="android:background">@drawable/sel_btn_card</item>-->
+    <!--<item name="android:textColor">@color/white</item>-->
+    <!--<item name="android:textSize">13sp</item>-->
+    <!--</style>-->
+
+    <!--<style name="CardDialogTheme" parent="@android:Theme.Dialog">-->
+    <!--<item name="android:windowFrame">@null</item>-->
+    <!--<item name="android:windowNoTitle">true</item>-->
+    <!--<item name="android:windowIsFloating">true</item>-->
+    <!--<item name="android:windowContentOverlay">@null</item>-->
+    <!--<item name="android:windowBackground">@android:color/transparent</item>-->
+    <!--<item name="android:backgroundDimEnabled">false</item>-->
+    <!--&lt;!&ndash; 弹出时下面的背景不变暗 &ndash;&gt;-->
+    <!--</style>-->
+</resources>

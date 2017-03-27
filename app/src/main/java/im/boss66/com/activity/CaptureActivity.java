@@ -10,7 +10,6 @@ import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,7 +40,6 @@ import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
@@ -51,7 +49,6 @@ import java.util.Hashtable;
 import im.boss66.com.R;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
-import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
@@ -240,7 +237,6 @@ public class CaptureActivity extends BaseActivity {
         MycsLog.i("result:" + result);
         if (result.contains("add_friend:")) {
             String userid = result.substring(result.indexOf(":") + 1, result.length());
-//            addFriendRequest(userid);
             Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
             intent.putExtra("classType", "CaptureActivity");
             intent.putExtra("userid", userid);
