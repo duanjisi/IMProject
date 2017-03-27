@@ -48,6 +48,7 @@ import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.Hashtable;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
@@ -56,7 +57,9 @@ import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.BaseModelRequest;
 import im.boss66.com.http.request.AddFriendRequest;
+import im.boss66.com.http.request.GroupAddMemsRequest;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.util.RGBLuminanceSource;
 import im.boss66.com.util.Utils;
@@ -238,14 +241,39 @@ public class CaptureActivity extends BaseActivity {
      */
     private void decodeResult(String result) {
         MycsLog.i("result:" + result);
-        if (result.contains("add_friend:")) {
-            String userid = result.substring(result.indexOf(":") + 1, result.length());
-//            addFriendRequest(userid);
+        if (result.contains("uid=")) { //加好友
+            String userid = result.substring(result.indexOf("=") + 1, result.length());
             Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
             intent.putExtra("classType", "CaptureActivity");
             intent.putExtra("userid", userid);
             startActivity(intent);
             finish();
+        }else if(result.contains("gid=")){ //加群
+
+            String gid = result.substring(result.indexOf("=") + 1, result.length());
+            GroupAddMemsRequest request = new GroupAddMemsRequest(TAG, gid, App.getInstance().getUid());
+            request.send(new BaseModelRequest.RequestCallback<String>() {
+                @Override
+                public void onSuccess(String pojo) {
+                    onAddMember();
+                }
+                @Override
+                public void onFailure(String msg) {
+                    cancelLoadingDialog();
+                    showToast(msg, true);
+                }
+            });
+
+        }
+    }
+    private void onAddMember() {
+        try {
+            Thread.sleep(1000);
+            cancelLoadingDialog();
+            showToast("加入该群成功!", true);
+            finish();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

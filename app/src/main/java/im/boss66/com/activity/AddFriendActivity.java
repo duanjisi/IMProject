@@ -132,7 +132,7 @@ public class AddFriendActivity extends BaseActivity implements View.OnClickListe
         linearParams.height = screenW;
         linearParams.width = screenW;
         iv_qcode.setLayoutParams(linearParams);
-        MakeQRCodeUtil.createQRImage("add_friend:" + account.getUser_id(), screenW, screenW, iv_qcode);
+        MakeQRCodeUtil.createQRImage("https://api.66boss.com/web/download?uid=" + account.getUser_id(), screenW, screenW, iv_qcode);
         imageLoader.displayImage(account.getAvatar(), header, ImageLoaderUtils.getDisplayImageOptions());
 
         int[] location = new int[2];

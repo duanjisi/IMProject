@@ -67,7 +67,7 @@ public class ChatGroupCodeActivity extends BaseActivity {
             imageLoader.displayImage(imageUrl, ivIcon, ImageLoaderUtils.getDisplayImageOptions());
         }
         if (!groupid.equals("")) {
-            MakeQRCodeUtil.createQRImage("add_group:" + groupid, screenW, screenW, ivCode);
+            MakeQRCodeUtil.createQRImage("https://api.66boss.com/web/download?gid=" + groupid, screenW, screenW, ivCode);
         }
     }
 

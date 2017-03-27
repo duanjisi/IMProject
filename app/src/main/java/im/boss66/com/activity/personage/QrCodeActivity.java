@@ -60,7 +60,7 @@ public class QrCodeActivity extends BaseActivity implements View.OnClickListener
         iv_qcode.setLayoutParams(linearParams);
         AccountEntity sAccount = App.getInstance().getAccount();
         String user_id = sAccount.getUser_id();
-        String url = "add_friend:" + user_id;
+        String url = "https://api.66boss.com/web/download?uid=" + user_id;
         MakeQRCodeUtil.createQRImage(url, screenW, screenW, iv_qcode);
         String headicon = sAccount.getAvatar();
         imageLoader.displayImage(headicon, iv_head,
