@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:atgc="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="0.0dip"
+    android:layout_marginLeft="0.0dip"
+    android:layout_marginRight="0.0dip"
+    android:background="@drawable/video_bar_bg"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <ImageButton
+        android:id="@+id/mediacontroller_play_pause"
+        android:layout_width="54.6dip"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:background="#00000000"
+        android:gravity="center"
+        android:paddingBottom="15.4dp"
+        android:paddingLeft="26.4dp"
+        android:paddingRight="22dp"
+        android:paddingTop="15.4dp"
+        android:scaleType="center"
+        android:src="@drawable/video_controller_play" />
+
+    <!--<ImageButton-->
+    <!--android:id="@+id/video_controller_next_btn"-->
+    <!--android:layout_width="50.25dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@null"-->
+    <!--android:paddingBottom="15.4dp"-->
+    <!--android:paddingLeft="15dp"-->
+    <!--android:paddingRight="13.75dp"-->
+    <!--android:paddingTop="15.4dp"-->
+    <!--android:scaleType="fitCenter"-->
+    <!--android:src="@drawable/play_next_cando" />-->
+    <TextView
+        android:id="@+id/mediacontroller_time_current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00:00"
+        android:textColor="@color/text_gray"
+        android:textSize="13sp" />
+
+    <im.boss66.com.widget.video.DragSeekBar
+        android:id="@+id/mediacontroller_seekbar"
+        style="@style/PlaySeekBar"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:max="100"
+        android:paddingBottom="20.35dp"
+        android:paddingLeft="11dp"
+        android:paddingRight="11dp"
+        android:paddingTop="20.35dp"
+        android:progress="0"
+        android:secondaryProgress="0"
+        atgc:isDrag="false" />
+
+    <TextView
+        android:id="@+id/mediacontroller_time_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="11dp"
+        android:text="00:05:00"
+        android:textColor="@color/text_gray"
+        android:textSize="13sp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_expand"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <!--android:src="@drawable/biz_video_expand"-->
+        <ImageView
+            android:id="@+id/expand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_vertical"
+            android:visibility="visible" />
+        <!--android:src="@drawable/biz_video_shrink"-->
+        <ImageView
+            android:id="@+id/shrink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone" />
+    </RelativeLayout>
+    <!--<TextView-->
+    <!--android:id="@+id/video_controller_chapters_tv"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:gravity="center"-->
+    <!--android:paddingLeft="10dp"-->
+    <!--android:paddingRight="10dp"-->
+    <!--android:text="选集"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="18sp" />-->
+
+</LinearLayout>

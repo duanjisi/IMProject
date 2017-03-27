@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swwy="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/video_play_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <im.boss66.com.widget.video.AppVideoView
+            android:id="@+id/play_video_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            android:id="@+id/loading_layout"
+            layout="@layout/view_player_video_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_close"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginLeft="16.5dp"
+        android:layout_marginTop="16.5dp"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.2"
+            android:background="@drawable/bg_direct_round" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/close" />
+    </FrameLayout>
+</RelativeLayout>

@@ -102,6 +102,10 @@ dependencies {
     compile 'net.jodah:typetools:0.4.0'
     compile 'com.facebook.fresco:fresco:0.9.0+'
     compile 'com.umeng.analytics:analytics:latest.integration'
+    // ijkplayer相关
+    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.5.1'
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv5:0.5.1'
+    compile 'com.qiniu:happy-dns:0.2.5'
     compile files('libs/autobahn.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile files('libs/xUtils-2.6.14.jar')
@@ -126,4 +130,5 @@ dependencies {
     compile files('libs/AMap_Location_V3.3.0_20170118.jar')
     compile files('libs/AMap_Search_V4.0.0_20170111.jar')
     compile files('libs/alipaySdk-20160825.jar')
+    compile files('libs/pldroid-camera-streaming-1.5.3.jar')
 }

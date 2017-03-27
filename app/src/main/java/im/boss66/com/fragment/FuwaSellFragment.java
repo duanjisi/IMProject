@@ -115,8 +115,8 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-//                        showToast("支付成功", true);
-                        requesResult();
+                        showToast("支付成功", true);
+//                        requesResult();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         showToast("支付失败", true);
@@ -497,6 +497,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                     requestWxTrade();
                     showToast("微信", false);
                 }
+                dialog3.dismiss();
             }
         });
         view_dialog.findViewById(R.id.img_xx).setOnClickListener(new View.OnClickListener() {
@@ -611,6 +612,22 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             Thread payThread = new Thread(payRunnable);
             payThread.start();
         }
+    }
+
+    private String getOrderStr() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("partner", "2088421642497087");
+        map.put("service", "mobile.securitypay.pay");
+        map.put("_input_charset", "UTF-8");
+        map.put("notify_url", "https://api.66boss.com/api/pay/alipaynotify");
+        map.put("out_trade_no", "0819145412-6177");
+        map.put("subject", "Alipay测试");
+        map.put("payment_type", "1");
+        map.put("seller_id", "RSA");
+        map.put("total_fee", "0.01");
+        map.put("body", "测试测试");
+        map.put("seller_id", "gangmian_66boss@163.com");
+        return "";
     }
 
     private void requesResult() {

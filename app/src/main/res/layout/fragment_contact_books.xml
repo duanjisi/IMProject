@@ -46,7 +46,7 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/search_bar_view">
 
-            <im.boss66.com.widget.EaseContactList
+            <im.boss66.com.widget.EaseBookList
                 android:id="@+id/contact_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

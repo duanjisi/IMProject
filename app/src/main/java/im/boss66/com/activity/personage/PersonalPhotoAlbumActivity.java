@@ -141,13 +141,16 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
         FrameLayout.LayoutParams linearParams = (FrameLayout.LayoutParams) iv_bg.getLayoutParams(); //取控件textView当前的布局参数
         linearParams.height = UIUtils.getScreenWidth(context) / 3 * 2;
         iv_bg.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
-        SharedPreferences mPreferences = context.getSharedPreferences("albumCover", MODE_PRIVATE);
-        if (mPreferences != null) {
-            String albumCover = mPreferences.getString("albumCover", "");
-            if (!TextUtils.isEmpty(albumCover)) {
-                imageLoader.displayImage(albumCover, iv_bg,
-                        ImageLoaderUtils.getDisplayImageOptions());
+        String cover = sAccount.getCover_pic();
+        if (TextUtils.isEmpty(cover)) {
+            SharedPreferences mPreferences = context.getSharedPreferences("albumCover", MODE_PRIVATE);
+            if (mPreferences != null) {
+                cover = mPreferences.getString("albumCover", "");
             }
+        }
+        if (!TextUtils.isEmpty(cover)) {
+            imageLoader.displayImage(cover, iv_bg,
+                    ImageLoaderUtils.getDisplayImageOptions());
         }
 
         String avatar = App.getInstance().getAccount().getAvatar();
@@ -188,8 +191,6 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                                                 }
                                             } else if (feedType == 2) {
                                                 if (TextUtils.isEmpty(file)) {
-                                                    isJumpLookPic = false;
-                                                } else if (!file.contains(".mp4")) {
                                                     isJumpLookPic = false;
                                                 } else {
                                                     isJumpLookPic = true;

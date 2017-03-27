@@ -99,7 +99,7 @@ public class SearchCircleAdapter extends ABaseAdapter<SearchCofriendEntity> {
                 } else {
                     String firstFile = files.get(0);
                     if (!TextUtils.isEmpty(firstFile)) {
-                        if (!firstFile.contains(".mp4")) {
+                        if (firstFile.contains(".png") || firstFile.contains(".jpg") || firstFile.contains(".jpeg")) {
                             for (String url : files) {
                                 PhotoInfo photoInfo = new PhotoInfo();
                                 photoInfo.file_url = url;
