@@ -44,6 +44,7 @@ import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.OrderInfoUtil2_0;
 import im.boss66.com.activity.treasure.FuwaDealActivity;
+import im.boss66.com.activity.treasure.FuwaPackageActivity;
 import im.boss66.com.adapter.FuwaSellAdapter;
 import im.boss66.com.entity.AlipayOrder;
 import im.boss66.com.entity.FuwaSellEntity;
@@ -79,15 +80,16 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
     private FuwaSellAdapter adapter;
 
-    private Dialog dialog;
+    private Dialog dialog; //福娃详情dialog
     private List<FuwaSellEntity.DataBean> datas;
     private List<FuwaSellEntity.DataBean> datasChoose = new ArrayList<>();
 
     private RecyclerView rcv_fuwalist;
 
 
-    private Dialog dialog2;
-    private Dialog dialog3;
+    private Dialog dialog2;     //选择器
+    private Dialog dialog3;    //购买dialog
+    private Dialog dialog4;   //购买成功提示
     private WheelView id_sex;
     private TextView mBtnConfirm2;
     private TextView btn_cancle2;
@@ -116,6 +118,9 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         showToast("支付成功", true);
+                        dialog.dismiss();   //福娃详情dialog
+                        showSuccessDialog();
+
 //                        requesResult();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
@@ -126,6 +131,44 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             }
         }
     };
+
+    private void showSuccessDialog() {
+
+
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
+        // 不同页面加载不同的popup布局
+        View view = inflater.inflate(R.layout.pop_buy_success, null);
+
+        dialog4 = new Dialog(getActivity(), R.style.dialog_ios_style);
+        dialog4.setContentView(view);
+        dialog4.setCancelable(true);
+        dialog4.setCanceledOnTouchOutside(false);
+
+        TextView tv_word = (TextView) view.findViewById(R.id.tv_word);
+        tv_word.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialog4.dismiss();
+
+                initData();
+            }
+        });
+
+        //设置dialog大小
+        Window dialogWindow = dialog4.getWindow();
+        WindowManager manager = getActivity().getWindowManager();
+        WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+        dialogWindow.setGravity(Gravity.CENTER);
+        Display d = manager.getDefaultDisplay(); // 获取屏幕宽、高度
+        params.width = (int) (d.getWidth() * 0.8); // 宽度设置为屏幕的0.9，根据实际情况调整
+        dialogWindow.setAttributes(params);
+
+        dialog4.show();
+
+
+    }
+
     private String[] fuwas;
 
     private Map<String, Integer> fuwaMap = new HashMap<>();
@@ -160,7 +203,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
     private void initData() {
         showLoadingDialog();
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
-        String url = HttpUrl.SEARCH_FUWA_SELL;
+        String url = HttpUrl.SEARCH_FUWA_SELL + "?time=" + System.currentTimeMillis();
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -414,7 +457,9 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         // 不同页面加载不同的popup布局
         dialog_view = inflater.inflate(R.layout.pop_fuwa_buy, null);
         TextView tv_fuwa_num = (TextView) dialog_view.findViewById(R.id.tv_fuwa_num);
+        TextView tv_number = (TextView) dialog_view.findViewById(R.id.tv_number);
         tv_fuwa_num.setText(chooseFuwa.getFuwaid() + "号福娃");
+        tv_number.setText(chooseFuwa.getFuwaid() + "");
 
         ImageView img_cancle = (ImageView) dialog_view.findViewById(R.id.img_cancle);
         img_cancle.setOnClickListener(new View.OnClickListener() {
@@ -565,7 +610,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         if (chooseFuwa != null) {
             OrderAlipayRequest request = new OrderAlipayRequest(TAG,
                     "" + chooseFuwa.getOrderid(),
-                    "0.01",
+                    chooseFuwa.getAmount()+"",
                     chooseFuwa.getFuwagid());
             request.send(new BaseDataRequest.RequestCallback<AlipayOrder>() {
                 @Override
