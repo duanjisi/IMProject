@@ -19,6 +19,15 @@ public class EmoBagEntity {
     private String group_system = "";
     private String download = "";
     private String url = "";
+    private boolean isLoaded = false;
+
+    public boolean isLoaded() {
+        return isLoaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        isLoaded = loaded;
+    }
 
     public String getGroup_id() {
         return group_id;

@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -316,6 +316,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                                 String url = files.get(0).file_url;
                                 String url_img = files.get(0).file_thumb;
                                 if (!TextUtils.isEmpty(url)) {
+                                    Log.i("info", "====================url:" + url);
                                     Intent intent = new Intent(context, VideoPlayerActivity.class);
                                     intent.putExtra("url", url);
                                     intent.putExtra("imgurl", url_img);

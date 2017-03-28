@@ -3,6 +3,8 @@ package im.boss66.com.activity.im;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.UiThread;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -27,6 +29,7 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.EmojiWellAdapter;
 import im.boss66.com.entity.BaseEmoWell;
@@ -36,13 +39,17 @@ import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.EmoWellChoseRequest;
 import im.boss66.com.task.EmoDbTask;
 import im.boss66.com.task.ZipExtractorTask;
+import im.boss66.com.util.UpdateCallback;
 import im.boss66.com.widget.ViewPagerLayout;
 
 /**
  * Created by Johnny on 2017/1/23.
  * 精选表情
  */
-public class EmojiSelectWellActivity extends BaseActivity implements View.OnClickListener, AbsListView.OnScrollListener {
+public class EmojiSelectWellActivity extends BaseActivity implements
+        View.OnClickListener,
+        AbsListView.OnScrollListener,
+        UpdateCallback {
     private final static String TAG = EmojiSelectWellActivity.class.getSimpleName();
     private int pagerNum = 10;
     private int pager = 1;
@@ -56,6 +63,7 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
     private HttpHandler<File> sHandler = null;
     private HttpUtils http = null;
     private Resources resources;
+    private Handler handler = new Handler();
     /**
      * 设置布局显示目标最大化
      */
@@ -110,7 +118,9 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
 
         listView.addHeaderView(header);
         listView.addFooterView(rootView);
-        adapter = new EmojiWellAdapter(context, mListener);
+//        adapter = new EmojiWellAdapter(context, mListener);
+        adapter = new EmojiWellAdapter(context);
+        adapter.setUpdateCallback(this);
         listView.setAdapter(adapter);
         listView.setOnScrollListener(this);
         listView.setOnItemClickListener(new ItemClickListener());
@@ -121,12 +131,14 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
         @Override
         public void myOnClick(int position, View v) {
             v.setVisibility(View.GONE);
+            listView.invalidate();
             download(position);
         }
     };
 
 
     public void download(final int position) {
+        Log.i("info", "================position:" + position);
         final EmoBagEntity entity = adapter.getData().get(position);
 //        String path = this.getFilesDir().getAbsolutePath();
         String dowloadUrl = entity.getDownload();
@@ -145,10 +157,14 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
         if (position >= listView.getFirstVisiblePosition()
                 && position <= listView
                 .getLastVisiblePosition()) {
-//            int positionInListView = position
-//                    - listView.getFirstVisiblePosition();
+            int positionInListView = position
+                    - listView.getFirstVisiblePosition();
+
+//            View view = listView
+//                    .getChildAt(position + 1);
             View view = listView
-                    .getChildAt(position + 1);
+                    .getChildAt(positionInListView);
+            Log.i("info", "================view:" + view);
             item = (ProgressBar) view.findViewById(R.id.download_pb);
             item.setVisibility(View.VISIBLE);
             textView = (TextView) view.findViewById(R.id.tv_download);
@@ -423,6 +439,148 @@ public class EmojiSelectWellActivity extends BaseActivity implements View.OnClic
                 requestNextPager();
             }
         }
+    }
+
+    @Override
+    public void startProgress(final EmoBagEntity model, final int position) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+////                for (int i = 0; i <= adapter.getData().size(); i++) {
+//                updateProgressInUiThread(model, 0, position);
+//                try {
+//                    Thread.sleep(50);
+//                } catch (InterruptedException e) {
+//                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                }
+//            }
+////            }
+//        }).start();
+
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                updateProgressPartly(model, 0, position);
+//            }
+//        });
+    }
+
+    @Override
+    public void freshProgress(final View view, final EmoBagEntity model, final int position) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                updateProgressPartly(view, model, 0, position);
+            }
+        });
+    }
+
+    @UiThread
+    void updateProgressInUiThread(EmoBagEntity model, int progress, int position) {
+        updateProgressPartly(model, progress, position);
+    }
+
+    private void updateProgressPartly(EmoBagEntity entity, int progress, int position) {
+        int firstVisiblePosition = listView.getFirstVisiblePosition();
+        int lastVisiblePosition = listView.getLastVisiblePosition();
+        if (position >= firstVisiblePosition && position <= lastVisiblePosition) {
+            View view = listView.getChildAt(position - firstVisiblePosition);
+            if (view.getTag() instanceof EmojiWellAdapter.ViewHolder) {
+                EmojiWellAdapter.ViewHolder vh = (EmojiWellAdapter.ViewHolder) view.getTag();
+                download(entity, vh);
+            }
+        }
+    }
+
+    private void updateProgressPartly(View view, EmoBagEntity entity, int progress, int position) {
+        EmojiWellAdapter.ViewHolder vh = (EmojiWellAdapter.ViewHolder) view.getTag();
+        download(entity, vh);
+    }
+
+    public void download(final EmoBagEntity entity, EmojiWellAdapter.ViewHolder holder) {
+        UIUtils.saveLoadingState(context, entity, true);
+        String dowloadUrl = entity.getDownload();
+        Log.i("info", "========dowloadUrl:" + dowloadUrl);
+        final String fileName = FileUtils.getFileNameFromPath(dowloadUrl);
+        Log.i("info", "========fileName:" + fileName);
+        final File file = new File(Constants.EMO_DIR_PATH, fileName);
+        if (file.exists()) {
+            file.delete();
+        }
+        http = new HttpUtils();
+        final ProgressBar progressBar = holder.progressBar;
+        final TextView tv_download = holder.tvDownLoad;
+        progressBar.setVisibility(View.VISIBLE);
+        tv_download.setVisibility(View.GONE);
+        Log.i("info", "========file.getPath().toString():" + file.getPath().toString());
+        sHandler = http.download(dowloadUrl, file.getPath().toString(), true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
+                false, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
+                new RequestCallBack<File>() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current,
+                                          boolean isUploading) {
+                        double i = current / (double) total * 100;
+                        int progress = (int) Math.ceil(i);
+                        if (progressBar != null) {
+                            progressBar.setProgress(progress);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(HttpException arg0, String arg1) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<File> responseInfo) {
+                        ZipExtractorTask task = new ZipExtractorTask(file.getPath(), Constants.EMO_DIR_PATH,
+                                EmojiSelectWellActivity.this, true, new ZipExtractorTask.Callback() {
+                            @Override
+                            public void onPreExecute() {
+                                if (tv_download != null) {
+                                    progressBar.setVisibility(View.GONE);
+                                    tv_download.setVisibility(View.VISIBLE);
+                                    tv_download.setText("解压中");
+                                    tv_download.setTextColor(resources.getColor(R.color.btn_green_noraml));
+                                    tv_download.setBackgroundResource(R.drawable.bg_frame_emo_default);
+                                }
+                            }
+
+                            @Override
+                            public void onComplete() {//解压完成，删除压缩包文件
+                                FileUtil.deleteFile(file.getPath().toString());
+                                String filepath = Constants.EMO_DIR_PATH + File.separator + fileName.replace(".zip", ".json");
+                                EmoDbTask dbTask = new EmoDbTask(filepath, new EmoDbTask.dbTaskCallback() {//解析.json文件。保持db数据
+                                    @Override
+                                    public void onPreExecute() {
+
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                        if (tv_download != null) {
+                                            progressBar.setVisibility(View.GONE);
+                                            tv_download.setVisibility(View.VISIBLE);
+                                            tv_download.setText("下载");
+                                            UIUtils.saveLoadingState(context, entity, false);
+                                            adapter.saveDownloadedStatus(entity);
+                                            tv_download.setTextColor(resources.getColor(R.color.btn_green_noraml));
+                                            tv_download.setBackgroundResource(R.drawable.bg_frame_emo_default);
+                                        }
+                                    }
+                                });
+                                dbTask.execute();
+                            }
+                        });
+                        task.execute();
+                    }
+                });
     }
 
     @Override

@@ -135,6 +135,9 @@
             android:screenOrientation="portrait"></activity>
         <!--播放视频-->
         <activity
+            android:name=".activity.player.videoPlayerActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".activity.player.PlayerVideoActivity"
             android:screenOrientation="portrait"></activity>
         <!--找福娃-->
@@ -552,6 +555,9 @@
         <!--&lt;!&ndash; 使用完全自定义消息来开启应用的服务进程的示例服务配置 &ndash;&gt;-->
         <!--&lt;!&ndash; 不是必需的服务，可以根据开发者的需求进行设置 &ndash;&gt;-->
         <!--<service android:name="com.atgc.cotton.services.NotificationService" />-->
+        <service
+            android:name=".services.UpdateService"
+            android:enabled="true"></service>
         <service android:name="im.boss66.com.services.MyPushIntentService" />
 
         <service android:name="im.boss66.com.services.NotificationService"></service>
