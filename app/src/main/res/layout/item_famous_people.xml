@@ -4,9 +4,10 @@
     android:background="@color/white"
     android:layout_height="wrap_content">
     <ImageView
+        android:scaleType="fitXY"
         android:id="@+id/img_headimg"
         android:layout_marginTop="16.5dp"
-        android:layout_marginLeft="16.5dp"
+        android:layout_marginLeft="10.5dp"
         android:layout_width="165dp"
         android:layout_height="165dp" />
 
@@ -14,8 +15,8 @@
         android:id="@+id/tv_name"
         android:text="dadadadad"
         android:textSize="17.6dp"
-        android:layout_marginTop="26.4dp"
-        android:layout_marginLeft="25.3dp"
+        android:layout_marginTop="16.4dp"
+        android:layout_marginLeft="15.3dp"
         android:layout_toRightOf="@id/img_headimg"
         android:textColor="@color/black"
         android:layout_width="wrap_content"
@@ -26,7 +27,7 @@
         android:textSize="14.3dp"
         android:textColor="@color/text_color_gray_9"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="25.3dp"
+        android:layout_marginLeft="15.3dp"
         android:layout_marginTop="16.5dp"
         android:text="asssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
         android:layout_below="@+id/tv_name"
