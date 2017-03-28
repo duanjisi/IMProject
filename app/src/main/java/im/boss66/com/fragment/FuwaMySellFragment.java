@@ -71,7 +71,7 @@ public class FuwaMySellFragment extends BaseFragment {
 
     private void initData() {
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
-        String url = HttpUrl.SEARY_MY_SELL_FUWA+ App.getInstance().getUid();
+        String url = HttpUrl.SEARY_MY_SELL_FUWA+ App.getInstance().getUid()+"&time="+System.currentTimeMillis();
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {

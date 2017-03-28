@@ -68,7 +68,7 @@
     <string name="privacy">隐私</string>
     <string name="general">通用</string>
     <string name="help_feedback">帮助与反馈</string>
-    <string name="about">关于嗨萌</string>
+    <string name="about">关于我们</string>
     <string name="exit_login">退出登录</string>
     <string name="set">设置</string>
     <string name="exit_login_tip">退出后不会删除任务历史数据，下次登录依然可以使用本账号。</string>
@@ -264,4 +264,13 @@
     <string name="player_video_answer_qustion">你问我答</string>
     <string name="player_video_list">视频列表</string>
     <string name="error_video_play_error">视频播放出错！</string>
+
+    <string name="about_app_des">\u3000\u3000嗨萌是佛山市老板六六科技有限公司于2016年开始打造，
+        2017年推向市场的一款社交软件，通过云计算、大数据技术自动推荐同事、同学、同乡，
+        让你找到失联多年的好友，同时嗨萌拥有丰富的表情包，可以不打一个字进行沟通。满足
+        现代人快速的生活节奏，除此之外它还可以玩游戏消磨时间。\n\u3000\u3000嗨萌一直以来本着从用户需求出发，
+        摒弃多余功能、简单易用为核心设计理念，致力于打造一款符合现代年轻人使用习惯的社交软件，
+        力争给用户带来最好的沟通体验。</string>
+    <string name="about_app_bottom_1">Copyright ©2017嗨萌 Version 1.0.0</string>
+    <string name="about_app_bottom_2">佛山市老板六六科技有限公司</string>
 </resources>

@@ -140,6 +140,10 @@
         <activity
             android:name=".activity.player.PlayerVideoActivity"
             android:screenOrientation="portrait"></activity>
+        <!--播放视频-->
+        <activity
+            android:name=".activity.player.VideoPlayerNewActivity"
+            android:screenOrientation="portrait"></activity>
         <!--找福娃-->
         <activity
             android:name=".activity.treasure.AroundPosActivity"

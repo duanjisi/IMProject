@@ -114,13 +114,14 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         showLoadingDialog();
         uid = App.getInstance().getUid();
 //        String url = HttpUrl.QUERY_MY_FUWA + "john"; //测试数据
-        String url = HttpUrl.QUERY_MY_FUWA + uid;
+        String url = HttpUrl.QUERY_MY_FUWA + uid+"&time="+System.currentTimeMillis();
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 cancelLoadingDialog();
                 String res = responseInfo.result;
+                Log.i("liwy",res);
                 if (!TextUtils.isEmpty(res)) {
                     FuwaEntity entity = JSON.parseObject(res, FuwaEntity.class);
                     List<FuwaEntity.Data> data = entity.getData();
@@ -196,7 +197,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
     private void initFuwaDetail(int postion) {
 
-        String url = HttpUrl.FUWA_DETAIL + fuwaList.get(postion).getGid();
+        String url = HttpUrl.FUWA_DETAIL + fuwaList.get(postion).getIdList().get(0);
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
@@ -253,7 +254,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         TextView tv_from = (TextView) dialog.findViewById(R.id.tv_from);
         TextView tv_catch = (TextView) dialog.findViewById(R.id.tv_catch);
         fuwa_id = fuwaList.get(choosePosition).getId();
-        fuwa_gid = fuwaList.get(choosePosition).getGid();
+        fuwa_gid = fuwaList.get(choosePosition).getIdList().get(0);
         tv_number.setText(fuwa_id);
         tv_fuwa_num.setText(fuwa_id+"号福娃");
         tv_from.setText("来源于:"+fuwaDetailEntity.getData().getCreator());

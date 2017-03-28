@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -124,7 +125,18 @@ public class EmoPicAdapter extends ABaseAdapter<EmoEntity> {
         int[] location = new int[2];
         v.getLocationOnScreen(location);
 //        popupWindow.showAtLocation(Parent, Gravity.NO_GRAVITY, location[0], location[1]);
-        popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWindow.getWidth() / 2, location[1] - popupWindow.getHeight());
+        int i  =location[0]; //当前位置横坐标
+        int j = location[1]; //当前位置纵坐标
+
+        if (i == 0 || j == 0) {
+            Rect rect = new Rect();
+            v.getGlobalVisibleRect(rect);
+            i = rect.left;
+            j = rect.top;
+        }
+        int x = (i + v.getWidth() / 2) - popupWindow.getWidth() / 2;//
+        int y = j- popupWindow.getHeight();
+        popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, x, y);
     }
 
     private String getPath(EmoEntity entity) {

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/bg_fuwa_pop">
+
+        <TextView
+            android:id="@+id/tv_top"
+            android:textSize="18.5sp"
+            android:layout_marginTop="27dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:text="购买成功"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:layout_below="@id/tv_top"
+            android:id="@+id/tv_content"
+            android:textSize="18.5sp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:layout_marginTop="5dp"
+            android:text="可到背包查看购买的福娃"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+
+        <TextView
+            android:id="@+id/tv_word"
+            android:textSize="18.5sp"
+            android:textColor="@color/text_color_yellow"
+            android:background="@drawable/shape_fuwa"
+            android:gravity="center"
+            android:text="好"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="100dp"
+            android:layout_height="30dp" />
+
+
+
+    </RelativeLayout>
+</RelativeLayout>

@@ -5,6 +5,7 @@
     android:layout_height="wrap_content">
     
     <ImageView
+        android:scaleType="fitXY"
         android:id="@+id/img_school"
         android:layout_marginTop="9.9dp"
         android:layout_marginLeft="9.9dp"

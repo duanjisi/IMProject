@@ -344,4 +344,12 @@ public class PlayerVideoActivity extends BaseActivity implements
     private void recordCurrentVideoPosition() {
         mVideoView.recordVideoProgress(mVideoView.getCurrentPosition());
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mScreenReceiver != null) {
+            unregisterReceiver(mScreenReceiver);
+        }
+    }
 }

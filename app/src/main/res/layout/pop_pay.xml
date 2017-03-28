@@ -142,9 +142,8 @@
             android:textSize="18sp"
             android:background="@drawable/shape_pay"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true"
             android:layout_width="match_parent"
             android:layout_height="43dp" />
     </RelativeLayout>

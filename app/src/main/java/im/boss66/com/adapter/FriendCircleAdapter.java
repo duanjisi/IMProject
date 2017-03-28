@@ -23,8 +23,8 @@ import im.boss66.com.Utils.UrlUtils;
 import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.activity.discover.ImagePagerActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
-import im.boss66.com.activity.discover.VideoPlayerActivity;
 import im.boss66.com.activity.discover.WebViewActivity;
+import im.boss66.com.activity.player.VideoPlayerNewActivity;
 import im.boss66.com.adapter.ViewHolder.CircleViewHolder;
 import im.boss66.com.adapter.ViewHolder.ImageViewHolder;
 import im.boss66.com.adapter.ViewHolder.URLViewHolder;
@@ -316,12 +316,9 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                                 String url = files.get(0).file_url;
                                 String url_img = files.get(0).file_thumb;
                                 if (!TextUtils.isEmpty(url)) {
-                                    Log.i("info", "====================url:" + url);
-                                    Intent intent = new Intent(context, VideoPlayerActivity.class);
-                                    intent.putExtra("url", url);
+                                    Intent intent = new Intent(context, VideoPlayerNewActivity.class);
+                                    intent.putExtra("videoPath", url);
                                     intent.putExtra("imgurl", url_img);
-                                    intent.putExtra("isDelete", true);
-                                    intent.putExtra("isFull", false);
                                     context.startActivity(intent);
                                 }
                             }
