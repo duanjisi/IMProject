@@ -7,6 +7,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.pili.pldroid.player.AVOptions;
@@ -15,6 +16,7 @@ import com.pili.pldroid.player.widget.PLVideoTextureView;
 
 import im.boss66.com.R;
 import im.boss66.com.Utils.NetworkUtil;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 
 /**
@@ -40,10 +42,13 @@ public class VideoPlayerNewActivity extends BaseActivity {
         mVideoView = (PLVideoTextureView) findViewById(R.id.videoView);
         View loadingView = findViewById(R.id.loading);
         mVideoView.setBufferingIndicator(loadingView);
+        mVideoView.setScreenOnWhilePlaying(true);
         int codec = getIntent().getIntExtra("mediaCodec", AVOptions.MEDIA_CODEC_SW_DECODE);
         mVideoPath = getIntent().getStringExtra("videoPath");
         mMediaController = new MediaController(this, false, mIsLiveStreaming == 1);
         mMediaController.setMediaPlayer(mVideoView);
+        mVideoView.setDisplayOrientation(270);
+        mVideoView.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_PAVED_PARENT);
         mVideoView.setMediaController(mMediaController);
         setOptions(codec);
         mVideoView.setOnCompletionListener(mOnCompletionListener);
@@ -55,7 +60,6 @@ public class VideoPlayerNewActivity extends BaseActivity {
             mVideoView.setCoverView(iv_coverView);
         }
         mVideoView.setVideoPath(mVideoPath);
-        mVideoView.setDisplayOrientation(270);
         mVideoView.start();
         iv_close.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -265,7 +265,7 @@ public class MediaController extends FrameLayout implements IMediaController {
         long position = mPlayer.getCurrentPosition();
         long duration = mPlayer.getDuration();
         if (position > duration){
-            position = duration;
+            return duration;
         }
         if (mProgress != null) {
             if (duration > 0) {

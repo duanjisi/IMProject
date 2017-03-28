@@ -339,12 +339,17 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                             if (!isFocusing) {
                                 canFocusIn = false;
                                 if (!previewing && isTakePic && isHideOk) {
-                                    mCamera.takePicture(null, null, mPictureCallback);
-                                    isTakePic = false;
-                                    tv_change_place.setVisibility(View.VISIBLE);
-                                    bt_catch.setVisibility(View.VISIBLE);
-                                    tv_bottom.setVisibility(View.GONE);
-                                    Log.i("onSensorChanged", "拍照");
+                                    try {
+                                        mCamera.takePicture(null, null, mPictureCallback);
+                                        isTakePic = false;
+                                        tv_change_place.setVisibility(View.VISIBLE);
+                                        bt_catch.setVisibility(View.VISIBLE);
+                                        tv_bottom.setVisibility(View.GONE);
+                                    }catch (Exception e){
+                                        mCamera.startPreview();
+                                        canFocusIn = true;
+                                        showToast("对焦失败，请移动手机重试下", false);
+                                    }
                                 }
                             }
                         }
@@ -394,13 +399,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    private String getNowTime() {
-        Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddHHmmssSS");
-        return dateFormat.format(date);
     }
 
     private void showPop() {
