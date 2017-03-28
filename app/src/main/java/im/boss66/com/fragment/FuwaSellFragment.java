@@ -20,6 +20,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -43,6 +44,7 @@ import java.util.Map;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.OrderInfoUtil2_0;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.treasure.FuwaDealActivity;
 import im.boss66.com.activity.treasure.FuwaPackageActivity;
 import im.boss66.com.adapter.FuwaSellAdapter;
@@ -552,6 +554,12 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             }
         });
 
+        TextView tv_buy = (TextView) view_dialog.findViewById(R.id.tv_buy);
+        int screenWidth = UIUtils.getScreenWidth(getActivity());
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv_buy.getLayoutParams();
+        layoutParams.width = (int) (screenWidth*0.9);
+        tv_buy.setLayoutParams(layoutParams);
 
         dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
         dialogWindow.setBackgroundDrawableResource(android.R.color.transparent); //加上可以在底部对其屏幕底部
