@@ -51,7 +51,8 @@ public class PermissionUtil {
     public static final String[] PERMISSIONS_CAMERA_LOCATION = {
             Manifest.permission.CAMERA,
             Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
     };
 
     // 聊天声音

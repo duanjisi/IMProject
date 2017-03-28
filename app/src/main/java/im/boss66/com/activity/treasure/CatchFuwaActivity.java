@@ -535,7 +535,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onRequestPermissionError() {
-                ToastUtil.showShort(CatchFuwaActivity.this, getString(R.string.giving_camera_permissions));
+                ToastUtil.showShort(CatchFuwaActivity.this, getString(R.string.giving_camera2_permissions));
             }
         };
         PermissionUtil

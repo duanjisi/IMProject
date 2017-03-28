@@ -43,6 +43,7 @@ public class VideoPlayerNewActivity extends BaseActivity {
         int codec = getIntent().getIntExtra("mediaCodec", AVOptions.MEDIA_CODEC_SW_DECODE);
         mVideoPath = getIntent().getStringExtra("videoPath");
         mMediaController = new MediaController(this, false, mIsLiveStreaming == 1);
+        mMediaController.setMediaPlayer(mVideoView);
         mVideoView.setMediaController(mMediaController);
         setOptions(codec);
         mVideoView.setOnCompletionListener(mOnCompletionListener);
