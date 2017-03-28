@@ -53,6 +53,7 @@ import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.book.SelectContactsActivity;
+import im.boss66.com.activity.player.VideoPlayerNewActivity;
 import im.boss66.com.entity.PhotoInfo;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
@@ -148,10 +149,10 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putString("url", videoPath);
+                bundle.putString("videoPath", videoPath);
                 bundle.putBoolean("isFull", false);
                 bundle.putBoolean("isDelete", true);
-                openActvityForResult(VideoPlayerActivity.class, RECORD_VIDEO, bundle);
+                openActvityForResult(VideoPlayerNewActivity.class, RECORD_VIDEO, bundle);
             }
         });
         multiImagView.setOnItemClickListener(new MultiImageView.OnItemClickListener() {

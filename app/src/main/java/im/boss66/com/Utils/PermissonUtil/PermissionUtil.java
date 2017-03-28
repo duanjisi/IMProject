@@ -43,7 +43,8 @@ public class PermissionUtil {
 
     //  聊天相机
     public static final String[] PERMISSIONS_CHAT_CAMERA = {
-            Manifest.permission.CAMERA
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
     //  相机和定位

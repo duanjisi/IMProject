@@ -40,7 +40,7 @@ import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.discover.ImagePagerActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
-import im.boss66.com.activity.player.PlayerVideoActivity;
+import im.boss66.com.activity.player.VideoPlayerNewActivity;
 import im.boss66.com.db.dao.EmoHelper;
 import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmotionEntity;
@@ -697,12 +697,9 @@ public class MessageAdapter extends BaseAdapter {
         holder.iv_player.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(mContext, VideoPlayerActivity.class);
-//                intent.putExtra("url", videoPath);
-//                intent.putExtra("imgurl", cover);
-//                intent.putExtra("isFull", false);
-                Intent intent = new Intent(mContext, PlayerVideoActivity.class);
+                Intent intent = new Intent(mContext, VideoPlayerNewActivity.class);
                 intent.putExtra("videoPath", videoPath);
+                intent.putExtra("imgurl", cover);
                 mContext.startActivity(intent);
             }
         });

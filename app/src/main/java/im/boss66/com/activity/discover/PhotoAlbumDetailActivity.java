@@ -39,6 +39,7 @@ import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.player.VideoPlayerNewActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.ActionItem;
 import im.boss66.com.entity.BaseResult;
@@ -365,8 +366,8 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                 }
                 break;
             case R.id.fl_video:
-                Intent intent = new Intent(this, VideoPlayerActivity.class);
-                intent.putExtra("url", videoUrl);
+                Intent intent = new Intent(this, VideoPlayerNewActivity.class);
+                intent.putExtra("videoPath", videoUrl);
                 intent.putExtra("imgurl", videoImgUrl);
                 intent.putExtra("isDelete", true);
                 startActivity(intent);
