@@ -158,6 +158,14 @@ public class EmojiWellAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void stopLoading() {
+        if (mList != null && mList.size() != 0) {
+            for (EmoBagEntity entity : mList) {
+                UIUtils.saveLoadingState(context, entity, false);
+            }
+        }
+    }
+
     /**
      * 用于回调的抽象类
      */

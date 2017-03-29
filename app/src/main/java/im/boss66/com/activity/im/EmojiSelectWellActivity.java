@@ -594,4 +594,12 @@ public class EmojiSelectWellActivity extends BaseActivity implements
         super.onStop();
         mADLayout.stopADLoop();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (adapter != null) {
+            adapter.stopLoading();
+        }
+    }
 }

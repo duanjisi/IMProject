@@ -79,7 +79,6 @@ import java.util.List;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
-import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.MD5Util;
 import im.boss66.com.Utils.MycsLog;
@@ -269,8 +268,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             case R.id.bt_share:
                 title = "嗨萌寻宝";
                 shareContent = getResources().getString(R.string.share_content);
-                targetUrl = "www.baidu.com";
-                imageUrl = "http://bbs.umeng.com/uc_server/data/avatar/000/00/00/90_avatar_middle.jpg";
+                targetUrl = "https://api.66boss.com/web/download?uid=" + userId;
+//                imageUrl = "http://bbs.umeng.com/uc_server/data/avatar/000/00/00/90_avatar_middle.jpg";
                 if (!isFinishing()) {
                     if (sharePopup.isShowing()) {
                         sharePopup.dismiss();
@@ -311,7 +310,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     //设置分享图片
                     weixinContent.setShareImage(new UMImage(context, imageUrl));
                 } else {
-                    weixinContent.setShareImage(new UMImage(context, R.drawable.logo_circle));
+                    weixinContent.setShareImage(new UMImage(context, R.drawable.logo_tips));
                 }
                 uMediaObject = weixinContent;
                 break;
@@ -330,7 +329,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     //设置分享图片
                     circleMedia.setShareImage(new UMImage(context, imageUrl));
                 } else {
-                    circleMedia.setShareImage(new UMImage(context, R.drawable.ic_launcher));
+                    circleMedia.setShareImage(new UMImage(context, R.drawable.logo_tips));
                 }
                 uMediaObject = circleMedia;
                 break;
@@ -346,7 +345,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     //设置分享图片
                     qqShareContent.setShareImage(new UMImage(context, imageUrl));
                 } else {
-                    qqShareContent.setShareImage(new UMImage(context, R.drawable.logo_circle));
+                    qqShareContent.setShareImage(new UMImage(context, R.drawable.logo_tips));
                 }
 
                 qqShareContent.setTargetUrl(targetUrl);
@@ -354,21 +353,21 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 break;
             case QZONE:
                 QZoneShareContent qzone = new QZoneShareContent();
-                // 设置分享文字
-                qzone.setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能 -- QZone");
-                // 设置点击消息的跳转URL
-                qzone.setTargetUrl("http://www.baidu.com");
-                // 设置分享内容的标题
-                qzone.setTitle("QZone title");
+//                // 设置分享文字
+//                qzone.setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能 -- QZone");
+//                // 设置点击消息的跳转URL
+//                qzone.setTargetUrl("http://www.baidu.com");
+//                // 设置分享内容的标题
+//                qzone.setTitle("QZone title");
                 // 设置分享图片
-//                qzone.setShareContent(shareContent);
-//                qzone.setTitle(title);
-//                qzone.setTargetUrl(targetUrl);
+                qzone.setShareContent(shareContent);
+                qzone.setTitle(title);
+                qzone.setTargetUrl(targetUrl);
                 if (imageUrl != null && !imageUrl.equals("")) {
                     //设置分享图片
                     qzone.setShareImage(new UMImage(context, imageUrl));
                 } else {
-                    qzone.setShareImage(new UMImage(context, R.drawable.logo_circle));
+                    qzone.setShareImage(new UMImage(context, R.drawable.logo_tips));
                 }
                 uMediaObject = qzone;
                 break;
@@ -382,6 +381,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
+                Log.i("info", "================eCode:" + eCode);
+                showToast("========eCode:" + eCode, true);
                 if (eCode == StatusCode.ST_CODE_SUCCESSED) {
                     showToast("分享成功!", true);
                 }

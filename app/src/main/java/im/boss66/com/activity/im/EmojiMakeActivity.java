@@ -130,10 +130,11 @@ public class EmojiMakeActivity extends BaseActivity implements View.OnClickListe
                 if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                         actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
                     String keyWords = getText(query);
+                    int index = viewPager.getCurrentItem();
                     if (keyWords != null && !keyWords.equals("")) {
-//                        showToast(keyWords, true);
-                        int index = viewPager.getCurrentItem();
                         ((MyFragment) fragments.get(index)).search(keyWords);
+                    } else {
+                        ((MyFragment) fragments.get(index)).requestEmos();
                     }
                     return true;
                 }

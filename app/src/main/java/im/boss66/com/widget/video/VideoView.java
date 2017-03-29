@@ -34,9 +34,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-
 import java.io.IOException;
-
 import im.boss66.com.App;
 import im.boss66.com.BuildConfig;
 import im.boss66.com.R;
@@ -44,8 +42,6 @@ import im.boss66.com.Utils.MycsLog;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.pragma.DebugLog;
-
-
 /**
  * Displays a video file. The VideoView class can load images from various
  * sources (such as resources or content providers), takes care of computing its

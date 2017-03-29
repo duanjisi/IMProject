@@ -126,10 +126,20 @@ public class ChatServices extends Service implements Observer {
 
 
     public void sendMessage(String msg) {
-        Log.i("info", "===================IM发消息:" + msg);
-        if (mConnection != null && msg != null && !msg.equals("")) {
-            mConnection.sendTextMessage(msg);
+        if (mConnection != null) {
+            if (mConnection.isConnected()) {
+                if (msg != null && !msg.equals("")) {
+                    Log.i("info", "===================IM发消息:" + msg);
+                    mConnection.sendTextMessage(msg);
+                }
+            } else {
+                startConnection();
+            }
         }
+//        if (mConnection != null && msg != null && !msg.equals("")) {
+//            Log.i("info", "===================IM发消息:" + msg);
+//            mConnection.sendTextMessage(msg);
+//        }
     }
 
 //    private void messageHandle(String payload) {

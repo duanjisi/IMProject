@@ -135,9 +135,6 @@
             android:screenOrientation="portrait"></activity>
         <!--播放视频-->
         <activity
-            android:name=".activity.player.videoPlayerActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
             android:name=".activity.player.PlayerVideoActivity"
             android:screenOrientation="portrait"></activity>
         <!--播放视频-->
