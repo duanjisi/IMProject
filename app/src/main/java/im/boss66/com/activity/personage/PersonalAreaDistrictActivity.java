@@ -15,20 +15,22 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.LocalAddressAdapter;
+import im.boss66.com.config.LoginStatus;
+import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.ChangeAreaRequest;
 
 /**
- *地区-区
+ * 地区-区
  */
-public class PersonalAreaDistrictActivity extends BaseActivity implements View.OnClickListener{
+public class PersonalAreaDistrictActivity extends BaseActivity implements View.OnClickListener {
 
     private final static String TAG = PersonalAreaDistrictActivity.class.getSimpleName();
 
     private TextView tv_back, tv_title;
     private RecyclerView rv_area;
     private LocalAddressAdapter adapter;
-    private String province,city,district;
+    private String province, city, district, pro_name, city_name, district_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,40 +56,44 @@ public class PersonalAreaDistrictActivity extends BaseActivity implements View.O
             if (bundle != null) {
                 province = bundle.getString("province");
                 city = bundle.getString("city");
-//                LocalAddressEntity.FourChild child = (LocalAddressEntity.FourChild) bundle.getSerializable("list");
-//                if (child != null) {
-//                    final List<LocalAddressEntity.LastChild> list = child.getList();
-//                    if (list != null) {
-//                        adapter = new LocalAddressAdapter(this);
-//                        adapter.getDistrictList(list,3);
-//                        adapter.setOnItemClickListener(new LocalAddressAdapter.MyItemClickListener() {
-//                            @Override
-//                            public void onItemClick(View view, int postion) {
-//                                if (list != null && list.size() > postion) {
-//                                    LocalAddressEntity.LastChild child = list.get(postion);
-//                                    if (child != null){
-//                                        district = child.getRegion_id();
-//                                        changeArea();
-//                                    }
-//                                }
-//                            }
-//                        });
-//                        rv_area.setAdapter(adapter);
-//                    }
-//                }
+                city_name = bundle.getString("city_name");
+                pro_name = bundle.getString("pro_name");
+                LocalAddressEntity.FourChild child = (LocalAddressEntity.FourChild) bundle.getSerializable("list");
+                if (child != null) {
+                    final List<LocalAddressEntity.LastChild> list = child.getList();
+                    if (list != null) {
+                        adapter = new LocalAddressAdapter(this);
+                        adapter.getDistrictList(list, 3);
+                        adapter.setOnItemClickListener(new LocalAddressAdapter.MyItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int postion) {
+                                if (list != null && list.size() > postion) {
+                                    LocalAddressEntity.LastChild child = list.get(postion);
+                                    if (child != null) {
+                                        district = child.getRegion_id();
+                                        district_name = child.getRegion_name();
+                                        changeArea();
+                                    }
+                                }
+                            }
+                        });
+                        rv_area.setAdapter(adapter);
+                    }
+                }
             }
         }
     }
 
-    private void changeArea(){
-        ChangeAreaRequest request = new ChangeAreaRequest(TAG,province,city,district);
+    private void changeArea() {
+        ChangeAreaRequest request = new ChangeAreaRequest(TAG, province, city, district);
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String pojo) {
                 List<Activity> tempActivityList = App.getInstance().getTempActivityList();
                 if (tempActivityList != null && tempActivityList.size() > 0) {
-                    App.getInstance().getAccount().setDistrict_str(province+" " + city + " " + district);
-                    for (int i = 0;i<tempActivityList.size();i++){
+                    LoginStatus loginStatus = LoginStatus.getInstance();
+                    loginStatus.setDistrict_str(pro_name + " " + city_name + " " + district_name);
+                    for (int i = 0; i < tempActivityList.size(); i++) {
                         tempActivityList.get(i).finish();
                     }
                     tempActivityList.clear();
@@ -96,7 +102,7 @@ public class PersonalAreaDistrictActivity extends BaseActivity implements View.O
 
             @Override
             public void onFailure(String msg) {
-                ToastUtil.showShort(context,msg);
+                ToastUtil.showShort(context, msg);
             }
         });
     }

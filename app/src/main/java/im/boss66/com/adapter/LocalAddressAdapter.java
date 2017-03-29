@@ -8,7 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import im.boss66.com.R;
+import im.boss66.com.entity.LocalAddressEntity;
 
 /**
  * 地区
@@ -17,29 +20,29 @@ public class LocalAddressAdapter extends RecyclerView.Adapter<LocalAddressAdapte
 
     private int type;
     private Context context;
-    //    private List<LocalAddressEntity.ThreeChild> privincelist;
-//    private List<LocalAddressEntity.FourChild> cityList;
-//    private List<LocalAddressEntity.LastChild> districList;
+    private List<LocalAddressEntity.ThreeChild> privincelist;
+    private List<LocalAddressEntity.FourChild> cityList;
+    private List<LocalAddressEntity.LastChild> districList;
     protected MyItemClickListener mItemClickListener;
 
     public LocalAddressAdapter(Context context) {
         this.context = context;
     }
 
-//    public void getPrivincedList(List<LocalAddressEntity.ThreeChild> list, int Type){
-//        this.type = Type;
-//        this.privincelist = list;
-//    }
-//
-//    public void getCityList(List<LocalAddressEntity.FourChild> list, int Type){
-//        this.type = Type;
-//        this.cityList = list;
-//    }
-//
-//    public void getDistrictList(List<LocalAddressEntity.LastChild> list, int Type){
-//        this.type = Type;
-//        this.districList = list;
-//    }
+    public void getPrivincedList(List<LocalAddressEntity.ThreeChild> list, int Type) {
+        this.type = Type;
+        this.privincelist = list;
+    }
+
+    public void getCityList(List<LocalAddressEntity.FourChild> list, int Type) {
+        this.type = Type;
+        this.cityList = list;
+    }
+
+    public void getDistrictList(List<LocalAddressEntity.LastChild> list, int Type) {
+        this.type = Type;
+        this.districList = list;
+    }
 
     @Override
     public AddressViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -49,35 +52,35 @@ public class LocalAddressAdapter extends RecyclerView.Adapter<LocalAddressAdapte
 
     @Override
     public void onBindViewHolder(AddressViewHolder holder, int position) {
-//        if (type == 1){
-//            LocalAddressEntity.ThreeChild item = privincelist.get(position);
-//            if (item != null){
-//                holder.tv_address.setText("" + item.getRegion_name());
-//            }
-//        }else if(type == 2){
-//            LocalAddressEntity.FourChild item = cityList.get(position);
-//            if (item != null){
-//                holder.tv_address.setText("" + item.getRegion_name());
-//            }
-//        }else {
-//            LocalAddressEntity.LastChild item = districList.get(position);
-//            if (item != null){
-//                holder.iv_go.setVisibility(View.GONE);
-//                holder.tv_address.setText("" + item.getRegion_name());
-//            }
-//        }
+        if (type == 1) {
+            LocalAddressEntity.ThreeChild item = privincelist.get(position);
+            if (item != null) {
+                holder.tv_address.setText("" + item.getRegion_name());
+            }
+        } else if (type == 2) {
+            LocalAddressEntity.FourChild item = cityList.get(position);
+            if (item != null) {
+                holder.tv_address.setText("" + item.getRegion_name());
+            }
+        } else {
+            LocalAddressEntity.LastChild item = districList.get(position);
+            if (item != null) {
+                holder.iv_go.setVisibility(View.GONE);
+                holder.tv_address.setText("" + item.getRegion_name());
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
         int size = 0;
-//        if (type == 1){
-//            size = privincelist != null?privincelist.size():0;
-//        }else if(type == 2){
-//            size = cityList != null?cityList.size():0;
-//        }else {
-//            size = districList != null?districList.size():0;
-//        }
+        if (type == 1) {
+            size = privincelist != null ? privincelist.size() : 0;
+        } else if (type == 2) {
+            size = cityList != null ? cityList.size() : 0;
+        } else {
+            size = districList != null ? districList.size() : 0;
+        }
         return size;
     }
 

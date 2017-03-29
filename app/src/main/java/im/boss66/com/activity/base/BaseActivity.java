@@ -34,7 +34,7 @@ public class BaseActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        App.getInstance().addTempActivity(this);
+        //App.getInstance().addTempActivity(this);
 //        AppManager.getInstance().push(this);
 //        overridePendingTransition(R.anim.slide_right_in,R.anim.slide_right_out);
         context = this;

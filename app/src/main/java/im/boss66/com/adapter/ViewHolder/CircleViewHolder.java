@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.widget.CommentListView;
 import im.boss66.com.widget.ExpandTextView;
 import im.boss66.com.widget.PraiseListView;
@@ -61,6 +62,11 @@ public abstract class CircleViewHolder extends RecyclerView.ViewHolder {
         addressTv = (TextView) itemView.findViewById(R.id.addressTv);
         deleteBtn = (TextView) itemView.findViewById(R.id.deleteBtn);
         snsBtn = (ImageView) itemView.findViewById(R.id.snsBtn);
+        LinearLayout.LayoutParams snsParams = (LinearLayout.LayoutParams) snsBtn.getLayoutParams();
+        int sceenW = UIUtils.getScreenWidth(itemView.getContext());
+        snsParams.width = sceenW/18;
+        snsParams.height =sceenW/21;
+        snsBtn.setLayoutParams(snsParams);
         praiseListView = (PraiseListView) itemView.findViewById(R.id.praiseListView);
 
         digCommentBody = (LinearLayout) itemView.findViewById(R.id.digCommentBody);

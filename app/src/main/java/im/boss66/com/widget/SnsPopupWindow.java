@@ -54,7 +54,7 @@ public class SnsPopupWindow extends PopupWindow implements View.OnClickListener 
         this.setContentView(view);
         int sceenW = UIUtils.getScreenWidth(context);
         this.setWidth(UIUtils.dip2px(context, sceenW/3));
-        this.setHeight(UIUtils.dip2px(context, sceenW/14));
+        this.setHeight(UIUtils.dip2px(context, sceenW/16));
         this.setFocusable(true);
         this.setOutsideTouchable(true);
         this.update();
