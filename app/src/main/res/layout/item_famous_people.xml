@@ -23,6 +23,10 @@
         android:layout_height="wrap_content" />
 
     <TextView
+
+        android:maxLines="7"
+        android:ellipsize="end"
+        android:layout_alignBottom="@id/img_headimg"
         android:id="@+id/tv_content"
         android:textSize="14.3dp"
         android:textColor="@color/text_color_gray_9"

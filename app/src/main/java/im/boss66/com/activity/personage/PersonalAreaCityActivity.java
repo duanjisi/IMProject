@@ -14,15 +14,17 @@ import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.LocalAddressAdapter;
+import im.boss66.com.entity.LocalAddressEntity;
 
 /**
- *地区-市
+ * 地区-市
  */
-public class PersonalAreaCityActivity extends BaseActivity implements View.OnClickListener{
+public class PersonalAreaCityActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView tv_back, tv_title;
     private RecyclerView rv_area;
     private LocalAddressAdapter adapter;
+    private String pro_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,32 +45,35 @@ public class PersonalAreaCityActivity extends BaseActivity implements View.OnCli
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         //设置布局管理器
         rv_area.setLayoutManager(layoutManager);
-        if (getIntent() != null){
+        if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
-            if (bundle != null){
+            if (bundle != null) {
                 final String province = bundle.getString("province");
-//                LocalAddressEntity.ThreeChild child = (LocalAddressEntity.ThreeChild) bundle.getSerializable("list");
-//                if (child != null){
-//                    final List<LocalAddressEntity.FourChild> list = child.getList();
-//                    if (list != null){
-//                        adapter = new LocalAddressAdapter(this);
-//                        adapter.getCityList(list,2);
-//                        adapter.setOnItemClickListener(new LocalAddressAdapter.MyItemClickListener() {
-//                            @Override
-//                            public void onItemClick(View view, int postion) {
-//                                if (list != null && list.size() > postion){
-//                                    LocalAddressEntity.FourChild child = list.get(postion);
-//                                    Bundle bundle = new Bundle();
-//                                    bundle.putSerializable("list",child);
-//                                    bundle.putString("province",province);
-//                                    bundle.putString("city",child.getRegion_id());
-//                                    openActivity(PersonalAreaDistrictActivity.class,bundle);
-//                                }
-//                            }
-//                        });
-//                        rv_area.setAdapter(adapter);
-//                    }
-//                }
+                pro_name = bundle.getString("pro_name");
+                LocalAddressEntity.ThreeChild child = (LocalAddressEntity.ThreeChild) bundle.getSerializable("list");
+                if (child != null) {
+                    final List<LocalAddressEntity.FourChild> list = child.getList();
+                    if (list != null) {
+                        adapter = new LocalAddressAdapter(this);
+                        adapter.getCityList(list, 2);
+                        adapter.setOnItemClickListener(new LocalAddressAdapter.MyItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int postion) {
+                                if (list != null && list.size() > postion) {
+                                    LocalAddressEntity.FourChild child = list.get(postion);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("list", child);
+                                    bundle.putString("province", province);
+                                    bundle.putString("pro_name", pro_name);
+                                    bundle.putString("city_name", child.getRegion_name());
+                                    bundle.putString("city", child.getRegion_id());
+                                    openActivity(PersonalAreaDistrictActivity.class, bundle);
+                                }
+                            }
+                        });
+                        rv_area.setAdapter(adapter);
+                    }
+                }
             }
         }
     }

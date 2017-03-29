@@ -28,6 +28,7 @@ import im.boss66.com.R;
 import im.boss66.com.adapter.FamousPeopleAdapter;
 import im.boss66.com.entity.FamousPeopleEntity;
 import im.boss66.com.http.HttpUrl;
+import im.boss66.com.listener.RecycleViewItemListener;
 
 /**
  * 名人
@@ -121,6 +122,22 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
 
         rcv_famous_people = (RecyclerView) findViewById(R.id.rcv_famous_people);
         adapter = new FamousPeopleAdapter(this);
+        adapter.setItemListener(new RecycleViewItemListener() {
+            @Override
+            public void onItemClick(int postion) {
+                int id = result.get(postion).getId();
+                String name = result.get(postion).getName();
+                Intent intent = new Intent(FamousPersonActivity.this,FamousPersonDetailActivity.class);
+                intent.putExtra("id",id);
+                intent.putExtra("name",name);
+                startActivity(intent);
+            }
+
+            @Override
+            public boolean onItemLongClick(int position) {
+                return false;
+            }
+        });
         rcv_famous_people.setLayoutManager(new LinearLayoutManager(this));
         rcv_famous_people.setAdapter(adapter);
     }

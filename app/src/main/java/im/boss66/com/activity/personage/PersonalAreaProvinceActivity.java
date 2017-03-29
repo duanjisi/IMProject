@@ -32,8 +32,8 @@ public class PersonalAreaProvinceActivity extends BaseActivity implements View.O
     private LocalAddressAdapter adapter;
     private LocalAddressEntity jsonDate;
     private App mApplication;
-//    private LocalAddressEntity.SecondChild result;
-//    private List<LocalAddressEntity.ThreeChild> list;
+    private LocalAddressEntity.SecondChild result;
+    private List<LocalAddressEntity.ThreeChild> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,12 +54,12 @@ public class PersonalAreaProvinceActivity extends BaseActivity implements View.O
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         //设置布局管理器
         rv_area.setLayoutManager(layoutManager);
-//        result = mApplication.getLocalAddress();
-//        if (result == null){
-//            jsonData(context);
-//            result = jsonDate.getResult();
-//        }
-//        showData(result);
+        result = mApplication.getLoacalAddress();
+        if (result == null){
+            jsonData(context);
+            result = jsonDate.getResult();
+        }
+        showData(result);
     }
 
     public LocalAddressEntity jsonData(Context context) {//filename assets目录下的json文件名
@@ -80,18 +80,18 @@ public class PersonalAreaProvinceActivity extends BaseActivity implements View.O
         return jsonDate;
     }
 
-//    private void showData(LocalAddressEntity.SecondChild result){
-//        if (result != null) {
-//            mApplication.setLocalAddress(result);
-//            list = result.getList();
-//            if (list != null) {
-//                adapter = new LocalAddressAdapter(this);
-//                adapter.getPrivincedList(list,1);
-//                adapter.setOnItemClickListener(this);
-//                rv_area.setAdapter(adapter);
-//            }
-//        }
-//    }
+    private void showData(LocalAddressEntity.SecondChild result){
+        if (result != null) {
+            mApplication.setLoacalAddress(result);
+            list = result.getList();
+            if (list != null) {
+                adapter = new LocalAddressAdapter(this);
+                adapter.getPrivincedList(list,1);
+                adapter.setOnItemClickListener(this);
+                rv_area.setAdapter(adapter);
+            }
+        }
+    }
 
     @Override
     public void onClick(View view) {
@@ -108,12 +108,13 @@ public class PersonalAreaProvinceActivity extends BaseActivity implements View.O
 
     @Override
     public void onItemClick(View view, int postion) {
-//        if (list != null && list.size() > postion) {
-//            LocalAddressEntity.ThreeChild child = list.get(postion);
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("list", child);
-//            bundle.putString("province", child.getRegion_id());
-//            openActivity(PersonalAreaCityActivity.class, bundle);
-//        }
+        if (list != null && list.size() > postion) {
+            LocalAddressEntity.ThreeChild child = list.get(postion);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("list", child);
+            bundle.putString("province", child.getRegion_id());
+            bundle.putString("pro_name",child.getRegion_name());
+            openActivity(PersonalAreaCityActivity.class, bundle);
+        }
     }
 }

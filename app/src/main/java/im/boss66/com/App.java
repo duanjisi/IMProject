@@ -34,6 +34,7 @@ import im.boss66.com.db.RecentDB;
 import im.boss66.com.db.UserDB;
 import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.fragment.ContactBooksFragment;
 
 public class App extends Application {
@@ -65,6 +66,8 @@ public class App extends Application {
     private static int sSeekPos;
     private static int sMaxVolume;
     private static double dVolume;
+
+    private LocalAddressEntity.SecondChild loacalAddress;
 
     public synchronized static App getInstance() {
         return mApplication;
@@ -532,12 +535,13 @@ public class App extends Application {
         }
         System.exit(0);
     }
-//    public LocalAddressEntity.SecondChild getLocalAddress() {
-//        return localAddress;
-//    }
-//
-//    public void setLocalAddress(LocalAddressEntity.SecondChild localAddress) {
-//        this.localAddress = localAddress;
-//    }
+
+    public LocalAddressEntity.SecondChild getLoacalAddress() {
+        return loacalAddress;
+    }
+
+    public void setLoacalAddress(LocalAddressEntity.SecondChild loacalAddress) {
+        this.loacalAddress = loacalAddress;
+    }
 
 }
