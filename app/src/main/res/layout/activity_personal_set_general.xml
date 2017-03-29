@@ -14,8 +14,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16.5dp"
             android:layout_marginBottom="20dp"
+            android:layout_marginTop="16.5dp"
             android:background="@color/line_color_gray_d2"
             android:orientation="vertical">
 
@@ -23,12 +23,13 @@
                 android:id="@+id/rl_font_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="1px"
                 android:background="@drawable/personal_bt_selector"
-                android:layout_marginTop="1dp"
                 android:paddingBottom="18dp"
                 android:paddingLeft="16.5dp"
                 android:paddingRight="16.5dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -50,8 +51,9 @@
 
             <View
                 android:layout_width="16.5dp"
-                android:layout_height="1dp"
-                android:background="@color/white" />
+                android:layout_height="1px"
+                android:background="@color/white"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/rl_chat_bg"
@@ -61,7 +63,8 @@
                 android:paddingBottom="18dp"
                 android:paddingLeft="16.5dp"
                 android:paddingRight="16.5dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -83,13 +86,15 @@
 
             <View
                 android:layout_width="16.5dp"
-                android:layout_height="1dp"
-                android:background="@color/white" />
+                android:layout_height="1px"
+                android:background="@color/white"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/rl_my_face"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="1px"
                 android:background="@drawable/personal_bt_selector"
                 android:paddingBottom="18dp"
                 android:paddingLeft="16.5dp"
@@ -116,14 +121,14 @@
 
             <View
                 android:layout_width="16.5dp"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:background="@color/white" />
 
             <RelativeLayout
                 android:id="@+id/rl_photos_videos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="1px"
                 android:background="@drawable/personal_bt_selector"
                 android:paddingBottom="18dp"
                 android:paddingLeft="16.5dp"
@@ -151,14 +156,14 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1px"
+                android:layout_marginTop="1px"
                 android:background="@color/background_color" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="1px"
                 android:background="@drawable/personal_bt_selector"
                 android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
@@ -192,20 +197,22 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginTop="1dp"
-                android:background="@color/background_color" />
+                android:layout_marginBottom="1px"
+                android:layout_marginTop="1px"
+                android:background="@color/background_color"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/rl_function"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="1px"
                 android:background="@drawable/personal_bt_selector"
                 android:paddingBottom="18dp"
                 android:paddingLeft="16.5dp"
                 android:paddingRight="16.5dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -228,8 +235,9 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1px"
+                android:layout_marginTop="1px"
+                android:visibility="gone"
                 android:background="@color/background_color" />
 
             <RelativeLayout
@@ -240,7 +248,8 @@
                 android:paddingBottom="18dp"
                 android:paddingLeft="16.5dp"
                 android:paddingRight="16.5dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -262,19 +271,21 @@
 
             <View
                 android:layout_width="16.5dp"
-                android:layout_height="1dp"
+                android:layout_height="1px"
+                android:visibility="gone"
                 android:background="@color/white" />
 
             <RelativeLayout
                 android:id="@+id/rl_memory_space"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="1px"
                 android:background="@drawable/personal_bt_selector"
                 android:paddingBottom="18dp"
                 android:paddingLeft="16.5dp"
                 android:paddingRight="16.5dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -297,25 +308,26 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginTop="1dp"
-                android:background="@color/background_color" />
-
+                android:layout_marginBottom="1px"
+                android:layout_marginTop="1px"
+                android:background="@color/background_color"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_clear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginBottom="1px"
                 android:layout_toRightOf="@+id/iv_photo"
-                android:layout_marginBottom="1dp"
                 android:background="@drawable/personal_bt_selector"
                 android:gravity="center"
                 android:paddingBottom="18dp"
                 android:paddingTop="18dp"
                 android:text="@string/empty_chat_record"
                 android:textColor="@color/black"
-                android:textSize="17.5sp" />
+                android:textSize="17.5sp"
+                android:visibility="gone" />
 
         </LinearLayout>
 
