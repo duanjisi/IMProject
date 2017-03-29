@@ -16,6 +16,7 @@ import im.boss66.com.R;
 import im.boss66.com.entity.FamousPeopleEntity;
 
 /**
+ * 名人
  * Created by liw on 2017/3/7.
  */
 public class FamousPeopleAdapter extends BaseRecycleViewAdapter{
@@ -27,12 +28,20 @@ public class FamousPeopleAdapter extends BaseRecycleViewAdapter{
 
     @Override
     public void onBindItemHolder(RecyclerView.ViewHolder holder, int position) {
-        FamousPeopleHodler hodler1 = (FamousPeopleHodler) holder;
+        final FamousPeopleHodler holder1 = (FamousPeopleHodler) holder;
         FamousPeopleEntity.ResultBean item = (FamousPeopleEntity.ResultBean) datas.get(position);
 
-        hodler1.tv_name.setText(item.getName());
-        hodler1.tv_content.setText(item.getDesc());
-        Glide.with(context).load(item.getPhoto()).into(hodler1.img_headimg);
+        holder1.tv_name.setText(item.getName());
+        holder1.tv_content.setText(item.getDesc());
+        Glide.with(context).load(item.getPhoto()).into(holder1.img_headimg);
+
+        holder1.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int adapterPosition = holder1.getAdapterPosition();
+                itemListener.onItemClick(adapterPosition);
+            }
+        });
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,7 +37,7 @@ import im.boss66.com.listener.CommunityMsgListener;
 public class SearchPop extends BasePopuWindow implements View.OnClickListener {
     private View view;
     private Context context;
-    private EditText et_search;
+    public EditText et_search;
     private int fragment_position;
     private SchoolmateListEntity schoolmateListEntity;
     private Handler handler = new Handler() {
@@ -60,6 +61,7 @@ public class SearchPop extends BasePopuWindow implements View.OnClickListener {
     }
 
 
+
     public void setFragment_position(int fragment_position) {
         this.fragment_position = fragment_position;
     }
@@ -79,6 +81,14 @@ public class SearchPop extends BasePopuWindow implements View.OnClickListener {
                 return false;
             }
         });
+//      只会第一次打开显示
+//        et_search.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                InputMethodManager manager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+//                manager.showSoftInput(et_search, 0);
+//            }
+//        });
 
         return view;
     }

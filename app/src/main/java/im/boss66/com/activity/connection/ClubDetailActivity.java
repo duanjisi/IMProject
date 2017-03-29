@@ -16,13 +16,21 @@ import im.boss66.com.http.HttpUrl;
  */
 public class ClubDetailActivity extends WebBaseActivity {
 
+    private int id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         if(intent!=null){
-            int id = intent.getIntExtra("id", -1);
-            url = HttpUrl.CLUB_DETATIL+"?id="+id;
+            if(intent.getExtras().containsKey("companyClubId")){
+                id = intent.getIntExtra("companyClubId", -1);
+                url = HttpUrl.CLUB_DETATIL+"?id="+id;
+            }else{
+                id = intent.getIntExtra("schoolClubId",-1);
+                url = HttpUrl.SCHOOL_CLUB_DETATIL+"?id="+id;
+            }
+
             title  =intent.getStringExtra("name");
         }
         setTitleUrl();
