@@ -8,6 +8,7 @@ import android.widget.ToggleButton;
 
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.im.EmojiMyActivity;
 import im.boss66.com.widget.ActionSheet;
 
 /**
@@ -67,6 +68,7 @@ public class PersonalSetGeneralActivity extends BaseActivity implements View.OnC
                 openActivity(PersonalSetChatBgActivity.class);
                 break;
             case R.id.rl_my_face://我的表情
+                openActivity(EmojiMyActivity.class);
                 break;
             case R.id.rl_photos_videos://照片和视频
                 openActivity(PersonalSetPhotosVideoActivity.class);
