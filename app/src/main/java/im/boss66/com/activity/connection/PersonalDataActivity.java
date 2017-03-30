@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.activity.base.ABaseActivity;
@@ -324,6 +325,12 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                 if (result != null) {
                     userInfoEntity = JSON.parseObject(result, UserInfoEntity.class);
                     if (userInfoEntity != null) {
+                        if (userInfoEntity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
                         if (userInfoEntity.getCode() == 1) {
 
                             handler.obtainMessage(4).sendToTarget();

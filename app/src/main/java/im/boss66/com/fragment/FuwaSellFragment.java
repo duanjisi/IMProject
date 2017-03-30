@@ -96,6 +96,9 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
     private TextView mBtnConfirm2;
     private TextView btn_cancle2;
 
+    private long time1  =0L; //用来防止多次点击
+    private long timeStart = 0L; //第二个
+
     private boolean choose = false;
     private Handler handler = new Handler() {
         @Override
@@ -442,15 +445,24 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             case R.id.tv_buy: //购买
 
                 //如果选中了
-
-                if (chooseFuwa != null) {
-                    showFuwaDialog(getActivity());
+                long time2 = System.currentTimeMillis();
+                if(time2-time1>500L){
+                    if (chooseFuwa != null) {
+                        showFuwaDialog(getActivity());
+                    }
+                    time1=time2;
+                }else{
+                    showToast("请不要点击太快",false);
                 }
+
 
                 break;
         }
 
     }
+
+
+
 
     //弹第一个福娃dialog
     private void showFuwaDialog(final Context context) {
@@ -478,9 +490,15 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         tv_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                showToast("buy", false);
-//                showPop();
-                showDialog();
+                long timeEnd = System.currentTimeMillis();
+                if(timeEnd-timeStart>500L){
+
+                    showDialog();
+
+                    timeStart=timeEnd;
+                }else {
+                    showToast("请不要点击太快",false);
+                }
             }
         });
 

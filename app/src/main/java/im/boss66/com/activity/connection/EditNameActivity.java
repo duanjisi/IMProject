@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
@@ -151,6 +152,13 @@ public class EditNameActivity extends BaseActivity implements View.OnClickListen
                 if(result!=null){
                     try {
                         JSONObject jsonObject = new JSONObject(result);
+                        if(jsonObject.getInt("status")==401){
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
+
 
                         if( jsonObject.getInt("code")==1){
 
