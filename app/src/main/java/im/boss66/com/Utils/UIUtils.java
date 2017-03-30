@@ -27,10 +27,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -38,6 +36,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import im.boss66.com.entity.EmoBagEntity;
 
 /**
  * @ClassName: UIUtil
@@ -797,6 +797,17 @@ public final class UIUtils {
             index = sizes.size() / 2;
         }
         return sizes.get(index);
+    }
+
+
+    public static void saveLoadingState(Context context, EmoBagEntity entity, boolean isLoading) {
+        String key = PrefKey.EMO_IS_LOADING + "." + entity.getGroup_id();
+        PreferenceUtils.putBoolean(context, key, isLoading);
+    }
+
+    public static boolean isLoading(Context context, EmoBagEntity entity) {
+        String key = PrefKey.EMO_IS_LOADING + "." + entity.getGroup_id();
+        return PreferenceUtils.getBoolean(context, key, false);
     }
 
 }

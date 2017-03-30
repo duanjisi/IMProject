@@ -43,6 +43,7 @@ public class LoginStatus {
     private static final String MEMBER_RANK = "member_rank";
     private static final String XINGZUO = "xingzuo";
     private static final String LOGIN_STATE = "login_state";
+    private String cover_pic;
     private static LoginStatus sLoginStatus;
     private SharedPreferences mPreferences;
 
@@ -327,5 +328,11 @@ public class LoginStatus {
 
     public void clear() {
         mPreferences.edit().clear().apply();
+    }
+
+    public void setCover_pic(String cover_pic) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString("cover_pic", cover_pic);
+        editor.apply();
     }
 }

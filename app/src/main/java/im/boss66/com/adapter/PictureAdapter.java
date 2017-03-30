@@ -12,6 +12,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.WeakHashMap;
 
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
@@ -31,7 +32,7 @@ public class PictureAdapter extends BasePicAdapter {
     private float mImageHeight;
     private ArrayList<EmoLove> images;
     private boolean isAddPager = false;
-
+    private WeakHashMap<String, View> maps = new WeakHashMap<>();
 //    private boolean isFirst = false;
 //    public void setFirst(boolean first) {
 //        isFirst = first;
@@ -172,36 +173,24 @@ public class PictureAdapter extends BasePicAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-//        ImageView imageView = new ImageView(context);
-//        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//        imageView.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, GridView.LayoutParams.MATCH_PARENT));
-//        imageView.getLayoutParams().width = (int) mImageHeight;
-//        imageView.getLayoutParams().height = (int) mImageHeight;
-//        String imageUrl = images.get(position);
-//        if (imageUrl != null && !imageUrl.equals("")) {
-//            if (!imageUrl.equals("lastItem")) {
-////                imageLoader.displayImage("file://" + imageUrl, imageView, ImageLoaderUtils.getDisplayImageOptions());
-////                loadBitmapFromUrl(imageView, imageUrl);
-//                MycsLog.i("info", "===imageUrl:" + imageUrl);
-//                imageLoader.displayImage("file:/" + imageUrl, imageView, ImageLoaderUtils.getDisplayImageOptions());
-//            } else {
-//                imageView.setImageResource(R.drawable.compose_pic_add);
-//            }
-//        }
-//        return imageView;
+    public View getView(int position, View view, ViewGroup parent) {
+        final EmoLove love = images.get(position);
+        String key = love.getCollect_id();
+        View convertView = maps.get(key);
         ViewHolder holder = null;
         if (convertView == null) {
             convertView = View.inflate(context, R.layout.item_picture, null);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
+            if (!maps.containsKey(key)) {
+                maps.put(key, convertView);
+            }
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         convertView.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, GridView.LayoutParams.MATCH_PARENT));
         convertView.getLayoutParams().width = (int) mImageHeight;
         convertView.getLayoutParams().height = (int) mImageHeight;
-        final EmoLove love = images.get(position);
         String imageUrl = love.getEmo_url();
         if (imageUrl != null && !imageUrl.equals("")) {
             if (!imageUrl.equals("lastItem")) {
@@ -277,6 +266,7 @@ public class PictureAdapter extends BasePicAdapter {
                 cancelLoadingDialog();
                 removeItem(love);
             }
+
             @Override
             public void onFailure(String msg) {
                 cancelLoadingDialog();

@@ -40,16 +40,19 @@ import im.boss66.com.entity.EmoCate;
 import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmoGroup;
 import im.boss66.com.entity.EmoLove;
+import im.boss66.com.entity.UpdateInfoEntity;
 import im.boss66.com.fragment.ContactBooksFragment;
 import im.boss66.com.fragment.ContactsFragment;
 import im.boss66.com.fragment.DiscoverFragment;
 import im.boss66.com.fragment.HomePagerFragment;
 import im.boss66.com.fragment.MineFragment;
 import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.request.CheckUpdateRequest;
 import im.boss66.com.http.request.EmoCollectionsRequest;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.services.ChatServices;
 import im.boss66.com.services.MyPushIntentService;
+import im.boss66.com.util.AutoUpdateUtil;
 import im.boss66.com.widget.dialog.PeopleDataDialog;
 
 /**
@@ -130,6 +133,7 @@ public class MainActivity extends BaseActivity implements Observer {
         ChatServices.startChatService(context);
         getPermission(PermissionUtil.PERMISSIONS_SYSTEM_SETTING);
         requestLoveStore();
+        checkUpdate();
     }
 
     public InputStream getImageStream(String path) throws Exception {
@@ -146,14 +150,20 @@ public class MainActivity extends BaseActivity implements Observer {
     }
 
 
-    private void loadGif() {
-//        String url = "https://imgcdn.66boss.com/emo/assets/2/3/Mi8zL~a6kOawj3dlYi5naWY=.gif";
-//        Uri uri = Uri.parse(url);
-//        //加载静态图片
-//        simpleDrawee00.setImageURI(uri);
-//        //加载动态图片
-//        DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).setAutoPlayAnimations(true).build();
-//        simpleDrawee01.setController(controller);
+    private void checkUpdate() {
+        CheckUpdateRequest request = new CheckUpdateRequest(TAG);
+        request.send(new BaseDataRequest.RequestCallback<UpdateInfoEntity>() {
+            @Override
+            public void onSuccess(UpdateInfoEntity response) {
+                AutoUpdateUtil.update(response.getVersion(), MainActivity.this, response.getApk_url(),
+                        response.getMsg(), response.getForce() != 0, false);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, true);
+            }
+        });
     }
 
     private void requestLoveStore() {

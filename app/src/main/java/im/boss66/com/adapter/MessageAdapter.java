@@ -662,37 +662,14 @@ public class MessageAdapter extends BaseAdapter {
         handleBaseMessage(holder, mItem);
 //        holder.duration.setText("");
         final String videoPath = mItem.getMessage();
+        Log.i("info", "===================videoPath:" + videoPath);
         String imageUrl = null;
         if (videoPath.contains(".mp4")) {
             imageUrl = videoPath.replace(".mp4", ".jpg");
-//            imageLoader.displayImage(imageUrl, holder.iv_cover, ImageLoaderUtils.getDisplayImageOptions());
-            scalLoadImageVideo(holder, imageUrl);
-//            imageLoader.displayImage(imageUrl, holder.iv_cover, ImageLoaderUtils.getDisplayImageOptions(), new ImageLoadingListener() {
-//                @Override
-//                public void onLoadingStarted(String s, View view) {
-//
-//                }
-//
-//                @Override
-//                public void onLoadingFailed(String s, View view, FailReason failReason) {
-//
-//                }
-//
-//                @Override
-//                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-//                    Log.i("info", "=====bitmap:" + bitmap);
-//                    if (bitmap != null) {
-//                        scalImageVideo(holder, bitmap);
-//                    }
-//                }
-//
-//                @Override
-//                public void onLoadingCancelled(String s, View view) {
-//
-//                }
-//            });
-
+        } else if (videoPath.contains(".mov")) {
+            imageUrl = videoPath.replace(".mov", ".jpg");
         }
+        scalLoadImageVideo(holder, imageUrl);
         final String cover = imageUrl;
         holder.iv_player.setOnClickListener(new View.OnClickListener() {
             @Override

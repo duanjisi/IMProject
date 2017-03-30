@@ -954,8 +954,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             object.put("senderID", userid);
             object.put("senderAvartar", account.getAvatar());
 
-            object.put("conversation", title);
-            object.put("conversationAvartar", toAvatar);
+            object.put("conversation", account.getUser_name());
+            if (isGroupChat) {
+                object.put("conversationAvartar", toAvatar);
+            } else {
+                object.put("conversationAvartar", account.getAvatar());
+            }
             return Base64Utils.encodeBase64(object.toString());
         } catch (JSONException e) {
             e.printStackTrace();

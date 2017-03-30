@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">嗨萌</string>
     <string name="net_error_tip">当前网络不可用，请检查你的网络设置</string>
+    <string name="opera_quit">退出</string>
     <!-- 上拉下拉 -->
     <string name="search_header">搜</string>
     <string name="xlistview_header_hint_normal">下拉刷新</string>

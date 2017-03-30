@@ -14,6 +14,10 @@ public class HttpUrl {
     public static final String UPLOAD_IMAGE_URL = BASE_URL + "upload/writev2?";
     public static final String UPLOAD_VIDEO_URL = BASE_URL + "upload/writev3?";
 
+    /**
+     * android版本更新
+     */
+    public static final String VERSION_UPDATE = MAIN_URL + "api/update";
     //手机号登录
     public static final String LOGIN_URL = MAIN_URL + "ucenter/login/index";
     //QQ登录

@@ -206,7 +206,7 @@ public class MultiImageView extends LinearLayout {
     private ImageView createImageView(int position, final boolean isMultiImage) {
         PhotoInfo photoInfo = imagesList.get(position);
         ImageView imageView;
-        if (fromType == 1) {
+        if (fromType == 1 || fromType == 3) {
             imageView = new ImageView(getContext());
         } else {
             imageView = new ColorFilterImageView(getContext());
@@ -214,6 +214,11 @@ public class MultiImageView extends LinearLayout {
         if (isMultiImage) {
             if (fromType == 1) {
                 imageView.setLayoutParams(albumPara);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            } else if (fromType == 3) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(sceenW, sceenW);
+                params.setMargins(20, 0, 0, 0);
+                imageView.setLayoutParams(params);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             } else {
                 imageView.setLayoutParams(position % MAX_PER_ROW_COUNT == 0 ? moreParaColumnFirst : morePara);
@@ -242,7 +247,14 @@ public class MultiImageView extends LinearLayout {
                     actualW = expectW;
                     actualH = expectH;
                 }
-                imageView.setLayoutParams(new LinearLayout.LayoutParams(actualW, actualH));
+                if (fromType == 3) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(sceenW, sceenW);
+                    params.setMargins(20, 0, 0, 0);
+                    imageView.setLayoutParams(params);
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                } else {
+                    imageView.setLayoutParams(new LinearLayout.LayoutParams(actualW, actualH));
+                }
             }
         }
         if (photoInfo.type == 0) {
