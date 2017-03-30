@@ -9,13 +9,13 @@ import java.util.List;
 public class NewsEntity {
 
     /**
-     * name : Hometown for Api v1
+     * name : MESSAGE
      * version : v1
      * message : succeed
      * code : 1
      * status : 200
-     * type : yii\Response
-     * result : [{"id":8,"pid":15,"title":"闽侯县","content":"balabalabala"}]
+     * type : app\modules\api\modules\v1\controllers\HometownController
+     * result : [{"id":"162","pid":"295","title":"伦洲岛","content":"清城地文景观类型多样，其中的山岳峡谷景观有\u201c青城第一山\u201d之称的大帽山，地处洲心的南山岭，东城的黄腾峡。十分独特的砂岩景观\u2014\u2014石角丹霞，此外，北江河清城段有广东省最大的内河岛\u2014\u2014伦洲岛。","pics":["https://imgcdn.66boss.com/contact/emo_HometownMessage/2017/03/29/2017-03-29034335559633.jpg"]}]
      */
 
     private String name;
@@ -84,30 +84,32 @@ public class NewsEntity {
 
     public static class ResultBean {
         /**
-         * id : 8
-         * pid : 15
-         * title : 闽侯县
-         * content : balabalabala
+         * id : 162
+         * pid : 295
+         * title : 伦洲岛
+         * content : 清城地文景观类型多样，其中的山岳峡谷景观有“青城第一山”之称的大帽山，地处洲心的南山岭，东城的黄腾峡。十分独特的砂岩景观——石角丹霞，此外，北江河清城段有广东省最大的内河岛——伦洲岛。
+         * pics : ["https://imgcdn.66boss.com/contact/emo_HometownMessage/2017/03/29/2017-03-29034335559633.jpg"]
          */
 
-        private int id;
-        private int pid;
+        private String id;
+        private String pid;
         private String title;
         private String content;
+        private List<String> pics;
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(String id) {
             this.id = id;
         }
 
-        public int getPid() {
+        public String getPid() {
             return pid;
         }
 
-        public void setPid(int pid) {
+        public void setPid(String pid) {
             this.pid = pid;
         }
 
@@ -125,6 +127,14 @@ public class NewsEntity {
 
         public void setContent(String content) {
             this.content = content;
+        }
+
+        public List<String> getPics() {
+            return pics;
+        }
+
+        public void setPics(List<String> pics) {
+            this.pics = pics;
         }
     }
 }

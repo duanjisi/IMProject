@@ -116,6 +116,15 @@ public class SchoolmateListEntity {
         private String ht_district;
         private int similar;
         private List<SchoolBean> school;
+        private int isFriend;
+
+        public int getIsFriend() {
+            return isFriend;
+        }
+
+        public void setIsFriend(int isFriend) {
+            this.isFriend = isFriend;
+        }
 
         public String getUser_id() {
             return user_id;

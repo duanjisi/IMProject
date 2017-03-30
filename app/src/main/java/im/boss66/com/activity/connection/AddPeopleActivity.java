@@ -1,11 +1,14 @@
 package im.boss66.com.activity.connection;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -141,6 +144,9 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
 
     }
 
+
+
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -153,6 +159,7 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
                 rl_search.setVisibility(View.INVISIBLE);
 
                 searchPop.showAtLocation(vp_search_people, Gravity.NO_GRAVITY,0,0);
+
                 break;
 
         }

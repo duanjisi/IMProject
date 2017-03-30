@@ -133,12 +133,14 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
         adapter.setItemListener(new RecycleViewItemListener() {
             @Override
             public void onItemClick(int postion) {
+                Intent intent = new Intent(ClubActivity.this, ClubDetailActivity.class);
                 if(!isSchool){
-                    Intent intent = new Intent(ClubActivity.this, ClubDetailActivity.class);
-                    intent.putExtra("id",result.get(postion).getId());
-                    intent.putExtra("name",result.get(postion).getName());
-                    startActivity(intent);
+                    intent.putExtra("companyClubId",result.get(postion).getId());
+                }else {
+                    intent.putExtra("schoolClubId",result.get(postion).getId());
                 }
+                intent.putExtra("name",result.get(postion).getName());
+                startActivity(intent);
             }
             @Override
             public boolean onItemLongClick(int position) {
@@ -148,8 +150,6 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
 
         rcv_club.setAdapter(adapter);
         rcv_club.setLayoutManager(new LinearLayoutManager(this));
-
-
     }
 
     @Override

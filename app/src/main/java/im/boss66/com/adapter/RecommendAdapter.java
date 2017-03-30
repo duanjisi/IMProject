@@ -136,33 +136,42 @@ public class RecommendAdapter extends BaseRecycleViewAdapter {
                     break;
             }
 
+            if(item.getIsFriend()==0){
 
-            holder1.tv_add_follow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (isFirst) {
-                        isFirst = false;
-                        AddFriendRequest request = new AddFriendRequest(TAG, item.getUser_id(), "");
-                        request.send(new BaseDataRequest.RequestCallback<String>() {
-                            @Override
-                            public void onSuccess(String str) {
-                                Toast.makeText(context, "已发送", Toast.LENGTH_SHORT).show();
-                                holder1.tv_add_follow.setText("已发送");
-                                holder1.tv_add_follow.setBackgroundResource(R.drawable.shape_null);
-                                holder1.tv_add_follow.setTextColor(Color.GRAY);
-                            }
+                holder1.tv_add_follow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (isFirst) {
+                            isFirst = false;
+                            AddFriendRequest request = new AddFriendRequest(TAG, item.getUser_id(), "");
+                            request.send(new BaseDataRequest.RequestCallback<String>() {
+                                @Override
+                                public void onSuccess(String str) {
+                                    Toast.makeText(context, "已发送", Toast.LENGTH_SHORT).show();
+                                    holder1.tv_add_follow.setText("    已发送");
+                                    holder1.tv_add_follow.setBackgroundResource(R.drawable.shape_null);
+                                    holder1.tv_add_follow.setTextColor(Color.GRAY);
+                                }
 
-                            @Override
-                            public void onFailure(String msg) {
-                                Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    } else {
-                        ToastUtil.showShort(context, "请不要重复添加");
+                                @Override
+                                public void onFailure(String msg) {
+                                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        } else {
+                            ToastUtil.showShort(context, "请不要重复添加");
+                        }
+
                     }
+                });
+            }else{
+                holder1.tv_add_follow.setClickable(false);
+                holder1.tv_add_follow.setText("已经添加");
+                holder1.tv_add_follow.setBackgroundResource(R.drawable.shape_null);
+                holder1.tv_add_follow.setTextColor(Color.GRAY);
 
-                }
-            });
+            }
+
         }
 
 

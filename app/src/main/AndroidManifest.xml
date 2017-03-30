@@ -496,6 +496,10 @@
         <activity android:name=".activity.treasure.FuwaDealActivity"></activity>
         <!--福娃排行榜-->
         <activity android:name=".activity.treasure.FuwaTopList"></activity>
+        <!--名人详情页-->
+        <activity android:name=".activity.connection.FamousPersonDetailActivity"></activity>
+        <!--家乡和校园动态详情-->
+        <activity android:name=".activity.connection.DynamicActivity"></activity>
 
         <!--支付宝start-->
         <activity

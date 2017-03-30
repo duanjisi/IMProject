@@ -198,9 +198,9 @@ public class HttpUrl {
 
     //商会详情页
     public static final String CLUB_DETATIL = MAIN_URL + "hometown/cofc";
-    //学校动态
+    //学校动态列表
     public static final String SCHOOL_NEWS = MAIN_URL + "api/v1/school/message";
-    //家乡动态
+    //家乡动态列表
     public static final String HOMETOWN_NEWS = MAIN_URL + "api/v1/hometown/message";
     //搜索学校
     public static final String SEARCH_SCHOOL = MAIN_URL + "api/v1/search/local-school";
@@ -244,4 +244,14 @@ public class HttpUrl {
     public static final String FUWA_PAY_ALIPAY = MAIN_URL + "api/pay/alipay";
     //支付系统通知购买成功
     public static final String SYSTEM_PAY_NOTICE = "http://wsimali.66boss.com:9090/msg/notice?";
+    //名人详情页
+    public static final String FAMOUSPERSON_DETAIL =MAIN_URL+"web/hometown/celebrity";
+    //学校社团详情页
+    public static final String SCHOOL_CLUB_DETATIL = MAIN_URL + "web/school/league";
+    //家乡动态详情页
+    public static final String HOMETONW_NEWS_DETATIL = MAIN_URL + "web/hometown/message";
+    //学校动态详情页
+    public static final String SCHOOL_NEWS_DETATIL = MAIN_URL + "/web/school/message";
+
+
 }

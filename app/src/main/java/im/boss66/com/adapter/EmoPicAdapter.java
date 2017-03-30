@@ -125,8 +125,8 @@ public class EmoPicAdapter extends ABaseAdapter<EmoEntity> {
         int[] location = new int[2];
         v.getLocationOnScreen(location);
 //        popupWindow.showAtLocation(Parent, Gravity.NO_GRAVITY, location[0], location[1]);
-        int i  =location[0]; //当前位置横坐标
-        int j = location[1]; //当前位置纵坐标
+        int i  =location[0]; //当前view横坐标
+        int j = location[1]; //当前view纵坐标
 
         if (i == 0 || j == 0) {
             Rect rect = new Rect();
