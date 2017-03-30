@@ -976,6 +976,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             //弹出键盘
             UIUtils.showSoftInput(et_send, this);
         } else if (View.GONE == visibility) {
+            bt_send.setText("");
             //隐藏键盘
             UIUtils.hideSoftInput(et_send, this);
         }

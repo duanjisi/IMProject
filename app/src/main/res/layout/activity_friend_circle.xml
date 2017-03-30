@@ -74,6 +74,7 @@
             android:paddingLeft="@dimen/dp_10"
             android:background="@drawable/bg_round_white"
             android:textColorHint="@color/hint_text_color"
+            android:textColor="@color/black"
             android:hint="评论" />
 
         <Button
@@ -83,7 +84,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:text="发送"
-            android:textColor="@color/semi_transparent"/>
+            android:textColor="@color/red_fuwa_alpa_stroke"/>
 
     </LinearLayout>
 
