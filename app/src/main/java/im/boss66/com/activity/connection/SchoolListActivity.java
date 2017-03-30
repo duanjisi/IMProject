@@ -75,6 +75,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
                     break;
                 case 2:
                     showToast("删除成功", false);
+                    SharedPreferencesMgr.setBoolean("EditSchool2",true);
                     initData();
                     break;
 
