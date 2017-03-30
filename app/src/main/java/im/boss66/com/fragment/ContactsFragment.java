@@ -184,6 +184,13 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
             SharedPreferencesMgr.setBoolean("setSuccess",false);
             initData();
         }
+
+        if(SharedPreferencesMgr.getBoolean("EditSchool2",false)){
+            SharedPreferencesMgr.setBoolean("EditSchool2",false);
+            initData();
+        }
+
+
     }
 
     private void initData() {

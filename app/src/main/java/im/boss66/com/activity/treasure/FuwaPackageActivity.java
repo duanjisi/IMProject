@@ -43,6 +43,7 @@ import java.util.List;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.MD5Util;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.FuwaListAdaper;
 import im.boss66.com.entity.FuwaDetailEntity;
@@ -67,6 +68,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     private List<FuwaEntity.Data> fuwaList=new ArrayList<>();
 
     private int choosePosition;
+    private  long time1 = 0L; //防止快速点击
 
 
     private Handler handler = new Handler(){
@@ -171,6 +173,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         adaper.notifyDataSetChanged();
     }
 
+
     private void initViews() {
         findViewById(R.id.tv_headlift_view).setOnClickListener(this);
         rcv_fuwalist = (RecyclerView) findViewById(R.id.rcv_fuwalist);
@@ -183,8 +186,14 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onItemClick(int postion) {
                 //弹pop
-                choosePosition = postion;
-                initFuwaDetail(postion);
+                long time2 = System.currentTimeMillis();
+                if(time2-time1>500L){
+                    choosePosition = postion;
+                    initFuwaDetail(postion);
+                    time1=time2;
+                }else {
+                    ToastUtil.showShort(context,"点击的太快啦");
+                }
             }
 
             @Override
@@ -343,18 +352,26 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         }
         TextView tv_confirm = (TextView) dialog2.findViewById(R.id.tv_confirm);
         tv_confirm.setOnClickListener(new View.OnClickListener() {
+            //防止二次点击
+            boolean first = true;
+            boolean first2 = true;
             @Override
             public void onClick(View view) {
 
                 if(flag){ //赠送
 //                    showToast("赠送",false);
-
-                    giveFuwa(et_price.getText().toString());
+                    if(first){
+                        first=false;
+                        giveFuwa(et_price.getText().toString());
+                    }
 
 
 
                 }else{ //出售
-                    sellFuwa(Double.parseDouble(et_price.getText().toString()));
+                    if(first2){
+                        first2=false;
+                        sellFuwa(Double.parseDouble(et_price.getText().toString()));
+                    }
 
                 }
             }

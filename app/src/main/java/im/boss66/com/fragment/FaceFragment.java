@@ -95,13 +95,14 @@ public class FaceFragment extends BaseFragment {
             if (size > App.PAGER_NUM) {
                 int startIndex = i * App.PAGER_NUM;
                 int endIndex = (i + 1) * App.PAGER_NUM - 1;
-                Log.i("info", "====startIndex:" + startIndex + "\n" + "endIndex:" + endIndex);
+                Log.i("info", "====startIndex:" + startIndex + "\n" + "endIndex:" + endIndex + "\n" +
+                        "size:" + size + "\n" + "pagers:" + pagers);
 //                if (endIndex <= size) {
 //                    adapter.initData(emos.subList(startIndex, endIndex));
 //                } else {
 //                    adapter.initData(emos.subList(startIndex, size - 1));
 //                }
-                if (endIndex <= size) {
+                if (endIndex < size) {
                     adapter.initData(getList(startIndex, endIndex));
                 } else {
                     adapter.initData(getList(startIndex, size - 1));
@@ -170,8 +171,13 @@ public class FaceFragment extends BaseFragment {
 
     private ArrayList<EmoEntity> getList(int start, int end) {
         ArrayList<EmoEntity> list = new ArrayList<>();
+        Log.i("info", "===================ooooooooo===================");
         for (int i = start; i <= end; i++) {
-            list.add(emos.get(i));
+            EmoEntity entity = emos.get(i);
+            Log.i("info", "====i:" + i + " entity:" + entity);
+            if (entity != null) {
+                list.add(entity);
+            }
         }
         return list;
     }

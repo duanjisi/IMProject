@@ -86,7 +86,8 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
             switch (msg.what){
                 case 1:
                     if(saveSchoolEntity.getCode()==1){
-                        SharedPreferencesMgr.setBoolean("EditSchool",true);
+                        SharedPreferencesMgr.setBoolean("EditSchool",true); //用于schoollist刷新数据
+                        SharedPreferencesMgr.setBoolean("EditSchool2",true); //用于人脉主页刷新数据
                         finish();
                     }else{
                         showToast("添加失败",false);
@@ -94,6 +95,7 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
                     break;
                 case 2:
                     SharedPreferencesMgr.setBoolean("EditSchool",true);
+                    SharedPreferencesMgr.setBoolean("EditSchool2",true);
                     finish();
                     break;
 

@@ -34,9 +34,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-
 import java.io.IOException;
-
 import im.boss66.com.App;
 import im.boss66.com.BuildConfig;
 import im.boss66.com.R;
@@ -44,8 +42,6 @@ import im.boss66.com.Utils.MycsLog;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.pragma.DebugLog;
-
-
 /**
  * Displays a video file. The VideoView class can load images from various
  * sources (such as resources or content providers), takes care of computing its
@@ -76,6 +72,7 @@ public class VideoView extends SurfaceView implements
 
     //    private int mVideoLayout = VIDEO_LAYOUT_ZOOM;
     private int mVideoLayout = VIDEO_LAYOUT_STRETCH;
+    //    private int mVideoLayout = VIDEO_LAYOUT_ORIGIN;
     public static final int VIDEO_LAYOUT_ORIGIN = 0;
     public static final int VIDEO_LAYOUT_SCALE = 1;
     public static final int VIDEO_LAYOUT_STRETCH = 2;
@@ -98,6 +95,7 @@ public class VideoView extends SurfaceView implements
     private IMediaPlayer.OnSeekCompleteListener mOnSeekCompleteListener;
     private IMediaPlayer.OnInfoListener mOnInfoListener;
     private IMediaPlayer.OnBufferingUpdateListener mOnBufferingUpdateListener;
+    private IMediaPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener;
     private int mCurrentBufferPercentage;
     private long mSeekWhenPrepared;
     private boolean mCanPause = true;
@@ -422,8 +420,17 @@ public class VideoView extends SurfaceView implements
         public void onVideoSizeChanged(IMediaPlayer mp, int width, int height,
                                        int sarNum, int sarDen) {
             DebugLog.dfmt(TAG, "onVideoSizeChanged: (%dx%d)", width, height);
-            mVideoWidth = mp.getVideoWidth();
-            mVideoHeight = mp.getVideoHeight();
+            if (width < height) {
+                mVideoWidth = mp.getVideoWidth();
+                mVideoHeight = mp.getVideoHeight();
+//                mVideoSarNum = sarNum;
+//                mVideoSarDen = sarDen;
+            } else {
+                mVideoWidth = mp.getVideoHeight();
+                mVideoHeight = mp.getVideoWidth();
+//                mVideoSarNum = sarDen;
+//                mVideoSarDen = sarNum;
+            }
             mVideoSarNum = sarNum;
             mVideoSarDen = sarDen;
             if (mVideoWidth != 0 && mVideoHeight != 0)

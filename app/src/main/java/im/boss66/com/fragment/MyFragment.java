@@ -12,10 +12,11 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.paging.gridview.PagingGridView;
+
 import java.util.ArrayList;
 
 import im.boss66.com.R;
-import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.im.EmojiEditActivity;
 import im.boss66.com.adapter.EmojiAdapter;
 import im.boss66.com.entity.BaseEditEmo;
@@ -25,52 +26,24 @@ import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.EditEmosAllRequest;
 import im.boss66.com.http.request.EditEmosCateRequest;
 import im.boss66.com.http.request.EmosSearchRequest;
-import im.boss66.com.widget.MyGridView;
 
 public class MyFragment extends BaseFragment {
     private static final String TAG = MyFragment.class.getSimpleName();
     private String title, cateid;
+    private int pager = 1;
+    private int pagerNum = 20;
     private View view;
     private RelativeLayout rlNotify;
     private Button btnRefresh;
-    private MyGridView gridView;
+    private PagingGridView gridView;
     private EmojiAdapter adapter;
-
+    private boolean isCompleted = false;
+    private String keywords = "";
 
     public void setCateid(String cateid) {
         this.cateid = cateid;
     }
 
-    /**
-     * 设置布局显示目标最大化
-     */
-//    private LinearLayout.LayoutParams WClayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//    private LinearLayout.LayoutParams FFlayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
-//    private ProgressBar progressBar;
-//    private View rootView;
-//    private void initRootView() {
-//        LinearLayout layout = new LinearLayout(getActivity());
-//        //设置布局 水平方向
-//        layout.setOrientation(LinearLayout.HORIZONTAL);
-//        //进度条
-//        progressBar = new ProgressBar(getActivity());
-//        //进度条显示位置
-//        progressBar.setPadding(0, 0, 15, 0);
-//
-//        layout.addView(progressBar, WClayoutParams);
-//
-//        TextView textView = new TextView(getActivity());
-//        textView.setText("加载中...");
-//        textView.setGravity(Gravity.CENTER_VERTICAL);
-//
-//        layout.addView(textView, FFlayoutParams);
-//        layout.setGravity(Gravity.CENTER);
-//
-//        LinearLayout loadingLayout = new LinearLayout(getActivity());
-//        loadingLayout.addView(layout, WClayoutParams);
-//        loadingLayout.setGravity(Gravity.CENTER);
-//        rootView = loadingLayout;
-//    }
     public static MyFragment newInstance(String title, String cateid) {
         MyFragment fragment = new MyFragment();
         Bundle args = new Bundle();
@@ -81,8 +54,11 @@ public class MyFragment extends BaseFragment {
     }
 
     public void search(String key) {
+        Log.i("info", "===================search.key:" + key);
+        this.keywords = key;
+        pager = 1;
         showLoadingDialog();
-        EmosSearchRequest request = new EmosSearchRequest(TAG, key, cateid, "1", "20");
+        EmosSearchRequest request = new EmosSearchRequest(TAG, key, cateid, "" + pager, "" + pagerNum);
         request.send(new BaseDataRequest.RequestCallback<BaseEmo>() {
             @Override
             public void onSuccess(BaseEmo pojo) {
@@ -100,9 +76,20 @@ public class MyFragment extends BaseFragment {
 
     private void bindDatas(BaseEmo baseEmo) {
         if (baseEmo != null) {
-            ArrayList<EmoEntity> list = baseEmo.getResult();
-            if (list != null && list.size() != 0) {
-                adapter.initData(list);
+//            initGridView();
+            adapter.removeAllItems();
+            ArrayList<EmoEntity> entities = baseEmo.getResult();
+            Log.i("info", "=============entities.size():" + entities.size());
+            if (entities != null && entities.size() != 0) {
+                pager++;
+                if (entities.size() < pagerNum) {
+                    isCompleted = true;
+                    gridView.onFinishLoading(false, null);
+                }
+                adapter.addMoreItems(entities);
+            } else {
+                isCompleted = true;
+                gridView.onFinishLoading(false, null);
             }
         }
     }
@@ -130,38 +117,65 @@ public class MyFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_pager_list, null);
-//            initRootView();
             initViews(view);
         }
         return view;
     }
 
     private void initViews(View view) {
-        gridView = (MyGridView) view.findViewById(R.id.listView);
         rlNotify = (RelativeLayout) view.findViewById(R.id.rl_notify);
         btnRefresh = (Button) view.findViewById(R.id.btn_refresh);
+        gridView = (PagingGridView) view.findViewById(R.id.listView);
         adapter = new EmojiAdapter(getActivity());
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new ItemClickListener());
+        gridView.setHasMoreItems(true);
+        gridView.setPagingableListener(new PagingGridView.Pagingable() {
+            @Override
+            public void onLoadMoreItems() {
+                if (isCompleted) {
+                    gridView.onFinishLoading(false, null);
+                } else {
+                    if (TextUtils.isEmpty(keywords)) {
+                        loadMore();
+                    } else {
+                        loadSearchMore();
+                    }
+                }
+            }
+        });
         requestEmos();
     }
 
-    private void requestEmos() {
-        if (TextUtils.isEmpty(title)) {
-            return;
-        }
-        BaseDataRequest request;
-        if (title.equals("全部")) {
-            request = new EditEmosAllRequest(TAG, "1", "20");
-        } else {
-            request = new EditEmosCateRequest(TAG, cateid, "1", "20");
-        }
-        showLoadingDialog();
-        request.send(new BaseDataRequest.RequestCallback<BaseEditEmo>() {
+    private void initGridView() {
+        gridView = (PagingGridView) view.findViewById(R.id.listView);
+        adapter = new EmojiAdapter(getActivity());
+        gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(new ItemClickListener());
+        gridView.setHasMoreItems(true);
+        gridView.setPagingableListener(new PagingGridView.Pagingable() {
             @Override
-            public void onSuccess(BaseEditEmo pojo) {
+            public void onLoadMoreItems() {
+                if (isCompleted) {
+                    gridView.onFinishLoading(false, null);
+                } else {
+                    if (TextUtils.isEmpty(keywords)) {
+                        loadMore();
+                    } else {
+                        loadSearchMore();
+                    }
+                }
+            }
+        });
+    }
+
+    private void loadSearchMore() {
+        EmosSearchRequest request = new EmosSearchRequest(TAG, keywords, cateid, "" + pager, "" + pagerNum);
+        request.send(new BaseDataRequest.RequestCallback<BaseEmo>() {
+            @Override
+            public void onSuccess(BaseEmo pojo) {
                 cancelLoadingDialog();
-                bindDatas(pojo);
+                refreshSearchDatas(pojo);
             }
 
             @Override
@@ -172,19 +186,147 @@ public class MyFragment extends BaseFragment {
         });
     }
 
-    private void bindDatas(BaseEditEmo baseEditEmo) {
-        if (baseEditEmo != null) {
-            ArrayList<EmoEntity> jokes = baseEditEmo.getEmo();
-            if (jokes != null && jokes.size() != 0) {
-                UIUtils.hindView(rlNotify);
-                UIUtils.showView(gridView);
-                adapter.initData(jokes);
+    private void refreshSearchDatas(BaseEmo entity) {
+        ArrayList<EmoEntity> entities = entity.getResult();
+        if (entities != null && entities.size() != 0) {
+            pager++;
+            if (entities.size() < pagerNum) {
+                isCompleted = true;
+                gridView.onFinishLoading(false, null);
             } else {
-                UIUtils.hindView(gridView);
-                UIUtils.showView(rlNotify);
+                gridView.onFinishLoading(true, entities);
             }
+        } else {
+            isCompleted = true;
+            gridView.onFinishLoading(false, null);
         }
     }
+
+    private void loadMore() {
+        Log.i("info", "=================loadMore.title:" + title);
+        if (TextUtils.isEmpty(title)) {
+            return;
+        }
+        BaseDataRequest request;
+        if (title.equals("全部")) {
+            request = new EditEmosAllRequest(TAG, "" + pager, "" + pagerNum);
+        } else {
+            request = new EditEmosCateRequest(TAG, cateid, "" + pager, "" + pagerNum);
+        }
+        request.send(new BaseDataRequest.RequestCallback<BaseEditEmo>() {
+            @Override
+            public void onSuccess(BaseEditEmo pojo) {
+                refreshDatas(pojo);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void refreshDatas(BaseEditEmo entity) {
+        ArrayList<EmoEntity> entities = entity.getEmo();
+        if (entities != null && entities.size() != 0) {
+            pager++;
+            if (entities.size() < pagerNum) {
+                isCompleted = true;
+                gridView.onFinishLoading(false, null);
+            } else {
+                gridView.onFinishLoading(true, entities);
+            }
+        } else {
+            isCompleted = true;
+            gridView.onFinishLoading(false, null);
+        }
+    }
+
+    public void requestEmos() {
+        Log.i("info", "=================requestEmos.title:" + title);
+        if (TextUtils.isEmpty(title)) {
+            return;
+        }
+        keywords = "";
+        pager = 1;
+        BaseDataRequest request;
+        if (title.equals("全部")) {
+            request = new EditEmosAllRequest(TAG, "" + pager, "" + pagerNum);
+        } else {
+            request = new EditEmosCateRequest(TAG, cateid, "" + pager, "" + pagerNum);
+        }
+        showLoadingDialog();
+        request.send(new BaseDataRequest.RequestCallback<BaseEditEmo>() {
+            @Override
+            public void onSuccess(BaseEditEmo pojo) {
+                cancelLoadingDialog();
+                initDatas(pojo);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                cancelLoadingDialog();
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void initDatas(BaseEditEmo entity) {
+//        initGridView();
+        ArrayList<EmoEntity> entities = entity.getEmo();
+        adapter.removeAllItems();
+        if (entities != null && entities.size() != 0) {
+            pager++;
+            if (entities.size() < pagerNum) {
+                isCompleted = true;
+                gridView.onFinishLoading(false, null);
+            }
+            adapter.addMoreItems(entities);
+        } else {
+            isCompleted = true;
+            gridView.onFinishLoading(false, null);
+        }
+    }
+
+//    private void requestEmos() {
+//        if (TextUtils.isEmpty(title)) {
+//            return;
+//        }
+//        BaseDataRequest request;
+//        if (title.equals("全部")) {
+//            request = new EditEmosAllRequest(TAG, "1", "20");
+//        } else {
+//            request = new EditEmosCateRequest(TAG, cateid, "1", "20");
+//        }
+//        showLoadingDialog();
+//        request.send(new BaseDataRequest.RequestCallback<BaseEditEmo>() {
+//            @Override
+//            public void onSuccess(BaseEditEmo pojo) {
+//                cancelLoadingDialog();
+//                bindDatas(pojo);
+//            }
+//
+//            @Override
+//            public void onFailure(String msg) {
+//                cancelLoadingDialog();
+//                showToast(msg, true);
+//            }
+//        });
+//    }
+//
+//    private void bindDatas(BaseEditEmo baseEditEmo) {
+//        if (baseEditEmo != null) {
+//            ArrayList<EmoEntity> jokes = baseEditEmo.getEmo();
+//            if (jokes != null && jokes.size() != 0) {
+//                UIUtils.hindView(rlNotify);
+//                UIUtils.showView(gridView);
+//                adapter.initData(jokes);
+//            } else {
+//                UIUtils.hindView(gridView);
+//                UIUtils.showView(rlNotify);
+//            }
+//        }
+//    }
 
     private class ItemClickListener implements AdapterView.OnItemClickListener {
         @Override

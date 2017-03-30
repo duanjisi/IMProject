@@ -207,7 +207,6 @@ public class EmojiGroupDetailsActivity extends BaseActivity implements View.OnCl
     }
 
     public void download(final EmojiInform entity) {
-//        final EmoBagEntity entity = adapter.getData().get(position);
         String dowloadUrl = entity.getUrl();
         Log.i("info", "========dowloadUrl:" + dowloadUrl);
         final String fileName = FileUtils.getFileNameFromPath(dowloadUrl);
@@ -215,6 +214,8 @@ public class EmojiGroupDetailsActivity extends BaseActivity implements View.OnCl
         if (file.exists()) {
             file.delete();
         }
+        progressBar.setVisibility(View.VISIBLE);
+        tv_download.setVisibility(View.GONE);
         http = new HttpUtils();
         sHandler = http.download(dowloadUrl, file.getPath().toString(), true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
                 false, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
@@ -276,8 +277,6 @@ public class EmojiGroupDetailsActivity extends BaseActivity implements View.OnCl
                                             tv_download.setText("已下载");
                                             saveDownloadedStatus(entity);
                                             tv_download.setEnabled(false);
-//                                            tv_download.setTextColor(resources.getColor(R.color.btn_green_noraml));
-//                                            tv_download.setBackgroundResource(R.drawable.bg_frame_emo_default);
                                         }
                                     }
                                 });

@@ -90,6 +90,8 @@ public class AppVideoView extends FrameLayout implements View.OnTouchListener {
 
     private IMediaPlayer.OnBufferingUpdateListener mOnBufferingUpdateListener;
 
+    private IMediaPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener;
+
     private IMediaPlayer.OnSeekCompleteListener mOnSeekCompleteListener;
 
     private IMediaPlayer.OnErrorListener mOnErrorListener;
