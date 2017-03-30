@@ -21,6 +21,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.adapter.ClubAdapter;
@@ -39,12 +40,12 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
     private int id;
     private boolean isSchool;
     private String url;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 1:
                     result = clubEntity.getResult();
                     adapter.setDatas(result);
@@ -65,11 +66,11 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.getExtras().containsKey("school_id")) {
-                id = intent.getIntExtra("school_id",-1);
+                id = intent.getIntExtra("school_id", -1);
                 url = HttpUrl.SCHOOL_CLUB_LIST;
-                isSchool =true;
+                isSchool = true;
             } else {
-                id = intent.getIntExtra("hometown_id",-1);
+                id = intent.getIntExtra("hometown_id", -1);
                 url = HttpUrl.HOMETOWN_CLUB_LIST;
                 isSchool = false;
             }
@@ -83,8 +84,8 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        url = url+"?id=" + id;
-        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>(){
+        url = url + "?id=" + id;
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -92,14 +93,22 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
                 String result = responseInfo.result;
 
 
-                if(result!=null){
+                if (result != null) {
                     clubEntity = JSON.parseObject(result, ClubEntity.class);
-                    if(clubEntity!=null){
-                        if(clubEntity.getCode()==1){
-                            handler.obtainMessage(1).sendToTarget();
-                        }else {
-                            showToast(clubEntity.getMessage(),false);
+
+                    if (clubEntity != null) {
+                        if (clubEntity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            if (clubEntity.getCode() == 1) {
+                                handler.obtainMessage(1).sendToTarget();
+                            } else {
+                                showToast(clubEntity.getMessage(), false);
+                            }
                         }
+
                     }
                 }
 
@@ -114,13 +123,12 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
     }
 
 
-
     private void initViews() {
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
-        if(isSchool){
+        if (isSchool) {
             tv_headcenter_view.setText("社团");
-        }else{
+        } else {
             tv_headcenter_view.setText("商会");
 
         }
@@ -134,14 +142,15 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
             @Override
             public void onItemClick(int postion) {
                 Intent intent = new Intent(ClubActivity.this, ClubDetailActivity.class);
-                if(!isSchool){
-                    intent.putExtra("companyClubId",result.get(postion).getId());
-                }else {
-                    intent.putExtra("schoolClubId",result.get(postion).getId());
+                if (!isSchool) {
+                    intent.putExtra("companyClubId", result.get(postion).getId());
+                } else {
+                    intent.putExtra("schoolClubId", result.get(postion).getId());
                 }
-                intent.putExtra("name",result.get(postion).getName());
+                intent.putExtra("name", result.get(postion).getName());
                 startActivity(intent);
             }
+
             @Override
             public boolean onItemLongClick(int position) {
                 return false;

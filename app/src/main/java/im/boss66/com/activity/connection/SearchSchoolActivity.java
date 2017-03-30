@@ -23,6 +23,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
@@ -42,6 +43,7 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
     private SearchSchoolListEntity searchSchoolListEntity;
     private RecyclerView rcv_search_school;
     private SearchSchoolAdapter adapter;
+    private boolean flag;//判断是否选择了xuexiao
 
     private Handler handler = new Handler() {
         @Override
@@ -102,6 +104,7 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
                 if (editable.length() > 1) {
                     initData();
 
+                    flag=false;
 
                 }
 
@@ -116,6 +119,8 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
                 id = result.get(postion).getId();
                 name = result.get(postion).getName();
                 et_school.setText(name);
+                et_school.setSelection(et_school.getText().length());
+                flag = true;
             }
 
             @Override
@@ -141,6 +146,12 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
                 if (result != null) {
                     searchSchoolListEntity = JSON.parseObject(result, SearchSchoolListEntity.class);
                     if (searchSchoolListEntity != null) {
+                        if (searchSchoolListEntity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
                         if (searchSchoolListEntity.getCode() == 1) {
                             handler.obtainMessage(1).sendToTarget();
                         }else{
@@ -166,6 +177,10 @@ public class SearchSchoolActivity extends BaseActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.tv_headright_view:
+                if(!flag){    //修改了之后没选择
+                    ToastUtil.showShort(context,"请选择学校");
+                    return;
+                }
                 //如果id为空
                 if (!TextUtils.isEmpty(id)) {
                     Intent intent = new Intent();

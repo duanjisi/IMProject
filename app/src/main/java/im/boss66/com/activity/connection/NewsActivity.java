@@ -22,6 +22,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.ABaseActivity;
@@ -134,6 +135,12 @@ public class NewsActivity extends ABaseActivity implements View.OnClickListener 
                 if(result!=null){
                     newsEntity = JSON.parseObject(result, NewsEntity.class);
                     if(newsEntity!=null){
+                        if (newsEntity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
                         if(newsEntity.getCode()==1){
 
                             handler.obtainMessage(1).sendToTarget();

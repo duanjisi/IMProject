@@ -85,6 +85,7 @@ public class MessageAdapter extends BaseAdapter {
     private Resources resources;
     private ImageLoader imageLoader;
     private int widthScreen;
+    private int widthMin;
     private SoundUtil mSoundUtil = SoundUtil.getInstance();
     private Handler mHandler = new Handler();
     private int mImageHeight;
@@ -93,6 +94,7 @@ public class MessageAdapter extends BaseAdapter {
     public MessageAdapter(Context context, List<MessageItem> msgList) {
         this.mContext = context;
         widthScreen = UIUtils.getScreenWidth(context) / 2;
+        widthMin = UIUtils.getScreenWidth(context) / 3;
         mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 3;
         resources = context.getResources();
         mMsgList = msgList;
@@ -106,6 +108,7 @@ public class MessageAdapter extends BaseAdapter {
         this.mContext = context;
         this.toUid = toUid;
         widthScreen = UIUtils.getScreenWidth(context) / 2;
+        widthMin = UIUtils.getScreenWidth(context) / 4;
         mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 3;
         resources = context.getResources();
         mMsgList = msgList;
@@ -384,69 +387,6 @@ public class MessageAdapter extends BaseAdapter {
                 Glide.with(mContext).load(entity.getEmo_url()).
                         placeholder(R.drawable.zf_default_message_image).
                         crossFade().into(holder.gifView);
-//                final String cachePath = Constants.EMO_DIR_PATH + "emotion" + File.separator + name;
-//                File f = new File(cachePath);
-//                if (f.exists()) {
-//                    try {
-//                        Log.i("info", "==========emotion:  " + "emotion:" + cachePath);
-//                        GifDrawable drawable = new GifDrawable(cachePath);
-//                        holder.gifView.setImageDrawable(drawable);
-//                    } catch (IOException e) {
-//                        Log.i("info", "==========emotion:IOException:" + e.getMessage());
-//                        e.printStackTrace();
-//                        mHandler.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                holder.gifView.setImageResource(R.drawable.emo_default_img);
-//                            }
-//                        });
-//                    }
-//                } else {
-//                    HttpUtils http = new HttpUtils();
-//                    final HttpHandler handler = http.download(emo_url,
-//                            cachePath,
-//                            true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
-//                            true, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
-//                            new RequestCallBack<File>() {
-//                                @Override
-//                                public void onStart() {
-//
-//                                }
-//
-//                                @Override
-//                                public void onLoading(long total, long current, boolean isUploading) {
-//                                }
-//
-//                                @Override
-//                                public void onSuccess(ResponseInfo<File> responseInfo) {
-//                                    Log.i("info", "downloaded:" + responseInfo.result.getPath());
-//                                    try {
-//                                        Log.i("info", "==========emotion:  " + "emotion:net " + cachePath);
-//                                        GifDrawable drawable = new GifDrawable(cachePath);
-//                                        holder.gifView.setImageDrawable(drawable);
-//                                    } catch (IOException e) {
-//                                        e.printStackTrace();
-//                                        Log.i("info", "==========emotion:IOException:" + e.getMessage());
-//                                        mHandler.post(new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                holder.gifView.setImageResource(R.drawable.emo_default_img);
-//                                            }
-//                                        });
-//                                    }
-//                                }
-//
-//                                @Override
-//                                public void onFailure(HttpException error, String msg) {
-//                                    mHandler.post(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            holder.gifView.setImageResource(R.drawable.emo_default_img);
-//                                        }
-//                                    });
-//                                }
-//                            });
-//                }
             } else {
                 imageLoader.displayImage(entity.getEmo_url(), holder.gifView, ImageLoaderUtils.getDisplayImageOptions());
             }
@@ -576,13 +516,30 @@ public class MessageAdapter extends BaseAdapter {
     private void scaleSize(ImageView iv, int w, int h) {
         int width = w;
         int height = h;
-        while (width > widthScreen) {
-            width = width / 2;
-            height = height / 2;
+        if (w > widthScreen) {
+            while (width > widthScreen) {
+                width = width / 2;
+                height = height / 2;
+            }
+        } else if (w < widthMin) {
+            while (width < widthMin) {
+                width = width * 2;
+                height = height * 2;
+            }
         }
         iv.getLayoutParams().width = width;
         iv.getLayoutParams().height = height;
     }
+//    private void scaleSize(ImageView iv, int w, int h) {
+//        int width = w;
+//        int height = h;
+//        while (width > widthScreen) {
+//            width = width / 2;
+//            height = height / 2;
+//        }
+//        iv.getLayoutParams().width = width;
+//        iv.getLayoutParams().height = height;
+//    }
 
     private String[] getSize(String url) {
         String str = url.substring(url.indexOf("-"), url.length());
