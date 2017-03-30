@@ -1,6 +1,7 @@
 package im.boss66.com.activity.personage;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -30,7 +31,6 @@ public class PersonalAreaCityActivity extends BaseActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_address);
-        App.getInstance().addTempActivity(this);
         initView();
     }
 
@@ -67,7 +67,7 @@ public class PersonalAreaCityActivity extends BaseActivity implements View.OnCli
                                     bundle.putString("pro_name", pro_name);
                                     bundle.putString("city_name", child.getRegion_name());
                                     bundle.putString("city", child.getRegion_id());
-                                    openActivity(PersonalAreaDistrictActivity.class, bundle);
+                                    openActvityForResult(PersonalAreaDistrictActivity.class, 108, bundle);
                                 }
                             }
                         });
@@ -90,4 +90,14 @@ public class PersonalAreaCityActivity extends BaseActivity implements View.OnCli
                 break;
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 108 && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
+        }
+    }
+
 }

@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
@@ -257,17 +258,23 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
                     cancelLoadingDialog();
                     ChangeAvatarEntity entity = JSON.parseObject(responseInfo.result, ChangeAvatarEntity.class);
                     if (entity != null) {
-                        ChangeAvatarEntity.Result result = entity.getResult();
-                        if (result != null) {
-                            isHeadChange = true;
-                            ToastUtil.showShort(context, "更改成功");
-                            headurl = result.getAvatar();
-                            imageLoader.displayImage(headurl, iv_icon,
-                                    ImageLoaderUtils.getDisplayImageOptions());
-                            LoginStatus loginStatus = LoginStatus.getInstance();
-                            String avatar = result.getAvatar();
-                            if (!TextUtils.isEmpty(avatar)) {
-                                loginStatus.setAvatar(avatar);
+                        if (entity.status == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            ChangeAvatarEntity.Result result = entity.getResult();
+                            if (result != null) {
+                                isHeadChange = true;
+                                ToastUtil.showShort(context, "更改成功");
+                                headurl = result.getAvatar();
+                                imageLoader.displayImage(headurl, iv_icon,
+                                        ImageLoaderUtils.getDisplayImageOptions());
+                                LoginStatus loginStatus = LoginStatus.getInstance();
+                                String avatar = result.getAvatar();
+                                if (!TextUtils.isEmpty(avatar)) {
+                                    loginStatus.setAvatar(avatar);
+                                }
                             }
                         }
                     }

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.ToastUtil;
@@ -75,6 +76,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
                     break;
                 case 2:
                     showToast("删除成功", false);
+                    SharedPreferencesMgr.setBoolean("EditSchool2",true);
                     initData();
                     break;
 
@@ -158,6 +160,12 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
                 try {
                     JSONObject jsonObject = new JSONObject(result);
                     if (jsonObject != null) {
+                        if(jsonObject.getInt("status")==401){
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
                         if (jsonObject.getInt("code") == 1) {
                             handler.obtainMessage(2).sendToTarget();
                         } else {

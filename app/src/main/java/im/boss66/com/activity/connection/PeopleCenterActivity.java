@@ -49,6 +49,7 @@ import java.util.Collections;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.ToastUtil;
@@ -168,6 +169,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people_center);
         initViews();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         initData();
     }
 
@@ -493,6 +500,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 if (result != null) {
                     FriendCircleEntity data = JSON.parseObject(result, FriendCircleEntity.class);
                     if (data != null) {
+                        if (data.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
                         if (data.getCode() == 1) {
                             List<FriendCircle> list = data.getResult();
                             if (list != null && list.size() > 0) {
@@ -541,6 +554,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 if (!TextUtils.isEmpty(result)) {
                     CirclePraiseListEntity entity = JSON.parseObject(result, CirclePraiseListEntity.class);
                     if (entity != null) {
+                        if (entity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
                         List<FriendCirclePraiseEntity> list = entity.getResult();
                         if (list != null) {
                             FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
@@ -578,6 +597,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                     try {
                         JSONObject obj = new JSONObject(result);
                         if (obj != null) {
+                            if(obj.getInt("status")==401){
+                                Intent intent = new Intent();
+                                intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                                App.getInstance().sendBroadcast(intent);
+                                return;
+                            }
                             int code = obj.getInt("code");
                             String msg = obj.getString("message");
                             if (code == 1) {
@@ -615,6 +640,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 if (!TextUtils.isEmpty(result)) {
                     BaseResult data = JSON.parseObject(result, BaseResult.class);
                     if (data != null) {
+                        if (data.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
                         int code = data.getCode();
                         String msg = data.getMessage();
                         if (code == 1) {
@@ -680,6 +711,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 if (!TextUtils.isEmpty(result)) {
                     CircleCommentListEntity entity = JSON.parseObject(result, CircleCommentListEntity.class);
                     if (entity != null) {
+                        if (entity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
                         List<FriendCircleCommentEntity> list = entity.getResult();
                         if (list != null) {
                             FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
@@ -711,6 +748,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 if (!TextUtils.isEmpty(result)) {
                     BaseResult data = JSON.parseObject(result, BaseResult.class);
                     if (data != null) {
+                        if (data.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
                         int code = data.getCode();
                         String msg = data.getMessage();
                         if (code == 1) {
@@ -829,6 +872,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 if (!TextUtils.isEmpty(result)) {
                     BaseResult res = BaseResult.parse(result);
                     if (res != null) {
+                        if (res.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
                         if (res.getCode() == 1) {
                             iv_msg.setImageResource(R.drawable.news_have);
                         } else {

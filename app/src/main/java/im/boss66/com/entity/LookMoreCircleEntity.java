@@ -25,6 +25,11 @@ public class LookMoreCircleEntity {
     }
 
     private int code;
+
+    public int getStatus() {
+        return status;
+    }
+
     private int status;
     private String type;
     private List<SearchCofriendEntity> result;

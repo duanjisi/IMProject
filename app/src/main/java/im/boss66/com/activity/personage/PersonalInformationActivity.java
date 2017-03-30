@@ -34,7 +34,6 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
     private ImageLoader imageLoader;
 
     private String headUrl;
-    private boolean isFirst = false;
     private App mApplication;
     private boolean isChange = false;
 
@@ -136,8 +135,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                 openActvityForResult(PersonalInfoChangeActivity.class, NAME_SEX_SIGNATURE_REQUEST, bundle1);
                 break;
             case R.id.rl_area://地区
-                isFirst = true;
-                openActivity(PersonalAreaProvinceActivity.class);
+                openActvityForResult(PersonalAreaProvinceActivity.class,108);
                 break;
             case R.id.rl_signature://个性签名
                 Bundle bundle2 = new Bundle();
@@ -188,13 +186,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                         break;
                 }
             }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (isFirst && mApplication != null) {
+        }else if(requestCode == 108 && resultCode == RESULT_OK){
             AccountEntity sAccount = mApplication.getAccount();
             String area = sAccount.getDistrict_str();
             if (!TextUtils.isEmpty(area)) {

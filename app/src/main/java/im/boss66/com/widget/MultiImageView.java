@@ -213,6 +213,7 @@ public class MultiImageView extends LinearLayout {
         }
         if (isMultiImage) {
             if (fromType == 1) {
+                albumPara.setMargins(0, 0, 10, 0);
                 imageView.setLayoutParams(albumPara);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             } else if (fromType == 3) {

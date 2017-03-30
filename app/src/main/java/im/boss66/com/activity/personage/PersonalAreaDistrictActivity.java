@@ -36,7 +36,6 @@ public class PersonalAreaDistrictActivity extends BaseActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_address);
-        App.getInstance().addTempActivity(this);
         initView();
     }
 
@@ -89,15 +88,10 @@ public class PersonalAreaDistrictActivity extends BaseActivity implements View.O
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String pojo) {
-                List<Activity> tempActivityList = App.getInstance().getTempActivityList();
-                if (tempActivityList != null && tempActivityList.size() > 0) {
-                    LoginStatus loginStatus = LoginStatus.getInstance();
-                    loginStatus.setDistrict_str(pro_name + " " + city_name + " " + district_name);
-                    for (int i = 0; i < tempActivityList.size(); i++) {
-                        tempActivityList.get(i).finish();
-                    }
-                    tempActivityList.clear();
-                }
+                LoginStatus loginStatus = LoginStatus.getInstance();
+                loginStatus.setDistrict_str(pro_name + " " + city_name + " " + district_name);
+                setResult(RESULT_OK);
+                finish();
             }
 
             @Override

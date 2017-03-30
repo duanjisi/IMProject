@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.EmojiGroupDetailsActivity;
@@ -134,13 +135,19 @@ public class SearchLookMoreActivity extends BaseActivity implements View.OnClick
                     if (type == 1) {
                         LookMoreCircleEntity data = JSON.parseObject(result, LookMoreCircleEntity.class);
                         if (data != null) {
-                            if (data.getCode() == 1) {
-                                List<SearchCofriendEntity> list = data.getResult();
-                                if (list != null && list.size() > 0) {
-                                    showFriendData(list);
-                                }
+                            if (data.getStatus() == 401) {
+                                Intent intent = new Intent();
+                                intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                                App.getInstance().sendBroadcast(intent);
                             } else {
-                                showToast(data.getMessage(), false);
+                                if (data.getCode() == 1) {
+                                    List<SearchCofriendEntity> list = data.getResult();
+                                    if (list != null && list.size() > 0) {
+                                        showFriendData(list);
+                                    }
+                                } else {
+                                    showToast(data.getMessage(), false);
+                                }
                             }
                         } else {
                             showToast("没有更多数据了", false);

@@ -460,7 +460,6 @@
             android:name=".activity.connection.SchoolHometownActivity"
             android:screenOrientation="portrait"></activity>
         <!-- 发布消息-->
-        <activity android:name=".activity.connection.SendInformationActivity"></activity>
         <!-- 简介 -->
         <activity android:name=".activity.connection.IntroduceActivity"></activity>
         <!-- 名人 -->

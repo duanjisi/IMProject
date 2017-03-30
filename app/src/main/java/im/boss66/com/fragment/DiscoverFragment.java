@@ -18,6 +18,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.discover.FriendCircleActivity;
@@ -140,14 +141,20 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
                 if (!TextUtils.isEmpty(result)) {
                     BaseResult res = BaseResult.parse(result);
                     if (res != null) {
-                        if (res.getCode() == 1) {
-                            try {
-                                CircleNewestEntity data = JSON.parseObject(result, CircleNewestEntity.class);
-                                if (data != null) {
-                                    showData(data);
+                        if (res.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            if (res.getCode() == 1) {
+                                try {
+                                    CircleNewestEntity data = JSON.parseObject(result, CircleNewestEntity.class);
+                                    if (data != null) {
+                                        showData(data);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
                         }
                     }

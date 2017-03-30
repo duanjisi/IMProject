@@ -37,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.ToastUtil;
@@ -86,7 +87,8 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
             switch (msg.what){
                 case 1:
                     if(saveSchoolEntity.getCode()==1){
-                        SharedPreferencesMgr.setBoolean("EditSchool",true);
+                        SharedPreferencesMgr.setBoolean("EditSchool",true); //用于schoollist刷新数据
+                        SharedPreferencesMgr.setBoolean("EditSchool2",true); //用于人脉主页刷新数据
                         finish();
                     }else{
                         showToast("添加失败",false);
@@ -94,6 +96,7 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
                     break;
                 case 2:
                     SharedPreferencesMgr.setBoolean("EditSchool",true);
+                    SharedPreferencesMgr.setBoolean("EditSchool2",true);
                     finish();
                     break;
 
@@ -247,6 +250,13 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
                 try {
                     if(result!=null){
                         JSONObject jsonObject = new JSONObject(result);
+                        if(jsonObject.getInt("status")==401){
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
+
                         if(jsonObject.getInt("code")==1){
                             handler.obtainMessage(2).sendToTarget();
                         }else{

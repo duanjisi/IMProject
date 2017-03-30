@@ -9,7 +9,6 @@
         android:id="@+id/img_follow"
         android:layout_marginTop="9.9dp"
         android:layout_marginLeft="9.9dp"
-        android:src="@drawable/hp_wx"
         android:layout_width="39.6dp"
         android:layout_height="39.6dp" />
 

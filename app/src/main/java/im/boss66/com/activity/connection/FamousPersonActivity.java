@@ -22,6 +22,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
@@ -94,6 +95,12 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
                 if (result != null) {
                     famousPeopleEntity = JSON.parseObject(result, FamousPeopleEntity.class);
                     if(famousPeopleEntity!=null){
+                        if (famousPeopleEntity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
                         if (famousPeopleEntity.getCode() == 1) {
                             handler.obtainMessage(1).sendToTarget();
                         } else {

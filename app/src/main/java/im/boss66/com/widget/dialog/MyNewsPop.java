@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import im.boss66.com.R;
-import im.boss66.com.activity.connection.MyMessageActivity;
-import im.boss66.com.activity.connection.SendInformationActivity;
 import im.boss66.com.listener.CommunityMsgListener;
 
 /**
@@ -42,20 +40,16 @@ public class MyNewsPop extends BasePopuWindow implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        Intent intent = null;
         switch (view.getId()) {
             case R.id.tv_add_people:
-//                intent = new Intent(context, SendInformationActivity.class);
                 dismiss();
                 listener.goSendMsg();
                 break;
             case R.id.tv_personal_center:
-//                intent = new Intent(context, MyMessageActivity.class);
                 dismiss();
                 listener.goMyMsg();
                 break;
 
         }
-        // context.startActivity(intent);
     }
 }

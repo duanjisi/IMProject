@@ -9,7 +9,6 @@
         android:id="@+id/img_school"
         android:layout_marginTop="9.9dp"
         android:layout_marginLeft="9.9dp"
-        android:src="@drawable/hp_wx"
         android:layout_width="41.8dp"
         android:layout_height="41.8dp" />
 

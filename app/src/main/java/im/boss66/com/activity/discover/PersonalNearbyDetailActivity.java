@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
@@ -26,6 +29,7 @@ import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.FriendState;
 import im.boss66.com.entity.NearByChildEntity;
 import im.boss66.com.entity.PersonEntity;
+import im.boss66.com.entity.PhotoInfo;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.AddFriendRequest;
 import im.boss66.com.http.request.DeleteFriendRequest;
@@ -48,6 +52,7 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
     private PersonEntity person;
     private String classType;
     private String userid = "";
+    private String head_icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +93,8 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                     } else if (sex == 2) {
                         tv_sex.setText("" + "女");
                     }
-                    imageLoader.displayImage(item.getAvatar(), iv_head,
+                    head_icon = item.getAvatar();
+                    imageLoader.displayImage(head_icon, iv_head,
                             ImageLoaderUtils.getDisplayImageOptions());
                     int dis = item.getDistance();
                     tv_distance.setText("" + dis + "米以内");
@@ -203,7 +209,8 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
             } else {
                 tv_source.setText("来源于~");
             }
-            imageLoader.displayImage(entity.getAvatar(), iv_head,
+            head_icon = entity.getAvatar();
+            imageLoader.displayImage(head_icon, iv_head,
                     ImageLoaderUtils.getDisplayImageOptions());
         }
     }
@@ -219,6 +226,13 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 showActionSheet();
                 break;
             case R.id.iv_head://头像
+                if (TextUtils.isEmpty(head_icon)) {
+                    return;
+                }
+                ImagePagerActivity.ImageSize imageSize = new ImagePagerActivity.ImageSize(view.getMeasuredWidth(), view.getMeasuredHeight());
+                List<String> photoUrls = new ArrayList<String>();
+                photoUrls.add(head_icon);
+                ImagePagerActivity.startImagePagerActivity(context, photoUrls, 0, imageSize, false);
                 break;
             case R.id.tv_set_notes_labels://设置标签
                 break;

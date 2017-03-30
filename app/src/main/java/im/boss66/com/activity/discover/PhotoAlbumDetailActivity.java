@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.TimeUtil;
@@ -475,10 +476,17 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                         if (obj != null) {
                             int code = obj.getInt("code");
                             String msg = obj.getString("message");
-                            if (code == 1) {
-                                showToast("删除成功", false);
+                            int status = obj.getInt("status");
+                            if (status == 401) {
+                                Intent intent = new Intent();
+                                intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                                App.getInstance().sendBroadcast(intent);
                             } else {
-                                showToast(msg, false);
+                                if (code == 1) {
+                                    showToast("删除成功", false);
+                                } else {
+                                    showToast(msg, false);
+                                }
                             }
                         }
                     } catch (JSONException e) {
@@ -649,20 +657,26 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                 if (!TextUtils.isEmpty(result)) {
                     PhotoAlbumDetailEntity data = JSON.parseObject(result, PhotoAlbumDetailEntity.class);
                     if (data != null) {
-                        String msg = data.getMessage();
-                        int code = data.getCode();
-                        if (code == 1) {
-                            friendCircle = data.getResult();
-                            if (friendCircle != null) {
-                                feedId = friendCircle.getFeed_id();
-                                int feedType = friendCircle.getFeed_type();
-                                if (feedType == 1) {
-                                    rl_text.setVisibility(View.VISIBLE);
-                                    showSigleTxData(friendCircle);
-                                }
-                            }
+                        if (data.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
                         } else {
-                            showToast(msg, false);
+                            String msg = data.getMessage();
+                            int code = data.getCode();
+                            if (code == 1) {
+                                friendCircle = data.getResult();
+                                if (friendCircle != null) {
+                                    feedId = friendCircle.getFeed_id();
+                                    int feedType = friendCircle.getFeed_type();
+                                    if (feedType == 1) {
+                                        rl_text.setVisibility(View.VISIBLE);
+                                        showSigleTxData(friendCircle);
+                                    }
+                                }
+                            } else {
+                                showToast(msg, false);
+                            }
                         }
                     }
                 }
@@ -689,10 +703,16 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                 if (!TextUtils.isEmpty(result)) {
                     CircleCommentListEntity entity = JSON.parseObject(result, CircleCommentListEntity.class);
                     if (entity != null) {
-                        List<FriendCircleCommentEntity> list = entity.getResult();
-                        if (list != null) {
-                            friendCircle.setComment_list(list);
-                            commentView.setDatas(list);
+                        if (entity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            List<FriendCircleCommentEntity> list = entity.getResult();
+                            if (list != null) {
+                                friendCircle.setComment_list(list);
+                                commentView.setDatas(list);
+                            }
                         }
                     }
                 }
@@ -725,20 +745,26 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                         if (code == 1) {
                             PhotoAlbumDetailEntity data = JSON.parseObject(result, PhotoAlbumDetailEntity.class);
                             if (data != null) {
-                                String msg = data.getMessage();
-                                int code1 = data.getCode();
-                                if (code1 == 1) {
-                                    friendCircle = data.getResult();
-                                    if (friendCircle != null) {
-                                        feedId = friendCircle.getFeed_id();
-                                        int feedType = friendCircle.getFeed_type();
-                                        if (feedType == 1) {
-                                            rl_text.setVisibility(View.VISIBLE);
-                                            showSigleTxData(friendCircle);
-                                        }
-                                    }
+                                if (data.getStatus() == 401) {
+                                    Intent intent = new Intent();
+                                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                                    App.getInstance().sendBroadcast(intent);
                                 } else {
-                                    showToast(msg, false);
+                                    String msg = data.getMessage();
+                                    int code1 = data.getCode();
+                                    if (code1 == 1) {
+                                        friendCircle = data.getResult();
+                                        if (friendCircle != null) {
+                                            feedId = friendCircle.getFeed_id();
+                                            int feedType = friendCircle.getFeed_type();
+                                            if (feedType == 1) {
+                                                rl_text.setVisibility(View.VISIBLE);
+                                                showSigleTxData(friendCircle);
+                                            }
+                                        }
+                                    } else {
+                                        showToast(msg, false);
+                                    }
                                 }
                             }
                         } else {
@@ -775,10 +801,17 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                         if (obj != null) {
                             int code = obj.getInt("code");
                             String msg = obj.getString("message");
-                            if (code == 1) {
-                                showToast("删除成功", false);
+                            int status = obj.getInt("status");
+                            if (status == 401) {
+                                Intent intent = new Intent();
+                                intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                                App.getInstance().sendBroadcast(intent);
                             } else {
-                                showToast(msg, false);
+                                if (code == 1) {
+                                    showToast("删除成功", false);
+                                } else {
+                                    showToast(msg, false);
+                                }
                             }
                         }
                     } catch (JSONException e) {
@@ -810,16 +843,22 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                     if (data != null) {
                         int code = data.getCode();
                         String msg = data.getMessage();
-                        if (code == 1) {
-                            if (isPrase == 0) {
-                                isPrase = 1;
-                                editPraseList(false);
-                            } else {
-                                isPrase = 0;
-                                editPraseList(true);
-                            }
+                        if (data.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
                         } else {
-                            showToast(msg, false);
+                            if (code == 1) {
+                                if (isPrase == 0) {
+                                    isPrase = 1;
+                                    editPraseList(false);
+                                } else {
+                                    isPrase = 0;
+                                    editPraseList(true);
+                                }
+                            } else {
+                                showToast(msg, false);
+                            }
                         }
                     }
                 }
@@ -876,10 +915,16 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                 if (!TextUtils.isEmpty(result)) {
                     CircleCommentListEntity entity = JSON.parseObject(result, CircleCommentListEntity.class);
                     if (entity != null) {
-                        List<FriendCircleCommentEntity> list = entity.getResult();
-                        if (list != null) {
-                            friendCircle.setComment_list(list);
-                            commentView.setDatas(list);
+                        if (entity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            List<FriendCircleCommentEntity> list = entity.getResult();
+                            if (list != null) {
+                                friendCircle.setComment_list(list);
+                                commentView.setDatas(list);
+                            }
                         }
                     }
                 }
@@ -904,12 +949,18 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                 if (!TextUtils.isEmpty(result)) {
                     BaseResult data = JSON.parseObject(result, BaseResult.class);
                     if (data != null) {
-                        int code = data.getCode();
-                        String msg = data.getMessage();
-                        if (code == 1) {
-                            getCommunityCommentList(feedId);
+                        if (data.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
                         } else {
-                            showToast(msg, false);
+                            int code = data.getCode();
+                            String msg = data.getMessage();
+                            if (code == 1) {
+                                getCommunityCommentList(feedId);
+                            } else {
+                                showToast(msg, false);
+                            }
                         }
                     }
                 }

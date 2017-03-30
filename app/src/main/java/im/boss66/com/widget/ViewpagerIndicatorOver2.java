@@ -370,6 +370,11 @@ public class ViewpagerIndicatorOver2 extends LinearLayout {
         public int getCount() {
             return fragments.size();
         }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+//            super.destroyItem(container, position, object);
+        }
     }
 
     public interface ICallBack {
