@@ -410,6 +410,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             //弹出键盘
             UIUtils.showSoftInput(et_send, this);
         } else if (View.GONE == visibility) {
+            et_send.setText("");
             //隐藏键盘
             UIUtils.hideSoftInput(et_send, this);
         }

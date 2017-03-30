@@ -52,9 +52,6 @@ public class SnsPopupWindow extends PopupWindow implements View.OnClickListener 
 
     public SnsPopupWindow(Context context) {
         int sceenW = UIUtils.getScreenWidth(context);
-        if (sceenW < 720) {
-            sceenW = 1000;
-        }
         View view = LayoutInflater.from(context).inflate(R.layout.social_sns_popupwindow, null);
         LinearLayout ll_pop = (LinearLayout) view.findViewById(R.id.ll_pop);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ll_pop.getLayoutParams();
