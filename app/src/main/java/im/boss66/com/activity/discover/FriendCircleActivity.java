@@ -898,7 +898,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     //openActivity(RecordVideoActivity.class);
                 } else if (cameraType == OPEN_CAMERA) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    String imageName = getNowTime() + ".png";
+                    String imageName = getNowTime() + ".jpg";
                     // 指定调用相机拍照后照片的储存路径
                     File dir = new File(savePath);
                     if (!dir.exists()) {

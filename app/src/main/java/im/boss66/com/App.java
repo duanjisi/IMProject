@@ -530,10 +530,12 @@ public class App extends Application {
 
     //遍历所有Activity并finish
     public void exit() {
-        for (Activity activity : tempActivityList) {
-            activity.finish();
+        if (tempActivityList != null) {
+            for (Activity activity : tempActivityList) {
+                activity.finish();
+            }
+            System.exit(0);
         }
-        System.exit(0);
     }
 
     public LocalAddressEntity.SecondChild getLoacalAddress() {

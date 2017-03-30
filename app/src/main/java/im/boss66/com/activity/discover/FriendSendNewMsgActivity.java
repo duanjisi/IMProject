@@ -44,8 +44,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.net.ssl.SSLSocketFactory;
+
 import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
@@ -253,7 +256,12 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                 item.h = imgW;
                 lists.add(item);
             }
+            multiImagView.setFromType(3);
+            multiImagView.setSceenW(imgW);
             multiImagView.setList(lists);
+            int sceenH = multiImagView.getHeight();
+            int sceenW = multiImagView.getWidth();
+            Log.i("multiImagView:", "sceenH:" + sceenH + "sceenW:" + sceenW);
         } else {
             multiImagView.setVisibility(View.GONE);
             iv_video_add.setVisibility(View.VISIBLE);
@@ -311,7 +319,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         String content = et_tx.getText().toString().trim();
         showLoadingDialog();
         String url;
-        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        HttpUtils httpUtils = new HttpUtils(70 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);
         if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
@@ -343,8 +351,13 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         if (SEND_TYPE_PHOTO.equals(sendType) && imgList != null) {
             for (int i = 0; i < imgList.size(); i++) {
                 String path = imgList.get(i);
-                File file = new File(path);
-                params.addBodyParameter("files" + "[" + i + "]", file);
+                Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
+                if (bitmap != null) {
+                    File file = FileUtils.compressImage(bitmap);
+                    if (file != null) {
+                        params.addBodyParameter("files" + "[" + i + "]", file);
+                    }
+                }
             }
         } else if (SEND_TYPE_VIDEO.equals(sendType) && !TextUtils.isEmpty(videoPath)) {
             if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
@@ -387,7 +400,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
             @Override
             public void onFailure(HttpException e, String s) {
                 cancelLoadingDialog();
-                showToast(s, false);
+                showToast("上传失败，请重试...", false);
             }
         });
     }
@@ -537,7 +550,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
             public void onRequestPermissionSuccess() {
                 if (cameraType == OPEN_CAMERA) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    String imageName = getNowTime() + ".png";
+                    String imageName = getNowTime() + ".jpg";
                     // 指定调用相机拍照后照片的储存路径
                     File dir = new File(savePath);
                     if (!dir.exists()) {
@@ -585,7 +598,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
             if (uri.getScheme().equals("content")) {
                 Cursor cursor = getContentResolver().query(uri, null,
                         null, null, null);
-                if (cursor != null){
+                if (cursor != null) {
                     if (cursor.moveToNext()) {
                         int columnIndex = cursor
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
