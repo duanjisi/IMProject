@@ -148,6 +148,7 @@ public class FaceLoveFragment extends BaseFragment {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             EmoLove love = (EmoLove) adapterView.getItemAtPosition(i);
             if (love.getEmo_url().equals("firstItem")) {
+//                getPermission(PermissionUtil.PERMISSIONS_GROUP_CAMERA);
                 Intent intent = new Intent(getActivity(), EmojiAddActivity.class);
                 startActivityForResult(intent, 101);
             } else {
@@ -241,6 +242,7 @@ public class FaceLoveFragment extends BaseFragment {
         }
         setImgSelected(0);
     }
+
 
     @Override
     public void onDestroy() {
