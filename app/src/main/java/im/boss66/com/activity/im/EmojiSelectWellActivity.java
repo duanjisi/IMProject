@@ -117,7 +117,7 @@ public class EmojiSelectWellActivity extends BaseActivity implements
         tvSearch.setOnClickListener(this);
 
         listView.addHeaderView(header);
-        listView.addFooterView(rootView);
+//        listView.addFooterView(rootView);
 //        adapter = new EmojiWellAdapter(context, mListener);
         adapter = new EmojiWellAdapter(context);
         adapter.setUpdateCallback(this);
@@ -365,6 +365,7 @@ public class EmojiSelectWellActivity extends BaseActivity implements
                 isload = false;
             } else {
                 pager++;
+                listView.addFooterView(rootView);
             }
             adapter.initData(bags);
         } else {

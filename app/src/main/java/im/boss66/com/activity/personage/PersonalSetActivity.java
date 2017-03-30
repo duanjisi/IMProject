@@ -95,7 +95,6 @@ public class PersonalSetActivity extends BaseActivity implements View.OnClickLis
         App.getInstance().logout();
         Session.getInstance().stopChatService();
 //        ChatServices.stopChatService(context);
-
 //        Session.getInstance().exitActivitys();
 //        Intent intent = new Intent();
 //        intent.setClass(PersonalSetActivity.this, LoginActivity.class);
