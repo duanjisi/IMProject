@@ -3,6 +3,7 @@ package im.boss66.com.activity.discover;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,6 +29,7 @@ import java.util.Date;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
@@ -99,9 +101,15 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
         String main = HttpUrl.CHANE_ALBUM_COVER;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-        File file = new File(path);
+        Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
+        if (bitmap != null) {
+            File file = FileUtils.compressImage(bitmap);
+            if (file != null) {
+                params.addBodyParameter("cover_pic", file);
+            }
+        }
         params.addBodyParameter("access_token", access_token);
-        params.addBodyParameter("cover_pic", file);
+
         httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -115,7 +123,8 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                             String url = result.getAvatar();
                             Intent intent = new Intent();
                             intent.putExtra("icon_url", url);
-                            App.getInstance().getAccount().setCover_pic(url);
+                            LoginStatus loginStatus = LoginStatus.getInstance();
+                            loginStatus.setCover_pic(url);
                             SharedPreferences mPreferences = context.getSharedPreferences("albumCover", MODE_PRIVATE);
                             SharedPreferences.Editor editor = mPreferences.edit();
                             editor.putString("albumCover", url);
