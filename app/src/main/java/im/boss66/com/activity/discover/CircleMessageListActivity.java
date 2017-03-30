@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.CircleMessageListAdapter;
@@ -144,9 +145,15 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
                 if (result != null) {
                     CircleMsgListEntity data = JSON.parseObject(result, CircleMsgListEntity.class);
                     if (data != null) {
-                        List<CircleMsgListEntity.CircleMsgItem> list = data.getResult();
-                        if (list != null && list.size() > 0) {
-                            showData(list);
+                        if (data.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            List<CircleMsgListEntity.CircleMsgItem> list = data.getResult();
+                            if (list != null && list.size() > 0) {
+                                showData(list);
+                            }
                         }
                     }
                 }
@@ -191,10 +198,17 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
                         if (obj != null) {
                             int code = obj.getInt("code");
                             String msg = obj.getString("message");
+                            int status = obj.getInt("status");
                             if (code == 1) {
-                                allList.clear();
-                                adapter.setDatas(allList);
-                                tv_right.setEnabled(false);
+                                if (status == 401) {
+                                    Intent intent = new Intent();
+                                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                                    App.getInstance().sendBroadcast(intent);
+                                } else {
+                                    allList.clear();
+                                    adapter.setDatas(allList);
+                                    tv_right.setEnabled(false);
+                                }
                             } else {
                                 showToast(msg, false);
                             }
@@ -247,9 +261,15 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
                 if (result != null) {
                     CircleMsgListEntity data = JSON.parseObject(result, CircleMsgListEntity.class);
                     if (data != null) {
-                        List<CircleMsgListEntity.CircleMsgItem> list = data.getResult();
-                        if (list != null && list.size() > 0) {
-                            showData(list);
+                        if (data.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            List<CircleMsgListEntity.CircleMsgItem> list = data.getResult();
+                            if (list != null && list.size() > 0) {
+                                showData(list);
+                            }
                         }
                     }
                 }
@@ -280,10 +300,17 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
                         if (obj != null) {
                             int code = obj.getInt("code");
                             String msg = obj.getString("message");
+                            int status = obj.getInt("status");
                             if (code == 1) {
-                                allList.clear();
-                                adapter.setDatas(allList);
-                                tv_right.setEnabled(false);
+                                if (status == 401) {
+                                    Intent intent = new Intent();
+                                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                                    App.getInstance().sendBroadcast(intent);
+                                } else {
+                                    allList.clear();
+                                    adapter.setDatas(allList);
+                                    tv_right.setEnabled(false);
+                                }
                             } else {
                                 showToast(msg, false);
                             }

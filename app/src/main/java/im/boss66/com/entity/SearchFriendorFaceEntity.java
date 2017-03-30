@@ -26,6 +26,11 @@ public class SearchFriendorFaceEntity {
     }
 
     private int code;
+
+    public int getStatus() {
+        return status;
+    }
+
     private int status;
     private String type;
 

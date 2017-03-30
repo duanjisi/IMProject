@@ -24,7 +24,6 @@ public class CircleMsgListEntity {
     }
 
     private int code;
-    private int status;
     private String type;
     private List<CircleMsgItem> result;
 
@@ -35,6 +34,12 @@ public class CircleMsgListEntity {
     public void setResult(List<CircleMsgItem> result) {
         this.result = result;
     }
+
+    public int getStatus() {
+        return status;
+    }
+
+    private int status;
 
     public class CircleMsgItem {
         public int getMsg_id() {

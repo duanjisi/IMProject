@@ -12,6 +12,7 @@ public class BaseResult {
     private String version;
     private String message;
     private int code;
+
     private int status;
     private String type;
 
@@ -35,6 +36,10 @@ public class BaseResult {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getStatus() {
+        return status;
     }
 
     public static BaseResult parse(String json) {

@@ -3,9 +3,12 @@ package im.boss66.com.widget;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -32,29 +35,44 @@ public class SnsPopupWindow extends PopupWindow implements View.OnClickListener 
     private OnItemClickListener mItemClickListener;
     // 定义弹窗子类项列表
     private ArrayList<ActionItem> mActionItems = new ArrayList<ActionItem>();
+    private int p_h, p_w;
 
     public void setmItemClickListener(OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
+
     public ArrayList<ActionItem> getmActionItems() {
         return mActionItems;
     }
+
     public void setmActionItems(ArrayList<ActionItem> mActionItems) {
         this.mActionItems = mActionItems;
     }
 
 
     public SnsPopupWindow(Context context) {
+        int sceenW = UIUtils.getScreenWidth(context);
+        if (sceenW < 720) {
+            sceenW = 1000;
+        }
         View view = LayoutInflater.from(context).inflate(R.layout.social_sns_popupwindow, null);
+        LinearLayout ll_pop = (LinearLayout) view.findViewById(R.id.ll_pop);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ll_pop.getLayoutParams();
+        p_w = sceenW / 8 * 5;
+        p_h = sceenW / 8;
+        layoutParams.width = p_w;
+        layoutParams.height = p_h;
+        ll_pop.setLayoutParams(layoutParams);
         digBtn = (TextView) view.findViewById(R.id.digBtn);
         commentBtn = (TextView) view.findViewById(R.id.commentBtn);
         digBtn.setOnClickListener(this);
         commentBtn.setOnClickListener(this);
-
         this.setContentView(view);
-        int sceenW = UIUtils.getScreenWidth(context);
-        this.setWidth(UIUtils.dip2px(context, sceenW/3));
-        this.setHeight(UIUtils.dip2px(context, sceenW/16));
+
+//        this.setWidth(UIUtils.dip2px(context, sceenW / 3));
+//        this.setHeight(UIUtils.dip2px(context, sceenW / 16));
+        this.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        this.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setFocusable(true);
         this.setOutsideTouchable(true);
         this.update();
@@ -66,20 +84,22 @@ public class SnsPopupWindow extends PopupWindow implements View.OnClickListener 
 
         initItemData();
     }
+
     private void initItemData() {
         addAction(new ActionItem("赞"));
         addAction(new ActionItem("评论"));
     }
 
-    public void showPopupWindow(View parent){
+    public void showPopupWindow(View parent) {
         parent.getLocationOnScreen(mLocation);
         // 设置矩形的大小
-        mRect.set(mLocation[0], mLocation[1], mLocation[0] + parent.getWidth(),mLocation[1] + parent.getHeight());
+        //mRect.set(mLocation[0], mLocation[1], mLocation[0] + parent.getWidth(), mLocation[1] + parent.getHeight());
         digBtn.setText(mActionItems.get(0).mTitle);
-        if(!this.isShowing()){
-            showAtLocation(parent, Gravity.NO_GRAVITY, mLocation[0] - this.getWidth()
-                    , mLocation[1] - ((this.getHeight() - parent.getHeight()) / 2));
-        }else{
+        if (!this.isShowing()) {
+            Log.i("showPopupWindow:", "width:" + p_w + "height:" + p_h);
+            showAtLocation(parent, Gravity.NO_GRAVITY, mLocation[0] - p_w
+                    , mLocation[1] - ((p_h - parent.getHeight()) / 2));
+        } else {
             dismiss();
         }
     }

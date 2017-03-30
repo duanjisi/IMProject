@@ -2,6 +2,7 @@ package im.boss66.com.activity.personage;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -34,12 +35,12 @@ public class PersonalAreaProvinceActivity extends BaseActivity implements View.O
     private App mApplication;
     private LocalAddressEntity.SecondChild result;
     private List<LocalAddressEntity.ThreeChild> list;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_address);
         mApplication = App.getInstance();
-        mApplication.addTempActivity(this);
         initView();
     }
 
@@ -55,7 +56,7 @@ public class PersonalAreaProvinceActivity extends BaseActivity implements View.O
         //设置布局管理器
         rv_area.setLayoutManager(layoutManager);
         result = mApplication.getLoacalAddress();
-        if (result == null){
+        if (result == null) {
             jsonData(context);
             result = jsonDate.getResult();
         }
@@ -80,13 +81,13 @@ public class PersonalAreaProvinceActivity extends BaseActivity implements View.O
         return jsonDate;
     }
 
-    private void showData(LocalAddressEntity.SecondChild result){
+    private void showData(LocalAddressEntity.SecondChild result) {
         if (result != null) {
             mApplication.setLoacalAddress(result);
             list = result.getList();
             if (list != null) {
                 adapter = new LocalAddressAdapter(this);
-                adapter.getPrivincedList(list,1);
+                adapter.getPrivincedList(list, 1);
                 adapter.setOnItemClickListener(this);
                 rv_area.setAdapter(adapter);
             }
@@ -113,8 +114,17 @@ public class PersonalAreaProvinceActivity extends BaseActivity implements View.O
             Bundle bundle = new Bundle();
             bundle.putSerializable("list", child);
             bundle.putString("province", child.getRegion_id());
-            bundle.putString("pro_name",child.getRegion_name());
-            openActivity(PersonalAreaCityActivity.class, bundle);
+            bundle.putString("pro_name", child.getRegion_name());
+            openActvityForResult(PersonalAreaCityActivity.class, 108, bundle);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 108 && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
         }
     }
 }

@@ -47,6 +47,7 @@ import java.util.List;
 import javax.net.ssl.SSLSocketFactory;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
@@ -383,12 +384,19 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                         if (obj != null) {
                             int code = obj.getInt("code");
                             String msg = obj.getString("message");
-                            if (code == 1) {
-                                showToast("发布成功", false);
-                                setResult(RESULT_OK);
-                                finish();
+                            int status = obj.getInt("status");
+                            if (status == 401) {
+                                Intent intent = new Intent();
+                                intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                                App.getInstance().sendBroadcast(intent);
                             } else {
-                                showToast(msg, false);
+                                if (code == 1) {
+                                    showToast("发布成功", false);
+                                    setResult(RESULT_OK);
+                                    finish();
+                                } else {
+                                    showToast(msg, false);
+                                }
                             }
                         }
                     } catch (JSONException e) {

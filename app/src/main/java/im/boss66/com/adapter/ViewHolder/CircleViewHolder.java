@@ -62,11 +62,6 @@ public abstract class CircleViewHolder extends RecyclerView.ViewHolder {
         addressTv = (TextView) itemView.findViewById(R.id.addressTv);
         deleteBtn = (TextView) itemView.findViewById(R.id.deleteBtn);
         snsBtn = (ImageView) itemView.findViewById(R.id.snsBtn);
-        LinearLayout.LayoutParams snsParams = (LinearLayout.LayoutParams) snsBtn.getLayoutParams();
-        int sceenW = UIUtils.getScreenWidth(itemView.getContext());
-        snsParams.width = sceenW/18;
-        snsParams.height =sceenW/21;
-        snsBtn.setLayoutParams(snsParams);
         praiseListView = (PraiseListView) itemView.findViewById(R.id.praiseListView);
 
         digCommentBody = (LinearLayout) itemView.findViewById(R.id.digCommentBody);

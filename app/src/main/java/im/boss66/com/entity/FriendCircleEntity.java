@@ -25,6 +25,11 @@ public class FriendCircleEntity {
     }
 
     private int code;
+
+    public int getStatus() {
+        return status;
+    }
+
     private int status;
     private String type;
 

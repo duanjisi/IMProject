@@ -29,6 +29,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.EmojiGroupDetailsActivity;
@@ -189,14 +190,20 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
                     try {
                         SearchFriendorFaceEntity data = JSON.parseObject(result, SearchFriendorFaceEntity.class);
                         if (data != null) {
-                            int code = data.getCode();
-                            if (code == 1) {
-                                SearchDataEntity searchData = data.getResult();
-                                if (searchData != null) {
-                                    showData(searchData);
-                                }
+                            if (data.getStatus() == 401) {
+                                Intent intent = new Intent();
+                                intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                                App.getInstance().sendBroadcast(intent);
                             } else {
-                                showToast("获取数据失败", false);
+                                int code = data.getCode();
+                                if (code == 1) {
+                                    SearchDataEntity searchData = data.getResult();
+                                    if (searchData != null) {
+                                        showData(searchData);
+                                    }
+                                } else {
+                                    showToast("获取数据失败", false);
+                                }
                             }
                         }
                     } catch (Exception e) {

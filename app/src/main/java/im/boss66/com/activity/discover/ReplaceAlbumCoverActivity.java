@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
@@ -117,20 +118,26 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                     cancelLoadingDialog();
                     AlbumCoverEntity entity = JSON.parseObject(responseInfo.result, AlbumCoverEntity.class);
                     if (entity != null) {
-                        AlbumCoverEntity.Result result = entity.getResult();
-                        if (result != null) {
-                            ToastUtil.showShort(context, "更改成功");
-                            String url = result.getAvatar();
+                        if (entity.status == 401) {
                             Intent intent = new Intent();
-                            intent.putExtra("icon_url", url);
-                            LoginStatus loginStatus = LoginStatus.getInstance();
-                            loginStatus.setCover_pic(url);
-                            SharedPreferences mPreferences = context.getSharedPreferences("albumCover", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = mPreferences.edit();
-                            editor.putString("albumCover", url);
-                            editor.apply();
-                            setResult(RESULT_OK, intent);
-                            finish();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            AlbumCoverEntity.Result result = entity.getResult();
+                            if (result != null) {
+                                ToastUtil.showShort(context, "更改成功");
+                                String url = result.getAvatar();
+                                Intent intent = new Intent();
+                                intent.putExtra("icon_url", url);
+                                LoginStatus loginStatus = LoginStatus.getInstance();
+                                loginStatus.setCover_pic(url);
+                                SharedPreferences mPreferences = context.getSharedPreferences("albumCover", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = mPreferences.edit();
+                                editor.putString("albumCover", url);
+                                editor.apply();
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            }
                         }
                     }
                 } catch (JSONException e) {

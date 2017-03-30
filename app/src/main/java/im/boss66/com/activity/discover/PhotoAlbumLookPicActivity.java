@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
@@ -257,16 +258,22 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
                 if (!TextUtils.isEmpty(result)) {
                     PhotoAlbumDetailEntity data = JSON.parseObject(result, PhotoAlbumDetailEntity.class);
                     if (data != null) {
-                        String msg = data.getMessage();
-                        int code = data.getCode();
-                        if (code == 1) {
-                            friendCircle = data.getResult();
-                            if (friendCircle != null) {
-                                int feedType = friendCircle.getFeed_type();
-                                showSigleTxData(friendCircle, feedType);
-                            }
+                        if (data.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
                         } else {
-                            showToast(msg, false);
+                            String msg = data.getMessage();
+                            int code = data.getCode();
+                            if (code == 1) {
+                                friendCircle = data.getResult();
+                                if (friendCircle != null) {
+                                    int feedType = friendCircle.getFeed_type();
+                                    showSigleTxData(friendCircle, feedType);
+                                }
+                            } else {
+                                showToast(msg, false);
+                            }
                         }
                     }
                 }
@@ -606,12 +613,18 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
                 if (!TextUtils.isEmpty(result)) {
                     CircleCommentListEntity entity = JSON.parseObject(result, CircleCommentListEntity.class);
                     if (entity != null) {
-                        List<FriendCircleCommentEntity> list = entity.getResult();
-                        if (list != null) {
-                            friendCircle.setComment_list(list);
-                            int size = list.size();
-                            if (size > 0) {
-                                tv_commit_num.setText("" + size);
+                        if (entity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            List<FriendCircleCommentEntity> list = entity.getResult();
+                            if (list != null) {
+                                friendCircle.setComment_list(list);
+                                int size = list.size();
+                                if (size > 0) {
+                                    tv_commit_num.setText("" + size);
+                                }
                             }
                         }
                     }
@@ -647,16 +660,22 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
                 if (!TextUtils.isEmpty(result)) {
                     PhotoAlbumDetailEntity data = JSON.parseObject(result, PhotoAlbumDetailEntity.class);
                     if (data != null) {
-                        String msg = data.getMessage();
-                        int code = data.getCode();
-                        if (code == 1) {
-                            friendCircle = data.getResult();
-                            if (friendCircle != null) {
-                                int feedType = friendCircle.getFeed_type();
-                                showSigleTxData(friendCircle, feedType);
-                            }
+                        if (data.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
                         } else {
-                            showToast(msg, false);
+                            String msg = data.getMessage();
+                            int code = data.getCode();
+                            if (code == 1) {
+                                friendCircle = data.getResult();
+                                if (friendCircle != null) {
+                                    int feedType = friendCircle.getFeed_type();
+                                    showSigleTxData(friendCircle, feedType);
+                                }
+                            } else {
+                                showToast(msg, false);
+                            }
                         }
                     }
                 }

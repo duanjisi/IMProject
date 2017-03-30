@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
@@ -389,13 +390,19 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                 if (result != null) {
                     FriendCircleEntity data = JSON.parseObject(result, FriendCircleEntity.class);
                     if (data != null) {
-                        if (data.getCode() == 1) {
-                            List<FriendCircle> list = data.getResult();
-                            if (list != null && list.size() > 0) {
-                                showData(list);
-                            }
+                        if (data.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
                         } else {
-                            showToast(data.getMessage(), false);
+                            if (data.getCode() == 1) {
+                                List<FriendCircle> list = data.getResult();
+                                if (list != null && list.size() > 0) {
+                                    showData(list);
+                                }
+                            } else {
+                                showToast(data.getMessage(), false);
+                            }
                         }
                     } else {
                         showToast("没有更多数据了", false);

@@ -59,6 +59,7 @@ import java.util.Date;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
@@ -498,9 +499,15 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     FriendCircleEntity data = JSON.parseObject(result, FriendCircleEntity.class);
                     if (data != null) {
                         if (data.getCode() == 1) {
-                            List<FriendCircle> list = data.getResult();
-                            if (list != null && list.size() > 0) {
-                                showData(list);
+                            if (data.getStatus() == 401) {
+                                Intent intent = new Intent();
+                                intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                                App.getInstance().sendBroadcast(intent);
+                            } else {
+                                List<FriendCircle> list = data.getResult();
+                                if (list != null && list.size() > 0) {
+                                    showData(list);
+                                }
                             }
                         } else {
                             showToast(data.getMessage(), false);
@@ -651,11 +658,18 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                         if (obj != null) {
                             int code = obj.getInt("code");
                             String msg = obj.getString("message");
-                            if (code == 1) {
-                                adapter.remove(curPostion);
-                                showToast("删除成功", false);
+                            int status = obj.getInt("status");
+                            if (status == 401) {
+                                Intent intent = new Intent();
+                                intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                                App.getInstance().sendBroadcast(intent);
                             } else {
-                                showToast(msg, false);
+                                if (code == 1) {
+                                    adapter.remove(curPostion);
+                                    showToast("删除成功", false);
+                                } else {
+                                    showToast(msg, false);
+                                }
                             }
                         }
                     } catch (JSONException e) {
@@ -687,13 +701,19 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 if (!TextUtils.isEmpty(result)) {
                     CirclePraiseListEntity entity = JSON.parseObject(result, CirclePraiseListEntity.class);
                     if (entity != null) {
-                        List<FriendCirclePraiseEntity> list = entity.getResult();
-                        if (list != null) {
-                            FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
-                            if (item != null) {
-                                item.setPraise_list(list);
-                                item.setIs_praise(isPraise);
-                                adapter.notifyItemChanged(curPostion);
+                        if (entity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            List<FriendCirclePraiseEntity> list = entity.getResult();
+                            if (list != null) {
+                                FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
+                                if (item != null) {
+                                    item.setPraise_list(list);
+                                    item.setIs_praise(isPraise);
+                                    adapter.notifyItemChanged(curPostion);
+                                }
                             }
                         }
                     }
@@ -742,6 +762,9 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
     //发表评论
     private void createComment(String content, String pid, String uid_to) {
+        if (bt_send != null) {
+            bt_send.setText("");
+        }
         CircleCommentCreateRequest request = new CircleCommentCreateRequest(TAG, String.valueOf(feedId), content, pid, uid_to);
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
@@ -784,12 +807,18 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 if (!TextUtils.isEmpty(result)) {
                     CircleCommentListEntity entity = JSON.parseObject(result, CircleCommentListEntity.class);
                     if (entity != null) {
-                        List<FriendCircleCommentEntity> list = entity.getResult();
-                        if (list != null) {
-                            FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
-                            if (item != null) {
-                                item.setComment_list(list);
-                                adapter.notifyItemChanged(curPostion);
+                        if (entity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            List<FriendCircleCommentEntity> list = entity.getResult();
+                            if (list != null) {
+                                FriendCircle item = (FriendCircle) adapter.getDatas().get(curPostion);
+                                if (item != null) {
+                                    item.setComment_list(list);
+                                    adapter.notifyItemChanged(curPostion);
+                                }
                             }
                         }
                     }
