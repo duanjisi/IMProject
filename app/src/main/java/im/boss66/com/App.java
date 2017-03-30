@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
@@ -26,8 +27,11 @@ import java.util.Map;
 
 import de.tavendo.autobahn.WebSocket;
 import de.tavendo.autobahn.WebSocketConnection;
+import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.SharePreferenceUtil;
 import im.boss66.com.Utils.SharedPreferencesMgr;
+import im.boss66.com.Utils.ToastUtil;
+import im.boss66.com.activity.treasure.CatchFuwaActivity;
 import im.boss66.com.config.LoginStatus;
 import im.boss66.com.db.MessageDB;
 import im.boss66.com.db.RecentDB;
@@ -36,6 +40,7 @@ import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.fragment.ContactBooksFragment;
+import im.boss66.com.listener.PermissionListener;
 
 public class App extends Application {
     public final static String API_KEY = "fiWrR2Ki8NkR6r5GHdM2lY7j";
@@ -68,6 +73,7 @@ public class App extends Application {
     private static double dVolume;
 
     private LocalAddressEntity.SecondChild loacalAddress;
+    private PermissionListener permissionListener;
 
     public synchronized static App getInstance() {
         return mApplication;
@@ -109,8 +115,8 @@ public class App extends Application {
 //        mNotificationManager = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
         SharedPreferencesMgr.init(this, "liw");
         //异常捕捉
-//        CrashHandler crashHandler = CrashHandler.getInstance();
-//        crashHandler.init(getApplicationContext());
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(getApplicationContext());
     }
 
     @Override
@@ -530,10 +536,14 @@ public class App extends Application {
 
     //遍历所有Activity并finish
     public void exit() {
-        for (Activity activity : tempActivityList) {
-            activity.finish();
+        if(tempActivityList!=null){
+            for (Activity activity : tempActivityList) {
+                activity.finish();
+            }
+            System.exit(0);
+
         }
-        System.exit(0);
+
     }
 
     public LocalAddressEntity.SecondChild getLoacalAddress() {
@@ -543,5 +553,6 @@ public class App extends Application {
     public void setLoacalAddress(LocalAddressEntity.SecondChild loacalAddress) {
         this.loacalAddress = loacalAddress;
     }
+
 
 }
