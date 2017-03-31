@@ -27,7 +27,6 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.adapter.NewsAdapter;
-import im.boss66.com.entity.ClubEntity;
 import im.boss66.com.entity.NewsEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.RecycleViewItemListener;
