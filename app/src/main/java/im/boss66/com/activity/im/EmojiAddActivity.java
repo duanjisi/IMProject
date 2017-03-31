@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.MycsLog;
+import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
 import im.boss66.com.activity.base.BaseActivity;
@@ -32,6 +33,7 @@ import im.boss66.com.entity.EmoLove;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.EmoCollectionAddRequest;
+import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.MyGridView;
 
 /**
@@ -40,6 +42,7 @@ import im.boss66.com.widget.MyGridView;
  */
 public class EmojiAddActivity extends BaseActivity implements View.OnClickListener {
     private final static String TAG = EmojiAddActivity.class.getSimpleName();
+    private PermissionListener permissionListener;
     public final static String CHATPHOTO_PATH = Environment
             .getExternalStorageDirectory()
             + File.separator;
@@ -85,12 +88,36 @@ public class EmojiAddActivity extends BaseActivity implements View.OnClickListen
 //            String string = (String) parent.getItemAtPosition(position);
             EmoLove love = (EmoLove) parent.getItemAtPosition(position);
             if (love.getEmo_url().equals("lastItem")) {
+                getPermission(PermissionUtil.PERMISSIONS_GROUP_CAMERA);
+            }
+        }
+    }
+
+    private void getPermission(String[] permissions) {
+        permissionListener = new PermissionListener() {
+            @Override
+            public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
+            }
+
+            @Override
+            public void onRequestPermissionSuccess() {
                 MultiImageSelector.create(context).
                         showCamera(true).
                         count(1)
                         .start(EmojiAddActivity.this, 100);
             }
-        }
+
+            @Override
+            public void onRequestPermissionError() {
+                showToast(getString(R.string.giving_album_permissions), true);
+            }
+        };
+        PermissionUtil
+                .with(this)
+                .permissions(
+                        permissions//相机权限
+                ).request(permissionListener);
     }
 
     @Override
