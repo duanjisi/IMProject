@@ -1357,6 +1357,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 uploadImageAudioFile(picPath, true, 0);
             }
         } else if (requestCode == Code.Request.TAKE_PHOTO) {
+
             uploadImageAudioFile(photoPath, true, 0);
         } else if (requestCode == 0) {
             if (data != null) {

@@ -84,15 +84,28 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                     break;
                 case 3:
                     showToast("出售成功",false);
+                    gidList.remove(fuwa_gid);
                     dialog2.dismiss();
                     dialog.dismiss();
-                    initData();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            initData();
+                        }
+                    },300);
+
                     break;
                 case 4:
                     showToast("赠送成功",false);
+                    gidList.remove(fuwa_gid);
                     dialog2.dismiss();
                     dialog.dismiss();
-                    initData();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            initData();
+                        }
+                    },300);
                     break;
 
             }
@@ -102,6 +115,9 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     private String fuwa_id;
     private String fuwa_gid;
     private String uid;
+    private List<String> gidList;
+
+    private boolean first=true;  //第一次进页面存储福娃gid list
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +184,16 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                 }
                 fuwaList.add(bill);
             }
+        }
+        if(first){
+            gidList = new ArrayList<>();
+            first= false;
+            for(int i =0;i<fuwaList.size();i++){
+                List<String> idList = fuwaList.get(i).getIdList();
+                gidList.addAll(idList);
+            }
+
+
         }
         adaper.setDatas(fuwaList);
         adaper.notifyDataSetChanged();
@@ -398,6 +424,10 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
     //赠送福娃
     private void giveFuwa(String string) {
+        if(!gidList.contains(fuwa_gid)){
+            showToast("出售失败",false);
+            return;
+        }
         String url = HttpUrl.GIVE_FUWA +"?token="+string+"&fuwagid="+fuwa_gid+"&fromuser="+uid;
         String sigh ="/donate"+"?token="+string+"&fuwagid="+fuwa_gid+"&fromuser="+uid+"&platform=boss66";
 
@@ -430,6 +460,10 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
     //出售福娃
     private void sellFuwa(Double price) {
+        if(!gidList.contains(fuwa_gid)){
+            showToast("出售失败",false);
+            return;
+        }
         String url = HttpUrl.SELL_FUWA +"?id="+fuwa_id+"&owner="+uid+"&amount="+price+"&fuwagid="+fuwa_gid;
         String sigh ="/sell"+"?id="+fuwa_id+"&owner="+uid+"&amount="+price+"&fuwagid="+fuwa_gid+"&platform=boss66";
         sigh = MD5Util.getStringMD5(sigh);
