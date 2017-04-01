@@ -18,6 +18,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+
 import im.boss66.com.Constants;
 import im.boss66.com.activity.book.NewFriendsActivity;
 import im.boss66.com.entity.MessageEvent;
@@ -31,15 +36,13 @@ import im.boss66.com.entity.MessageEvent;
 //完全自定义处理类
 //参考文档的1.6.5
 //http://dev.umeng.com/push/android/integration#1_6_5
-public class MyPushIntentService extends UmengBaseIntentService {
+public class MyPushIntentService extends UmengBaseIntentService implements Observer {
     private static final String TAG = MyPushIntentService.class.getName();
     private static final int notifyID = 1002;
     private static final int notifyID_FRIEND_ADD = 1003;
     private static final int notifyID_FRIEND_REPLY = 1004;
     private static final int notifyID_ADERTISING = 1005;
     private static final int notifyID_REDPACKET = 1006;
-
-
     private static MyPushIntentService pushIntentService;
 
     public static MyPushIntentService getInstance() {
@@ -47,6 +50,12 @@ public class MyPushIntentService extends UmengBaseIntentService {
             pushIntentService = new MyPushIntentService();
         }
         return pushIntentService;
+    }
+
+    public static void stopPushService(Context context) {
+        Intent iService = new Intent(context, MyPushIntentService.class);
+//        iService.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.stopService(iService);
     }
 
     @Override
@@ -80,6 +89,18 @@ public class MyPushIntentService extends UmengBaseIntentService {
         return sb.toString();
     }
 
+    private static String printMap(Map<String, String> map) {
+        Iterator iter = map.entrySet().iterator();
+        StringBuilder sb = new StringBuilder();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            Object key = entry.getKey();
+            Object val = entry.getValue();
+            sb.append("\nkey:" + key + ", value:" + val);
+        }
+        return sb.toString();
+    }
+
     private void sendNotification(Context appContext, String message) {
         try {
             String packageName = appContext.getApplicationInfo().packageName;
@@ -94,9 +115,11 @@ public class MyPushIntentService extends UmengBaseIntentService {
             int notificationId = 0;
             String msgType = msg.custom;
             String notice = msg.text;
+            Map<String, String> maps = msg.extra;
+            android.util.Log.i("info", "==========extra:" + printMap(maps));
             Intent intent = null;
             if (msgType.equals("chat")) {
-                if (notice.contains("已成为你的好友!")) {
+                if (notice.contains("和你已经成为好友!")) {
                     intent = new Intent();
                     android.util.Log.i("info", "=============receiver()");
 //                    if (pushCallback != null) {
@@ -173,5 +196,10 @@ public class MyPushIntentService extends UmengBaseIntentService {
     private void senBroadCast(Context context, String action) {
         Intent intent = new Intent(action);
         context.sendBroadcast(intent);
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+
     }
 }

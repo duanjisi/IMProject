@@ -175,7 +175,7 @@ public class ChatServices extends Service implements Observer {
                     sation.setConversation_id(datas[1]);
                     fromid = datas[1];
                 }
-                if (PreferenceUtils.getBoolean(this, fromid, true)) {
+                if (!PreferenceUtils.getBoolean(this, PrefKey.AVOID_DISTURB + fromid, false)) {
                     startAlarm(this);
                 }
                 sation.setNewest_msg_type(datas[3]);

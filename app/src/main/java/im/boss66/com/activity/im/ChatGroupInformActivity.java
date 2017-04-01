@@ -113,7 +113,7 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
             switchNick.closeSwitch();
         }
 
-        boolean isopen = PreferenceUtils.getBoolean(this, PrefKey.AVOID_DISTURB + groupid, true);
+        boolean isopen = PreferenceUtils.getBoolean(this, PrefKey.AVOID_DISTURB + groupid, false);
         if (isopen) {
             switchDisturb.openSwitch();
         } else {

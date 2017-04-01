@@ -187,9 +187,9 @@
             android:name=".activity.book.SelectContactsActivity"
             android:screenOrientation="portrait"></activity>
         <!--手机联系人-->
-        <activityf
+        <activity
             android:name=".activity.book.PhoneContactsActivity"
-            android:screenOrientation="portrait"></activityf>
+            android:screenOrientation="portrait"></activity>
         <!--验证申请-->
         <activity
             android:name=".activity.im.VerifyApplyActivity"

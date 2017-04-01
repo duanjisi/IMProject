@@ -1,5 +1,6 @@
 package im.boss66.com.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -77,6 +79,7 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
         adapter = new ConversationAdapter(getActivity());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new ItemClickListner());
+        listView.setOnItemLongClickListener(new ItemLongClickListener());
         initDatas();
     }
 
@@ -141,6 +144,53 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
             intent.putExtra("title", entity.getUser_name());
             intent.putExtra("toAvatar", entity.getAvatar());
             startActivity(intent);
+        }
+    }
+
+    private class ItemLongClickListener implements AdapterView.OnItemLongClickListener {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+            BaseConversation entity = (BaseConversation) adapterView.getItemAtPosition(i);
+            if (entity != null) {
+                showDeleteDialog(entity);
+            }
+            return true;
+        }
+    }
+
+    private void showDeleteDialog(final BaseConversation conversation) {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View view = inflater.inflate(R.layout.item_dialog_notification, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        ((TextView) view.findViewById(R.id.title)).setText("提示");
+        ((TextView) view.findViewById(R.id.message)).setText("确定删除该条聊天记录吗?");
+        view.findViewById(R.id.option).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteItem(conversation);
+                dialog.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    private void deleteItem(BaseConversation conversation) {
+        ConversationHelper.getInstance().deleteByConversationId(conversation.getConversation_id());
+        ArrayList<BaseConversation> conversations = (ArrayList<BaseConversation>) adapter.getData();
+        for (BaseConversation mode : conversations) {
+            if (mode.getConversation_id().equals(conversation.getConversation_id())) {
+                adapter.remove(mode);
+                break;
+            }
         }
     }
 

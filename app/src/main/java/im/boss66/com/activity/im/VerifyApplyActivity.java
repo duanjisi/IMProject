@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.http.BaseDataModel;
@@ -93,7 +94,8 @@ public class VerifyApplyActivity extends BaseActivity implements View.OnClickLis
 
     public void senNotification(String toUid, String msgType, String message) {
         if (toUid != null && !toUid.equals("")) {
-            NotificationRequest request = new NotificationRequest("sendnotification", toUid, msgType, message);
+            String ext = UIUtils.createJsonStr("addContact", toUid);
+            NotificationRequest request = new NotificationRequest("sendnotification", toUid, msgType, message, ext);
             request.send(new BaseDataModel.RequestCallback<String>() {
                 @Override
                 public void onSuccess(String pojo) {

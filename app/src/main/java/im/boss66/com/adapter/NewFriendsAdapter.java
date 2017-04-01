@@ -78,8 +78,9 @@ public class NewFriendsAdapter extends ABaseAdapter<NewFriend> {
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String pojo) {
-                String str = account.getUser_name() + "已成为你的好友!";
-                NetworkUtil.senNotification(friend.getUser_id(), "chat", str);
+                String str = account.getUser_name() + "和你已经成为好友!";
+                String ext = UIUtils.createJsonStr("accept", account.getUser_id());
+                NetworkUtil.senNotification(friend.getUser_id(), "chat", str, ext);
                 cancelLoadingDialog();
                 friend.setFeedback_mark("2");
                 notifyDataSetChanged();

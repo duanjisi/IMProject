@@ -11,6 +11,7 @@ import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.activity.SplashActivity;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.services.MyPushIntentService;
 import im.boss66.com.widget.ActionSheet;
 
 /**
@@ -25,6 +26,7 @@ public class PersonalSetActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.getInstance().addTempActivity(this);
         setContentView(R.layout.activity_personal_set);
         initView();
     }
@@ -94,6 +96,7 @@ public class PersonalSetActivity extends BaseActivity implements View.OnClickLis
     public void onClick(int which) {//退出登录
         App.getInstance().logout();
         Session.getInstance().stopChatService();
+        MyPushIntentService.stopPushService(context);
 //        ChatServices.stopChatService(context);
 //        Session.getInstance().exitActivitys();
 //        Intent intent = new Intent();

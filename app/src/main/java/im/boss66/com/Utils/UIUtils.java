@@ -27,6 +27,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
@@ -810,4 +813,14 @@ public final class UIUtils {
         return PreferenceUtils.getBoolean(context, key, false);
     }
 
+    public static String createJsonStr(String msgTyp, String userid) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("contactTpye ", msgTyp);
+            object.put("user_id ", userid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return object.toString();
+    }
 }

@@ -90,6 +90,7 @@ public class MainActivity extends BaseActivity implements Observer {
         super.onCreate(savedInstanceState);
         Session.getInstance().addObserver(this);
         Fresco.initialize(MainActivity.this);//注册，在setContentView之前。
+        App.getInstance().addTempActivity(this);
         setContentView(R.layout.activity_main);
         initViews();
     }

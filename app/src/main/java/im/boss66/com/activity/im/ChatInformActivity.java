@@ -17,6 +17,7 @@ import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.PrefKey;
 import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.book.SelectContactsActivity;
@@ -67,13 +68,6 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
         rl_complain.setOnClickListener(this);
         switchDisturb.setOnClickListener(this);
         iv_add.setOnClickListener(this);
-
-        boolean isopen = PreferenceUtils.getBoolean(this, uid, true);
-        if (isopen) {
-            switchDisturb.openSwitch();
-        } else {
-            switchDisturb.closeSwitch();
-        }
         Intent intent = getIntent();
         if (intent != null) {
             uid = intent.getStringExtra("uid");
@@ -88,6 +82,12 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
             if (!TextUtils.isEmpty(name)) {
                 tvName.setText(name);
             }
+        }
+        boolean isopen = PreferenceUtils.getBoolean(this, PrefKey.AVOID_DISTURB + uid, false);
+        if (isopen) {
+            switchDisturb.openSwitch();
+        } else {
+            switchDisturb.closeSwitch();
         }
     }
 
@@ -126,7 +126,7 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
                     switchDisturb.openSwitch();
                     isOpen = true;
                 }
-                PreferenceUtils.putBoolean(this, uid, isOpen);
+                PreferenceUtils.putBoolean(this, PrefKey.AVOID_DISTURB + uid, isOpen);
                 break;
             case R.id.iv_add:
                 Intent intent = new Intent(context, SelectContactsActivity.class);
