@@ -1402,13 +1402,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-//    private boolean isImage(String url) {
-//        String end = FileUtils.getFileNameFromPath(url);
-//        if (end.contains(".jpg")){
-//
-//        }
-//    }
-
     private void InItTitle1() {
         linearLayout.removeAllViews();
         if (textViews != null) {
