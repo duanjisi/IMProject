@@ -425,7 +425,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     //赠送福娃
     private void giveFuwa(String string) {
         if(!gidList.contains(fuwa_gid)){
-            showToast("出售失败",false);
+            showToast("赠送失败",false);
             return;
         }
         String url = HttpUrl.GIVE_FUWA +"?token="+string+"&fuwagid="+fuwa_gid+"&fromuser="+uid;
