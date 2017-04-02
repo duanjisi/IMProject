@@ -124,7 +124,13 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         showToast("支付成功", true);
                         dialog.dismiss();   //福娃详情dialog
-                        showSuccessDialog();
+
+                        if(dialog4==null){
+                            showSuccessDialog();
+                        }else if(!dialog4.isShowing()){
+                            dialog4.show();
+
+                        }
 
 //                        requesResult();
                     } else {
@@ -136,6 +142,10 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             }
         }
     };
+    private TextView tv_fuwa_num;
+    private TextView tv_number;
+    private TextView tv_price1;
+    private TextView tv_count;
 
     private void showSuccessDialog() {
 
@@ -156,7 +166,21 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
                 dialog4.dismiss();
 
-                initData();
+                datas.remove(chooseFuwa);
+                adapter.setDatas(datas);
+                adapter.setChooses();
+                adapter.notifyDataSetChanged();
+
+                datasChoose = datas;
+
+                tv_price.setTextColor(0xffcccccc);
+                img_price.setImageResource(R.drawable.fuwa_price);
+
+                tv_price.setText("价格");
+
+                tv_choose.setTextColor(0xffcccccc);
+                img_choose.setImageResource(R.drawable.fuwa_screen);
+
             }
         });
 
@@ -338,7 +362,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                 @Override
                 public void onClick(View view) {
                     dialog2.dismiss();
-                    datasChoose.clear();
+                    datasChoose=new ArrayList<FuwaSellEntity.DataBean>();
                     //筛选福娃
                     if (fuwaNum > 0) {   //选中1-66号福娃
 
@@ -448,7 +472,14 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                 long time2 = System.currentTimeMillis();
                 if(time2-time1>500L){
                     if (chooseFuwa != null) {
-                        showFuwaDialog(getActivity());
+                        if(dialog==null){
+
+                            showFuwaDialog(getActivity());
+                        }else if(!dialog.isShowing()) {
+                            setContent();
+                            dialog.show();
+
+                        }
                     }
                     time1=time2;
                 }else{
@@ -470,10 +501,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         // 不同页面加载不同的popup布局
         dialog_view = inflater.inflate(R.layout.pop_fuwa_buy, null);
-        TextView tv_fuwa_num = (TextView) dialog_view.findViewById(R.id.tv_fuwa_num);
-        TextView tv_number = (TextView) dialog_view.findViewById(R.id.tv_number);
-        tv_fuwa_num.setText(chooseFuwa.getFuwaid() + "号福娃");
-        tv_number.setText(chooseFuwa.getFuwaid() + "");
+
 
         ImageView img_cancle = (ImageView) dialog_view.findViewById(R.id.img_cancle);
         img_cancle.setOnClickListener(new View.OnClickListener() {
@@ -482,10 +510,11 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                 dialog.dismiss();
             }
         });
+        tv_fuwa_num = (TextView) dialog_view.findViewById(R.id.tv_fuwa_num);
+        tv_number = (TextView) dialog_view.findViewById(R.id.tv_number);
+        tv_price1 = (TextView) dialog_view.findViewById(R.id.tv_price);
+        setContent();
 
-        TextView tv_price = (TextView) dialog_view.findViewById(R.id.tv_price);
-        fuwa_price = chooseFuwa.getAmount();
-        tv_price.setText("购买金额: " + fuwa_price + "元");
         TextView tv_buy = (TextView) dialog_view.findViewById(R.id.tv_buy);
         tv_buy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -493,7 +522,14 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                 long timeEnd = System.currentTimeMillis();
                 if(timeEnd-timeStart>500L){
 
-                    showDialog();
+                    if(dialog3==null){
+
+                        showDialog();
+                    }else if(!dialog3.isShowing()){
+                        setContent2();
+                        dialog3.show();
+
+                    }
 
                     timeStart=timeEnd;
                 }else {
@@ -520,6 +556,12 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         dialog.show();
     }
 
+    private void setContent() {
+        tv_fuwa_num.setText(chooseFuwa.getFuwaid() + "号福娃");
+        tv_number.setText(chooseFuwa.getFuwaid() + "");
+        tv_price1.setText("购买金额: " + chooseFuwa.getAmount() + "元");
+    }
+
 
     private void showDialog() {
         dialog3 = new Dialog(getActivity(), R.style.Dialog_full);
@@ -534,8 +576,9 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
         final ImageView img_zhifubao_choose = (ImageView) view_dialog.findViewById(R.id.img_zhifubao_choose);
         final ImageView img_wx_choose = (ImageView) view_dialog.findViewById(R.id.img_wx_choose);
-        final TextView tv_count = (TextView) view_dialog.findViewById(R.id.tv_count);
-        tv_count.setText(fuwa_price + "元");
+        tv_count = (TextView) view_dialog.findViewById(R.id.tv_count);
+        setContent2();
+
         view_dialog.findViewById(R.id.rl_zhifubao).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -590,6 +633,10 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         dialogWindow.setAttributes(lp);
         dialog3.setCanceledOnTouchOutside(true);
         dialog3.show();
+    }
+
+    private void setContent2() {
+        tv_count.setText(chooseFuwa.getAmount() + "元");
     }
 
     private void requestWxTrade() {

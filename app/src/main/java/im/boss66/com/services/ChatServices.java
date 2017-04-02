@@ -43,6 +43,7 @@ public class ChatServices extends Service implements Observer {
     private String userid;
     private MessageDB mMsgDB;// 保存消息的数据库
     private WebSocket mConnection;
+    private long time1 = 0L;
 
     @Nullable
     @Override
@@ -147,6 +148,7 @@ public class ChatServices extends Service implements Observer {
 //            ((receiveMessageCallback) callbacks.get(i)).onMessageReceive(payload);
 //    }
 
+
     private void messageHandle(String str) {
         Log.i("info", "===================IM接消息");
         MycsLog.i("info", "====str:" + str);
@@ -175,8 +177,12 @@ public class ChatServices extends Service implements Observer {
                     sation.setConversation_id(datas[1]);
                     fromid = datas[1];
                 }
-                if (!PreferenceUtils.getBoolean(this, PrefKey.AVOID_DISTURB + fromid, false)) {
-                    startAlarm(this);
+                if (PreferenceUtils.getBoolean(this, fromid, true)) {
+                    long time2 = System.currentTimeMillis();
+                    if (time2 - time1 > 2000) {
+                        time1 = time2;
+                        startAlarm(this);
+                    }
                 }
                 sation.setNewest_msg_type(datas[3]);
                 sation.setNewest_msg_time(datas[5] + "000");
