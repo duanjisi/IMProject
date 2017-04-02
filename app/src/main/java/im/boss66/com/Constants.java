@@ -6,6 +6,8 @@ package im.boss66.com;
 public class Constants {
     public static final String EMO_DIR_PATH =
             android.os.Environment.getExternalStorageDirectory() + "/HaiMeng/" + App.getInstance().getUid() + "/";
+    public static final String EMO_DIR_SYSTEM_PATH =
+            android.os.Environment.getExternalStorageDirectory() + "/HaiMeng/";
     public static final String ACTION_LOGOUT_RESETING = "im.boss66.com.logout.reseting";
 
     public static final class Action {

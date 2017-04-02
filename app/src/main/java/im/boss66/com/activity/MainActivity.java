@@ -17,6 +17,8 @@ import com.umeng.message.IUmengUnregisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -25,10 +27,15 @@ import java.util.Observable;
 import java.util.Observer;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
+import im.boss66.com.Utils.FileUtil;
+import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
+import im.boss66.com.Utils.PrefKey;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
@@ -52,6 +59,8 @@ import im.boss66.com.http.request.EmoCollectionsRequest;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.services.ChatServices;
 import im.boss66.com.services.MyPushIntentService;
+import im.boss66.com.task.EmoDbTask;
+import im.boss66.com.task.ZipExtractorTask;
 import im.boss66.com.util.AutoUpdateUtil;
 import im.boss66.com.widget.dialog.PeopleDataDialog;
 
@@ -135,6 +144,10 @@ public class MainActivity extends BaseActivity implements Observer {
         getPermission(PermissionUtil.PERMISSIONS_SYSTEM_SETTING);
         requestLoveStore();
         checkUpdate();
+        boolean isInitEmo = PreferenceUtils.getBoolean(context, PrefKey.EMO_SYSTEM_INIT, true);
+        if (isInitEmo) {
+            initSystemEmos();
+        }
     }
 
     public InputStream getImageStream(String path) throws Exception {
@@ -605,6 +618,69 @@ public class MainActivity extends BaseActivity implements Observer {
         if (mPushAgent.isEnabled() || UmengRegistrar.isRegistered(MainActivity.this)) {
             //开启推送并设置注册的回调处理
             mPushAgent.disable(mUnregisterCallback);
+        }
+    }
+
+    private void initSystemEmos() {
+        String savePath = Constants.EMO_DIR_PATH;
+        FileUtils.getInstance(context).copyAssetsToSD("emo", savePath).
+                setFileOperateCallback(new FileUtils.FileOperateCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.i("info", "====系统表情已拷贝至Sd卡");
+                        ZipTask();
+                    }
+
+                    @Override
+                    public void onFailed(String error) {
+                        showToast("初始化系统表情失败!", true);
+                    }
+                });
+    }
+
+    private void ZipTask() {
+        final String fileName = assetsEmos();
+        if (fileName != null && !fileName.equals("")) {
+            final File file = new File(Constants.EMO_DIR_PATH, fileName);
+//            if (file.exists()) {
+//                file.delete();
+//            }
+            ZipExtractorTask task = new ZipExtractorTask(file.getPath(), Constants.EMO_DIR_PATH,
+                    MainActivity.this, true, new ZipExtractorTask.Callback() {
+                @Override
+                public void onPreExecute() {
+
+                }
+                @Override
+                public void onComplete() {//解压完成，删除压缩包文件
+                    FileUtil.deleteFile(file.getPath().toString());
+                    String filepath = Constants.EMO_DIR_PATH + File.separator + fileName.replace(".zip", ".json");
+                    EmoDbTask dbTask = new EmoDbTask(filepath, new EmoDbTask.dbTaskCallback() {//解析.json文件。保持db数据
+                        @Override
+                        public void onPreExecute() {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            PreferenceUtils.putBoolean(context, PrefKey.EMO_SYSTEM_INIT, false);
+                            Log.i("info", "====系统表情初始化成功!");
+                        }
+                    });
+                    dbTask.execute();
+                }
+            });
+            task.execute();
+        }
+    }
+
+
+    private String assetsEmos() {
+        try {
+            return this.getAssets().list("emo")[0];
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

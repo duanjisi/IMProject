@@ -13,6 +13,7 @@ public class PersonEntity {
     private String signature = "";
     private String cover_pic = "";
     private String district = "";
+    private String district_str = "";
 
     public String getUser_id() {
         return user_id;
@@ -76,5 +77,13 @@ public class PersonEntity {
 
     public void setDistrict(String district) {
         this.district = district;
+    }
+
+    public String getDistrict_str() {
+        return district_str;
+    }
+
+    public void setDistrict_str(String district_str) {
+        this.district_str = district_str;
     }
 }

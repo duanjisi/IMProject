@@ -181,7 +181,6 @@ public class ChatServices extends Service implements Observer {
                 sation.setNewest_msg_type(datas[3]);
                 sation.setNewest_msg_time(datas[5] + "000");
                 ConversationHelper.getInstance().save(sation);
-
                 String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + fromid;
                 String msg = "";
                 if (!datas[3].equals("group")) {

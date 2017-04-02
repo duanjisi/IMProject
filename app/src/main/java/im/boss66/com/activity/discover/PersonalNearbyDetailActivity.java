@@ -29,7 +29,6 @@ import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.FriendState;
 import im.boss66.com.entity.NearByChildEntity;
 import im.boss66.com.entity.PersonEntity;
-import im.boss66.com.entity.PhotoInfo;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.AddFriendRequest;
 import im.boss66.com.http.request.DeleteFriendRequest;
@@ -187,7 +186,7 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
             UIUtils.hindView(tv_distance);
             UIUtils.hindView(bt_complaint);
             UIUtils.showView(rl_privacy);
-            tv_area.setText(entity.getDistrict());
+            tv_area.setText(entity.getDistrict_str());
             tv_personalized_signature.setText(entity.getSignature());
             UIUtils.showView(bt_greet);
             if (friendState.getIs_friend().equals("1")) {

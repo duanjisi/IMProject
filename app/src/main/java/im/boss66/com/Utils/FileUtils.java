@@ -7,6 +7,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
@@ -17,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,6 +36,39 @@ public class FileUtils {
 
     public static String DCIMCamera_PATH = Environment
             .getExternalStorageDirectory() + "/DCIM/Camera/";
+
+    private static FileUtils instance;
+    private static final int SUCCESS = 1;
+    private static final int FAILED = 0;
+    private Context context;
+    private FileOperateCallback callback;
+    private volatile boolean isSuccess;
+    private String errorStr;
+
+    public static FileUtils getInstance(Context context) {
+        if (instance == null)
+            instance = new FileUtils(context);
+        return instance;
+    }
+
+    private FileUtils(Context context) {
+        this.context = context;
+    }
+
+    private Handler handler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (callback != null) {
+                if (msg.what == SUCCESS) {
+                    callback.onSuccess();
+                }
+                if (msg.what == FAILED) {
+                    callback.onFailed(msg.obj.toString());
+                }
+            }
+        }
+    };
 
     public static String getNewFileName() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -165,16 +202,16 @@ public class FileUtils {
     /**
      * 根据byte数组，生成文件
      */
-    public static File getFile(byte[] bfile, String filePath,String fileName) {
+    public static File getFile(byte[] bfile, String filePath, String fileName) {
         BufferedOutputStream bos = null;
         FileOutputStream fos = null;
         File file = null;
         try {
             File dir = new File(filePath);
-            if(!dir.exists()&&dir.isDirectory()){//判断文件目录是否存在
+            if (!dir.exists() && dir.isDirectory()) {//判断文件目录是否存在
                 dir.mkdirs();
             }
-            file = new File(filePath+"\\"+fileName);
+            file = new File(filePath + "\\" + fileName);
             fos = new FileOutputStream(file);
             bos = new BufferedOutputStream(fos);
             bos.write(bfile);
@@ -257,7 +294,7 @@ public class FileUtils {
 //        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
 
         String imageName = getNowTime() + ".jpg";
-        File file = new File(Environment.getExternalStorageDirectory() + "/" +imageName);
+        File file = new File(Environment.getExternalStorageDirectory() + "/" + imageName);
         try {
             FileOutputStream fos = new FileOutputStream(file);
             try {
@@ -281,4 +318,92 @@ public class FileUtils {
         return dateFormat.format(date);
     }
 
+    public void CopyAssets(Context context, String oldPath, String newPath) {
+        try {
+            String fileNames[] = context.getAssets().list(oldPath);// 获取assets目录下的所有文件及目录名
+            if (fileNames.length > 0) {// 如果是目录
+                File file = new File(newPath);
+                file.mkdirs();// 如果文件夹不存在，则递归
+                for (String fileName : fileNames) {
+                    CopyAssets(context, oldPath + "/" + fileName, newPath + "/" + fileName);
+                }
+            } else {// 如果是文件
+                InputStream is = context.getAssets().open(oldPath);
+                FileOutputStream fos = new FileOutputStream(new File(newPath));
+                byte[] buffer = new byte[1024];
+                int byteCount = 0;
+                while ((byteCount = is.read(buffer)) != -1) {// 循环从输入流读取
+                    // buffer字节
+                    fos.write(buffer, 0, byteCount);// 将读取的输入流写入到输出流
+                }
+                fos.flush();// 刷新缓冲区
+                is.close();
+                fos.close();
+                handler.obtainMessage(SUCCESS).sendToTarget();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorStr = e.getMessage();
+            handler.obtainMessage(FAILED, errorStr).sendToTarget();
+        }
+    }
+
+    public FileUtils copyAssetsToSD(final String srcPath, final String sdPath) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+//                copyAssetsToDst(context, srcPath, sdPath);
+                CopyAssets(context, srcPath, sdPath);
+//                if (isSuccess)
+//                    handler.obtainMessage(SUCCESS).sendToTarget();
+//                else
+//                    handler.obtainMessage(FAILED, errorStr).sendToTarget();
+            }
+        }).start();
+        return this;
+    }
+
+    public void setFileOperateCallback(FileOperateCallback callback) {
+        this.callback = callback;
+    }
+
+    private void copyAssetsToDst(Context context, String srcPath, String dstPath) {
+        try {
+            String fileNames[] = context.getAssets().list(srcPath);
+            if (fileNames.length > 0) {
+                File file = new File(Environment.getExternalStorageDirectory(), dstPath);
+                if (!file.exists()) file.mkdirs();
+                for (String fileName : fileNames) {
+                    if (!srcPath.equals("")) { // assets 文件夹下的目录
+                        copyAssetsToDst(context, srcPath + File.separator + fileName, dstPath + File.separator + fileName);
+                    } else { // assets 文件夹
+                        copyAssetsToDst(context, fileName, dstPath + File.separator + fileName);
+                    }
+                }
+            } else {
+                File outFile = new File(Environment.getExternalStorageDirectory(), dstPath);
+                InputStream is = context.getAssets().open(srcPath);
+                FileOutputStream fos = new FileOutputStream(outFile);
+                byte[] buffer = new byte[1024];
+                int byteCount;
+                while ((byteCount = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, byteCount);
+                }
+                fos.flush();
+                is.close();
+                fos.close();
+            }
+            isSuccess = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorStr = e.getMessage();
+            isSuccess = false;
+        }
+    }
+
+    public interface FileOperateCallback {
+        void onSuccess();
+
+        void onFailed(String error);
+    }
 }

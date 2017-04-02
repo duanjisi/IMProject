@@ -1477,7 +1477,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
         ArrayList<EmoGroup> groups = (ArrayList<EmoGroup>) EmoGroupHelper.getInstance().queryByCateId(cateId);
         Log.i("info", "====cateId:" + cateId);
-        Log.i("info", "====groups.size():" + groups.size());
         FaceLoveFragment frag = FaceLoveFragment.newInstance();
         frag.setLoveCallback(this);
         fragments.add(frag);
@@ -1496,6 +1495,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             setBotBarSelector(0);
         }
     }
+
 
     private String editUrl = "";
     private String emoCode;
@@ -1597,9 +1597,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 textView.setImageResource(R.drawable.hp_o_love);
             } else {
                 EmoGroup group = groups.get(i - 1);
-                Log.i("info", "=====group:" + group);
                 Bitmap bitmap = getBitmap(group);
-                Log.i("info", "=====bitmap:" + bitmap);
                 if (bitmap != null) {
                     textView.setImageBitmap(bitmap);
                 }
