@@ -108,9 +108,8 @@ public class RecommendAdapter extends BaseRecycleViewAdapter {
                         String edu_year = school.get(0).getEdu_year();
                         String departments = school.get(0).getDepartments();
                         String name = school.get(0).getName();
-                        holder1.tv_follow_content.setText(edu_year);
-                        holder1.tv_follow_content2.setText(departments);
-                        holder1.tv_follow_content3.setText(name);
+                        holder1.tv_follow_content.setText(edu_year+"  "+name);
+
                     }
 
                     break;
@@ -118,21 +117,16 @@ public class RecommendAdapter extends BaseRecycleViewAdapter {
                     String ht_province = item.getHt_province();
                     String ht_city = item.getHt_city();
                     String province = item.getProvince();
-                    if (map1.get(ht_province) != null) {
-                        holder1.tv_follow_content.setText(map1.get(ht_province));
-                    }
-                    if (map2.get(ht_city) != null) {
-                        holder1.tv_follow_content2.setText(map2.get(ht_city));
-                    }
-                    if (map3.get(province) != null) {
-                        holder1.tv_follow_content3.setText("居住于" + map3.get(province));
+
+                    if(map1.get(ht_province) != null&&map2.get(ht_city) != null){
+
+                        holder1.tv_follow_content.setText(map1.get(ht_province)+"  "+map2.get(ht_city));
                     }
 
                     break;
                 case 3:
-                    holder1.tv_follow_content.setText(item.getIndustry());
-                    holder1.tv_follow_content2.setText(item.getInterest());
-//                        holder1.tv_follow_content3.setText("");
+
+                    holder1.tv_follow_content.setText(item.getIndustry()+"  "+item.getIndustry());
                     break;
             }
 
@@ -193,8 +187,7 @@ public class RecommendAdapter extends BaseRecycleViewAdapter {
         public ImageView img_follow;
         public TextView tv_follow_name;
         public TextView tv_follow_content;
-        public TextView tv_follow_content2;
-        public TextView tv_follow_content3;
+
         public TextView tv_same;
         public TextView tv_add_follow;
 
@@ -203,8 +196,7 @@ public class RecommendAdapter extends BaseRecycleViewAdapter {
             img_follow = (ImageView) itemView.findViewById(R.id.img_follow);
             tv_follow_name = (TextView) itemView.findViewById(R.id.tv_follow_name);
             tv_follow_content = (TextView) itemView.findViewById(R.id.tv_follow_content);
-            tv_follow_content2 = (TextView) itemView.findViewById(R.id.tv_follow_content2);
-            tv_follow_content3 = (TextView) itemView.findViewById(R.id.tv_follow_content3);
+
             tv_same = (TextView) itemView.findViewById(R.id.tv_same);
             tv_add_follow = (TextView) itemView.findViewById(R.id.tv_add_follow);
         }

@@ -80,7 +80,12 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
                 break;
                 case 2:
-                    showFuwaDialog(context);
+                    if(dialog==null){
+                        showFuwaDialog(context);
+                    }else if(!dialog.isShowing()){
+                        setContent();
+                        dialog.show();
+                    }
                     break;
                 case 3:
                     showToast("出售成功",false);
@@ -118,6 +123,10 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     private List<String> gidList;
 
     private boolean first=true;  //第一次进页面存储福娃gid list
+    private TextView tv_number;
+    private TextView tv_fuwa_num;
+    private TextView tv_from;
+    private TextView tv_catch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -284,16 +293,12 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                     showFuwaDialog2(context, true);
             }
         });
-        TextView tv_number = (TextView) dialog.findViewById(R.id.tv_number);
-        TextView tv_fuwa_num = (TextView) dialog.findViewById(R.id.tv_fuwa_num);
-        TextView tv_from = (TextView) dialog.findViewById(R.id.tv_from);
-        TextView tv_catch = (TextView) dialog.findViewById(R.id.tv_catch);
-        fuwa_id = fuwaList.get(choosePosition).getId();
-        fuwa_gid = fuwaList.get(choosePosition).getIdList().get(0);
-        tv_number.setText(fuwa_id);
-        tv_fuwa_num.setText(fuwa_id+"号福娃");
-        tv_from.setText("来源于:"+fuwaDetailEntity.getData().getCreator());
-        tv_catch.setText("捕获于："+fuwaDetailEntity.getData().getPos());
+        tv_number = (TextView) dialog.findViewById(R.id.tv_number);
+        tv_fuwa_num = (TextView) dialog.findViewById(R.id.tv_fuwa_num);
+        tv_from = (TextView) dialog.findViewById(R.id.tv_from);
+        tv_catch = (TextView) dialog.findViewById(R.id.tv_catch);
+        setContent();
+
 
         ImageView img_cancle = (ImageView) dialog.findViewById(R.id.img_cancle);
         img_cancle.setOnClickListener(new View.OnClickListener() {
@@ -312,6 +317,17 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         dialogWindow.setAttributes(params);
 
         dialog.show();
+    }
+
+    private void setContent() {
+
+        fuwa_id = fuwaList.get(choosePosition).getId();
+        fuwa_gid = fuwaList.get(choosePosition).getIdList().get(0);
+        tv_number.setText(fuwa_id);
+        tv_fuwa_num.setText(fuwa_id+"号福娃");
+        tv_from.setText("来源于:"+fuwaDetailEntity.getData().getCreator());
+        tv_catch.setText("捕获于："+fuwaDetailEntity.getData().getPos());
+
     }
 
     //第二个个福娃dialog2
