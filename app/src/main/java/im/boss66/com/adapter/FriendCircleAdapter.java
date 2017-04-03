@@ -186,7 +186,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                                 config.circlePosition = circlePosition;
                                 config.commentPosition = commentPosition;
                                 config.commentType = CommentConfig.Type.REPLY;
-                                config.uid_to_name = commentItem.getUid_to_name();
+                                config.uid_to_name = commentItem.getUid_from_name();
                                 config.commentFromId = commentItem.getUid_from();
                                 config.pid = commentItem.getPid();
                                 config.isReply = true;

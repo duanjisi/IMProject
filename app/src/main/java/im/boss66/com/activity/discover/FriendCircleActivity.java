@@ -396,6 +396,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void updateEditTextBodyVisible(int visibility, CommentConfig commentConfig) {
         ll_edit_text.setVisibility(visibility);
+        String uidFromName = null;
         if (commentConfig != null) {
             Log.i("评论--键盘--", visibility + ":" + commentConfig.toString());
             feedId = commentConfig.feedid;
@@ -404,9 +405,16 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             isReply = commentConfig.isReply;
             commentFromId = commentConfig.commentFromId;
             commentPid = commentConfig.pid;
+            uidFromName = commentConfig.uid_to_name;
         }
         if (View.VISIBLE == visibility) {
             et_send.requestFocus();
+            if (isReply && !TextUtils.isEmpty(uidFromName)) {
+                et_send.setHint("回复" + uidFromName);
+            } else {
+                et_send.setHint("评论");
+            }
+
             //弹出键盘
             UIUtils.showSoftInput(et_send, this);
         } else if (View.GONE == visibility) {

@@ -36,6 +36,7 @@ import im.boss66.com.activity.AddFriendActivity;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.book.SelectContactsActivity;
 import im.boss66.com.activity.im.ChatActivity;
+import im.boss66.com.activity.treasure.MainTreasureActivity;
 import im.boss66.com.adapter.ConversationAdapter;
 import im.boss66.com.db.dao.ConversationHelper;
 import im.boss66.com.entity.BaseConversation;
@@ -51,6 +52,7 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
     private RelativeLayout rl_top_bar;
     private Handler handler = new Handler();
     private View view;
+    private TextView tv_game;
 
     @Nullable
     @Override
@@ -71,6 +73,7 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
 //    }
 
     private void initViews(View view) {
+        tv_game = (TextView) view.findViewById(R.id.tv_game);
         rl_top_bar = (RelativeLayout) view.findViewById(R.id.rl_top_bar);
         ivAdd = (ImageView) view.findViewById(R.id.iv_add);
         ivAdd.setOnClickListener(this);
@@ -80,6 +83,7 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new ItemClickListner());
         listView.setOnItemLongClickListener(new ItemLongClickListener());
+        tv_game.setOnClickListener(this);
         initDatas();
     }
 
@@ -102,6 +106,10 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
                         showPop(getActivity(), rl_top_bar);
                     }
                 }
+                break;
+            case R.id.tv_game:
+                Intent intent = new Intent(getActivity(), MainTreasureActivity.class);
+                startActivity(intent);
                 break;
         }
     }

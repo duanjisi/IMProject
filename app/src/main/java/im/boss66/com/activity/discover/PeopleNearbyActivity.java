@@ -196,6 +196,7 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
                     Bundle bundle = new Bundle();
                     bundle.putString("classType", "PeopleNearbyActivity");
                     bundle.putSerializable("people", item);
+                    bundle.putString("userid",item.getUser_id());
                     openActivity(PersonalNearbyDetailActivity.class, bundle);
                 }
             }
