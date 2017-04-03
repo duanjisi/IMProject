@@ -141,7 +141,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
         }
         holder.contentTv.setVisibility(TextUtils.isEmpty(content) ? View.GONE : View.VISIBLE);
 
-        if (curUserid.equals(entity.getUser_id())) {
+        if (curUserid.equals(entity.getFeed_uid())) {
             holder.deleteBtn.setVisibility(View.VISIBLE);
         } else {
             holder.deleteBtn.setVisibility(View.GONE);

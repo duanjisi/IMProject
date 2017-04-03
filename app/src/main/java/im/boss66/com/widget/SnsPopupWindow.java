@@ -27,8 +27,6 @@ public class SnsPopupWindow extends PopupWindow implements View.OnClickListener 
     private TextView digBtn;
     private TextView commentBtn;
 
-    // 实例化一个矩形
-    private Rect mRect = new Rect();
     // 坐标的位置（x、y）
     private final int[] mLocation = new int[2];
     // 弹窗子类项选中时的监听
@@ -90,10 +88,8 @@ public class SnsPopupWindow extends PopupWindow implements View.OnClickListener 
     public void showPopupWindow(View parent) {
         parent.getLocationOnScreen(mLocation);
         // 设置矩形的大小
-        //mRect.set(mLocation[0], mLocation[1], mLocation[0] + parent.getWidth(), mLocation[1] + parent.getHeight());
         digBtn.setText(mActionItems.get(0).mTitle);
         if (!this.isShowing()) {
-            Log.i("showPopupWindow:", "width:" + p_w + "height:" + p_h);
             showAtLocation(parent, Gravity.NO_GRAVITY, mLocation[0] - p_w
                     , mLocation[1] - ((p_h - parent.getHeight()) / 2));
         } else {

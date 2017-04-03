@@ -63,6 +63,9 @@ public class ClipImageActivity extends BaseActivity implements View.OnClickListe
         mOutput = clipOptions.getOutputPath();
         mInput = clipOptions.getInputPath();
         mMaxWidth = clipOptions.getMaxWidth();
+        if (mMaxWidth <= 0){
+            mMaxWidth = 640;
+        }
         mClipImageView.setAspect(clipOptions.getAspectX(), clipOptions.getAspectY());
         mClipImageView.setTip(clipOptions.getTip());
         mClipImageView.setMaxOutputWidth(mMaxWidth);
@@ -179,7 +182,7 @@ public class ClipImageActivity extends BaseActivity implements View.OnClickListe
             try {
                 fos = new FileOutputStream(mOutput);
                 Bitmap bitmap = createClippedBitmap();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 if (!bitmap.isRecycled()) {
                     bitmap.recycle();
                 }

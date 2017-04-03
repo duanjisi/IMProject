@@ -39,6 +39,7 @@ public class FuwaMessageActivity extends BaseActivity implements View.OnClickLis
     private FuwaMessageAdapter adapter;
     private List<FuwaMsgItem> list;
     private DbUtils mDbUtils;
+    private boolean isHas = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,13 @@ public class FuwaMessageActivity extends BaseActivity implements View.OnClickLis
         adapter.getDb(mDbUtils);
         lv_listview.setAdapter(adapter);
         getServerData();
+        if (!isHas && list != null && list.size() > 0) {
+            try {
+                mDbUtils.saveAll(list);
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+        }
         int num = adapter.getCount();
         if (num > 0) {
             lv_listview.setVisibility(View.VISIBLE);
@@ -101,6 +109,7 @@ public class FuwaMessageActivity extends BaseActivity implements View.OnClickLis
                                             list_.addAll(list);
                                         }
                                         adapter.onDataChange(list_);
+                                        isHas = true;
                                         mDbUtils.saveAll(list_);
                                     } catch (DbException e) {
                                         e.printStackTrace();
