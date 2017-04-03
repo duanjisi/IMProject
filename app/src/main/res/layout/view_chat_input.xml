@@ -51,8 +51,8 @@
             <TextView
                 android:layout_width="1px"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dip"
+                android:layout_marginTop="8dip"
                 android:background="@color/gray" />
 
             <ImageView
@@ -66,8 +66,8 @@
             <TextView
                 android:layout_width="1px"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dip"
+                android:layout_marginTop="8dip"
                 android:background="@color/gray" />
 
             <ImageView
@@ -81,8 +81,8 @@
             <TextView
                 android:layout_width="1px"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dip"
+                android:layout_marginTop="8dip"
                 android:background="@color/gray" />
         </LinearLayout>
 

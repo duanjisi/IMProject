@@ -113,7 +113,15 @@ public class EmoCateHelper extends ColumnHelper<EmoCate> {
         if (exist(c)) {
             c.moveToLast();
             do {
-                bos.add(getBean(c));
+//                bos.add(getBean(c));
+                EmoCate cate = getBean(c);
+                if (!cate.getCate_id().equals("1")) {
+                    if (cate.getCate_id().equals("8")) {
+                        bos.add(0, cate);
+                    } else {
+                        bos.add(cate);
+                    }
+                }
             } while (c.moveToPrevious());
         }
         c.close();

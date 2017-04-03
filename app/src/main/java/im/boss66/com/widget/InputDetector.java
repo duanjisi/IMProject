@@ -15,6 +15,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import im.boss66.com.Utils.UIUtils;
+
 /**
  * Created by dss886 on 15/9/26.
  */
@@ -200,9 +202,8 @@ public class InputDetector {
     private void showEmotionLayout() {
         int softInputHeight = getSupportSoftInputHeight();
         if (softInputHeight == 0) {
-//            int height = UIUtils.getScreenHeight(mActivity) / 2 - 50;
-//            Log.i("info", "=======================height:" + height);
-            softInputHeight = sp.getInt(SHARE_PREFERENCE_TAG, 400);
+            int height = UIUtils.getScreenHeight(mActivity) / 2 - 50;
+            softInputHeight = sp.getInt(SHARE_PREFERENCE_TAG, height);
         }
         hideSoftInput();
         mEmotionLayout.getLayoutParams().height = softInputHeight;

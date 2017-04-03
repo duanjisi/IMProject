@@ -1,18 +1,23 @@
 package im.boss66.com.fragment;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 
@@ -21,6 +26,9 @@ import java.util.List;
 import im.boss66.com.R;
 import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.activity.MainActivity;
+import im.boss66.com.activity.connection.AddPeopleActivity;
+import im.boss66.com.activity.connection.PeopleCenterActivity;
+import im.boss66.com.activity.connection.PersonalDataActivity;
 import im.boss66.com.activity.treasure.FuwaPackageActivity;
 import im.boss66.com.activity.connection.SchoolHometownActivity;
 import im.boss66.com.adapter.MyHometownAdapter;
@@ -58,9 +66,11 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                 case 1:
                     //如果有数据
                     if (school_list != null && school_list.size() > 0 && hometown_list != null && hometown_list.size() > 0) {
-                        flag=false;
+                        flag = false;
+
                         //只要有一样没数据
                     } else {
+                        flag = true;
                         if (peopleDataDialog == null) {
                             peopleDataDialog = new PeopleDataDialog(getActivity());
                             peopleDataDialog.show();
@@ -83,6 +93,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     };
     private List<MyInfo.ResultBean.SchoolListBean> school_list; //学校
     private List<MyInfo.ResultBean.HometownListBean> hometown_list; //家乡
+    private TextView tv_personal_center;
 
 
     @Nullable
@@ -156,12 +167,12 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
         switch (view.getId()) {
             case R.id.iv_add:
-                if (peopleConnectionPop == null) {
-                    showPop(rl_top_bar);
-                } else {
-                    if (!peopleConnectionPop.isShowing()) {
-                        showPop(rl_top_bar);
-                    }
+                if(popupWindow==null){
+
+                    showPop(rl_top_bar, flag);
+                }else if(!popupWindow.isShowing()){
+                    setContent(flag);
+                    popupWindow.showAsDropDown(rl_top_bar);
                 }
 
                 break;
@@ -169,24 +180,94 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    private void showPop(View parent) {
-        peopleConnectionPop = new PeopleConnectionPop(getActivity());
-        peopleConnectionPop.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        peopleConnectionPop.setAnimationStyle(R.style.PopupTitleBarAnim1);
-        peopleConnectionPop.showAsDropDown(parent);
+    private PopupWindow popupWindow;
+
+    private void showPop(View parent, final boolean flag) {
+//        peopleConnectionPop = new PeopleConnectionPop(getActivity(),flag);
+//        peopleConnectionPop.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//        peopleConnectionPop.setAnimationStyle(R.style.PopupTitleBarAnim1);
+//        peopleConnectionPop.showAsDropDown(parent);
+        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.pop_connection, null);
+        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        view.findViewById(R.id.tv_add_people).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getActivity(), AddPeopleActivity.class);
+                startActivity(intent);
+                popupWindow.dismiss();
+
+            }
+        });
+        view.findViewById(R.id.tv_personal_center).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag) {
+                    Intent intent = new Intent(getActivity(), PersonalDataActivity.class);
+                    startActivity(intent);
+                    popupWindow.dismiss();
+                    return;
+                }
+                Intent intent1 = new Intent(getActivity(), PeopleCenterActivity.class);
+                startActivity(intent1);
+                popupWindow.dismiss();
+
+            }
+        });
+        tv_personal_center = (TextView) view.findViewById(R.id.tv_personal_center);
+        setContent(flag);
+
+
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(0xb0000000));
+        popupWindow.getBackground().setAlpha(0);
+        popupWindow.showAsDropDown(parent);
+        view.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                int top = view.findViewById(R.id.pop_layout).getTop();
+                int Bottom = view.findViewById(R.id.pop_layout).getBottom();
+                int left = view.findViewById(R.id.pop_layout).getLeft();
+                int right = view.findViewById(R.id.pop_layout).getRight();
+                int y = (int) event.getY();
+                int x = (int) event.getX();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (y < top || y > Bottom) {
+                            popupWindow.dismiss();
+                        }
+                        if (x < left || x > right) {
+                            popupWindow.dismiss();
+                        }
+                        break;
+                }
+
+                return true;
+            }
+        });
+
+    }
+
+    private void setContent(boolean flag) {
+        if (flag) { //没数据
+            tv_personal_center.setText("完善资料");
+        }else {
+            tv_personal_center.setText("人脉中心");
+
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         //修改完后请求接口
-        if(SharedPreferencesMgr.getBoolean("setSuccess",false)){
-            SharedPreferencesMgr.setBoolean("setSuccess",false);
+        if (SharedPreferencesMgr.getBoolean("setSuccess", false)) {
+            SharedPreferencesMgr.setBoolean("setSuccess", false);
             initData();
         }
-
-        if(SharedPreferencesMgr.getBoolean("EditSchool2",false)){
-            SharedPreferencesMgr.setBoolean("EditSchool2",false);
+        if (SharedPreferencesMgr.getBoolean("EditSchool2", false)) {
+            SharedPreferencesMgr.setBoolean("EditSchool2", false);
             initData();
         }
 

@@ -132,7 +132,10 @@ public class EmoGroupHelper extends ColumnHelper<EmoGroup> {
         if (exist(c)) {
             c.moveToLast();
             do {
-                bos.add(getBean(c));
+                EmoGroup group = getBean(c);
+                if (!(group.getCate_id().equals("8") || group.equals("1"))) {
+                    bos.add(getBean(c));
+                }
             } while (c.moveToPrevious());
         }
         c.close();
@@ -203,7 +206,11 @@ public class EmoGroupHelper extends ColumnHelper<EmoGroup> {
      * 删除表内所有数据
      */
     public void deleteAllDatas() {
-        DBHelper.getInstance(mContext).delete(EmoGroupColumn.TABLE_NAME, EmoGroupColumn.USER_ID + " =?", new String[]{userId});
+//        DBHelper.getInstance(mContext).delete(EmoGroupColumn.TABLE_NAME, EmoGroupColumn.USER_ID + " =?", new String[]{userId});
+        String str = "not in(?,?)";
+        DBHelper.getInstance(mContext).delete(EmoGroupColumn.TABLE_NAME,
+                EmoGroupColumn.CATE_ID + " not in(?,?)" + " and " + EmoGroupColumn.USER_ID + " =?",
+                new String[]{"1", "8", userId});
     }
 
     @Override

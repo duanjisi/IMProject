@@ -46,6 +46,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -954,10 +955,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             object.put("senderID", userid);
             object.put("senderAvartar", account.getAvatar());
 
-            object.put("conversation", account.getUser_name());
             if (isGroupChat) {
+                object.put("conversation", title);
                 object.put("conversationAvartar", toAvatar);
             } else {
+                object.put("conversation", account.getUser_name());
                 object.put("conversationAvartar", account.getAvatar());
             }
             return Base64Utils.encodeBase64(object.toString());
@@ -1237,7 +1239,23 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
 
+    private boolean isImageFile(String url) {
+        Log.i("info", "===============url:" + url);
+        String end = FileUtils.getFileNameFromPath(url);
+        if (end.contains(".jpg") ||
+                end.contains(".png") ||
+                end.contains(".jpeg")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void uploadImageAudioFile(final String path, final boolean isImage, final int voiceTime) {
+        if (!isImageFile(path)) {
+            showToast("不支持该文件格式!", true);
+            return;
+        }
         String main = "";
         if (isImage) {
             main = HttpUrl.UPLOAD_IMAGE_URL;
@@ -1266,10 +1284,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //                    cancelLoadingDialog();
                     String path = parsePath(responseInfo.result);
                     Log.i("info", "=====path:" + path);
-                    if (isImage) {
-                        sendImageMessage(path);
-                    } else {
-                        sendAudioMessage(path, voiceTime);
+                    if (!TextUtils.isEmpty(path)) {
+                        if (isImage) {
+                            sendImageMessage(path);
+                        } else {
+                            sendAudioMessage(path, voiceTime);
+                        }
                     }
                 }
 
@@ -1353,10 +1373,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 cursor.moveToFirst();
                 final String picPath = cursor.getString(column_index);
-                uploadImageAudioFile(picPath, true, 0);
+                if (picPath != null && !picPath.equals("")) {
+                    uploadImageAudioFile(picPath, true, 0);
+                }
             }
         } else if (requestCode == Code.Request.TAKE_PHOTO) {
-            uploadImageAudioFile(photoPath, true, 0);
+            if (photoPath != null && !photoPath.equals("")) {
+                uploadImageAudioFile(photoPath, true, 0);
+            }
         } else if (requestCode == 0) {
             if (data != null) {
 //              int duration = data.getIntExtra("dur", 0);
@@ -1453,7 +1477,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
         ArrayList<EmoGroup> groups = (ArrayList<EmoGroup>) EmoGroupHelper.getInstance().queryByCateId(cateId);
         Log.i("info", "====cateId:" + cateId);
-        Log.i("info", "====groups.size():" + groups.size());
         FaceLoveFragment frag = FaceLoveFragment.newInstance();
         frag.setLoveCallback(this);
         fragments.add(frag);
@@ -1472,6 +1495,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             setBotBarSelector(0);
         }
     }
+
 
     private String editUrl = "";
     private String emoCode;
@@ -1530,23 +1554,41 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         llBottom.removeAllViews();
         imageViews = new ArrayList<ImageView>();
         int width = getWindowManager().getDefaultDisplay().getWidth() / 8;
+//        int height = UIUtils.dip2px(this, 50);
         int height = UIUtils.dip2px(this, 50);
+        int margin = 5;
         for (int i = 0; i <= groups.size() + 1; i++) {
             ImageView textView = new ImageView(this);
+            LinearLayout ll = new LinearLayout(this);
             if (i == groups.size() + 1) {
-                textView.setId(EMOTION_SETING_UP);
+//                textView.setId(EMOTION_SETING_UP);
+                ll.setId(EMOTION_SETING_UP);
             } else {
-                textView.setId(i);
+//                textView.setId(i);
+                ll.setId(i);
             }
-            textView.setTag("bottom");
-            textView.setOnClickListener(this);
+//            textView.setTag("bottom");
+//            textView.setOnClickListener(this);
 //            textView.setMinimumWidth(width);
+            ll.setTag("bottom");
+            ll.setOnClickListener(this);
             LinearLayout.LayoutParams params = new LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             params.width = width;
-            params.height = height - 32;
+//            params.height = height - 32;
+            params.height = LayoutParams.MATCH_PARENT;
             params.gravity = Gravity.CENTER;
-            textView.setLayoutParams(params);
+            params.topMargin = margin;
+            params.bottomMargin = margin;
+//            textView.setLayoutParams(params);
+            ll.setLayoutParams(params);
+
+            LinearLayout.LayoutParams params2 = new LayoutParams(
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            params2.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
+            params2.weight = 1;
+            params2.height = LayoutParams.MATCH_PARENT;
+            textView.setLayoutParams(params2);
             if (i == groups.size() + 1) {
 //                textView.setImageResource(R.drawable.hp_ch_setup);
                 textView.setImageResource(R.drawable.hp_sm_setup);
@@ -1555,27 +1597,32 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 textView.setImageResource(R.drawable.hp_o_love);
             } else {
                 EmoGroup group = groups.get(i - 1);
-                Log.i("info", "=====group:" + group);
                 Bitmap bitmap = getBitmap(group);
-                Log.i("info", "=====bitmap:" + bitmap);
                 if (bitmap != null) {
                     textView.setImageBitmap(bitmap);
                 }
             }
+            ll.addView(textView);
             imageViews.add(textView);
-            // �ָ���
             View view = new View(this);
             LinearLayout.LayoutParams layoutParams = new LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+//            layoutParams.width = 1;
+//            layoutParams.height = height - 32;
+//            layoutParams.gravity = Gravity.CENTER;
+
             layoutParams.width = 1;
-            layoutParams.height = height - 32;
+            layoutParams.height = LayoutParams.MATCH_PARENT;
             layoutParams.gravity = Gravity.CENTER;
+            layoutParams.topMargin = margin;
+            layoutParams.bottomMargin = margin;
             view.setLayoutParams(layoutParams);
             view.setBackgroundColor(resources.getColor(R.color.gray));
-            llBottom.addView(textView);
-            if (i != groups.size() - 1) {
-                llBottom.addView(view);
-            }
+//            llBottom.addView(textView);
+            llBottom.addView(ll);
+//            if (i != groups.size() - 1) {
+            llBottom.addView(view);
+//            }
         }
     }
 

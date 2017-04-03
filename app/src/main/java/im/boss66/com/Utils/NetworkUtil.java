@@ -227,9 +227,9 @@ public class NetworkUtil {
         return typeName;
     }
 
-    public static void senNotification(String toUid, String msgType, String message) {
+    public static void senNotification(String toUid, String msgType, String message, String ext) {
         if (toUid != null && !toUid.equals("")) {
-            NotificationRequest request = new NotificationRequest("sendnotification", toUid, msgType, message);
+            NotificationRequest request = new NotificationRequest("sendnotification", toUid, msgType, message, ext);
             request.send(new BaseDataModel.RequestCallback<String>() {
                 @Override
                 public void onSuccess(String pojo) {

@@ -20,10 +20,12 @@ public class NotificationRequest extends BaseDataModel<String> {
         String users = (String) mParams[0];
         String msgType = (String) mParams[1];
         String message = (String) mParams[2];
+        String ext = (String) mParams[3];
         Map<String, String> map = new HashMap<String, String>();
         map.put("users", users);
         map.put("msgtype", msgType);
         map.put("message", message);
+        map.put("ext", ext);
         return map;
     }
 

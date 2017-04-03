@@ -40,7 +40,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/hp_some_go"/>
-
         </RelativeLayout>
 
         <View
