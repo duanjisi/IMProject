@@ -87,17 +87,49 @@
         android:textSize="19.8sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tv_rank"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_store"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="39dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="11dp"
-        android:paddingRight="11dp"
-        android:text="福娃排行榜 >"
-        android:textColor="#d0976f"
-        android:textSize="16.5sp" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_apply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="11dp"
+            android:paddingRight="11dp"
+            android:text="申请福娃 >"
+            android:textColor="#d0976f"
+            android:textSize="16.5sp" />
+
+        <TextView
+            android:id="@+id/tv_rank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="46dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="11dp"
+            android:paddingRight="11dp"
+            android:text="福娃排行榜 >"
+            android:textColor="#d0976f"
+            android:textSize="16.5sp" />
+    </LinearLayout>
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_rank"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/btn_store"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="39dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:paddingLeft="11dp"-->
+    <!--android:paddingRight="11dp"-->
+    <!--android:text="福娃排行榜 >"-->
+    <!--android:textColor="#d0976f"-->
+    <!--android:textSize="16.5sp" />-->
 </RelativeLayout>

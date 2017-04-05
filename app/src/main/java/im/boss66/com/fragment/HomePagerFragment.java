@@ -36,6 +36,7 @@ import im.boss66.com.activity.AddFriendActivity;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.book.SelectContactsActivity;
 import im.boss66.com.activity.im.ChatActivity;
+import im.boss66.com.activity.treasure.MainTreasureActivity;
 import im.boss66.com.adapter.ConversationAdapter;
 import im.boss66.com.db.dao.ConversationHelper;
 import im.boss66.com.entity.BaseConversation;
@@ -48,6 +49,7 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
     private ConversationAdapter adapter;
     private PopupWindow popupWindow;
     private ImageView ivAdd;
+    private TextView tv_treasure;
     private RelativeLayout rl_top_bar;
     private Handler handler = new Handler();
     private View view;
@@ -73,7 +75,9 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
     private void initViews(View view) {
         rl_top_bar = (RelativeLayout) view.findViewById(R.id.rl_top_bar);
         ivAdd = (ImageView) view.findViewById(R.id.iv_add);
+        tv_treasure = (TextView) view.findViewById(R.id.tv_treasure);
         ivAdd.setOnClickListener(this);
+        tv_treasure.setOnClickListener(this);
 
         listView = (ListView) view.findViewById(R.id.listView);
         adapter = new ConversationAdapter(getActivity());
@@ -103,7 +107,18 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
                     }
                 }
                 break;
+            case R.id.tv_treasure:
+                openActivity(MainTreasureActivity.class, null);
+                break;
         }
+    }
+
+    private void openActivity(Class<?> clazz, Bundle bundle) {
+        Intent intent = new Intent(getActivity(), clazz);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        startActivity(intent);
     }
 
     @Override
