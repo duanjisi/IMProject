@@ -123,6 +123,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         showToast("支付成功", true);
+                        chooseFuwa =null;
                         dialog.dismiss();   //福娃详情dialog
 
                         if(dialog4==null){
@@ -361,6 +362,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             mBtnConfirm2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    chooseFuwa = null;
                     dialog2.dismiss();
                     datasChoose=new ArrayList<FuwaSellEntity.DataBean>();
                     //筛选福娃
@@ -427,6 +429,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
 
             case R.id.ll_right:     //价格
+                chooseFuwa = null;
                 tv_choose.setTextColor(0xffcccccc);
                 img_choose.setImageResource(R.drawable.fuwa_screen);
 
@@ -480,7 +483,10 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                             dialog.show();
 
                         }
+                    }else{
+                        showToast("请选择福娃",false);
                     }
+
                     time1=time2;
                 }else{
                     showToast("请不要点击太快",false);
