@@ -23,7 +23,8 @@
             android:paddingBottom="10dp"
             android:paddingLeft="16.5dp"
             android:paddingRight="16.5dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -49,8 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="22dp"
             android:layout_marginBottom="1dp"
-            android:layout_marginTop="1dp"
-            android:background="@color/background_color" />
+            android:background="@color/background_color"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/rl_qq_num"
@@ -61,7 +62,8 @@
             android:paddingBottom="10dp"
             android:paddingLeft="16.5dp"
             android:paddingRight="16.5dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -86,6 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
             android:background="@drawable/personal_bt_selector"
             android:paddingBottom="10dp"
             android:paddingLeft="16.5dp"
@@ -113,8 +116,8 @@
                 android:id="@+id/tv_phone_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/iv_phone"
                 android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/iv_phone"
                 android:textColor="@color/text_app_num_gray"
                 android:textSize="15.4sp" />
 
@@ -193,7 +196,8 @@
             android:paddingBottom="10dp"
             android:paddingLeft="16.5dp"
             android:paddingRight="16.5dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"

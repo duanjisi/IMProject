@@ -13,8 +13,9 @@
         android:id="@+id/iv_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_22"
         android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_22"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher" />
 
@@ -22,8 +23,8 @@
         android:id="@+id/tv_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/iv_head"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="17dp"
         android:text="H A I M E N G"
         android:textColor="@color/black"
@@ -33,8 +34,8 @@
         android:id="@+id/tv_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/tv_1"
+        android:layout_centerHorizontal="true"
         android:text="嗨  萌"
         android:textColor="@color/text_new_alerts_gray"
         android:textSize="20sp" />
@@ -42,10 +43,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/tv_2"
-        android:padding="@dimen/dp_14"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dp_22"
+        android:padding="@dimen/dp_14"
         android:text="@string/about_app_des"
         android:textColor="@color/text_new_alerts_gray"
         android:textSize="16sp" />
@@ -62,13 +63,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/about_app_bottom_1"
-            android:textSize="@dimen/sp_14"/>
+            android:textSize="@dimen/sp_14" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/about_app_bottom_2"
-            android:textSize="@dimen/sp_14"/>
+            android:textSize="@dimen/sp_14" />
 
     </LinearLayout>
 </RelativeLayout>
