@@ -249,7 +249,7 @@ public class HttpUrl {
     //支付系统通知购买成功
     public static final String SYSTEM_PAY_NOTICE = "http://wsimali.66boss.com:9090/msg/notice?";
     //名人详情页
-    public static final String FAMOUSPERSON_DETAIL =MAIN_URL+"web/hometown/celebrity";
+    public static final String FAMOUSPERSON_DETAIL = MAIN_URL + "web/hometown/celebrity";
     //学校社团详情页
     public static final String SCHOOL_CLUB_DETATIL = MAIN_URL + "web/school/league";
     //家乡动态详情页
@@ -257,5 +257,7 @@ public class HttpUrl {
     //学校动态详情页
     public static final String SCHOOL_NEWS_DETATIL = MAIN_URL + "/web/school/message";
 
+    //修改密码
+    public static final String CHANGE_USER_PW = MAIN_URL + "/ucenter/psw/index";
 
 }

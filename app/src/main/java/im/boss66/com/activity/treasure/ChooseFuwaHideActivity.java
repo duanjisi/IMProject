@@ -14,7 +14,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -50,12 +53,15 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
     private RecyclerView rv_content;
     private ChooseFuwaHideAdapter adapter;
     private List<FuwaEntity.Data> fuwaList;
-    private Dialog dialog;
+    private Dialog dialog, recommondDialog;
     private TextView tv_dia_name, tv_serial_dia_number;
     private int selectPos;
     private String selectId;
     private static File imgFile;
     private String userId, geohash, address;
+    private EditText et_recommond;
+    private FuwaEntity.Data fuwaItem;
+    private String recommond;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,10 +102,10 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
                             adapter.notifyItemChanged(selectPos);
                         }
                         selectPos = position;
-                        FuwaEntity.Data item = fuwaList.get(position);
-                        item.setSel(true);
+                        fuwaItem = fuwaList.get(position);
+                        fuwaItem.setSel(true);
                         adapter.notifyItemChanged(selectPos);
-                        showDialog(item);
+                        showRecommondDialog();
                     }
 
                     @Override
@@ -163,6 +169,9 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
     }
 
     private void showDialog(FuwaEntity.Data item) {
+        if (recommondDialog != null && recommondDialog.isShowing()) {
+            recommondDialog.dismiss();
+        }
         if (dialog == null) {
             View view = LayoutInflater.from(context).inflate(
                     R.layout.dialog_choose_fuwa, null);
@@ -210,6 +219,14 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
             case R.id.iv_close:
                 dialog.dismiss();
                 break;
+            case R.id.bt_sure:
+                recommond = et_recommond.getText().toString().trim();
+                showDialog(fuwaItem);
+                break;
+            case R.id.tv_jump_over:
+                recommond = "";
+                showDialog(fuwaItem);
+                break;
         }
     }
 
@@ -219,7 +236,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
 
     private void hideFuwaServer() {
         String url = HttpUrl.HIDE_MY_FUWA + userId + "&fuwagid=" +
-                selectId + "&pos=" + address + "&geohash=" + geohash;
+                selectId + "&pos=" + address + "&geohash=" + geohash + "&detail=" + recommond;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         RequestParams params = new RequestParams();
         params.addBodyParameter("file", imgFile);
@@ -247,6 +264,33 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
                 showToast(s, false);
             }
         });
+    }
+
+    private void showRecommondDialog() {
+        if (recommondDialog == null) {
+            View view = LayoutInflater.from(context).inflate(
+                    R.layout.dialog_hide_fuwa_recommend, null);
+            int sceenH = UIUtils.getScreenHeight(this);
+            et_recommond = (EditText) view.findViewById(R.id.et_recommond);
+            Button bt_sure = (Button) view.findViewById(R.id.bt_sure);
+            TextView tv_jump_over = (TextView) view.findViewById(R.id.tv_jump_over);
+            bt_sure.setOnClickListener(this);
+            tv_jump_over.setOnClickListener(this);
+            LinearLayout.LayoutParams etParam = (LinearLayout.LayoutParams) et_recommond.getLayoutParams();
+            etParam.height = sceenH / 7;
+            et_recommond.setLayoutParams(etParam);
+
+            recommondDialog = new Dialog(context, R.style.ActionSheetDialogStyle);
+            recommondDialog.setContentView(view);
+//            Window dialogWindow = dialog.getWindow();
+//            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+//            lp.width = (int) (sceenW * 0.8);
+//            lp.height = (int) (sceenH * 0.6);
+//            dialogWindow.setAttributes(lp);
+//            dialogWindow.setGravity(Gravity.CENTER);
+            recommondDialog.setCanceledOnTouchOutside(true);
+        }
+        recommondDialog.show();
     }
 
 }

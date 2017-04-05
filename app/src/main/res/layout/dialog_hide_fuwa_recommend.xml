@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_p"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_marginRight="@dimen/dp_4"
+        android:background="@drawable/shape_fuwa_edit"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dp_22"
+            android:paddingLeft="@dimen/dp_14"
+            android:paddingRight="@dimen/dp_14"
+            android:paddingTop="@dimen/dp_36">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_14"
+                android:layout_weight="1"
+                android:text="活动介绍"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <EditText
+                android:id="@+id/et_recommond"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:background="@drawable/bg_fuwa_gary_round"
+                android:gravity="top"
+                android:hint="福娃活动详情一句话介绍"
+                android:padding="@dimen/dp_14"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bt_sure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fl_cont"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/dp_22"
+            android:layout_marginRight="@dimen/dp_22"
+            android:layout_marginTop="@dimen/dp_22"
+            android:background="@drawable/shape_fuwa"
+            android:text="确认"
+            android:textColor="#E6CC97"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/tv_jump_over"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/dp_22"
+            android:layout_marginTop="@dimen/dp_18"
+            android:text="跳过，不填写"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+</RelativeLayout>
