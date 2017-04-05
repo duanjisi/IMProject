@@ -40,6 +40,7 @@ import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.discover.ImagePagerActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
+import im.boss66.com.activity.im.CopyTextActivity;
 import im.boss66.com.activity.player.VideoPlayerNewActivity;
 import im.boss66.com.db.dao.EmoHelper;
 import im.boss66.com.entity.EmoEntity;
@@ -289,6 +290,18 @@ public class MessageAdapter extends BaseAdapter {
                                    final MessageItem mItem, final View parent) {
         handleBaseMessage(holder, mItem);
         holder.tvMsg.setText(mItem.getMessage());
+        holder.tvMsg.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                CharSequence msg = ((TextView) v).getText();
+                if (msg != null && !msg.equals("")) {
+                    Intent intent = new Intent(mContext, CopyTextActivity.class);
+                    intent.putExtra("msg", msg);
+                    mContext.startActivity(intent);
+                }
+                return false;
+            }
+        });
     }
 
     private void handleEmotionMessage(final EmotionMessageHolder holder,
@@ -542,7 +555,7 @@ public class MessageAdapter extends BaseAdapter {
 //    }
 
     private String[] getSize(String url) {
-        Log.i("liwya",url);
+        Log.i("liwya", url);
         String str = url.substring(url.indexOf("-"), url.length());
         String size = str.substring(str.indexOf("-") + 1, str.indexOf("."));
         return size.split("x");

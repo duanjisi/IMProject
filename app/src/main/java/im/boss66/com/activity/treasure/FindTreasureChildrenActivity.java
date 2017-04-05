@@ -5,15 +5,23 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,6 +99,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         AMap.OnMapClickListener {
     private static final String TAG = FindTreasureChildrenActivity.class.getSimpleName();
     private LocalBroadcastReceiver mLocalBroadcastReceiver;
+    private PopupWindow popupWindow;
     private MapView mMapView = null;
     private AMap aMap;
     //    private MarkerOptions markerOptions;
@@ -126,9 +135,10 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     public static final String LOCATION_MARKER_FLAG = "mylocation";
     private WrappingSlidingDrawer slidingDrawer;
     private ImageView handler;
-    private TextView tv_location, tv_distanc_start, tv_distanc_target, tv_time, tv_num;
+    private TextView tv_location, tv_distanc_start, tv_distanc_target, tv_time, tv_num, tv_detail;
     private Button btn_catch;
     private PermissionListener permissionListener;
+    private RelativeLayout titleBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +167,9 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         tv_distanc_start = (TextView) findViewById(R.id.tv_distance_start);
         tv_distanc_target = (TextView) findViewById(R.id.tv_distance_target);
         tv_num = (TextView) findViewById(R.id.tv_num);
+        tv_detail = (TextView) findViewById(R.id.tv_detail);
         btn_catch = (Button) findViewById(R.id.btn_catch);
+        titleBar = (RelativeLayout) findViewById(R.id.rl_top_bar);
 
         slidingDrawer.setOnDrawerOpenListener(new SlidingDrawer.OnDrawerOpenListener() {
             @Override
@@ -176,6 +188,8 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         tvStore.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
         btn_catch.setOnClickListener(this);
+        tv_detail.setOnClickListener(this);
+        titleBar.setOnClickListener(this);
 
         mLocalBroadcastReceiver = new LocalBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
@@ -272,6 +286,19 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             case R.id.iv_reset_location:
                 backOlderPosition();
                 break;
+            case R.id.tv_detail:
+                if (popupWindow == null) {
+                    if (currentChild != null) {
+                        showDetail(context, titleBar, currentChild);
+                    }
+                } else {
+                    if (!popupWindow.isShowing()) {
+                        if (currentChild != null) {
+                            showDetail(context, titleBar, currentChild);
+                        }
+                    }
+                }
+                break;
             case R.id.btn_catch:
                 if (currentChild != null) {
                     Intent intent = new Intent(context, CatchFuwaActivity.class);
@@ -282,6 +309,34 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 }
                 break;
         }
+    }
+
+    private void showDetail(final Context context, View parent, ChildEntity entity) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        // 不同页面加载不同的popup布局
+        View view = inflater.inflate(R.layout.popwindow_item_detail, null);
+        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.FILL_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        popupWindow.setAnimationStyle(R.style.PopupTitleBarAnim);
+
+        TextView tvTips = (TextView) view.findViewById(R.id.tv_tips);
+        String detail = entity.getDetail();
+        if (TextUtils.isEmpty(detail)) {
+            tvTips.setText(detail);
+        }
+        int[] location = new int[2];
+        parent.getLocationOnScreen(location);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(getDrawableFromRes(R.drawable.bg_popwindow));
+        popupWindow.showAsDropDown(parent);
+    }
+
+    private Drawable getDrawableFromRes(int resId) {
+        Resources res = getResources();
+        Bitmap bmp = BitmapFactory.decodeResource(res, resId);
+        return new BitmapDrawable(bmp);
     }
 
     @Override

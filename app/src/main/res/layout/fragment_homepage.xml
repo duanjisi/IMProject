@@ -18,7 +18,7 @@
             android:gravity="center"
             android:paddingLeft="11dp"
             android:paddingRight="16dp"
-            android:text="游戏"
+            android:text="寻宝"
             android:textColor="@color/white"
             android:textSize="17.5sp" />
 
@@ -47,6 +47,5 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_top_bar"
         android:divider="@null"
-        android:dividerHeight="0dp">
-    </ListView>
+        android:dividerHeight="0dp"></ListView>
 </RelativeLayout>

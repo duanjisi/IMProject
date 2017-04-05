@@ -10,6 +10,7 @@ public class ChildEntity {
     private String geo = "";
     private String pos = "";
     private String id = "";
+    private String detail = "";
 
     public String getDistance() {
         return distance;
@@ -57,5 +58,13 @@ public class ChildEntity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 }
