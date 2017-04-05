@@ -178,8 +178,9 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     break;
                 case 2: //更新成功
                     showToast("保存成功", false);
+                    SharedPreferencesMgr.setBoolean("setSuccess", true); //用来onresume刷新数据，刷新后为false
+                    SharedPreferencesMgr.setBoolean("setSuccess2", true); //用
                     finish();
-                    SharedPreferencesMgr.setBoolean("setSuccess", true);
                     break;
                 case 3: //更新失败
                     showToast("更新失败", false);

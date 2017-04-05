@@ -8,12 +8,10 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -25,11 +23,10 @@ import java.util.List;
 
 import im.boss66.com.R;
 import im.boss66.com.Utils.SharedPreferencesMgr;
-import im.boss66.com.activity.MainActivity;
 import im.boss66.com.activity.connection.AddPeopleActivity;
 import im.boss66.com.activity.connection.PeopleCenterActivity;
 import im.boss66.com.activity.connection.PersonalDataActivity;
-import im.boss66.com.activity.treasure.FuwaPackageActivity;
+import im.boss66.com.activity.treasure.ApplyFuwaActivity;
 import im.boss66.com.activity.connection.SchoolHometownActivity;
 import im.boss66.com.adapter.MyHometownAdapter;
 import im.boss66.com.adapter.MySchoolAdapter;
@@ -49,14 +46,11 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private RecyclerView rcv_mySchool;
     private RecyclerView rcv_myHometown;
     private ImageView iv_add;
-    private PeopleConnectionPop peopleConnectionPop;
     private RelativeLayout rl_top_bar;
     private MySchoolAdapter mySchoolAdapter;
     private MyHometownAdapter myHometownAdapter;
     private MyInfo myInfo;
-    private boolean flag = true;
 
-    private PeopleDataDialog peopleDataDialog;
 
     private Handler handler = new Handler() {
         @Override
@@ -64,21 +58,11 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
-                    //如果有数据
-                    if (school_list != null && school_list.size() > 0 && hometown_list != null && hometown_list.size() > 0) {
-                        flag = false;
 
-                        //只要有一样没数据
-                    } else {
-                        flag = true;
-                        if (peopleDataDialog == null) {
-                            peopleDataDialog = new PeopleDataDialog(getActivity());
-                            peopleDataDialog.show();
-                        } else {
-                            if (!peopleDataDialog.isShowing()) {
-                                peopleDataDialog.show();
-                            }
-                        }
+                    if (school_list != null && school_list.size() > 0 && hometown_list != null && hometown_list.size() > 0) {
+                        SharedPreferencesMgr.setBoolean("setSuccess2",true);
+                    }else{
+                        SharedPreferencesMgr.setBoolean("setSuccess2",false);
                     }
 
                     mySchoolAdapter.setDatas(school_list);
@@ -106,6 +90,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
+        initData();
     }
 
 
@@ -167,11 +152,11 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
         switch (view.getId()) {
             case R.id.iv_add:
-                if(popupWindow==null){
+                if (popupWindow == null) {
 
-                    showPop(rl_top_bar, flag);
-                }else if(!popupWindow.isShowing()){
-                    setContent(flag);
+                    showPop(rl_top_bar);
+                } else if (!popupWindow.isShowing()) {
+                    setContent();
                     popupWindow.showAsDropDown(rl_top_bar);
                 }
 
@@ -182,11 +167,8 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
     private PopupWindow popupWindow;
 
-    private void showPop(View parent, final boolean flag) {
-//        peopleConnectionPop = new PeopleConnectionPop(getActivity(),flag);
-//        peopleConnectionPop.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-//        peopleConnectionPop.setAnimationStyle(R.style.PopupTitleBarAnim1);
-//        peopleConnectionPop.showAsDropDown(parent);
+    private void showPop(View parent) {
+
         final View view = LayoutInflater.from(getActivity()).inflate(R.layout.pop_connection, null);
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
         view.findViewById(R.id.tv_add_people).setOnClickListener(new View.OnClickListener() {
@@ -202,7 +184,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         view.findViewById(R.id.tv_personal_center).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (flag) {
+                if (!SharedPreferencesMgr.getBoolean("setSuccess2", false)) {
                     Intent intent = new Intent(getActivity(), PersonalDataActivity.class);
                     startActivity(intent);
                     popupWindow.dismiss();
@@ -215,7 +197,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
             }
         });
         tv_personal_center = (TextView) view.findViewById(R.id.tv_personal_center);
-        setContent(flag);
+        setContent();
 
 
         popupWindow.setOutsideTouchable(true);
@@ -249,12 +231,12 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
     }
 
-    private void setContent(boolean flag) {
-        if (flag) { //没数据
-            tv_personal_center.setText("完善资料");
-        }else {
-            tv_personal_center.setText("人脉中心");
+    private void setContent() {
 
+        if (SharedPreferencesMgr.getBoolean("setSuccess2", false)) {
+            tv_personal_center.setText("人脉中心");
+        } else {
+            tv_personal_center.setText("完善资料");
         }
     }
 
@@ -295,15 +277,15 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
 
     }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        //不能再onresume里，否则会在activity里就弹dialog
-        if (isVisibleToUser && flag) {
-            initData();
-        }
-
-    }
+//
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        //不能再onresume里，否则会在activity里就弹dialog
+//        if (isVisibleToUser && flag) {
+//            initData();
+//        }
+//
+//    }
 
 }

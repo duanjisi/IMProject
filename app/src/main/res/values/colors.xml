@@ -28,6 +28,7 @@
     <color name="hint_text_color">#888888</color>
     <color name="text_color_yellow">#e7d09a</color>
     <color name="text_color_yellow2">#d3000f</color>
+    <color name="text_color_yellow3">#D33A01</color>
     <color name="text_color_grey">#8d1800</color>
     <color name="line_red">#ff7f5b</color>
     <color name="line_red2">#cf241c</color>

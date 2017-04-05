@@ -503,6 +503,9 @@
         <activity android:name=".activity.connection.FamousPersonDetailActivity"></activity>
         <!--家乡和校园动态详情-->
         <activity android:name=".activity.connection.DynamicActivity"></activity>
+        <!--申请福娃-->
+        <activity android:name=".activity.treasure.ApplyFuwaActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
 
         <!--支付宝start-->
         <activity

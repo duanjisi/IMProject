@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:background="@color/text_color_yellow3"
+        android:id="@+id/rl_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        >
+
+        <TextView
+            android:id="@+id/tv_headlift_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/fuwa_return"
+            android:gravity="center"
+            android:paddingLeft="16dp"
+            android:paddingRight="11dp"
+            android:text="返回"
+            android:textColor="@color/text_color_yellow"
+            android:textSize="17.5sp" />
+
+        <TextView
+            android:text="申请福娃"
+            android:id="@+id/tv_headcenter_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/text_color_yellow"
+            android:textSize="17.5sp" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+
+            <RelativeLayout
+                android:id="@+id/rl_name"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="5dp"
+                >
+
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:id="@+id/tv_name"
+                    style="@style/personal_data_tv_style"
+                    android:text="联系人姓名*" />
+
+
+
+                <EditText
+                    android:maxLength="6"
+                    android:textCursorDrawable="@null"
+                    android:gravity="center_vertical|right"
+                    android:textColorHint="@color/bg_rectangle"
+                    android:hint="请填写"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/et_name"
+                    style="@style/personal_data_tv_style3"
+                    />
+
+                <View
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="22dp"
+                    android:background="@color/gray" />
+
+
+
+
+            </RelativeLayout>
+
+
+
+            <RelativeLayout
+                android:id="@+id/rl_time"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                >
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_time"
+                    style="@style/personal_data_tv_style"
+                    android:text="联系人手机*" />
+
+
+
+                <EditText
+                    android:textCursorDrawable="@null"
+                    android:gravity="center_vertical|right"
+                    android:inputType="number"
+                    android:maxLength="11"
+                    android:textColorHint="@color/bg_rectangle"
+                    android:hint="请填写"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/et_phone"
+                    style="@style/personal_data_tv_style3"
+                    />
+
+                <View
+                    style="@style/personal_data_view_style"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_location"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                >
+
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    style="@style/personal_data_tv_style"
+                    android:text="属于*" />
+
+
+                <TextView
+                    android:text="个人"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_location"
+                    android:layout_marginLeft="1dp"
+                    style="@style/personal_data_tv_style3"
+                    />
+
+                <ImageView
+                    android:id="@+id/img_person"
+                    android:src="@drawable/choose_btn"
+                    android:layout_marginRight="5dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/tv_location"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+
+                <TextView
+                    android:id="@+id/tv_company"
+                    android:layout_marginRight="30dp"
+                    android:layout_toLeftOf="@id/img_person"
+                    android:text="商家"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="1dp"
+                    style="@style/personal_data_tv_style3"
+                    />
+                <ImageView
+                    android:id="@+id/img_company"
+                    android:src="@drawable/choose_click_btn"
+                    android:layout_marginRight="5dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/tv_company"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+
+
+                <View
+                    style="@style/personal_data_view_style"
+                    android:layout_alignParentBottom="true" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_school"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                >
+                <TextView
+                    android:id="@+id/tv_ge"
+                    android:layout_marginRight="16dp"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="个"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_school"
+                    style="@style/personal_data_tv_style"
+                    android:text="个数*" />
+
+
+
+                <EditText
+                    android:textCursorDrawable="@null"
+                    android:gravity="center_vertical|right"
+                    android:inputType="number"
+                    android:maxLength="5"
+                    android:layout_toLeftOf="@id/tv_ge"
+                    android:textColorHint="@color/bg_rectangle"
+                    android:hint="请填写要申请的福娃个数"
+                    android:layout_marginRight="5dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/et_num"
+                    style="@style/personal_data_tv_style3"
+                    />
+
+
+                <View
+                    style="@style/personal_data_view_style"
+                    android:layout_alignParentBottom="true" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_hometown"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                >
+
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_hometown"
+                    style="@style/personal_data_tv_style"
+                    android:text="用途*" />
+
+
+                <View
+                    style="@style/personal_data_view_style"
+                    android:layout_alignParentBottom="true" />
+
+                <EditText
+                    android:textCursorDrawable="@null"
+                    android:gravity="center_vertical|right"
+                    android:maxLength="15"
+                    android:layout_centerVertical="true"
+                    android:hint="请填写申请福娃的用途"
+                    android:textColorHint="@color/bg_rectangle"
+                    android:id="@+id/et_use"
+                    style="@style/personal_data_tv_style3"
+                    android:layout_alignParentRight="true"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+
+                android:id="@+id/rl_where"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                >
+
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_job"
+                    style="@style/personal_data_tv_style"
+                    android:text="区域" />
+
+                <TextView
+                    android:text="请选择福娃藏在哪个地域"
+                    android:textColor="@color/bg_rectangle"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_where"
+                    style="@style/personal_data_tv_style3"
+                    />
+
+                <View
+                    style="@style/personal_data_view_style"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/tv_comfire"
+                android:layout_width="match_parent"
+                android:layout_height="51.7dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:layout_marginTop="33dp"
+                android:background="@drawable/shape_apply_fuwa"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="提交申请"
+                android:textColor="@color/text_color_yellow"
+                android:textSize="19.8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="16.5dp"
+                android:text="注：标注*号的选项为必填选项"
+                android:textColor="@color/text_color_gray_c"
+                android:textSize="16.5sp" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+
+</LinearLayout>
