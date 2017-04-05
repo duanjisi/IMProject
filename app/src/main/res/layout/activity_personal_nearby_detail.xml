@@ -18,7 +18,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:layout_marginTop="16.5dp"
                 android:background="@color/line_color_gray_d2" />
 
@@ -38,7 +38,7 @@
                     android:id="@+id/tv_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="11dp"
+                    android:layout_marginLeft="11px"
                     android:layout_toRightOf="@+id/iv_head"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
@@ -69,12 +69,12 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:background="@color/line_color_gray_d2" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:layout_marginTop="25dp"
                 android:background="@color/line_color_gray_d2" />
 
@@ -84,14 +84,17 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/personal_bt_selector"
                 android:drawableRight="@drawable/hp_some_go"
-                android:padding="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="@dimen/dp_10"
                 android:text="@string/set_up_notes_and_labels"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:background="@color/line_color_gray_d2" />
 
             <LinearLayout
@@ -105,8 +108,8 @@
                     android:id="@+id/ll_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="1dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1px"
+                    android:layout_marginTop="1px"
                     android:background="@drawable/personal_bt_selector"
                     android:paddingBottom="10dp"
                     android:paddingLeft="16.5dp"
@@ -140,7 +143,7 @@
                     android:id="@+id/rl_privacy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginBottom="1px"
                     android:background="@drawable/personal_bt_selector"
                     android:paddingBottom="10dp"
                     android:paddingLeft="16.5dp"
@@ -167,9 +170,60 @@
                         android:layout_weight="3"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:text="少时诵诗书所所多多多多多多"
                         android:textColor="@color/black"
                         android:textSize="17.5sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1px"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingRight="16.5dp">
+
+                    <TextView
+                        android:id="@+id/tv_p"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:paddingLeft="16.5dp"
+                        android:text="个人相册"
+                        android:textColor="@color/black"
+                        android:textSize="17.5sp" />
+
+                    <ImageView
+                        android:id="@+id/iv_photo_1"
+                        android:layout_width="0dp"
+                        android:layout_height="70.4dp"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:layout_weight="2"
+                        android:scaleType="centerCrop" />
+
+                    <ImageView
+                        android:id="@+id/iv_photo_2"
+                        android:layout_width="0dp"
+                        android:layout_height="70.4dp"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:layout_weight="2"
+                        android:scaleType="centerCrop" />
+
+                    <ImageView
+                        android:id="@+id/iv_photo_3"
+                        android:layout_width="0dp"
+                        android:layout_height="70.4dp"
+                        android:layout_weight="2"
+                        android:scaleType="centerCrop" />
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:src="@drawable/hp_some_go" />
 
                 </LinearLayout>
 
@@ -177,7 +231,7 @@
                     android:id="@+id/rl_general"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginBottom="1px"
                     android:background="@drawable/personal_bt_selector"
                     android:paddingBottom="10dp"
                     android:paddingLeft="16.5dp"
@@ -201,7 +255,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="16.5dp"
                         android:layout_weight="3"
-                        android:text="来源于~"
                         android:textColor="@color/black"
                         android:textSize="17.5sp" />
 

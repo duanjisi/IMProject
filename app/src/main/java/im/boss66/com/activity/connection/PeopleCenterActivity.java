@@ -127,31 +127,31 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
     private ImageView img_noschool;
 
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 1:
                     String district_str = userInfoEntity.getResult().getDistrict_str();
                     String school = userInfoEntity.getResult().getSchool();
                     String user_name = userInfoEntity.getResult().getUser_name();
 
-                    if(TextUtils.isEmpty(district_str)&&TextUtils.isEmpty(school)){
+                    if (TextUtils.isEmpty(district_str) && TextUtils.isEmpty(school)) {
                         //只显示名字
-                       img_noschool.setVisibility(View.VISIBLE);
+                        img_noschool.setVisibility(View.VISIBLE);
                         tv_name2.setVisibility(View.VISIBLE);
                         tv_name2.setText(user_name);
 
-                    }else {
+                    } else {
                         //有学校家乡
-                        tv_address.setText(district_str+"  "+school);
+                        tv_address.setText(district_str + "  " + school);
                         img_hasschool.setVisibility(View.VISIBLE);
                         tv_name.setVisibility(View.VISIBLE);
                         tv_name.setText(user_name);
                     }
 
-                    if(other){ //别人的页面
+                    if (other) { //别人的页面
                         rl_edit_info.setClickable(false);
                         img_noschool.setVisibility(View.GONE);
                         img_hasschool.setVisibility(View.GONE);
@@ -269,8 +269,8 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         headParam.height = sceenW / 3 * 2;
         rl_head.setLayoutParams(headParam);
         RelativeLayout.LayoutParams headIconParam = (RelativeLayout.LayoutParams) user_head.getLayoutParams();
-        headIconParam.height = sceenW / 10*3;
-        headIconParam.width = sceenW / 10*3;
+        headIconParam.height = sceenW / 10 * 3;
+        headIconParam.width = sceenW / 10 * 3;
         user_head.setLayoutParams(headIconParam);
 
         RelativeLayout.LayoutParams headMsgParam = (RelativeLayout.LayoutParams) rl_msg.getLayoutParams();
@@ -597,7 +597,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                     try {
                         JSONObject obj = new JSONObject(result);
                         if (obj != null) {
-                            if(obj.getInt("status")==401){
+                            if (obj.getInt("status") == 401) {
                                 Intent intent = new Intent();
                                 intent.setAction(Constants.ACTION_LOGOUT_RESETING);
                                 App.getInstance().sendBroadcast(intent);
@@ -824,6 +824,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
     @Override
     public void updateEditTextBodyVisible(int visibility, CommentConfig commentConfig) {
         ll_edit_text.setVisibility(visibility);
+        String uidFromName = "";
         if (commentConfig != null) {
             feedId = commentConfig.feedid;
             curPostion = commentConfig.circlePosition;
@@ -831,8 +832,14 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
             isReply = commentConfig.isReply;
             commentFromId = commentConfig.commentFromId;
             commentPid = commentConfig.pid;
+            uidFromName = commentConfig.uid_to_name;
         }
         if (View.VISIBLE == visibility) {
+            if (isReply && !TextUtils.isEmpty(uidFromName)) {
+                et_send.setHint("回复" + uidFromName);
+            } else {
+                et_send.setHint("评论");
+            }
             et_send.requestFocus();
             //弹出键盘
             UIUtils.showSoftInput(et_send, this);

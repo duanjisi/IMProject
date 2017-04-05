@@ -11,14 +11,14 @@
         android:background="@color/top_bar_color">
 
         <TextView
-            android:id="@+id/tv_treasure"
+            android:id="@+id/tv_game"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:paddingLeft="16dp"
+            android:paddingLeft="11dp"
             android:paddingRight="16dp"
-            android:text="寻宝"
+            android:text="游戏"
             android:textColor="@color/white"
             android:textSize="17.5sp" />
 
@@ -47,5 +47,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_top_bar"
         android:divider="@null"
-        android:dividerHeight="0dp"></ListView>
+        android:dividerHeight="0dp">
+    </ListView>
 </RelativeLayout>

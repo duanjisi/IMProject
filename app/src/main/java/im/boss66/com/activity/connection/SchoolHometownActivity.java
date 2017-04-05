@@ -478,7 +478,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                     try {
                         JSONObject obj = new JSONObject(result);
                         if (obj != null) {
-                            if(obj.getInt("status")==401){
+                            if (obj.getInt("status") == 401) {
                                 Intent intent = new Intent();
                                 intent.setAction(Constants.ACTION_LOGOUT_RESETING);
                                 App.getInstance().sendBroadcast(intent);
@@ -708,7 +708,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             if (uri.getScheme().equals("content")) {
                 Cursor cursor = getContentResolver().query(uri, null,
                         null, null, null);
-                if (cursor != null){
+                if (cursor != null) {
                     if (cursor.moveToNext()) {
                         int columnIndex = cursor
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
@@ -999,6 +999,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     @Override
     public void updateEditTextBodyVisible(int visibility, CommentConfig commentConfig) {
         ll_edit_text.setVisibility(visibility);
+        String uidFromName = "";
         if (commentConfig != null) {
             Log.i("评论--键盘--", visibility + ":" + commentConfig.toString());
             feedId = commentConfig.feedid;
@@ -1007,8 +1008,14 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             isReply = commentConfig.isReply;
             commentFromId = commentConfig.commentFromId;
             commentPid = commentConfig.pid;
+            uidFromName = commentConfig.uid_to_name;
         }
         if (View.VISIBLE == visibility) {
+            if (isReply && !TextUtils.isEmpty(uidFromName)) {
+                et_send.setHint("回复" + uidFromName);
+            } else {
+                et_send.setHint("评论");
+            }
             et_send.requestFocus();
             //弹出键盘
             UIUtils.showSoftInput(et_send, this);

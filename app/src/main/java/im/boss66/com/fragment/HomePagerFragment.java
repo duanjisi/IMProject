@@ -49,10 +49,10 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
     private ConversationAdapter adapter;
     private PopupWindow popupWindow;
     private ImageView ivAdd;
-    private TextView tv_treasure;
     private RelativeLayout rl_top_bar;
     private Handler handler = new Handler();
     private View view;
+    private TextView tv_game;
 
     @Nullable
     @Override
@@ -73,17 +73,17 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
 //    }
 
     private void initViews(View view) {
+        tv_game = (TextView) view.findViewById(R.id.tv_game);
         rl_top_bar = (RelativeLayout) view.findViewById(R.id.rl_top_bar);
         ivAdd = (ImageView) view.findViewById(R.id.iv_add);
-        tv_treasure = (TextView) view.findViewById(R.id.tv_treasure);
         ivAdd.setOnClickListener(this);
-        tv_treasure.setOnClickListener(this);
 
         listView = (ListView) view.findViewById(R.id.listView);
         adapter = new ConversationAdapter(getActivity());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new ItemClickListner());
         listView.setOnItemLongClickListener(new ItemLongClickListener());
+        tv_game.setOnClickListener(this);
         initDatas();
     }
 
@@ -107,18 +107,11 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
                     }
                 }
                 break;
-            case R.id.tv_treasure:
-                openActivity(MainTreasureActivity.class, null);
+            case R.id.tv_game:
+                Intent intent = new Intent(getActivity(), MainTreasureActivity.class);
+                startActivity(intent);
                 break;
         }
-    }
-
-    private void openActivity(Class<?> clazz, Bundle bundle) {
-        Intent intent = new Intent(getActivity(), clazz);
-        if (bundle != null) {
-            intent.putExtras(bundle);
-        }
-        startActivity(intent);
     }
 
     @Override

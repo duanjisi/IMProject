@@ -101,6 +101,7 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
     private int cameraType;//1:相机 2：相册 3：视频
     private int SEND_TYPE_PHOTO_TX = 101;
     private boolean isAddNew = false;
+    private String requestUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +136,7 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
         View header = LayoutInflater.from(this).inflate(R.layout.item_friend_circle_head,
                 (ViewGroup) findViewById(android.R.id.content), false);
         ImageView iv_today = (ImageView) header.findViewById(R.id.iv_today);
+        TextView tv_name = (TextView) header.findViewById(R.id.tv_name);
         ll_personal = (LinearLayout) header.findViewById(R.id.ll_personal);
         tv_signature = (TextView) header.findViewById(R.id.tv_signature);
         iv_bg = (ImageView) header.findViewById(R.id.iv_bg);
@@ -149,16 +151,8 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                 cover = mPreferences.getString("albumCover", "");
             }
         }
-        if (!TextUtils.isEmpty(cover)) {
-            imageLoader.displayImage(cover, iv_bg,
-                    ImageLoaderUtils.getDisplayImageOptions());
-        }
-
         String avatar = App.getInstance().getAccount().getAvatar();
-        if (!TextUtils.isEmpty(avatar)) {
-            imageLoader.displayImage(avatar, iv_head,
-                    ImageLoaderUtils.getDisplayImageOptions());
-        }
+
         ll_personal.setVisibility(View.VISIBLE);
         tv_signature.setVisibility(View.VISIBLE);
 
@@ -226,8 +220,10 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
         iv_bg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isChangeIcon = true;
-                showActionSheet(0);
+                if (TextUtils.isEmpty(requestUserId)) {
+                    isChangeIcon = true;
+                    showActionSheet(0);
+                }
             }
         });
         iv_today.setOnClickListener(this);
@@ -238,6 +234,27 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
             }
         });
         rv_friend.setPullRefreshEnabled(false);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            requestUserId = bundle.getString("user_id");
+            String per_name = bundle.getString("person_name");
+            avatar = bundle.getString("person_head");
+            cover = bundle.getString("person_covpic");
+            String per_sign = bundle.getString("person_signature");
+            tv_name.setText("" + per_name);
+            tv_signature.setText("" + per_sign);
+        }
+        if (!TextUtils.isEmpty(requestUserId)) {
+            iv_set.setVisibility(View.GONE);
+        }
+        if (!TextUtils.isEmpty(cover)) {
+            imageLoader.displayImage(cover, iv_bg,
+                    ImageLoaderUtils.getDisplayImageOptions());
+        }
+        if (!TextUtils.isEmpty(avatar)) {
+            imageLoader.displayImage(avatar, iv_head,
+                    ImageLoaderUtils.getDisplayImageOptions());
+        }
         getServerGallery();
     }
 
@@ -381,6 +398,9 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
             url = url + "?page=" + 0 + "&size=" + allsize;
         } else {
             url = url + "?page=" + page + "&size=" + 20;
+        }
+        if (!TextUtils.isEmpty(requestUserId)) {
+            url = url + "&user_id=" + requestUserId;
         }
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override

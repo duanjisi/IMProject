@@ -141,7 +141,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
         }
         holder.contentTv.setVisibility(TextUtils.isEmpty(content) ? View.GONE : View.VISIBLE);
 
-        if (curUserid.equals(entity.getUser_id())) {
+        if (curUserid.equals(entity.getFeed_uid())) {
             holder.deleteBtn.setVisibility(View.VISIBLE);
         } else {
             holder.deleteBtn.setVisibility(View.GONE);
@@ -186,7 +186,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                                 config.circlePosition = circlePosition;
                                 config.commentPosition = commentPosition;
                                 config.commentType = CommentConfig.Type.REPLY;
-                                config.uid_to_name = commentItem.getUid_to_name();
+                                config.uid_to_name = commentItem.getUid_from_name();
                                 config.commentFromId = commentItem.getUid_from();
                                 config.pid = commentItem.getPid();
                                 config.isReply = true;

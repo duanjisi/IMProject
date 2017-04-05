@@ -121,7 +121,7 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
                     Intent intent = new Intent(context, PeopleCenterActivity.class);
-                    intent.putExtra("other",true);
+                    intent.putExtra("other", true);
                     intent.putExtra("name", entity.getUser_name());
                     intent.putExtra("address", entity.getFeed_to());
                     intent.putExtra("uid", entity.getUser_id());
@@ -195,7 +195,7 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
                                 config.circlePosition = circlePosition;
                                 config.commentPosition = commentPosition;
                                 config.commentType = CommentConfig.Type.REPLY;
-                                config.uid_to_name = commentItem.getUid_to_name();
+                                config.uid_to_name = commentItem.getUid_from_name();
                                 config.commentFromId = commentItem.getUid_from();
                                 config.pid = commentItem.getPid();
                                 config.commentId = commentItem.getComm_id();

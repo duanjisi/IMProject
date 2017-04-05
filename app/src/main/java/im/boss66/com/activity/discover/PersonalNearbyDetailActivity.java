@@ -24,6 +24,7 @@ import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.ChatActivity;
 import im.boss66.com.activity.im.VerifyApplyActivity;
+import im.boss66.com.activity.personage.PersonalPhotoAlbumActivity;
 import im.boss66.com.db.dao.ConversationHelper;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.FriendState;
@@ -46,12 +47,16 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
     private ImageView iv_set, iv_head;
     private Button bt_greet, bt_complaint;
     private ImageLoader imageLoader;
-    private LinearLayout ll_area, rl_privacy, rl_general;
+    private LinearLayout ll_area, rl_privacy, rl_general, ll_photo;
     private FriendState friendState;
     private PersonEntity person;
     private String classType;
     private String userid = "";
     private String head_icon;
+    private ImageView iv_photo_1, iv_photo_2, iv_photo_3;
+    private ImageView[] imgPhotos;
+    private boolean isLoad = false;
+    private String person_name, person_head, person_covpic, person_signature;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +76,8 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 userid = bundle.getString("userid", "");
                 classType = bundle.getString("classType");
                 if (!TextUtils.isEmpty(classType)) {
-                    if ("SharkItOffActivity".equals(classType)) {
-                        tv_source.setText("来自摇一摇");
-                    } else if ("PeopleNearbyActivity".equals(classType)) {
-                        tv_source.setText("附近的人");
-                    } else {
-                        requestFriendShip();
-                    }
+                    requestPersonInform();
+                    requestFriendShip();
 //                    else if ("CaptureActivity".equals(classType)) {
 ////                        tv_source.setText("通过扫一扫添加");
 //                        requestPersonInform();
@@ -108,6 +108,10 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
     }
 
     private void initView() {
+        ll_photo = (LinearLayout) findViewById(R.id.ll_photo);
+        iv_photo_1 = (ImageView) findViewById(R.id.iv_photo_1);
+        iv_photo_2 = (ImageView) findViewById(R.id.iv_photo_2);
+        iv_photo_3 = (ImageView) findViewById(R.id.iv_photo_3);
         rl_privacy = (LinearLayout) findViewById(R.id.rl_privacy);
         rl_general = (LinearLayout) findViewById(R.id.rl_general);
         ll_area = (LinearLayout) findViewById(R.id.ll_area);
@@ -125,7 +129,8 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
         iv_head = (ImageView) findViewById(R.id.iv_head);
         bt_greet = (Button) findViewById(R.id.bt_greet);
         bt_complaint = (Button) findViewById(R.id.bt_complaint);
-
+        imgPhotos = new ImageView[]{iv_photo_1, iv_photo_2, iv_photo_3};
+        ll_photo.setOnClickListener(this);
         tv_back.setOnClickListener(this);
         iv_set.setOnClickListener(this);
 
@@ -156,7 +161,13 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
 
     private void initDatas(FriendState state) {
         this.friendState = state;
-        requestPersonInform();
+        if (state.getIs_friend().equals("1")) {
+            iv_set.setImageResource(R.drawable.hp_chat_more);
+            iv_set.setVisibility(View.VISIBLE);
+            bt_greet.setText("发消息");
+        } else {
+            bt_greet.setText("添加到通讯录");
+        }
     }
 
     private void requestPersonInform() {
@@ -180,22 +191,20 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
 
     private void bindDatas(PersonEntity entity) {
         if (entity != null) {
+            isLoad = true;
             this.person = entity;
-            tv_name.setText(entity.getUser_name());
+            person_name = entity.getUser_name();
+            person_head = entity.getAvatar();
+            person_covpic = entity.getCover_pic();
+            person_signature = entity.getSignature();
+            tv_name.setText("" + person_name);
             tv_sex.setText(entity.getSex());
             UIUtils.hindView(tv_distance);
             UIUtils.hindView(bt_complaint);
             UIUtils.showView(rl_privacy);
             tv_area.setText(entity.getDistrict_str());
-            tv_personalized_signature.setText(entity.getSignature());
+            tv_personalized_signature.setText("" + person_signature);
             UIUtils.showView(bt_greet);
-            if (friendState.getIs_friend().equals("1")) {
-                iv_set.setImageResource(R.drawable.hp_chat_more);
-                iv_set.setVisibility(View.VISIBLE);
-                bt_greet.setText("发消息");
-            } else {
-                bt_greet.setText("添加到通讯录");
-            }
 
             if ("CaptureActivity".equals(classType)) {
                 tv_source.setText("通过扫一扫添加");
@@ -205,6 +214,10 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 tv_source.setText("通讯录");
             } else if ("NewFriendsActivity".equals(classType)) {
                 tv_source.setText("新的朋友");
+            } else if ("SharkItOffActivity".equals(classType)) {
+                tv_source.setText("来自摇一摇");
+            } else if ("PeopleNearbyActivity".equals(classType)) {
+                tv_source.setText("附近的人");
             } else {
                 tv_source.setText("来源于~");
             }
@@ -254,6 +267,17 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 }
                 break;
             case R.id.bt_complaint://投诉
+                break;
+            case R.id.ll_photo:
+                if (isLoad) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("person_name", person_name);
+                    bundle.putString("person_head", person_head);
+                    bundle.putString("person_covpic", person_covpic);
+                    bundle.putString("person_signature", person_signature);
+                    bundle.putString("user_id", userid);
+                    openActivity(PersonalPhotoAlbumActivity.class, bundle);
+                }
                 break;
         }
     }
