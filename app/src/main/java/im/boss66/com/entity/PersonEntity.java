@@ -1,5 +1,7 @@
 package im.boss66.com.entity;
 
+import java.util.List;
+
 /**
  * Created by Johnny on 2017/2/21.
  * 个人用户信息
@@ -14,6 +16,8 @@ public class PersonEntity {
     private String cover_pic = "";
     private String district = "";
     private String district_str = "";
+
+    private List<String> photos;
 
     public String getUser_id() {
         return user_id;
@@ -85,5 +89,13 @@ public class PersonEntity {
 
     public void setDistrict_str(String district_str) {
         this.district_str = district_str;
+    }
+
+    public List<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<String> photos) {
+        this.photos = photos;
     }
 }

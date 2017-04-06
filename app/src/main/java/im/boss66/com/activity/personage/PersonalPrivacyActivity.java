@@ -8,16 +8,18 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
 
 /**
- *个人隐私设置
+ * 个人隐私设置
  */
-public class PersonalPrivacyActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener{
+public class PersonalPrivacyActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private TextView tv_back,tv_title;
-    private ToggleButton sb_add_friend_verify,sb_recommended_friends,sb_allow_stranger,sb_only_show_friends;
-    private RelativeLayout rl_add_my_type,rl_address_book_list,rl_donot_let_him_see,rl_donot_see_him;
+    private TextView tv_back, tv_title;
+    private ToggleButton sb_add_friend_verify, sb_recommended_friends, sb_allow_stranger, sb_only_show_friends;
+    private RelativeLayout rl_add_my_type, rl_address_book_list, rl_donot_let_him_see, rl_donot_see_him;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,11 +48,20 @@ public class PersonalPrivacyActivity extends BaseActivity implements View.OnClic
         sb_recommended_friends.setOnCheckedChangeListener(this);
         sb_allow_stranger.setOnCheckedChangeListener(this);
         sb_only_show_friends.setOnCheckedChangeListener(this);
+
+        boolean add_friend = PreferenceUtils.getBoolean(context, "set_add_friend_verify", true);
+        sb_add_friend_verify.setChecked(add_friend);
+        boolean recommended_friends = PreferenceUtils.getBoolean(context, "set_recommended_friends", true);
+        sb_recommended_friends.setChecked(add_friend);
+        boolean allow_stranger = PreferenceUtils.getBoolean(context, "set_allow_stranger", true);
+        sb_allow_stranger.setChecked(add_friend);
+        boolean only_show_friends = PreferenceUtils.getBoolean(context, "set_only_show_friends", true);
+        sb_only_show_friends.setChecked(add_friend);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_back:
                 finish();
                 break;
@@ -70,16 +81,16 @@ public class PersonalPrivacyActivity extends BaseActivity implements View.OnClic
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
             case R.id.sb_add_friend_verify://加我为朋友时需要验证
-
+                PreferenceUtils.putBoolean(context, "set_add_friend_verify", b);
                 break;
             case R.id.sb_recommended_friends://向我推荐通讯录朋友
-
+                PreferenceUtils.putBoolean(context, "set_recommended_friends", b);
                 break;
             case R.id.sb_allow_stranger://允许陌生人查看十条朋友圈
-
+                PreferenceUtils.putBoolean(context, "set_allow_stranger", b);
                 break;
             case R.id.sb_only_show_friends://仅向朋友展示最近半年的朋友圈
-
+                PreferenceUtils.putBoolean(context, "set_only_show_friends", b);
                 break;
         }
     }

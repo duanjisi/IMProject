@@ -7,6 +7,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 
@@ -15,8 +16,9 @@ import im.boss66.com.activity.base.BaseActivity;
  */
 public class PersonalSetPhotosVideoActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView tv_back,tv_title;
-    private ToggleButton tb_photo,tb_video;
+    private TextView tv_back, tv_title;
+    private ToggleButton tb_photo, tb_video;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,21 +35,25 @@ public class PersonalSetPhotosVideoActivity extends BaseActivity implements View
         tv_back.setOnClickListener(this);
         tb_photo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                ToastUtil.showShort(PersonalSetPhotosVideoActivity.this,"photo"+b);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                PreferenceUtils.putBoolean(PersonalSetPhotosVideoActivity.this, "phone_save_photo", isChecked);
             }
         });
         tb_video.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                ToastUtil.showShort(PersonalSetPhotosVideoActivity.this,"video"+b);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                PreferenceUtils.putBoolean(PersonalSetPhotosVideoActivity.this, "phone_save_video", isChecked);
             }
         });
+        boolean phone_save_photo = PreferenceUtils.getBoolean(context, "phone_save_photo", true);
+        tb_photo.setChecked(phone_save_photo);
+        boolean phone_save_video = PreferenceUtils.getBoolean(context, "phone_save_video", true);
+        tb_video.setChecked(phone_save_video);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_back:
                 finish();
                 break;

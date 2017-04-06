@@ -102,6 +102,7 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
     private int SEND_TYPE_PHOTO_TX = 101;
     private boolean isAddNew = false;
     private String requestUserId;
+    private boolean isSelt = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +124,7 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
         tv_back = (TextView) findViewById(R.id.tv_back);
         iv_set = (ImageView) findViewById(R.id.iv_set);
         rv_friend = (LRecyclerView) findViewById(R.id.rv_friend);
+        tv_title.setText("相册");
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         //设置为垂直布局，这也是默认的
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
@@ -236,13 +238,21 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
         rv_friend.setPullRefreshEnabled(false);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            requestUserId = bundle.getString("user_id");
-            String per_name = bundle.getString("person_name");
-            avatar = bundle.getString("person_head");
-            cover = bundle.getString("person_covpic");
-            String per_sign = bundle.getString("person_signature");
-            tv_name.setText("" + per_name);
-            tv_signature.setText("" + per_sign);
+            isSelt = bundle.getBoolean("isSelt");
+            if (isSelt) {
+                ll_personal.setVisibility(View.VISIBLE);
+            } else {
+                requestUserId = bundle.getString("user_id");
+                String per_name = bundle.getString("person_name");
+                avatar = bundle.getString("person_head");
+                cover = bundle.getString("person_covpic");
+                String per_sign = bundle.getString("person_signature");
+                tv_name.setText("" + per_name);
+                if (!TextUtils.isEmpty(per_sign)) {
+                    tv_signature.setText("" + per_sign);
+                }
+                ll_personal.setVisibility(View.GONE);
+            }
         }
         if (!TextUtils.isEmpty(requestUserId)) {
             iv_set.setVisibility(View.GONE);
@@ -255,6 +265,7 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
             imageLoader.displayImage(avatar, iv_head,
                     ImageLoaderUtils.getDisplayImageOptions());
         }
+        adapter.getIsSelt(isSelt);
         getServerGallery();
     }
 

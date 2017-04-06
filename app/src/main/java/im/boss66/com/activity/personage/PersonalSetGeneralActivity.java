@@ -2,11 +2,13 @@ package im.boss66.com.activity.personage;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.EmojiMyActivity;
 import im.boss66.com.widget.ActionSheet;
@@ -14,7 +16,7 @@ import im.boss66.com.widget.ActionSheet;
 /**
  * 设置-通用
  */
-public class PersonalSetGeneralActivity extends BaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener {
+public class PersonalSetGeneralActivity extends BaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener, CompoundButton.OnCheckedChangeListener {
 
     private TextView tv_back, tv_title, tv_clear;
     private RelativeLayout rl_font_size, rl_chat_bg, rl_my_face, rl_photos_videos,
@@ -51,6 +53,9 @@ public class PersonalSetGeneralActivity extends BaseActivity implements View.OnC
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_title.setText(getString(R.string.general));
         tv_back.setOnClickListener(this);
+        sb_receiver_model.setOnCheckedChangeListener(this);
+        boolean phone_receiver = PreferenceUtils.getBoolean(context, "phone_receiver", true);
+        sb_receiver_model.setChecked(phone_receiver);
     }
 
     @Override
@@ -96,5 +101,14 @@ public class PersonalSetGeneralActivity extends BaseActivity implements View.OnC
     @Override
     public void onClick(int which) {
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+        switch (compoundButton.getId()) {
+            case R.id.sb_receiver_model:
+                PreferenceUtils.putBoolean(this, "phone_receiver", isChecked);
+                break;
+        }
     }
 }

@@ -23,7 +23,6 @@
         android:textColor="@color/black"
         android:textSize="17sp"
         android:visibility="gone">
-
         <requestFocus />
     </im.boss66.com.widget.ClearEditText>
 

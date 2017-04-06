@@ -18,63 +18,63 @@
             android:id="@+id/rl_safe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/personal_bt_selector"
             android:layout_marginTop="1px"
-            android:paddingRight="16.5dp"
+            android:background="@drawable/personal_bt_selector"
+            android:paddingBottom="10dp"
             android:paddingLeft="16.5dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingRight="16.5dp"
+            android:paddingTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
-                android:textSize="17.5sp"
+                android:text="@string/account_and_safe"
                 android:textColor="@color/black"
-                android:text="@string/account_and_safe"/>
+                android:textSize="17.5sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/hp_some_go"/>
+                android:background="@drawable/hp_some_go" />
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="22dp"
-            android:layout_marginTop="1px"
             android:layout_marginBottom="1px"
-            android:background="@color/background_color"/>
+            android:layout_marginTop="1px"
+            android:background="@color/background_color" />
 
         <RelativeLayout
             android:id="@+id/rl_new_alerts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/personal_bt_selector"
             android:layout_marginBottom="1px"
-            android:paddingRight="16.5dp"
+            android:background="@drawable/personal_bt_selector"
+            android:paddingBottom="10dp"
             android:paddingLeft="16.5dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingRight="16.5dp"
+            android:paddingTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
-                android:textSize="17.5sp"
+                android:text="@string/new_alerts"
                 android:textColor="@color/black"
-                android:text="@string/new_alerts"/>
+                android:textSize="17.5sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/hp_some_go"/>
+                android:background="@drawable/hp_some_go" />
 
         </RelativeLayout>
 
@@ -82,28 +82,28 @@
             android:id="@+id/rl_privacy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/personal_bt_selector"
             android:layout_marginBottom="1px"
-            android:paddingRight="16.5dp"
+            android:background="@drawable/personal_bt_selector"
+            android:paddingBottom="10dp"
             android:paddingLeft="16.5dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingRight="16.5dp"
+            android:paddingTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
-                android:textSize="17.5sp"
+                android:text="@string/privacy"
                 android:textColor="@color/black"
-                android:text="@string/privacy"/>
+                android:textSize="17.5sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/hp_some_go"/>
+                android:background="@drawable/hp_some_go" />
 
         </RelativeLayout>
 
@@ -112,62 +112,63 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/personal_bt_selector"
-            android:paddingRight="16.5dp"
+            android:paddingBottom="10dp"
             android:paddingLeft="16.5dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingRight="16.5dp"
+            android:paddingTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
-                android:textSize="17.5sp"
+                android:text="@string/general"
                 android:textColor="@color/black"
-                android:text="@string/general"/>
+                android:textSize="17.5sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/hp_some_go"/>
+                android:background="@drawable/hp_some_go" />
 
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="22dp"
-            android:layout_marginTop="1px"
             android:layout_marginBottom="1px"
-            android:background="@color/background_color"/>
+            android:layout_marginTop="1px"
+            android:background="@color/background_color" />
 
         <RelativeLayout
             android:id="@+id/rl_help_feedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/personal_bt_selector"
             android:layout_marginBottom="1px"
-            android:paddingRight="16.5dp"
+            android:background="@drawable/personal_bt_selector"
+            android:paddingBottom="10dp"
             android:paddingLeft="16.5dp"
+            android:paddingRight="16.5dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
-                android:textSize="17.5sp"
+                android:text="@string/help_feedback"
                 android:textColor="@color/black"
-                android:text="@string/help_feedback"/>
+                android:textSize="17.5sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/hp_some_go"/>
+                android:background="@drawable/hp_some_go" />
 
         </RelativeLayout>
 
@@ -176,48 +177,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/personal_bt_selector"
-            android:paddingRight="16.5dp"
+            android:paddingBottom="10dp"
             android:paddingLeft="16.5dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingRight="16.5dp"
+            android:paddingTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16.5dp"
-                android:textSize="17.5sp"
+                android:text="@string/about"
                 android:textColor="@color/black"
-                android:text="@string/about"/>
+                android:textSize="17.5sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/hp_some_go"/>
+                android:background="@drawable/hp_some_go" />
 
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="22dp"
-            android:layout_marginTop="1px"
             android:layout_marginBottom="1px"
-            android:background="@color/background_color"/>
+            android:layout_marginTop="1px"
+            android:background="@color/background_color" />
 
         <TextView
             android:id="@+id/tv_exit_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="1px"
             android:background="@drawable/personal_bt_selector"
             android:gravity="center"
             android:paddingBottom="15.5dp"
             android:paddingTop="16.5dp"
-            android:layout_marginBottom="1px"
-            android:textSize="17.5sp"
+            android:text="@string/exit_login"
             android:textColor="@color/black"
-            android:text="@string/exit_login"/>
+            android:textSize="17.5sp" />
 
     </LinearLayout>
 

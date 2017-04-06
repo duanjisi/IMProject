@@ -15,10 +15,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:paddingLeft="11dp"
-            android:gravity="center"
             android:drawableLeft="@drawable/selector_text_bg_white_gary"
             android:drawablePadding="4dp"
+            android:gravity="center"
+            android:paddingLeft="11dp"
             android:text="返回"
             android:textColor="@drawable/selector_textcolor_white_gary"
             android:textSize="16.5sp" />
@@ -35,11 +35,12 @@
             android:id="@+id/iv_set"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingRight="@dimen/dp_10"
-            android:paddingLeft="@dimen/dp_10"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/hp_setup" />
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:src="@drawable/hp_setup"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -77,11 +78,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_icon"
         android:layout_centerHorizontal="true"
-        android:padding="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_14"
         android:background="@drawable/bg_round_darkgray"
-        android:visibility="gone"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_10"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -91,7 +92,7 @@
                 android:id="@+id/iv_head"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/person"/>
+                android:src="@drawable/person" />
 
             <TextView
                 android:id="@+id/tv_name"
@@ -99,9 +100,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
                 android:layout_toRightOf="@+id/iv_head"
-                android:maxLines="1"
-                android:maxEms="6"
                 android:ellipsize="end"
+                android:maxEms="6"
+                android:maxLines="1"
                 android:text="tes水水水水搜索搜索搜索t"
                 android:textColor="@color/bg_gray"
                 android:textSize="19.8sp" />
@@ -122,12 +123,12 @@
                 android:id="@+id/tv_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/iv_head"
                 android:layout_below="@+id/tv_name"
                 android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@+id/iv_head"
                 android:text="ssss"
                 android:textColor="@color/bg_gray"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
         </RelativeLayout>
 
@@ -137,7 +138,7 @@
             android:layout_alignParentRight="true"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/dp_10"
-            android:src="@drawable/arrow_normal"/>
+            android:src="@drawable/arrow_normal" />
 
     </LinearLayout>
 

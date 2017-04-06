@@ -245,6 +245,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 return false;
             }
         });
+        rcv_news.setFooterViewHint("拼命加载中", "我是有底线的", "网络不给力啊，点击再试一次吧");
         // 头部view
         View header = LayoutInflater.from(this).inflate(R.layout.headview_people_center,
                 (ViewGroup) findViewById(android.R.id.content), false);
