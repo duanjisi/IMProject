@@ -411,7 +411,8 @@
         <!-- 相册详情 -->
         <activity
             android:name=".activity.discover.PhotoAlbumDetailActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateUnchanged|adjustResize"></activity>
         <!-- 相册详情 -->
         <activity
             android:name=".activity.discover.PhotoAlbumLookPicActivity"
@@ -504,7 +505,8 @@
         <!--家乡和校园动态详情-->
         <activity android:name=".activity.connection.DynamicActivity"></activity>
         <!--申请福娃-->
-        <activity android:name=".activity.treasure.ApplyFuwaActivity"
+        <activity
+            android:name=".activity.treasure.ApplyFuwaActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"></activity>
 
         <!--支付宝start-->

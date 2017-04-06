@@ -1,204 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_p"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fadeScrollbars="true"
-    android:fillViewport="true">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <include layout="@layout/common_title" />
+
+    <RelativeLayout
+        android:id="@+id/rl_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_10">
 
-        <include layout="@layout/common_title" />
-
-        <RelativeLayout
-            android:id="@+id/rl_text"
+        <ScrollView
+            android:id="@+id/sv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/dp_10">
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/dp_10"
-                    android:paddingRight="@dimen/dp_10">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/iv_head"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/dp_10" />
-
-                        <TextView
-                            android:id="@+id/tv_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@+id/iv_head"
-                            android:textColor="@color/text_color_blue" />
-
-                        <LinearLayout
-                            android:id="@+id/ll_content"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignLeft="@+id/tv_name"
-                            android:layout_below="@+id/tv_name"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tv_content"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dp_6"
-                                android:textColor="@color/black" />
-
-                            <im.boss66.com.widget.MultiImageView
-                                android:id="@+id/multiImagView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:visibility="gone"></im.boss66.com.widget.MultiImageView>
-
-                            <FrameLayout
-                                android:id="@+id/fl_video"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:visibility="gone">
-
-                                <ImageView
-                                    android:id="@+id/iv_video_bg"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-
-                                <ImageView
-                                    android:id="@+id/iv_video_play"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_video_play" />
-
-                            </FrameLayout>
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tv_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignLeft="@+id/ll_content"
-                            android:layout_below="@+id/ll_content"
-                            android:layout_marginTop="@dimen/dp_6"
-                            android:text="2012.6.5"
-                            android:textColor="@color/hint_text_color" />
-
-                        <TextView
-                            android:id="@+id/tv_delete"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignTop="@+id/tv_time"
-                            android:layout_marginLeft="@dimen/dp_6"
-                            android:layout_toRightOf="@+id/tv_time"
-                            android:text="删除"
-                            android:textColor="@color/text_color_blue" />
-
-                        <ImageView
-                            android:id="@+id/iv_sns"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignTop="@+id/tv_time"
-                            android:src="@drawable/im_snsimg" />
-
-                    </RelativeLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_midden"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/im_distribute_comm_bg"
-                        android:minHeight="10dip"
-                        android:orientation="vertical"
-                        android:paddingBottom="8dip"
-                        android:paddingLeft="12dip"
-                        android:paddingRight="12dip"
-                        android:paddingTop="12dip">
-
-                        <im.boss66.com.widget.PraiseListView
-                            android:id="@+id/praiseListView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:lineSpacingMultiplier="1.1"
-                            android:textColor="@color/praise_item"
-                            android:textSize="14sp"
-                            app:item_color="@color/praise_item" />
-
-                        <View
-                            android:id="@+id/lin_dig"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dip"
-                            android:layout_marginBottom="5dip"
-                            android:layout_marginTop="5dip"
-                            android:background="@color/im_line_color" />
-
-                        <im.boss66.com.widget.CommentListView
-                            android:id="@+id/commentList"
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            android:orientation="vertical"
-                            app:item_color="@color/praise_item" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </ScrollView>
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@color/background_color"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/dp_6"
-                android:paddingLeft="@dimen/dp_14"
-                android:paddingRight="@dimen/dp_14"
-                android:paddingTop="@dimen/dp_6">
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10">
 
-                <EditText
-                    android:id="@+id/et_send"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_round_white"
-                    android:hint="评论"
-                    android:paddingLeft="@dimen/dp_10"
-                    android:textColorHint="@color/hint_text_color" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/iv_head"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dp_10" />
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/iv_head"
+                        android:textColor="@color/text_color_blue" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/tv_name"
+                        android:layout_below="@+id/tv_name"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_6"
+                            android:textColor="@color/black" />
+
+                        <im.boss66.com.widget.MultiImageView
+                            android:id="@+id/multiImagView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"></im.boss66.com.widget.MultiImageView>
+
+                        <FrameLayout
+                            android:id="@+id/fl_video"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/iv_video_bg"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <ImageView
+                                android:id="@+id/iv_video_play"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_video_play" />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/ll_content"
+                        android:layout_below="@+id/ll_content"
+                        android:layout_marginTop="@dimen/dp_6"
+                        android:text="2012.6.5"
+                        android:textColor="@color/hint_text_color" />
+
+                    <TextView
+                        android:id="@+id/tv_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/tv_time"
+                        android:layout_marginLeft="@dimen/dp_6"
+                        android:layout_toRightOf="@+id/tv_time"
+                        android:text="删除"
+                        android:textColor="@color/text_color_blue" />
+
+                    <ImageView
+                        android:id="@+id/iv_sns"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/tv_time"
+                        android:src="@drawable/im_snsimg" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_midden"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/im_distribute_comm_bg"
+                    android:minHeight="10dip"
+                    android:orientation="vertical"
+                    android:paddingBottom="8dip"
+                    android:paddingLeft="12dip"
+                    android:paddingRight="12dip"
+                    android:paddingTop="12dip">
+
+                    <im.boss66.com.widget.PraiseListView
+                        android:id="@+id/praiseListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:lineSpacingMultiplier="1.1"
+                        android:textColor="@color/praise_item"
+                        android:textSize="14sp"
+                        app:item_color="@color/praise_item" />
+
+                    <View
+                        android:id="@+id/lin_dig"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dip"
+                        android:layout_marginBottom="5dip"
+                        android:layout_marginTop="5dip"
+                        android:background="@color/im_line_color" />
+
+                    <im.boss66.com.widget.CommentListView
+                        android:id="@+id/commentList"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="vertical"
+                        app:item_color="@color/praise_item" />
+
+                </LinearLayout>
 
                 <Button
-                    android:id="@+id/bt_send"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dp_6"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:background="@color/red_fuwa_alpa_stroke"
                     android:text="发送"
-                    android:textColor="@color/white" />
-
+                    android:textColor="@color/white"
+                    android:visibility="invisible" />
             </LinearLayout>
 
-        </RelativeLayout>
+        </ScrollView>
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/background_color"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dp_6"
+            android:paddingLeft="@dimen/dp_14"
+            android:paddingRight="@dimen/dp_14"
+            android:paddingTop="@dimen/dp_6">
 
-</ScrollView>
+            <EditText
+                android:id="@+id/et_send"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:background="@drawable/bg_round_white"
+                android:hint="评论"
+                android:paddingLeft="@dimen/dp_10"
+                android:textColorHint="@color/hint_text_color" />
+
+            <Button
+                android:id="@+id/bt_send"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp_6"
+                android:layout_weight="1"
+                android:background="@color/red_fuwa_alpa_stroke"
+                android:text="发送"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

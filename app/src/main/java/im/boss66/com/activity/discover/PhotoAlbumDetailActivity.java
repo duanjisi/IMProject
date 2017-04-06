@@ -3,11 +3,14 @@ package im.boss66.com.activity.discover;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -16,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -45,7 +49,6 @@ import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.ActionItem;
 import im.boss66.com.entity.BaseResult;
 import im.boss66.com.entity.CircleCommentListEntity;
-import im.boss66.com.entity.CirclePraiseListEntity;
 import im.boss66.com.entity.FriendCircle;
 import im.boss66.com.entity.FriendCircleCommentEntity;
 import im.boss66.com.entity.FriendCirclePraiseEntity;
@@ -100,6 +103,10 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
     private String commentFromId, commentPid;
     private List<PhotoInfo> files;
     private String classType;
+    private ScrollView sv_content;
+    private LinearLayout ll_p;
+    private boolean isShowkeyboad = false;
+    private String replyName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +150,8 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
     private void initView() {
         sceenW = UIUtils.getScreenWidth(this);
         imageLoader = ImageLoaderUtils.createImageLoader(this);
+        ll_p = (LinearLayout) findViewById(R.id.ll_p);
+        sv_content = (ScrollView) findViewById(R.id.sv_content);
         //视频
         fl_video = (FrameLayout) findViewById(R.id.fl_video);
         iv_video_play = (ImageView) findViewById(R.id.iv_video_play);
@@ -196,6 +205,30 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
             }
         });
 
+        ll_p.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = ll_p.getRootView().getHeight() - ll_p.getHeight();
+                if (heightDiff > 100) {
+                    //高度变小100像素则认为键盘弹出
+                    isShowkeyboad = true;
+                    sv_content.fullScroll(ScrollView.FOCUS_DOWN);
+                } else {
+                    isShowkeyboad = false;
+                }
+            }
+        });
+        sv_content.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (isShowkeyboad) {
+                    et_send.setHint("评论");
+                    UIUtils.hideSoftInput(et_send, context);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void showSigleTxData(FriendCircle item) {
@@ -281,14 +314,17 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                 public void onItemClick(int position) {
                     FriendCircleCommentEntity item = commentList.get(position);
                     if (item != null) {
+                        replyName = item.getUid_from_name();
                         commonId = item.getComm_id();
                         commentFromId = item.getUid_from();
                         commentPid = item.getPid();
                         if (!TextUtils.isEmpty(commentFromId) && !TextUtils.isEmpty(userId)) {
                             if (commentFromId.equals(userId)) {
+                                isReply = false;
                                 showActionSheet();
                             } else {
                                 isReply = true;
+                                et_send.setHint("回复" + replyName);
                                 UIUtils.showSoftInput(et_send, PhotoAlbumDetailActivity.this);
                             }
                         }
@@ -465,6 +501,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                     }
                     break;
                 case 1://发布评论
+                    et_send.setHint("评论");
                     et_send.requestFocus();
                     //弹出键盘
                     UIUtils.showSoftInput(et_send, PhotoAlbumDetailActivity.this);
@@ -710,7 +747,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
     //获取评论列表
     private void getServerCommentList(int feedId) {
-        String main = HttpUrl.FRIEND_CIRCLE_GET_COMMENT_LIST + "?feed_id=" + feedId;
+        String main = HttpUrl.FRIEND_CIRCLE_GET_COMMENT_LIST + "?feed_id=" + feedId + "&page=0&size=1024";
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);
@@ -922,7 +959,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
     //获取评论列表
     private void getCommunityCommentList(int feedId) {
-        String main = HttpUrl.GET_COMMUNITY_COMMENT_LIST + "?feed_id=" + feedId;
+        String main = HttpUrl.GET_COMMUNITY_COMMENT_LIST + "?feed_id=" + feedId + "&page=0&size=1024";
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);
@@ -941,8 +978,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                             List<FriendCircleCommentEntity> list = entity.getResult();
                             if (list != null && list.size() > 0) {
                                 friendCircle.setComment_list(list);
-                                commentView.setVisibility(View.VISIBLE);
-                                commentView.setDatas(list);
+                                showSigleTxData(friendCircle);
                             }
                         }
                     }
