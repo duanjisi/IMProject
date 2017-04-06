@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_fuwa"
+        android:layout_width="110dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/fuwa_bgs">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/number_bg" />
+
+            <TextView
+                android:id="@+id/tv_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=""
+                android:textColor="@color/text_color_yellow2"
+                android:textSize="13.2dp" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/img_fuwa"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/fuwabig" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@id/img_fuwa"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/line_red" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/line_red" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_fuwa_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/rl_fuwa"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@id/rl_fuwa"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="19dp" />
+
+    <TextView
+        android:id="@+id/tv_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_fuwa_num"
+        android:layout_below="@id/tv_fuwa_num"
+        android:layout_marginTop="25dp"
+        android:text=""
+        android:textColor="@color/bg_rectangle"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_catch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_from"
+        android:layout_below="@id/tv_from"
+        android:layout_marginTop="15dp"
+        android:text=""
+        android:textColor="@color/bg_rectangle"
+        android:textSize="15sp" />
+
+</RelativeLayout>
