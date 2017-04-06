@@ -86,7 +86,7 @@
         android:layout_marginTop="@dimen/dp_14"
         android:background="@color/white"
         android:hint="请输入邮箱地址"
-        android:inputType="textPassword"
+        android:inputType="textEmailAddress"
         android:padding="8dp"
         android:singleLine="true"
         android:textColor="@color/black"
