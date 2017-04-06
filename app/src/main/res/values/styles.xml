@@ -296,5 +296,9 @@
         <item name="android:maxHeight">20dip</item>
     </style>
 
+    <style name="hide_fuwa_pop_anim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/pop_enter_ani_hidefuwa</item>
+        <item name="android:windowExitAnimation">@anim/pop_exit_ani_hidefuwa</item>
+    </style>
 
 </resources>
