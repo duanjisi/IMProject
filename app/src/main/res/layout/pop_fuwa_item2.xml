@@ -39,6 +39,7 @@
                 android:layout_height="35dp">
 
                 <EditText
+                    android:maxLength="15"
                     android:inputType="numberDecimal"
                     android:textColor="@color/white"
                     android:id="@+id/et_price"

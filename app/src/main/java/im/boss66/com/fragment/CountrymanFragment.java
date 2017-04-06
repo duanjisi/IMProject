@@ -106,12 +106,15 @@ public class CountrymanFragment extends BaseFragment {
                 String result = responseInfo.result;
                 if (result != null) {
                     schoolmateListEntity = JSON.parseObject(result, SchoolmateListEntity.class);
-                    if (schoolmateListEntity != null) {
+                    if (schoolmateListEntity.getResult() != null) {
                         if (schoolmateListEntity.getCode() == 1) {
                             handler.obtainMessage(1).sendToTarget();
                         }else{
                             showToast(schoolmateListEntity.getMessage(),false);
                         }
+                    }else{
+                        showToast("empty",false);
+
                     }
                 }
 

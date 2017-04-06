@@ -93,6 +93,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
+            android:maxLength="10"
             android:singleLine="true"
             android:textCursorDrawable="@null"
             android:gravity="center_vertical|right"

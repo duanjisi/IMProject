@@ -44,6 +44,7 @@ import java.util.Map;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.OrderInfoUtil2_0;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.treasure.FuwaDealActivity;
 import im.boss66.com.activity.treasure.FuwaPackageActivity;
@@ -489,7 +490,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
                     time1=time2;
                 }else{
-                    showToast("请不要点击太快",false);
+                    ToastUtil.showShort(getContext(),"请不要点击太快");
                 }
 
 
@@ -539,7 +540,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
                     timeStart=timeEnd;
                 }else {
-                    showToast("请不要点击太快",false);
+                    ToastUtil.showShort(getActivity(),"请不要点击太快");
                 }
             }
         });
