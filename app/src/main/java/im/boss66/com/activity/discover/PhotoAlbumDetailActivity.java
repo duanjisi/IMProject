@@ -120,7 +120,6 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
             if (bundle != null) {
                 classType = bundle.getString("classType");
                 feedId = bundle.getInt("feedId");
-                classType = bundle.getString("classType");
                 if (!TextUtils.isEmpty(classType) && "PhotoAlbumLookPicActivity".equals(classType)) {
                     friendCircle = (FriendCircle) bundle.getSerializable("data");
                     if (friendCircle != null) {
@@ -200,6 +199,14 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
     }
 
     private void showSigleTxData(FriendCircle item) {
+        String curDetailUid = item.getFeed_uid();
+        if (!TextUtils.isEmpty(curDetailUid) && !TextUtils.isEmpty(userId)) {
+            if (userId.equals(curDetailUid)) {
+                tv_delete.setVisibility(View.VISIBLE);
+            } else {
+                tv_delete.setVisibility(View.GONE);
+            }
+        }
         int prase = item.getIs_praise();
         if (prase == 0) {
             isPrase = 1;
@@ -250,6 +257,8 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
         praiseList = item.getPraise_list();
         if (praiseList != null && praiseList.size() > 0) {
+            ll_midden.setVisibility(View.VISIBLE);
+            praiseListView.setVisibility(View.VISIBLE);
             praiseListView.setDatas(praiseList);
             praiseListView.setOnItemClickListener(new PraiseListView.OnItemClickListener() {
                 @Override
@@ -263,6 +272,8 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
         commentList = item.getComment_list();
         if (commentList != null && commentList.size() > 0) {
+            ll_midden.setVisibility(View.VISIBLE);
+            commentView.setVisibility(View.VISIBLE);
             commentView.getCurLoginUserId(userId);
             commentView.setDatas(commentList);
             commentView.setOnItemClickListener(new CommentListView.OnItemClickListener() {
@@ -289,10 +300,17 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
             commentView.setVisibility(View.GONE);
         }
 
-        if (commentList != null && commentList.size() == 0 && praiseList != null && praiseList.size() == 0) {
-            ll_midden.setVisibility(View.GONE);
+        if (commentList != null && praiseList != null) {
+            if (commentList.size() == 0 && praiseList.size() == 0) {
+                ll_midden.setVisibility(View.GONE);
+            } else if (commentList.size() > 0 && praiseList.size() > 0) {
+                ll_midden.setVisibility(View.VISIBLE);
+                lin_dig.setVisibility(View.VISIBLE);
+            }
         } else if (commentList == null && praiseList == null) {
             ll_midden.setVisibility(View.GONE);
+        } else {
+            ll_midden.setVisibility(View.VISIBLE);
         }
         String createTime = item.getAdd_time();
         if (!TextUtils.isEmpty(createTime)) {
@@ -343,7 +361,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                         pid = "0";
                         feed_uid = "0";
                     }
-                    bt_send.setText("");
+                    et_send.setText("");
                     if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
                         createCommunityComment(content, pid, feed_uid);
                     } else {
@@ -709,9 +727,9 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                             App.getInstance().sendBroadcast(intent);
                         } else {
                             List<FriendCircleCommentEntity> list = entity.getResult();
-                            if (list != null) {
+                            if (list != null && list.size() > 0) {
                                 friendCircle.setComment_list(list);
-                                commentView.setDatas(list);
+                                showSigleTxData(friendCircle);
                             }
                         }
                     }
@@ -921,8 +939,9 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                             App.getInstance().sendBroadcast(intent);
                         } else {
                             List<FriendCircleCommentEntity> list = entity.getResult();
-                            if (list != null) {
+                            if (list != null && list.size() > 0) {
                                 friendCircle.setComment_list(list);
+                                commentView.setVisibility(View.VISIBLE);
                                 commentView.setDatas(list);
                             }
                         }
