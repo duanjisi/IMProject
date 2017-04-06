@@ -21,292 +21,299 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:layout_marginTop="1dp"
-                android:paddingRight="16.5dp"
+                android:background="@color/white"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:text="@string/add_me_as_friend_needs_to_prove_it"
                     android:textColor="@color/black"
-                    android:text="@string/add_me_as_friend_needs_to_prove_it"/>
+                    android:textSize="17.5sp" />
 
                 <ToggleButton
                     android:id="@+id/sb_add_friend_verify"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:background="@android:color/transparent"
                     android:button="@drawable/selector_switch_bt"
                     android:checked="true"
                     android:text=""
                     android:textOff=""
-                    android:textOn=""
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:textOn="" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
-                android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp"
-                android:background="@color/background_color"/>
+                android:layout_marginTop="1dp"
+                android:background="@color/background_color" />
 
             <RelativeLayout
                 android:id="@+id/rl_add_my_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/personal_bt_selector"
-                android:paddingRight="16.5dp"
+                android:paddingBottom="18dp"
                 android:paddingLeft="16.5dp"
-                android:paddingTop="18dp"
-                android:paddingBottom="18dp">
+                android:paddingRight="16.5dp"
+                android:paddingTop="18dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:text="@string/add_my_way"
                     android:textColor="@color/black"
-                    android:text="@string/add_my_way"/>
+                    android:textSize="17.5sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/hp_some_go"/>
+                    android:background="@drawable/hp_some_go" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="16.5dp"
                 android:layout_height="1dp"
-                android:background="@color/white"/>
+                android:background="@color/white" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/personal_bt_selector"
                 android:layout_marginBottom="1dp"
-                android:paddingRight="16.5dp"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:text="@string/friend_recommended_to_me_my_address_book"
                     android:textColor="@color/black"
-                    android:text="@string/friend_recommended_to_me_my_address_book"/>
+                    android:textSize="17.5sp" />
 
                 <ToggleButton
                     android:id="@+id/sb_recommended_friends"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:background="@android:color/transparent"
                     android:button="@drawable/selector_switch_bt"
                     android:checked="false"
                     android:text=""
                     android:textOff=""
-                    android:textOn=""
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:textOn="" />
 
             </RelativeLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="58.3dp"
-                android:background="@color/background_color"
                 android:layout_marginBottom="1dp"
-                android:paddingRight="16.5dp"
-                android:paddingLeft="16.5dp"
-                android:paddingTop="7dp"
+                android:background="@color/background_color"
                 android:paddingBottom="7dp"
-                android:textSize="15.6sp"
+                android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
+                android:paddingTop="7dp"
+                android:text="@string/after_opening_recommend"
                 android:textColor="@color/text_new_alerts_gray"
-                android:text="@string/after_opening_recommend"/>
+                android:textSize="15.6sp" />
 
             <RelativeLayout
                 android:id="@+id/rl_address_book_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/personal_bt_selector"
-                android:paddingRight="16.5dp"
+                android:paddingBottom="18dp"
                 android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
                 android:paddingTop="18dp"
-                android:paddingBottom="18dp">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:text="@string/address_book_list"
                     android:textColor="@color/black"
-                    android:text="@string/address_book_list"/>
+                    android:textSize="17.5sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/hp_some_go"/>
+                    android:background="@drawable/hp_some_go" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="16.5dp"
                 android:layout_height="1dp"
-                android:background="@color/white"/>
+                android:visibility="gone"
+                android:background="@color/white" />
 
             <RelativeLayout
                 android:id="@+id/rl_donot_let_him_see"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/personal_bt_selector"
-                android:paddingRight="16.5dp"
+                android:paddingBottom="18dp"
                 android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
                 android:paddingTop="18dp"
-                android:paddingBottom="18dp">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:text="@string/donot_let_him_see_my_circle_of_friends"
                     android:textColor="@color/black"
-                    android:text="@string/donot_let_him_see_my_circle_of_friends"/>
+                    android:textSize="17.5sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/hp_some_go"/>
+                    android:background="@drawable/hp_some_go" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="16.5dp"
-                android:layout_height="1dp"
-                android:background="@color/white"/>
+                android:layout_height="1px"
+                android:visibility="gone"
+                android:background="@color/white" />
 
             <RelativeLayout
                 android:id="@+id/rl_donot_see_him"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/personal_bt_selector"
-                android:paddingRight="16.5dp"
+                android:paddingBottom="18dp"
                 android:paddingLeft="16.5dp"
+                android:paddingRight="16.5dp"
                 android:paddingTop="18dp"
-                android:paddingBottom="18dp">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:text="@string/donot_look_at_him_circle_of_friends"
                     android:textColor="@color/black"
-                    android:text="@string/donot_look_at_him_circle_of_friends"/>
+                    android:textSize="17.5sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/hp_some_go"/>
+                    android:background="@drawable/hp_some_go" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="16.5dp"
                 android:layout_height="1dp"
-                android:background="@color/white"/>
+                android:visibility="gone"
+                android:background="@color/white" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/personal_bt_selector"
-                android:paddingRight="16.5dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:text="@string/allow_strangers_to_see_ten_circle_of_friends"
                     android:textColor="@color/black"
-                    android:text="@string/allow_strangers_to_see_ten_circle_of_friends"/>
+                    android:textSize="17.5sp" />
 
                 <ToggleButton
                     android:id="@+id/sb_allow_stranger"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:background="@android:color/transparent"
                     android:button="@drawable/selector_switch_bt"
                     android:checked="false"
+                    android:gravity="center"
                     android:text=""
                     android:textOff=""
-                    android:textOn=""
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:textOn="" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="16.5dp"
                 android:layout_height="1dp"
-                android:background="@color/white"/>
+                android:background="@color/white" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/personal_bt_selector"
                 android:layout_marginBottom="1dp"
-                android:paddingRight="16.5dp"
+                android:background="@drawable/personal_bt_selector"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16.5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingRight="16.5dp"
+                android:paddingTop="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16.5dp"
-                    android:textSize="17.5sp"
+                    android:text="@string/only_show_friends_in_recent_half_a_year_circle_of_friends"
                     android:textColor="@color/black"
-                    android:text="@string/only_show_friends_in_recent_half_a_year_circle_of_friends"/>
+                    android:textSize="17.5sp" />
 
                 <ToggleButton
                     android:id="@+id/sb_only_show_friends"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:background="@android:color/transparent"
                     android:button="@drawable/selector_switch_bt"
                     android:checked="false"
                     android:text=""
                     android:textOff=""
-                    android:textOn=""
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:textOn="" />
 
             </RelativeLayout>
 

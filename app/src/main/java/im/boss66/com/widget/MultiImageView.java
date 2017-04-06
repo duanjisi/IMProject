@@ -94,7 +94,7 @@ public class MultiImageView extends LinearLayout {
      * @return The width of the view, honoring constraints from measureSpec
      */
     private int measureWidth(int measureSpec) {
-        int result = 0;
+        int result = 1;
         int specMode = View.MeasureSpec.getMode(measureSpec);
         int specSize = View.MeasureSpec.getSize(measureSpec);
 

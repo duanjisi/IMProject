@@ -3,7 +3,6 @@ package im.boss66.com.http.request;
 import java.util.HashMap;
 import java.util.Map;
 
-import im.boss66.com.entity.BaseResult;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
 
@@ -11,7 +10,7 @@ import im.boss66.com.http.HttpUrl;
  * 修改密码
  */
 public class ChangeUserPwRequest extends BaseDataRequest<String> {
-    protected ChangeUserPwRequest(String tag, Object... params) {
+    public ChangeUserPwRequest(String tag, Object... params) {
         super(tag, params);
     }
 

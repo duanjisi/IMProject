@@ -73,6 +73,7 @@
                     android:paddingRight="16.5dp"
                     android:paddingLeft="16.5dp"
                     android:paddingTop="10dp"
+                    android:visibility="gone"
                     android:paddingBottom="10dp">
 
                     <TextView
@@ -109,6 +110,7 @@
                     android:paddingTop="7dp"
                     android:paddingBottom="7dp"
                     android:textSize="15.6sp"
+                    android:visibility="gone"
                     android:textColor="@color/text_new_alerts_gray"
                     android:text="@string/notify_the_display_messages_tip"/>
 

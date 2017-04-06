@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.entity.AccountEntity;
 
@@ -17,8 +18,9 @@ import im.boss66.com.entity.AccountEntity;
  */
 public class PersonalAccountSafeActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView tv_back, tv_title,tv_phone_num,tv_app_num;
+    private TextView tv_back, tv_title, tv_phone_num, tv_app_num, tv_email;
     private RelativeLayout rl_app_num, rl_qq_num, rl_phone_num, rl_email_address, rl_password, rl_account_protect;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class PersonalAccountSafeActivity extends BaseActivity implements View.On
     }
 
     private void initView() {
+        tv_email = (TextView) findViewById(R.id.tv_email);
         tv_phone_num = (TextView) findViewById(R.id.tv_phone_num);
         tv_app_num = (TextView) findViewById(R.id.tv_app_num);
         rl_app_num = (RelativeLayout) findViewById(R.id.rl_app_num);
@@ -49,11 +52,15 @@ public class PersonalAccountSafeActivity extends BaseActivity implements View.On
         AccountEntity sAccount = App.getInstance().getAccount();
         String phone = sAccount.getMobile_phone();
         String user_id = sAccount.getUser_id();
-        if (!TextUtils.isEmpty(phone)){
+        if (!TextUtils.isEmpty(phone)) {
             tv_phone_num.setText(phone);
         }
-        if ((!TextUtils.isEmpty(user_id))){
+        if ((!TextUtils.isEmpty(user_id))) {
             tv_app_num.setText(user_id);
+        }
+        email = PreferenceUtils.getString(context, "user_email", "");
+        if (!TextUtils.isEmpty(email)) {
+            tv_email.setText(email);
         }
     }
 
@@ -71,8 +78,15 @@ public class PersonalAccountSafeActivity extends BaseActivity implements View.On
                 openActvityForResult(ChanePhoneNumActivity.class, 101);
                 break;
             case R.id.rl_email_address://邮箱地址
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("email", email);
+                bundle1.putString("changeType", "email");
+                openActvityForResult(ChangeUserPwActivity.class, 102, bundle1);
                 break;
             case R.id.rl_password://密码
+                Bundle bundle = new Bundle();
+                bundle.putString("changeType", "pw");
+                openActivity(ChangeUserPwActivity.class, bundle);
                 break;
             case R.id.rl_account_protect://账号保护
                 break;
@@ -85,8 +99,13 @@ public class PersonalAccountSafeActivity extends BaseActivity implements View.On
         if (requestCode == 101 && resultCode == RESULT_OK && data != null) {
             AccountEntity sAccount = App.getInstance().getAccount();
             String phone = sAccount.getMobile_phone();
-            if (!TextUtils.isEmpty(phone)){
+            if (!TextUtils.isEmpty(phone)) {
                 tv_phone_num.setText(phone);
+            }
+        } else if (requestCode == 102 && resultCode == RESULT_OK) {
+            email = PreferenceUtils.getString(context, "user_email", "");
+            if (!TextUtils.isEmpty(email)) {
+                tv_email.setText(email);
             }
         }
     }

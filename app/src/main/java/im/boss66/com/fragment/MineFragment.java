@@ -95,7 +95,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 openActvityForResult(PersonalInformationActivity.class, 101);
                 break;
             case R.id.rl_photo://相册
-                openActivity(PersonalPhotoAlbumActivity.class, null);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("isSelt", true);
+                openActivity(PersonalPhotoAlbumActivity.class, bundle);
                 break;
             case R.id.rl_collect://收藏
                 break;
