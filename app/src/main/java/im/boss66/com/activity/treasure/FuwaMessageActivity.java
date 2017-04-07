@@ -69,13 +69,6 @@ public class FuwaMessageActivity extends BaseActivity implements View.OnClickLis
         adapter.getDb(mDbUtils);
         lv_listview.setAdapter(adapter);
         getServerData();
-        if (!isHas && list != null && list.size() > 0) {
-            try {
-                mDbUtils.saveAll(list);
-            } catch (DbException e) {
-                e.printStackTrace();
-            }
-        }
         int num = adapter.getCount();
         if (num > 0) {
             lv_listview.setVisibility(View.VISIBLE);
@@ -89,7 +82,7 @@ public class FuwaMessageActivity extends BaseActivity implements View.OnClickLis
     private void getServerData() {
         AccountEntity sAccount = App.getInstance().getAccount();
         String userId = sAccount.getUser_id();
-        String url = HttpUrl.FUWA_MSG + userId;
+        String url = HttpUrl.FUWA_MSG + userId + "&time=" + System.currentTimeMillis();
         HttpUtils httpUtils = new HttpUtils(30 * 1000);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
@@ -112,10 +105,17 @@ public class FuwaMessageActivity extends BaseActivity implements View.OnClickLis
                                         isHas = true;
                                         mDbUtils.saveAll(list_);
                                     } catch (DbException e) {
+                                        saveList();
                                         e.printStackTrace();
                                     }
+                                } else {
+                                    saveList();
                                 }
+                            } else {
+                                saveList();
                             }
+                        } else {
+                            saveList();
                         }
                     }
                 } else {
@@ -125,9 +125,20 @@ public class FuwaMessageActivity extends BaseActivity implements View.OnClickLis
 
             @Override
             public void onFailure(HttpException e, String s) {
+                saveList();
                 showToast(s, false);
             }
         });
+    }
+
+    private void saveList() {
+        if (!isHas && list != null && list.size() > 0) {
+            try {
+                mDbUtils.saveAll(list);
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
