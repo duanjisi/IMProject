@@ -26,6 +26,7 @@ import java.util.Map;
 
 import de.tavendo.autobahn.WebSocket;
 import de.tavendo.autobahn.WebSocketConnection;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.Utils.SharePreferenceUtil;
 import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.config.LoginStatus;
@@ -348,7 +349,7 @@ public class App extends Application {
         sAccount.setMobile_phone(loginStatus.getMobilePhone());
         sAccount.setAvatar(loginStatus.getAvatar());
         sAccount.setSex(loginStatus.getSex());
-        sAccount.setSignature(loginStatus.getSex());
+        sAccount.setSignature(loginStatus.getSignature());
         sAccount.setProvince(loginStatus.getProvince());
         sAccount.setCity(loginStatus.getCity());
         sAccount.setDistrict(loginStatus.getDistrict());
@@ -546,4 +547,11 @@ public class App extends Application {
         this.loacalAddress = loacalAddress;
     }
 
+    public boolean isThirdLogin(Context context) {
+        return PreferenceUtils.getBoolean(context, "isThirdLogin", false);
+    }
+
+    public void setThirdLogin(Context context, boolean thirdLogin) {
+        PreferenceUtils.putBoolean(context, "isThirdLogin", thirdLogin);
+    }
 }

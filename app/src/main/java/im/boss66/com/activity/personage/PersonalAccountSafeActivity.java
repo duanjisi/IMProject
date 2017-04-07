@@ -84,6 +84,11 @@ public class PersonalAccountSafeActivity extends BaseActivity implements View.On
                 openActvityForResult(ChangeUserPwActivity.class, 102, bundle1);
                 break;
             case R.id.rl_password://密码
+                boolean isThird = App.getInstance().isThirdLogin(context);
+                if (isThird) {
+                    showToast("第三方登录无法修改密码", false);
+                    return;
+                }
                 Bundle bundle = new Bundle();
                 bundle.putString("changeType", "pw");
                 openActivity(ChangeUserPwActivity.class, bundle);

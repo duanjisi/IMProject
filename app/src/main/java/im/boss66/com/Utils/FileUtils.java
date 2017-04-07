@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -342,6 +343,7 @@ public class FileUtils {
                 handler.obtainMessage(SUCCESS).sendToTarget();
             }
         } catch (Exception e) {
+            Log.i("info","========Exception:"+e.getMessage());
             e.printStackTrace();
             errorStr = e.getMessage();
             handler.obtainMessage(FAILED, errorStr).sendToTarget();

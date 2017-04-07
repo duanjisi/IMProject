@@ -94,6 +94,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onSuccess(AccountEntity entity) {
                 cancelLoadingDialog();
+                App.getInstance().setThirdLogin(context, false);
                 loginSuccessed(entity);
             }
 
@@ -221,6 +222,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             request.send(new BaseDataRequest.RequestCallback<AccountEntity>() {
                 @Override
                 public void onSuccess(AccountEntity entity) {
+                    App.getInstance().setThirdLogin(context, true);
                     loginSuccessed(entity);
                 }
 

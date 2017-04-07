@@ -10,6 +10,7 @@ import android.widget.TextView;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.book.PhoneContactsActivity;
 import im.boss66.com.entity.AccountEntity;
 
 /**
@@ -40,24 +41,29 @@ public class ChanePhoneNumActivity extends BaseActivity implements View.OnClickL
         bt_check.setOnClickListener(this);
         AccountEntity sAccount = App.getInstance().getAccount();
         phone = sAccount.getMobile_phone();
-                if (!TextUtils.isEmpty(phone)) {
-                    tv_phone_num.setText("" + phone);
-                }
+        if (!TextUtils.isEmpty(phone)) {
+            tv_phone_num.setText("" + phone);
         }
+    }
 
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.tv_back:
-                    finish();
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_back:
+                finish();
                 break;
             case R.id.bt_change_phone:
+                boolean isThird = App.getInstance().isThirdLogin(context);
+                if (isThird) {
+                    showToast("第三方登录无法更换手机号", false);
+                    return;
+                }
                 Bundle bundle = new Bundle();
                 bundle.putString("phone", phone);
                 openActvityForResult(VerifyOldPhoneActivity.class, 101, bundle);
                 break;
             case R.id.bt_check:
-
+                openActivity(PhoneContactsActivity.class);
                 break;
         }
     }
@@ -65,7 +71,7 @@ public class ChanePhoneNumActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 101 && resultCode == RESULT_OK){
+        if (requestCode == 101 && resultCode == RESULT_OK) {
             setResult(RESULT_OK);
             finish();
         }
