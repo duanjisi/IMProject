@@ -9,7 +9,6 @@ public class FriendCircleEntity {
 
     private String name;
     private String version;
-
     private String message;
 
     public int getCode() {
@@ -42,4 +41,24 @@ public class FriendCircleEntity {
     }
 
     private List<FriendCircle> result;
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

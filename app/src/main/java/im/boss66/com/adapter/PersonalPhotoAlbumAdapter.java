@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class PersonalPhotoAlbumAdapter extends BaseRecycleViewAdapter {
     public final int TYPE_VIDEO = 2;
     private Context context;
     private int sceenW;
+    private boolean isSelt;
 
     public PersonalPhotoAlbumAdapter(Context context) {
         this.context = context;
@@ -101,7 +103,10 @@ public class PersonalPhotoAlbumAdapter extends BaseRecycleViewAdapter {
             switch (type) {
                 case TYPE_IMG:
                     final List<PhotoInfo> photos = item.getFiles();
-                    if (photos != null) {
+                    if (photos != null && photos.size() > 0) {
+                        ((ImageHolder) holder).ll_img.setVisibility(View.VISIBLE);
+                        ((ImageHolder) holder).tv_no_img_tx.setVisibility(View.GONE);
+                        ((ImageHolder) holder).tv_content.setText("" + content);
                         ((ImageHolder) holder).tv_content.setBackgroundColor(context.getResources().getColor(R.color.white));
                         int filesize = photos.size();
                         if (filesize >= 2) {
@@ -111,20 +116,27 @@ public class PersonalPhotoAlbumAdapter extends BaseRecycleViewAdapter {
                             if (!TextUtils.isEmpty(p_url)) {
                                 if (!p_url.contains(".png") && !p_url.contains(".jpg")
                                         && !p_url.contains(".jpeg")) {
-                                    ((ImageHolder) holder).tv_content.setBackgroundColor(context.getResources().getColor(R.color.text_bg));
+                                    ((ImageHolder) holder).ll_img.setVisibility(View.GONE);
+                                    ((ImageHolder) holder).tv_no_img_tx.setVisibility(View.VISIBLE);
+                                    ((ImageHolder) holder).tv_no_img_tx.setText("" + content);
+                                } else {
+                                    ((ImageHolder) holder).ll_img.setVisibility(View.VISIBLE);
+                                    ((ImageHolder) holder).tv_no_img_tx.setVisibility(View.GONE);
                                 }
                             } else {
-                                ((ImageHolder) holder).tv_content.setBackgroundColor(context.getResources().getColor(R.color.text_bg));
+                                ((ImageHolder) holder).ll_img.setVisibility(View.GONE);
+                                ((ImageHolder) holder).tv_no_img_tx.setVisibility(View.VISIBLE);
+                                ((ImageHolder) holder).tv_no_img_tx.setText("" + content);
                             }
                         }
                         ((ImageHolder) holder).multiImagView.setVisibility(View.VISIBLE);
                         ((ImageHolder) holder).multiImagView.setSceenW(sceenW);
                         ((ImageHolder) holder).multiImagView.setList(photos);
                     } else {
-                        ((ImageHolder) holder).tv_content.setBackgroundColor(context.getResources().getColor(R.color.text_bg));
+                        ((ImageHolder) holder).ll_img.setVisibility(View.GONE);
+                        ((ImageHolder) holder).tv_no_img_tx.setVisibility(View.VISIBLE);
+                        ((ImageHolder) holder).tv_no_img_tx.setText("" + content);
                     }
-
-                    ((ImageHolder) holder).tv_content.setText("" + content);
                     ((ImageHolder) holder).tv_month.setText("" + curMonth);
                     ((ImageHolder) holder).tv_day.setText("" + curDay);
                     if (nextItem == null) {
@@ -134,7 +146,7 @@ public class PersonalPhotoAlbumAdapter extends BaseRecycleViewAdapter {
                             long curTime = Long.parseLong(item.getAdd_time());
                             String resTime = TimeUtil.getTimeisTodayOrYestday(curTime * 1000);
                             if (!TextUtils.isEmpty(resTime)) {
-                                if ("今天".equals(resTime)) {
+                                if ("今天".equals(resTime) && isSelt) {
                                     ((ImageHolder) holder).tv_month.setVisibility(View.GONE);
                                     ((ImageHolder) holder).tv_day.setVisibility(View.GONE);
                                 } else {
@@ -161,7 +173,7 @@ public class PersonalPhotoAlbumAdapter extends BaseRecycleViewAdapter {
                                     long curTime = Long.parseLong(time);
                                     String resTime = TimeUtil.getTimeisTodayOrYestday(curTime * 1000);
                                     if (!TextUtils.isEmpty(resTime)) {
-                                        if ("今天".equals(resTime)) {
+                                        if ("今天".equals(resTime) && isSelt) {
                                             ((ImageHolder) holder).tv_month.setVisibility(View.GONE);
                                             ((ImageHolder) holder).tv_day.setVisibility(View.GONE);
                                         } else {
@@ -201,7 +213,7 @@ public class PersonalPhotoAlbumAdapter extends BaseRecycleViewAdapter {
                             long curTime = Long.parseLong(item.getAdd_time());
                             String resTime = TimeUtil.getTimeisTodayOrYestday(curTime * 1000);
                             if (!TextUtils.isEmpty(resTime)) {
-                                if ("今天".equals(resTime)) {
+                                if ("今天".equals(resTime) && isSelt) {
                                     ((VideoHolder) holder).tv_month.setVisibility(View.GONE);
                                     ((VideoHolder) holder).tv_day.setVisibility(View.GONE);
                                 } else {
@@ -228,7 +240,7 @@ public class PersonalPhotoAlbumAdapter extends BaseRecycleViewAdapter {
                                     long curTime = Long.parseLong(item.getAdd_time());
                                     String resTime = TimeUtil.getTimeisTodayOrYestday(curTime * 1000);
                                     if (!TextUtils.isEmpty(resTime)) {
-                                        if ("今天".equals(resTime)) {
+                                        if ("今天".equals(resTime) && isSelt) {
                                             ((VideoHolder) holder).tv_month.setVisibility(View.GONE);
                                             ((VideoHolder) holder).tv_day.setVisibility(View.GONE);
                                         } else {
@@ -269,7 +281,7 @@ public class PersonalPhotoAlbumAdapter extends BaseRecycleViewAdapter {
                             long curTime = Long.parseLong(item.getAdd_time());
                             String resTime = TimeUtil.getTimeisTodayOrYestday(curTime * 1000);
                             if (!TextUtils.isEmpty(resTime)) {
-                                if ("今天".equals(resTime)) {
+                                if ("今天".equals(resTime) && isSelt) {
                                     ((URLHolder) holder).tv_month.setVisibility(View.GONE);
                                     ((URLHolder) holder).tv_day.setVisibility(View.GONE);
                                 } else {
@@ -315,11 +327,14 @@ public class PersonalPhotoAlbumAdapter extends BaseRecycleViewAdapter {
     }
 
     public static class ImageHolder extends RecyclerView.ViewHolder {
-        private TextView tv_content, tv_num, tv_day, tv_month;
+        private TextView tv_content, tv_num, tv_day, tv_month, tv_no_img_tx;
         private MultiImageView multiImagView;
+        private LinearLayout ll_img;
 
         public ImageHolder(View itemView) {
             super(itemView);
+            tv_no_img_tx = (TextView) itemView.findViewById(R.id.tv_no_img_tx);
+            ll_img = (LinearLayout) itemView.findViewById(R.id.ll_img);
             tv_month = (TextView) itemView.findViewById(R.id.tv_month);
             tv_day = (TextView) itemView.findViewById(R.id.tv_day);
             tv_content = (TextView) itemView.findViewById(R.id.tv_content);
@@ -404,5 +419,9 @@ public class PersonalPhotoAlbumAdapter extends BaseRecycleViewAdapter {
 
             public void onLongClick(View view, int posotion);
         }
+    }
+
+    public void getIsSelt(boolean isSelt) {
+        this.isSelt = isSelt;
     }
 }

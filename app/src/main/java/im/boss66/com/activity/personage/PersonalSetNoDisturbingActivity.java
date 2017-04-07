@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
 
 /**
@@ -14,10 +15,11 @@ import im.boss66.com.activity.base.BaseActivity;
  */
 public class PersonalSetNoDisturbingActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView tv_back,tv_title;
-    private RelativeLayout rl_open,rl_only_at_night,rl_close;
-    private ImageView iv_open,iv_only_at_night,iv_close;
+    private TextView tv_back, tv_title;
+    private RelativeLayout rl_open, rl_only_at_night, rl_close;
+    private ImageView iv_open, iv_only_at_night, iv_close;
     private ImageView[] ivList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,12 +41,14 @@ public class PersonalSetNoDisturbingActivity extends BaseActivity implements Vie
         rl_open.setOnClickListener(this);
         rl_only_at_night.setOnClickListener(this);
         rl_close.setOnClickListener(this);
-        ivList = new ImageView[]{iv_open,iv_only_at_night,iv_close};
+        ivList = new ImageView[]{iv_open, iv_only_at_night, iv_close};
+        int tag = PreferenceUtils.getInt(context, "news_alert_time", 0);
+        showDrawByTag(tag);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_back:
                 finish();
                 break;
@@ -60,8 +64,9 @@ public class PersonalSetNoDisturbingActivity extends BaseActivity implements Vie
         }
     }
 
-    private void showDrawByTag(int tag){
-        for (int i=0;i<ivList.length;i++){
+    private void showDrawByTag(int tag) {
+        PreferenceUtils.putInt(context, "news_alert_time", tag);
+        for (int i = 0; i < ivList.length; i++) {
             ivList[i].setVisibility(View.GONE);
         }
         ivList[tag].setVisibility(View.VISIBLE);

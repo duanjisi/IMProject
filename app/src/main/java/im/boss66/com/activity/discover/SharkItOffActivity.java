@@ -246,6 +246,10 @@ public class SharkItOffActivity extends BaseActivity implements SensorEventListe
                 bundle.putString("classType", "SharkItOffActivity");
                 bundle.putSerializable("people", nearByChild);
                 openActivity(PersonalNearbyDetailActivity.class, bundle);
+                pb_shark.setVisibility(View.GONE);
+                ll_people.setVisibility(View.GONE);
+                tv_bottom.setText(getResources().getString(R.string.shark_it_off));
+                tv_bottom.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -264,6 +268,10 @@ public class SharkItOffActivity extends BaseActivity implements SensorEventListe
                     }
                 } else {
                     ToastUtil.showShort(SharkItOffActivity.this, "暂无同一时刻摇的人");
+                    pb_shark.setVisibility(View.GONE);
+                    ll_people.setVisibility(View.GONE);
+                    tv_bottom.setVisibility(View.VISIBLE);
+                    tv_bottom.setText(getResources().getString(R.string.shark_it_off));
                 }
             }
 
@@ -277,6 +285,7 @@ public class SharkItOffActivity extends BaseActivity implements SensorEventListe
                 }
                 pb_shark.setVisibility(View.GONE);
                 ll_people.setVisibility(View.GONE);
+                tv_bottom.setVisibility(View.VISIBLE);
                 tv_bottom.setText(getResources().getString(R.string.shark_it_off));
             }
         });

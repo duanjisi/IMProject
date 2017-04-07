@@ -345,7 +345,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                                         tv_change_place.setVisibility(View.VISIBLE);
                                         bt_catch.setVisibility(View.VISIBLE);
                                         tv_bottom.setVisibility(View.GONE);
-                                    }catch (Exception e){
+                                    } catch (Exception e) {
                                         mCamera.startPreview();
                                         canFocusIn = true;
                                         showToast("对焦失败，请移动手机重试下", false);
@@ -409,7 +409,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             rl_search.setOnClickListener(this);
             int sceenH = UIUtils.getScreenHeight(this);
             popWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, sceenH / 2, true);
-            popWindow.setAnimationStyle(R.style.PopupTitleBarAnim1);
+            popWindow.setAnimationStyle(R.style.hide_fuwa_pop_anim);
             popWindow.setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
             popWindow.setFocusable(true);
             popWindow.setOutsideTouchable(true);

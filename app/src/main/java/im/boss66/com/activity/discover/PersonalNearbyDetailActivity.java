@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +54,8 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
     private String classType;
     private String userid = "";
     private String head_icon;
-    private ImageView iv_photo_1, iv_photo_2, iv_photo_3;
-    private ImageView[] imgPhotos;
+    private ImageView iv_photo_1, iv_photo_2, iv_photo_3, iv_video_1, iv_video_2, iv_video_3;
+    private ImageView[] imgPhotos, imgVideos;
     private boolean isLoad = false;
     private String person_name, person_head, person_covpic, person_signature;
 
@@ -75,16 +76,9 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
             if (bundle != null) {
                 userid = bundle.getString("userid", "");
                 classType = bundle.getString("classType");
-                if (!TextUtils.isEmpty(classType)) {
-                    requestPersonInform();
-                    requestFriendShip();
-//                    else if ("CaptureActivity".equals(classType)) {
-////                        tv_source.setText("通过扫一扫添加");
-//                        requestPersonInform();
-//                    }
-                }
                 NearByChildEntity item = (NearByChildEntity) bundle.getSerializable("people");
                 if (item != null) {
+                    userid = item.getUser_id();
                     tv_name.setText("" + item.getUser_name());
                     int sex = item.getSex();
                     if (sex == 1) {
@@ -99,6 +93,14 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                     tv_distance.setText("" + dis + "米以内");
                     rl_general.setVisibility(View.VISIBLE);
                 }
+                if (!TextUtils.isEmpty(classType)) {
+                    requestPersonInform();
+                    requestFriendShip();
+//                    else if ("CaptureActivity".equals(classType)) {
+////                        tv_source.setText("通过扫一扫添加");
+//                        requestPersonInform();
+//                    }
+                }
                 String from = bundle.getString("from");
                 if (!TextUtils.isEmpty(from) && "friendcircle".equals(from)) {
                     rl_general.setVisibility(View.GONE);
@@ -112,6 +114,11 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
         iv_photo_1 = (ImageView) findViewById(R.id.iv_photo_1);
         iv_photo_2 = (ImageView) findViewById(R.id.iv_photo_2);
         iv_photo_3 = (ImageView) findViewById(R.id.iv_photo_3);
+
+        iv_video_1 = (ImageView) findViewById(R.id.iv_video_1);
+        iv_video_2 = (ImageView) findViewById(R.id.iv_video_2);
+        iv_video_3 = (ImageView) findViewById(R.id.iv_video_3);
+
         rl_privacy = (LinearLayout) findViewById(R.id.rl_privacy);
         rl_general = (LinearLayout) findViewById(R.id.rl_general);
         ll_area = (LinearLayout) findViewById(R.id.ll_area);
@@ -130,6 +137,7 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
         bt_greet = (Button) findViewById(R.id.bt_greet);
         bt_complaint = (Button) findViewById(R.id.bt_complaint);
         imgPhotos = new ImageView[]{iv_photo_1, iv_photo_2, iv_photo_3};
+        imgVideos = new ImageView[]{iv_video_1, iv_video_2, iv_video_3};
         ll_photo.setOnClickListener(this);
         tv_back.setOnClickListener(this);
         iv_set.setOnClickListener(this);
@@ -166,6 +174,7 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
             iv_set.setVisibility(View.VISIBLE);
             bt_greet.setText("发消息");
         } else {
+            iv_set.setVisibility(View.GONE);
             bt_greet.setText("添加到通讯录");
         }
     }
@@ -201,7 +210,9 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
             tv_sex.setText(entity.getSex());
             UIUtils.hindView(tv_distance);
             UIUtils.hindView(bt_complaint);
-            UIUtils.showView(rl_privacy);
+            if (!TextUtils.isEmpty(person_signature)) {
+                UIUtils.showView(rl_privacy);
+            }
             tv_area.setText(entity.getDistrict_str());
             tv_personalized_signature.setText("" + person_signature);
             UIUtils.showView(bt_greet);
@@ -224,6 +235,22 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
             head_icon = entity.getAvatar();
             imageLoader.displayImage(head_icon, iv_head,
                     ImageLoaderUtils.getDisplayImageOptions());
+            List<String> photos = entity.getPhotos();
+            if (photos != null && photos.size() > 0) {
+                int size = imgPhotos.length;
+                for (int i = 0; i < photos.size(); i++) {
+                    if (i < size) {
+                        String img = photos.get(i);
+                        if (img.contains(".mp4") || img.contains("mov")) {
+                            imgVideos[i].setVisibility(View.VISIBLE);
+                        }
+                        Picasso.with(context)
+                                .load(img)
+                                .error(R.drawable.zf_default_message_image)
+                                .into(imgPhotos[i]);
+                    }
+                }
+            }
         }
     }
 

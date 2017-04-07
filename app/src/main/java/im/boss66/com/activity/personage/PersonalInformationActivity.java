@@ -68,6 +68,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
             }
             String signature = sAccount.getSignature();
             if (!TextUtils.isEmpty(signature)) {
+                isSignatureNull = false;
                 tv_signature.setText(signature);
             }
             String area = sAccount.getDistrict_str();
@@ -135,7 +136,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                 openActvityForResult(PersonalInfoChangeActivity.class, NAME_SEX_SIGNATURE_REQUEST, bundle1);
                 break;
             case R.id.rl_area://地区
-                openActvityForResult(PersonalAreaProvinceActivity.class,108);
+                openActvityForResult(PersonalAreaProvinceActivity.class, 108);
                 break;
             case R.id.rl_signature://个性签名
                 Bundle bundle2 = new Bundle();
@@ -186,7 +187,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                         break;
                 }
             }
-        }else if(requestCode == 108 && resultCode == RESULT_OK){
+        } else if (requestCode == 108 && resultCode == RESULT_OK) {
             AccountEntity sAccount = mApplication.getAccount();
             String area = sAccount.getDistrict_str();
             if (!TextUtils.isEmpty(area)) {

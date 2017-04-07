@@ -3,6 +3,7 @@ package im.boss66.com.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.alibaba.fastjson.JSON;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.IUmengUnregisterCallback;
@@ -23,6 +25,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -36,6 +39,7 @@ import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.PrefKey;
 import im.boss66.com.Utils.PreferenceUtils;
+import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
@@ -47,6 +51,7 @@ import im.boss66.com.entity.EmoCate;
 import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmoGroup;
 import im.boss66.com.entity.EmoLove;
+import im.boss66.com.entity.MyInfo;
 import im.boss66.com.entity.UpdateInfoEntity;
 import im.boss66.com.fragment.ContactBooksFragment;
 import im.boss66.com.fragment.ContactsFragment;
@@ -56,6 +61,7 @@ import im.boss66.com.fragment.MineFragment;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.CheckUpdateRequest;
 import im.boss66.com.http.request.EmoCollectionsRequest;
+import im.boss66.com.http.request.MyInfoRequest;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.services.ChatServices;
 import im.boss66.com.services.MyPushIntentService;
@@ -70,7 +76,19 @@ import im.boss66.com.widget.dialog.PeopleDataDialog;
 public class MainActivity extends BaseActivity implements Observer {
     private final static String TAG = MainActivity.class.getSimpleName();
     private PermissionListener permissionListener;
-    private Handler handler = new Handler();
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:
+                    if(school_list!=null&&school_list.size()>0&&hometown_list!=null&&hometown_list.size()>0){
+                        SharedPreferencesMgr.setBoolean("setSuccess2",true);
+                    }
+                    break;
+            }
+        }
+    };
     private static final int VIEW_PAGER_PAGE_1 = 0;
     private static final int VIEW_PAGER_PAGE_2 = 1;
     private static final int VIEW_PAGER_PAGE_3 = 2;
@@ -94,6 +112,11 @@ public class MainActivity extends BaseActivity implements Observer {
     //    private SimpleDraweeView simpleDrawee00, simpleDrawee01;
     private PushAgent mPushAgent;
 
+
+    private MyInfo myInfo;
+    private List<MyInfo.ResultBean.SchoolListBean> school_list; //学校
+    private List<MyInfo.ResultBean.HometownListBean> hometown_list; //家乡
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,8 +125,31 @@ public class MainActivity extends BaseActivity implements Observer {
         App.getInstance().addTempActivity(this);
         setContentView(R.layout.activity_main);
         initViews();
-    }
 
+        if(SharedPreferencesMgr.getBoolean("setSuccess2",false)){
+            return;
+        }
+        initData();
+    }
+    private void initData() {
+        MyInfoRequest request = new MyInfoRequest(TAG);
+        request.send(new BaseDataRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String str) {
+                myInfo = JSON.parseObject(str, MyInfo.class);
+                hometown_list = myInfo.getResult().getHometown_list();
+                school_list = myInfo.getResult().getSchool_list();
+                handler.obtainMessage(1).sendToTarget();
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, false);
+
+            }
+        });
+    }
 
     private void initViews() {
         account = App.getInstance().getAccount();
@@ -498,6 +544,18 @@ public class MainActivity extends BaseActivity implements Observer {
                     break;
                 case R.id.rb_contact:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_3);
+//                   设置成功不弹窗
+                    if(SharedPreferencesMgr.getBoolean("setSuccess2",false)){
+                        return;
+                    }
+                    if (peopleDataDialog == null) {
+                        peopleDataDialog = new PeopleDataDialog(MainActivity.this);
+                        peopleDataDialog.show();
+                    } else {
+                        if (!peopleDataDialog.isShowing()) {
+                            peopleDataDialog.show();
+                        }
+                    }
                     break;
                 case R.id.rb_discover:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_4);

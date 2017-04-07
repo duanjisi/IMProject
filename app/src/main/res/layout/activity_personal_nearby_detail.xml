@@ -76,6 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="25dp"
+                android:visibility="gone"
                 android:background="@color/line_color_gray_d2" />
 
             <TextView
@@ -90,6 +91,7 @@
                 android:paddingTop="@dimen/dp_10"
                 android:text="@string/set_up_notes_and_labels"
                 android:textColor="@color/black"
+                android:visibility="gone"
                 android:textSize="20sp" />
 
             <View
@@ -183,7 +185,9 @@
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingRight="16.5dp">
+                    android:paddingBottom="@dimen/dp_10"
+                    android:paddingRight="16.5dp"
+                    android:paddingTop="@dimen/dp_10">
 
                     <TextView
                         android:id="@+id/tv_p"
@@ -195,28 +199,71 @@
                         android:textColor="@color/black"
                         android:textSize="17.5sp" />
 
-                    <ImageView
-                        android:id="@+id/iv_photo_1"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="70.4dp"
                         android:layout_marginRight="@dimen/dp_10"
-                        android:layout_weight="2"
-                        android:scaleType="centerCrop" />
+                        android:layout_weight="2">
 
-                    <ImageView
-                        android:id="@+id/iv_photo_2"
+                        <ImageView
+                            android:id="@+id/iv_photo_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+
+                        <ImageView
+                            android:id="@+id/iv_video_1"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_video_play"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="70.4dp"
                         android:layout_marginRight="@dimen/dp_10"
-                        android:layout_weight="2"
-                        android:scaleType="centerCrop" />
+                        android:layout_weight="2">
 
-                    <ImageView
-                        android:id="@+id/iv_photo_3"
+                        <ImageView
+                            android:id="@+id/iv_photo_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+
+                        <ImageView
+                            android:id="@+id/iv_video_2"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_video_play"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="70.4dp"
-                        android:layout_weight="2"
-                        android:scaleType="centerCrop" />
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:layout_weight="2">
+
+                        <ImageView
+                            android:id="@+id/iv_photo_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+
+                        <ImageView
+                            android:id="@+id/iv_video_3"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_video_play"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
 
 
                     <ImageView

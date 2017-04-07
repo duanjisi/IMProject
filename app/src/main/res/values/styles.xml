@@ -249,6 +249,17 @@
         <item name="android:layout_marginRight">33dp</item>
     </style>
 
+    <!-- 个人资料textview的样式 -->
+    <style name="personal_data_tv_style3">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginLeft">22dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:background">@null</item>
+    </style>
+
     <!-- 个人资料edittext的样式 -->
     <style name="personal_data_et_style">
         <item name="android:layout_width">match_parent</item>
@@ -285,5 +296,9 @@
         <item name="android:maxHeight">20dip</item>
     </style>
 
+    <style name="hide_fuwa_pop_anim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/pop_enter_ani_hidefuwa</item>
+        <item name="android:windowExitAnimation">@anim/pop_exit_ani_hidefuwa</item>
+    </style>
 
 </resources>

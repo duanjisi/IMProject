@@ -186,6 +186,7 @@ public class PersonalInfoChangeActivity extends BaseActivity implements View.OnC
 
                     @Override
                     public void onFailure(String msg) {
+                        showToast(msg, false);
                         cancelLoadingDialog();
                     }
                 });

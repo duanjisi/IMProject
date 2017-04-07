@@ -3,6 +3,7 @@ package im.boss66.com.activity.treasure;
 import android.app.Dialog;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
@@ -78,7 +79,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                 openActivity(GameRuleActivity.class);
                 break;
             case R.id.tv_apply://申请福娃
-
+                openActivity(ApplyFuwaActivity.class);
                 break;
             case R.id.iv_msg://消息
                 openActivity(FuwaMessageActivity.class);

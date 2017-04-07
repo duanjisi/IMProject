@@ -245,6 +245,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 return false;
             }
         });
+        rcv_news.setFooterViewHint("拼命加载中", "我是有底线的", "网络不给力啊，点击再试一次吧");
         // 头部view
         View header = LayoutInflater.from(this).inflate(R.layout.headview_people_center,
                 (ViewGroup) findViewById(android.R.id.content), false);
@@ -700,7 +701,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
 
     //获取评论列表
     private void getServerCommentList(int feedId) {
-        String main = HttpUrl.GET_COMMUNITY_COMMENT_LIST + "?feed_id=" + feedId;
+        String main = HttpUrl.GET_COMMUNITY_COMMENT_LIST + "?feed_id=" + feedId + "&page=0&size=1024";
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);

@@ -413,7 +413,8 @@
         <!-- 相册详情 -->
         <activity
             android:name=".activity.discover.PhotoAlbumDetailActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateUnchanged|adjustResize"></activity>
         <!-- 相册详情 -->
         <activity
             android:name=".activity.discover.PhotoAlbumLookPicActivity"
@@ -505,6 +506,10 @@
         <activity android:name=".activity.connection.FamousPersonDetailActivity"></activity>
         <!--家乡和校园动态详情-->
         <activity android:name=".activity.connection.DynamicActivity"></activity>
+        <!--申请福娃-->
+        <activity
+            android:name=".activity.treasure.ApplyFuwaActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
 
         <!--支付宝start-->
         <activity
@@ -551,6 +556,11 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- 设置-修改密码 -->
+        <activity
+            android:name=".activity.personage.ChangeUserPwActivity"
+            android:screenOrientation="portrait"></activity>
+
         <!-- 定位需要的服务 -->
         <service android:name="com.amap.api.location.APSService" />
         <meta-data

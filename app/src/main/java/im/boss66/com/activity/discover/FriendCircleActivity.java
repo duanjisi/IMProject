@@ -805,7 +805,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
     //获取评论列表
     private void getServerCommentList(int feedId) {
-        String main = HttpUrl.FRIEND_CIRCLE_GET_COMMENT_LIST + "?feed_id=" + feedId;
+        String main = HttpUrl.FRIEND_CIRCLE_GET_COMMENT_LIST + "?feed_id=" + feedId + "&page=0&size=1024";
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);

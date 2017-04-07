@@ -256,6 +256,8 @@ public class HttpUrl {
     public static final String HOMETONW_NEWS_DETATIL = MAIN_URL + "web/hometown/message";
     //学校动态详情页
     public static final String SCHOOL_NEWS_DETATIL = MAIN_URL + "/web/school/message";
+    //申请福娃
+    public static final String APPLY_FUWA = "http://wsimali.66boss.com:9090/msg/apply";
 
     //修改密码
     public static final String CHANGE_USER_PW = MAIN_URL + "/ucenter/psw/index";

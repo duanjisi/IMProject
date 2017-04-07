@@ -9,6 +9,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.PrefKey;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.widget.ActionSheet;
 
@@ -47,6 +49,14 @@ public class PersonalNewAlertsActivity extends BaseActivity implements View.OnCl
         sb_voice.setOnCheckedChangeListener(this);
         sb_friends_photo_update.setOnCheckedChangeListener(this);
         sb_vibration.setOnCheckedChangeListener(this);
+        boolean news_alert_voice = PreferenceUtils.getBoolean(context, "system_alerts_voice", true);
+        sb_voice.setChecked(news_alert_voice);
+        boolean news_alert = PreferenceUtils.getBoolean(context, "system_alerts", true);
+        sb_receive_new_alerts.setChecked(news_alert);
+        boolean news_shake = PreferenceUtils.getBoolean(context, "system_alerts_shake", true);
+        sb_vibration.setChecked(news_shake);
+        boolean system_alerts_circle = PreferenceUtils.getBoolean(context, "system_alerts_circle", true);
+        sb_friends_photo_update.setChecked(system_alerts_circle);
     }
 
     @Override
@@ -65,6 +75,7 @@ public class PersonalNewAlertsActivity extends BaseActivity implements View.OnCl
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
         switch (compoundButton.getId()) {
             case R.id.sb_receive_new_alerts://接收新消息通知
+                PreferenceUtils.putBoolean(this, "system_alerts", isChecked);
                 if (isChecked) {
                     ll_content.setVisibility(View.VISIBLE);
                 } else {
@@ -75,13 +86,13 @@ public class PersonalNewAlertsActivity extends BaseActivity implements View.OnCl
 
                 break;
             case R.id.sb_voice://声音
-
+                PreferenceUtils.putBoolean(this, "system_alerts_voice", isChecked);
                 break;
             case R.id.sb_vibration://振动
-
+                PreferenceUtils.putBoolean(this, "system_alerts_shake", isChecked);
                 break;
             case R.id.sb_friends_photo_update://朋友圈照片更新
-
+                PreferenceUtils.putBoolean(this, "system_alerts_circle", isChecked);
                 break;
         }
     }
