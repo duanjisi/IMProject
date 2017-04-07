@@ -23,6 +23,8 @@ public class ContactUtils {
             Log.i("info", "===============number:" + number);
             if (number.contains("-")) {
                 number = number.replace("-", "");
+            } else if (number.contains(" ")) {
+                number = number.replace(" ", "");
             }
             if (number != null && !number.equals("")) {
                 if (number.contains("+86")) {

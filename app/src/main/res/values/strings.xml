@@ -86,7 +86,7 @@
     <string name="circle_of_friends_photo_update">朋友圈照片更新</string>
     <string name="notify_the_display_messages_tip">关闭后，当收到微信消息时，通知提示将不显示发信人和内容摘要。</string>
     <string name="not_disturb_function_of_news_tip">设置系统功能消息提示声音和振动的时段。</string>
-    <string name="vibration_tip">当微信在运行时，你可以设置是否需要声音或者振动。</string>
+    <string name="vibration_tip">当嗨萌在运行时，你可以设置是否需要声音或者振动。</string>
     <string name="circle_of_friends_photo_update_tip">关闭后。有朋友更新照片时，界面下面的“发现”切换按钮上不再出现红点提示。</string>
 
     <string name="add_me_as_friend_needs_to_prove_it">加我为朋友时需要验证</string>
