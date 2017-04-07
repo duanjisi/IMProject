@@ -139,6 +139,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private Button btn_catch;
     private PermissionListener permissionListener;
     private RelativeLayout titleBar;
+    private Resources resources;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +153,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
     private void initViews() {
         account = App.getInstance().getAccount();
+        resources = getResources();
         imageLoader = ImageLoaderUtils.createImageLoader(context);
 
         topBar = findViewById(R.id.content);
@@ -321,8 +323,11 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
         TextView tvTips = (TextView) view.findViewById(R.id.tv_tips);
         String detail = entity.getDetail();
-        if (TextUtils.isEmpty(detail)) {
+        Log.i("info", "=====detail:" + detail);
+        if (!TextUtils.isEmpty(detail)) {
             tvTips.setText(detail);
+        } else {
+            tvTips.setText(resources.getString(R.string.no_act));
         }
         int[] location = new int[2];
         parent.getLocationOnScreen(location);
@@ -779,6 +784,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         ArrayList<ChildEntity> list = children.getData();
         if (list != null && list.size() != 0) {
             for (ChildEntity child : list) {
+                Log.i("info", "========details:" + child.getDetail());
                 if (!hasChild(child)) {
                     String[] strs = child.getGeo().split("-");
                     addMarkerToMap(new LatLng(Double.parseDouble(strs[1]), Double.parseDouble(strs[0])), child);

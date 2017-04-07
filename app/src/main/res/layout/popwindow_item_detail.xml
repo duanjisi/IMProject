@@ -38,7 +38,6 @@
             android:layout_marginTop="28dp"
             android:ellipsize="end"
             android:maxLines="3"
-            android:text="但是尖峰时刻到付款水电开发林肯律师的风景但是开发建设看到附近开了水电开发架空历史"
             android:textColor="@color/bg_rectangle"
             android:textSize="18sp" />
     </LinearLayout>
