@@ -20,7 +20,7 @@ public class FuwaEntity {
 
     private List<Data> data;
 
-    public class Data {
+    public static  class Data {
         public String getGid() {
             return gid;
         }

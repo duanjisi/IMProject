@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -343,6 +344,7 @@ public class FileUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.i("liwya",e.getMessage());
             errorStr = e.getMessage();
             handler.obtainMessage(FAILED, errorStr).sendToTarget();
         }

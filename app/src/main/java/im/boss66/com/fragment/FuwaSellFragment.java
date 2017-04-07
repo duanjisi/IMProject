@@ -124,7 +124,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         showToast("支付成功", true);
-                        chooseFuwa =null;
+
                         dialog.dismiss();   //福娃详情dialog
 
                         if(dialog4==null){
@@ -172,6 +172,8 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                 adapter.setDatas(datas);
                 adapter.setChooses();
                 adapter.notifyDataSetChanged();
+
+                chooseFuwa =null;
 
                 datasChoose = datas;
 
