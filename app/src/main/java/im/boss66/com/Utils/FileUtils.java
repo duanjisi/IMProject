@@ -343,6 +343,7 @@ public class FileUtils {
                 handler.obtainMessage(SUCCESS).sendToTarget();
             }
         } catch (Exception e) {
+            Log.i("info","========Exception:"+e.getMessage());
             e.printStackTrace();
             Log.i("liwya",e.getMessage());
             errorStr = e.getMessage();

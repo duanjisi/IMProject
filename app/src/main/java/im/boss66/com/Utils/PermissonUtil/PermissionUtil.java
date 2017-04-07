@@ -30,6 +30,7 @@ public class PermissionUtil {
 
     // 通讯录操作权限
     public static final String[] PERMISSIONS_GROUP_CONTCATS = {
+            Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.GET_ACCOUNTS,
             Manifest.permission.READ_CONTACTS};
     //Manifest.permission.WRITE_CONTACTS

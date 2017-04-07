@@ -25,7 +25,6 @@
     <!-- 录音 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!--<uses-permission android:name="android.permission.WRITE_CONTACTS" />-->
-
     <!--高德地图-->
     <!--允许程序打开网络套接字-->
     <!--允许程序设置内置sd卡的写权限-->
@@ -33,7 +32,6 @@
     <!--允许程序访问WiFi网络信息-->
     <!--允许程序读写手机状态和身份-->
     <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
-
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera.flash" />
