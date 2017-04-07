@@ -58,6 +58,8 @@ import im.boss66.com.entity.FuwaEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.RecycleViewItemListener;
 
+import static im.boss66.com.entity.FuwaEntity.*;
+
 /**
  * Created by liw on 2017/3/13.
  */
@@ -219,6 +221,25 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             }
 
 
+        }
+
+
+
+        List<String> ids = new ArrayList<>();
+        for(FuwaEntity.Data bills : fuwaList){
+            String id = bills.getId();
+            ids.add(id);
+        }
+
+
+        for(int i =1;i<67;i++){
+            String id = String.valueOf(i);
+            if(!ids.contains(id)){
+                FuwaEntity.Data data1 = new FuwaEntity.Data();
+                data1.setId(i+"");
+                data1.setNum(0);
+                fuwaList.add(data1);
+            }
         }
 
         Collections.sort(fuwaList, new Comparator<FuwaEntity.Data>() {

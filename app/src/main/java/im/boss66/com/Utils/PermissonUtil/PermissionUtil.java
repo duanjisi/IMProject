@@ -66,6 +66,11 @@ public class PermissionUtil {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    // 操作Sd卡
+    public static final String[] PERMISSIONS_SD_READ_WRITE = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
     // 读取联系人
     public static final String[] PERMISSIONS_READ_CONTACTS = {
             Manifest.permission.READ_CONTACTS
