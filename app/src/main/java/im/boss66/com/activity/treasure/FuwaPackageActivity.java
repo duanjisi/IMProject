@@ -274,8 +274,11 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                 if (time2 - time1 > 500L) {
                     choosePosition = postion;
                     vp_position=0; //点击后给vp_position设为0
-                    showFuwaDialog(context);
-                    time1 = time2;
+                    if(fuwaList.get(choosePosition).getIdList()!=null&&fuwaList.get(choosePosition).getIdList().size()>0){
+                        showFuwaDialog(context);
+
+                        time1 = time2;
+                    }
                 } else {
                     ToastUtil.showShort(context, "点击的太快啦");
                 }
@@ -409,8 +412,12 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 //                ll_points.addView(img);
 //            }
 //        }
-        fuwa_gid = fuwaList.get(choosePosition).getIdList().get(0); //首页的gid
-        initFuwaDetail(fuwa_gid);       //给第一个view初始化
+
+        if(fuwaList.get(choosePosition).getIdList()!=null&&fuwaList.get(choosePosition).getIdList().size()>0){
+
+            fuwa_gid = fuwaList.get(choosePosition).getIdList().get(0); //首页的gid
+            initFuwaDetail(fuwa_gid);       //给第一个view初始化
+        }
 
         vp_fuwa.setAdapter(new ViewAdapter(views));
 
