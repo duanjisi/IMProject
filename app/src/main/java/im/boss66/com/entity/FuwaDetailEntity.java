@@ -48,6 +48,7 @@ public class FuwaDetailEntity {
 
         private String pos;
         private String creator;
+        private String fuwaId;
 
         public String getPos() {
             return pos;
@@ -63,6 +64,14 @@ public class FuwaDetailEntity {
 
         public void setCreator(String creator) {
             this.creator = creator;
+        }
+
+        public String getFuwaId() {
+            return fuwaId;
+        }
+
+        public void setFuwaId(String fuwaId) {
+            this.fuwaId = fuwaId;
         }
     }
 }
