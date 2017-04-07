@@ -75,6 +75,7 @@
 
         <RelativeLayout
 
+            android:visibility="gone"
             android:id="@+id/rl_weixin"
             android:layout_below="@id/rl_zhifubao"
             android:layout_width="match_parent"

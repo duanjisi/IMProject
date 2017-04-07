@@ -19,7 +19,7 @@
         android:layout_below="@id/tv_apply"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
-        android:text="确认提交申请后运营商将会看到你的申请"
+        android:text="确认提交申请后工作人员将会看到你的申请"
         android:textSize="13sp"
         android:textColor="@color/bg_rectangle"
         android:layout_width="wrap_content"
