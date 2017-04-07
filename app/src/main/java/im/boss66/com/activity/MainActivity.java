@@ -187,13 +187,14 @@ public class MainActivity extends BaseActivity implements Observer {
 //        intent.putExtra("userid", account.getUser_id());
 //        startService(intent);
         ChatServices.startChatService(context);
-        getPermission(PermissionUtil.PERMISSIONS_SYSTEM_SETTING);
+//        getPermission(PermissionUtil.PERMISSIONS_SYSTEM_SETTING);
+        getPermission(PermissionUtil.PERMISSIONS_SD_READ_WRITE);
         requestLoveStore();
         checkUpdate();
-        boolean isInitEmo = PreferenceUtils.getBoolean(context, PrefKey.EMO_SYSTEM_INIT, true);
-        if (isInitEmo) {
-            initSystemEmos();
-        }
+//        boolean isInitEmo = PreferenceUtils.getBoolean(context, PrefKey.EMO_SYSTEM_INIT, true);
+//        if (isInitEmo) {
+//            initSystemEmos();
+//        }
     }
 
     public InputStream getImageStream(String path) throws Exception {
@@ -588,7 +589,10 @@ public class MainActivity extends BaseActivity implements Observer {
 
             @Override
             public void onRequestPermissionSuccess() {
-
+                boolean isInitEmo = PreferenceUtils.getBoolean(context, PrefKey.EMO_SYSTEM_INIT, true);
+                if (isInitEmo) {
+                    initSystemEmos();
+                }
             }
 
             @Override
