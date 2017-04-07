@@ -1,6 +1,7 @@
 package im.boss66.com.activity.book;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -32,6 +34,7 @@ import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.PingYinUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BasePhoneContact;
@@ -185,7 +188,7 @@ public class PhoneContactsActivity extends BaseActivity {
     }
 
     private void initData(BasePhoneContact basePhone) {
-        ArrayList<PhoneContact> contacts = basePhone.getResult();
+        final ArrayList<PhoneContact> contacts = basePhone.getResult();
         if (contacts != null && contacts.size() != 0) {
             HashMap<String, String> map = ContactUtils.getContactMap(context);
             for (int i = 0; i < contacts.size(); i++) {
@@ -221,6 +224,16 @@ public class PhoneContactsActivity extends BaseActivity {
             }
         }
         contactListLayout.init(contactList, R.layout.ease_row_phone_contact, null);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                EaseUser user = (EaseUser) listView.getItemAtPosition(position);
+                Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
+                intent.putExtra("classType", "PhoneContactsActivity");
+                intent.putExtra("userid", user.getUserid());
+                startActivity(intent);
+            }
+        });
     }
 
     private static boolean isChar(String str) {
