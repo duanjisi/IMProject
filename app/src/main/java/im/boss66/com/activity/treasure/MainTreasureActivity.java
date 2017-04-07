@@ -25,7 +25,7 @@ import im.boss66.com.activity.base.BaseActivity;
  * 寻宝首页.
  */
 public class MainTreasureActivity extends BaseActivity implements View.OnClickListener {
-    private TextView tv_command, tv_apply, tv_rank;
+    private TextView tv_command, tv_apply, tv_rank, tv_game;
     private ImageView iv_msg, iv_bag, iv_trade;
     private Button btn_find, btn_store;
 
@@ -42,6 +42,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         tv_command = (TextView) findViewById(R.id.tv_command);
         tv_rank = (TextView) findViewById(R.id.tv_rank);
         tv_apply = (TextView) findViewById(R.id.tv_apply);
+        tv_game = (TextView) findViewById(R.id.tv_game);
 
         iv_msg = (ImageView) findViewById(R.id.iv_msg);
         iv_bag = (ImageView) findViewById(R.id.iv_bag);
@@ -52,6 +53,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
         tv_command.setOnClickListener(this);
         tv_rank.setOnClickListener(this);
+        tv_game.setOnClickListener(this);
         tv_apply.setOnClickListener(this);
         iv_msg.setOnClickListener(this);
         iv_bag.setOnClickListener(this);
@@ -72,7 +74,9 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.tv_rank://福娃排行榜
                 openActivity(FuwaTopList.class);
-
+                break;
+            case R.id.tv_game://福娃游戏规则
+                openActivity(GameRuleActivity.class);
                 break;
             case R.id.tv_apply://申请福娃
                 openActivity(ApplyFuwaActivity.class);

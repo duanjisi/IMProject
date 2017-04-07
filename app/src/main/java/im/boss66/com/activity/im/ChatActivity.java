@@ -1252,7 +1252,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void uploadImageAudioFile(final String path, final boolean isImage, final int voiceTime) {
-        if (!isImageFile(path)) {
+        if (isImage && !isImageFile(path)) {
             showToast("不支持该文件格式!", true);
             return;
         }
@@ -1938,7 +1938,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                         TimeUnit.MILLISECONDS);
             }
         }
-
     }
 
     /**

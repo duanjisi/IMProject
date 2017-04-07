@@ -22,6 +22,7 @@ import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.book.SelectContactsActivity;
 import im.boss66.com.db.MessageDB;
+import im.boss66.com.db.dao.ConversationHelper;
 import im.boss66.com.widget.EaseSwitchButton;
 
 /**
@@ -36,6 +37,7 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
     private MessageDB mMsgDB;// 保存消息的数据库
     private String MsgTab;
     private String uid;
+    private boolean isTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
         rl_clear_records.setOnClickListener(this);
         rl_complain.setOnClickListener(this);
         switchDisturb.setOnClickListener(this);
+        switchTop.setOnClickListener(this);
         iv_add.setOnClickListener(this);
         Intent intent = getIntent();
         if (intent != null) {
@@ -83,12 +86,21 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
                 tvName.setText(name);
             }
         }
+        isTop = PreferenceUtils.getBoolean(context, PrefKey.CHAT_GROUP_INFORMS_FIRST + "/" + MsgTab, false);
+        if (isTop) {
+            switchTop.openSwitch();
+        } else {
+            switchTop.closeSwitch();
+        }
+
         boolean isopen = PreferenceUtils.getBoolean(this, PrefKey.AVOID_DISTURB + uid, false);
         if (isopen) {
             switchDisturb.openSwitch();
         } else {
             switchDisturb.closeSwitch();
         }
+
+
     }
 
     @Override
@@ -127,6 +139,16 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
                     isOpen = true;
                 }
                 PreferenceUtils.putBoolean(this, PrefKey.AVOID_DISTURB + uid, isOpen);
+                break;
+            case R.id.switch_btn_top:
+                if (isTop) {
+                    switchTop.closeSwitch();
+                } else {
+                    switchTop.openSwitch();
+                    ConversationHelper.getInstance().sortTop(uid);
+                }
+                isTop = !isTop;
+                PreferenceUtils.putBoolean(context, PrefKey.CHAT_GROUP_INFORMS_FIRST + "/" + MsgTab, isTop);
                 break;
             case R.id.iv_add:
                 Intent intent = new Intent(context, SelectContactsActivity.class);

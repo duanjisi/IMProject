@@ -8,7 +8,7 @@
         android:id="@+id/rl_top_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_navigation_bar_height"
-        android:background="@color/top_bar_color">
+        android:background="@drawable/top_bg">
 
         <TextView
             android:id="@+id/tv_back"

@@ -247,7 +247,7 @@
     <string name="notice_weixin_not_install">你未安装微信！</string>
     <string name="notice_qq_not_install">你未安装QQ！</string>
     <string name="share_content">我正在嗨萌寻宝,一起来寻宝吧!</string>
-
+    <string name="no_act">暂无活动</string>
     <!-- 视频相关 start -->
     <string name="video_input_verification_code_to_watch">输入正确验证码即可马上观看视频</string>
     <string name="video_verification_code">验证码</string>

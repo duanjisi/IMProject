@@ -165,7 +165,9 @@
         <activity
             android:name=".activity.treasure.MainTreasureActivity"
             android:screenOrientation="portrait"></activity>
-
+        <activity
+            android:name=".activity.treasure.GameRuleActivity"
+            android:screenOrientation="portrait"></activity>
         <!--群聊名称-->
         <activity
             android:name=".activity.im.ChatGroupNameActivity"
