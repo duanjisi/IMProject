@@ -264,7 +264,7 @@
                     android:layout_centerVertical="true"
                     android:id="@+id/tv_job"
                     style="@style/personal_data_tv_style"
-                    android:text="区域" />
+                    android:text="区域*" />
 
                 <TextView
                     android:text="请选择福娃藏在哪个地域"
