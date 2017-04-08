@@ -1,5 +1,6 @@
 package im.boss66.com.fragment;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.adapter.RecommendAdapter;
@@ -91,6 +93,12 @@ public class CustomAddFragment extends BaseFragment implements View.OnClickListe
                     schoolmateListEntity = JSON.parseObject(result, SchoolmateListEntity.class);
                     if (schoolmateListEntity.getResult() != null) {
                         if (schoolmateListEntity.getCode() == 1) {
+                            if (schoolmateListEntity.getStatus() == 401) {
+                                Intent intent = new Intent();
+                                intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                                App.getInstance().sendBroadcast(intent);
+                                return;
+                            }
                             handler.obtainMessage(1).sendToTarget();
                         }else{
                             showToast(schoolmateListEntity.getMessage(),false);
@@ -105,7 +113,14 @@ public class CustomAddFragment extends BaseFragment implements View.OnClickListe
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(e.getMessage(), false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
             }
         });
 
