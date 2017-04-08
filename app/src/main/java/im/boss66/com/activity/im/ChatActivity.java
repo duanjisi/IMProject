@@ -1320,8 +1320,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void uploadVideoFile(String videoPath) {
+        Log.i("info", "=================videoPath:" + videoPath);
         if (TextUtils.isEmpty(videoPath)) {
             showToast("视频文件路径未找到!", true);
+            return;
+        }
+        String fileName = FileUtil.getFileName(videoPath);
+        if (!(fileName.contains(".mp4")
+                || fileName.contains(".mov"))) {
+            showToast("不支持该视频文件格式!", true);
             return;
         }
         showLoadingDialog();

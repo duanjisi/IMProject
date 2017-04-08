@@ -634,23 +634,25 @@ public class MessageAdapter extends BaseAdapter {
 //        holder.duration.setText("");
         final String videoPath = mItem.getMessage();
         Log.i("info", "===================videoPath:" + videoPath);
-        String imageUrl = null;
+        String imageUrl = "";
         if (videoPath.contains(".mp4")) {
             imageUrl = videoPath.replace(".mp4", ".jpg");
         } else if (videoPath.contains(".mov")) {
             imageUrl = videoPath.replace(".mov", ".jpg");
         }
-        scalLoadImageVideo(holder, imageUrl);
-        final String cover = imageUrl;
-        holder.iv_player.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, VideoPlayerNewActivity.class);
-                intent.putExtra("videoPath", videoPath);
-                intent.putExtra("imgurl", cover);
-                mContext.startActivity(intent);
-            }
-        });
+        if (!imageUrl.equals("")) {
+            scalLoadImageVideo(holder, imageUrl);
+            final String cover = imageUrl;
+            holder.iv_player.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, VideoPlayerNewActivity.class);
+                    intent.putExtra("videoPath", videoPath);
+                    intent.putExtra("imgurl", cover);
+                    mContext.startActivity(intent);
+                }
+            });
+        }
     }
 
     private void startAnimation(ImageView imageView, int resId) {

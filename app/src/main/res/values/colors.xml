@@ -144,4 +144,8 @@
     <color name="golden_color">#e7d09a</color>
 
     <color name="text_gray_darker">#666666</color>
+
+    <color name="biz_audio_progress_bg">#00b2ff</color>
+    <color name="biz_audio_progress_first">#ffffff</color>
+    <color name="biz_audio_progress_second">#6b6666</color>
 </resources>

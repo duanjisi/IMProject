@@ -62,7 +62,6 @@ public class FuwaListAdaper extends  BaseRecycleViewAdapter{
             hodler1.tv_number.setText(item.getId());
         }
 
-        if(((FuwaEntity.Data) datas.get(position)).getIdList().size()>0){
 
             hodler1.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -71,7 +70,6 @@ public class FuwaListAdaper extends  BaseRecycleViewAdapter{
                     itemListener.onItemClick(adapterPosition);
                 }
             });
-        }
 
 }
 
