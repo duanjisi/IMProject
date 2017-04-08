@@ -96,7 +96,7 @@ public class CustomAddFragment extends BaseFragment implements View.OnClickListe
                             showToast(schoolmateListEntity.getMessage(),false);
                         }
                     }else {
-                        showToast("empty",false);
+//                        showToast("empty",false);
                     }
                 }
 

@@ -104,7 +104,7 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
                         if (famousPeopleEntity.getCode() == 1) {
                             handler.obtainMessage(1).sendToTarget();
                         } else {
-                            ToastUtil.show(context, famousPeopleEntity.getMessage(), Toast.LENGTH_SHORT);
+//                            ToastUtil.show(context, famousPeopleEntity.getMessage(), Toast.LENGTH_SHORT);
                         }
                     }
 

@@ -113,7 +113,7 @@ public class CountrymanFragment extends BaseFragment {
                             showToast(schoolmateListEntity.getMessage(),false);
                         }
                     }else{
-                        showToast("empty",false);
+//                        showToast("empty",false);
 
                     }
                 }
