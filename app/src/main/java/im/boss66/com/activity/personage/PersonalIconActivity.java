@@ -285,10 +285,21 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onFailure(HttpException e, String s) {
-                Toast.makeText(context, "上传失败!", Toast.LENGTH_LONG).show();
-                cancelLoadingDialog();
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
             }
         });
+    }
+
+    private void goLogin() {
+        Intent intent = new Intent();
+        intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+        App.getInstance().sendBroadcast(intent);
     }
 
     @SuppressLint("SimpleDateFormat")

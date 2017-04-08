@@ -533,9 +533,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                             String msg = obj.getString("message");
                             int status = obj.getInt("status");
                             if (status == 401) {
-                                Intent intent = new Intent();
-                                intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                                App.getInstance().sendBroadcast(intent);
+                                goLogin();
                             } else {
                                 if (code == 1) {
                                     showToast("删除成功", false);
@@ -552,8 +550,13 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
-                showToast("删除失败", false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast("删除失败", false);
+                }
             }
         });
     }
@@ -713,9 +716,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                     PhotoAlbumDetailEntity data = JSON.parseObject(result, PhotoAlbumDetailEntity.class);
                     if (data != null) {
                         if (data.getStatus() == 401) {
-                            Intent intent = new Intent();
-                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                            App.getInstance().sendBroadcast(intent);
+                            goLogin();
                         } else {
                             String msg = data.getMessage();
                             int code = data.getCode();
@@ -739,8 +740,13 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
-                showToast("获取失败", false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast("获取失败", false);
+                }
             }
         });
     }
@@ -759,9 +765,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                     CircleCommentListEntity entity = JSON.parseObject(result, CircleCommentListEntity.class);
                     if (entity != null) {
                         if (entity.getStatus() == 401) {
-                            Intent intent = new Intent();
-                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                            App.getInstance().sendBroadcast(intent);
+                            goLogin();
                         } else {
                             List<FriendCircleCommentEntity> list = entity.getResult();
                             if (list != null && list.size() > 0) {
@@ -775,7 +779,12 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(s, false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    showToast(s, false);
+                }
             }
         });
     }
@@ -801,9 +810,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                             PhotoAlbumDetailEntity data = JSON.parseObject(result, PhotoAlbumDetailEntity.class);
                             if (data != null) {
                                 if (data.getStatus() == 401) {
-                                    Intent intent = new Intent();
-                                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                                    App.getInstance().sendBroadcast(intent);
+                                    goLogin();
                                 } else {
                                     String msg = data.getMessage();
                                     int code1 = data.getCode();
@@ -832,8 +839,13 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
-                showToast("获取失败", false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
             }
         });
     }
@@ -877,8 +889,13 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
-                showToast("删除失败", false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast("删除失败", false);
+                }
             }
         });
     }
@@ -899,9 +916,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                         int code = data.getCode();
                         String msg = data.getMessage();
                         if (data.getStatus() == 401) {
-                            Intent intent = new Intent();
-                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                            App.getInstance().sendBroadcast(intent);
+                            goLogin();
                         } else {
                             if (code == 1) {
                                 if (isPrase == 0) {
@@ -921,7 +936,12 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(e.getMessage(), false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    showToast(s, false);
+                }
             }
         });
     }
@@ -987,7 +1007,13 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(s, false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
             }
         });
     }
@@ -1005,9 +1031,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                     BaseResult data = JSON.parseObject(result, BaseResult.class);
                     if (data != null) {
                         if (data.getStatus() == 401) {
-                            Intent intent = new Intent();
-                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                            App.getInstance().sendBroadcast(intent);
+                            goLogin();
                         } else {
                             int code = data.getCode();
                             String msg = data.getMessage();
@@ -1023,9 +1047,19 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(e.getMessage(), false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    showToast(s, false);
+                }
             }
         });
     }
 
+    private void goLogin() {
+        Intent intent = new Intent();
+        intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+        App.getInstance().sendBroadcast(intent);
+    }
 }

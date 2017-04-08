@@ -386,9 +386,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                             String msg = obj.getString("message");
                             int status = obj.getInt("status");
                             if (status == 401) {
-                                Intent intent = new Intent();
-                                intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                                App.getInstance().sendBroadcast(intent);
+                                goLogin();
                             } else {
                                 if (code == 1) {
                                     showToast("发布成功", false);
@@ -407,8 +405,13 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
-                showToast("上传失败，请重试...", false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast("上传失败，请重试...", false);
+                }
             }
         });
     }
@@ -671,6 +674,12 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         } else {
             return super.onKeyDown(keyCode, event);
         }
+    }
+
+    private void goLogin() {
+        Intent intent = new Intent();
+        intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+        App.getInstance().sendBroadcast(intent);
     }
 
 }

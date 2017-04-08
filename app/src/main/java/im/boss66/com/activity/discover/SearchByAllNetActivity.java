@@ -214,10 +214,21 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
-                showToast("获取数据失败", false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
             }
         });
+    }
+
+    private void goLogin() {
+        Intent intent = new Intent();
+        intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+        App.getInstance().sendBroadcast(intent);
     }
 
     private void showData(SearchDataEntity searchData) {

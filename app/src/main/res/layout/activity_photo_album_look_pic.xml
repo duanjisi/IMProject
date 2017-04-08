@@ -16,23 +16,40 @@
         android:layout_height="match_parent"
         android:visibility="gone">
 
-        <VideoView
-            android:id="@+id/vv_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
-
-        <ImageView
-            android:id="@+id/iv_bg"
+        <com.pili.pldroid.player.widget.PLVideoTextureView
+            android:id="@+id/videoView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true" />
 
-        <ProgressBar
-            android:id="@+id/pb_video"
+        <LinearLayout
+            android:id="@+id/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="正在加载" />
+        </LinearLayout>
+
+        <!--<ImageView-->
+        <!--android:id="@+id/iv_bg"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true" />-->
+
+        <!--<ProgressBar-->
+        <!--android:id="@+id/pb_video"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true" />-->
 
     </RelativeLayout>
 
