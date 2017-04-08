@@ -622,7 +622,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
     private void showDialog() {
         if (dialog == null) {
-            dialog_view = LayoutInflater.from(context).inflate(
+            dialog_view = LayoutInflater.from(CatchFuwaActivity.this).inflate(
                     R.layout.dialog_catch_fuwa, null);
             int sceenW = UIUtils.getScreenWidth(this);
             int sceenH = UIUtils.getScreenHeight(this);
@@ -635,7 +635,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             tv_continue.setOnClickListener(this);
             bt_share.setOnClickListener(this);
 
-            dialog = new Dialog(context, R.style.ActionSheetDialogStyle);
+            dialog = new Dialog(CatchFuwaActivity.this, R.style.ActionSheetDialogStyle);
             dialog.setContentView(dialog_view);
 
             LinearLayout ll_dialog = (LinearLayout) dialog_view.findViewById(R.id.ll_dialog);

@@ -69,7 +69,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
     private String userId, geohash, address;
     private EditText et_recommond;
     private FuwaEntity.Data fuwaItem;
-    private String recommond = "";
+    private String recommond = "暂无活动介绍";
     private ImageView iv_left, iv_right;
     private TextView tv_selected_tag;
     private FuwaDetailEntity fuwaDetailEntity;
@@ -269,7 +269,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
                 if (recommondDialog != null && recommondDialog.isShowing()) {
                     recommondDialog.dismiss();
                 }
-                recommond = "";
+                recommond = "暂无活动介绍";
                 hideFuwaServer();
                 break;
         }
