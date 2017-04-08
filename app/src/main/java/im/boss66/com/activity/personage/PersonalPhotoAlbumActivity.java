@@ -443,10 +443,21 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
-                showToast("获取数据失败", false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast("获取数据失败", false);
+                }
             }
         });
+    }
+
+    private void goLogin() {
+        Intent intent = new Intent();
+        intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+        App.getInstance().sendBroadcast(intent);
     }
 
     private void showData(List<FriendCircle> list) {

@@ -146,9 +146,7 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
                     CircleMsgListEntity data = JSON.parseObject(result, CircleMsgListEntity.class);
                     if (data != null) {
                         if (data.getStatus() == 401) {
-                            Intent intent = new Intent();
-                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                            App.getInstance().sendBroadcast(intent);
+                            goLogin();
                         } else {
                             List<CircleMsgListEntity.CircleMsgItem> list = data.getResult();
                             if (list != null && list.size() > 0) {
@@ -161,8 +159,13 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
-                showToast(e.getMessage(), false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
             }
         });
     }
@@ -201,9 +204,7 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
                             int status = obj.getInt("status");
                             if (code == 1) {
                                 if (status == 401) {
-                                    Intent intent = new Intent();
-                                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                                    App.getInstance().sendBroadcast(intent);
+                                    goLogin();
                                 } else {
                                     allList.clear();
                                     adapter.setDatas(allList);
@@ -222,8 +223,13 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(e.getMessage(), false);
-                cancelLoadingDialog();
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
             }
         });
     }
@@ -262,9 +268,7 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
                     CircleMsgListEntity data = JSON.parseObject(result, CircleMsgListEntity.class);
                     if (data != null) {
                         if (data.getStatus() == 401) {
-                            Intent intent = new Intent();
-                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                            App.getInstance().sendBroadcast(intent);
+                            goLogin();
                         } else {
                             List<CircleMsgListEntity.CircleMsgItem> list = data.getResult();
                             if (list != null && list.size() > 0) {
@@ -277,8 +281,13 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
-                showToast(e.getMessage(), false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
             }
         });
     }
@@ -324,10 +333,20 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(e.getMessage(), false);
-                cancelLoadingDialog();
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
             }
         });
     }
 
+    private void goLogin() {
+        Intent intent = new Intent();
+        intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+        App.getInstance().sendBroadcast(intent);
+    }
 }

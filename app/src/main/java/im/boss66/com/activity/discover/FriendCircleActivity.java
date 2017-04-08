@@ -529,7 +529,13 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(e.getMessage(), false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
             }
         });
     }
@@ -669,9 +675,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                             String msg = obj.getString("message");
                             int status = obj.getInt("status");
                             if (status == 401) {
-                                Intent intent = new Intent();
-                                intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                                App.getInstance().sendBroadcast(intent);
+                                goLogin();
                             } else {
                                 if (code == 1) {
                                     adapter.remove(curPostion);
@@ -689,8 +693,13 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
-                showToast("删除失败", false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast("删除失败", false);
+                }
             }
         });
     }
@@ -731,8 +740,12 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onFailure(HttpException e, String s) {
-                //cancelLoadingDialog();
-                showToast(s, false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    showToast(s, false);
+                }
             }
         });
     }
@@ -817,9 +830,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     CircleCommentListEntity entity = JSON.parseObject(result, CircleCommentListEntity.class);
                     if (entity != null) {
                         if (entity.getStatus() == 401) {
-                            Intent intent = new Intent();
-                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                            App.getInstance().sendBroadcast(intent);
+                            goLogin();
                         } else {
                             List<FriendCircleCommentEntity> list = entity.getResult();
                             if (list != null) {
@@ -836,7 +847,13 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(s, false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
             }
         });
     }
@@ -974,4 +991,9 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
     }
 
+    private void goLogin() {
+        Intent intent = new Intent();
+        intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+        App.getInstance().sendBroadcast(intent);
+    }
 }

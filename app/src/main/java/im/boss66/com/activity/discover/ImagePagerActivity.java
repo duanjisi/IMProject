@@ -83,9 +83,9 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("lits", imgUrls);
-                setResult(RESULT_OK);
+                Intent intent = new Intent();
+                intent.putExtra("lits", imgUrls);
+                setResult(RESULT_OK,intent);
                 finish();
             }
         });
@@ -369,6 +369,7 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
                     if (imgUrls.size() > page) {
                         imgUrls.remove(page);
                         mAdapter.notifyDataSetChanged();
+                        tv_indicator.setText(1 + "/" + mAdapter.getCount());
                     }
                 } else {
                     Bundle bundle = new Bundle();

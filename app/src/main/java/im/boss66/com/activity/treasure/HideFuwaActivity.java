@@ -193,7 +193,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             try {
                 bitmapImg = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 if (bitmapImg != null) {
-                    String imageName = "hai_meng_fuwa.jpg";
+                    String imageName = System.currentTimeMillis() + ".jpg";
                     // 指定调用相机拍照后照片的储存路径
                     File dir = new File(savePath);
                     if (!dir.exists()) {
@@ -591,6 +591,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                     .with(this)
                     .load(imgFile)
                     .into(iv_dialog_icon);
+            imgFile = null;
         }
         tv_dialog_address.setText("" + address);
         dialog.show();
