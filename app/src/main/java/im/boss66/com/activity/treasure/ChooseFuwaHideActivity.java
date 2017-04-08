@@ -152,6 +152,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
     private void getSeverData() {
         String url = HttpUrl.QUERY_MY_FUWA + userId;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
+        httpUtils.configCurrentHttpCacheExpiry(1000);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
