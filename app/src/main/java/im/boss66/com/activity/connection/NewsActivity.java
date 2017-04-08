@@ -144,7 +144,7 @@ public class NewsActivity extends ABaseActivity implements View.OnClickListener 
 
                             handler.obtainMessage(1).sendToTarget();
                         }else{
-                            ToastUtil.show(NewsActivity.this,newsEntity.getMessage(), Toast.LENGTH_SHORT);
+//                            ToastUtil.show(NewsActivity.this,newsEntity.getMessage(), Toast.LENGTH_SHORT);
                         }
                     }
 

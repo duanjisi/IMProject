@@ -105,7 +105,7 @@ public class ClubActivity extends ABaseActivity implements View.OnClickListener 
                             if (clubEntity.getCode() == 1) {
                                 handler.obtainMessage(1).sendToTarget();
                             } else {
-                                showToast(clubEntity.getMessage(), false);
+//                                showToast(clubEntity.getMessage(), false);
                             }
                         }
 
