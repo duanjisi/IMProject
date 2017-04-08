@@ -137,7 +137,12 @@
             android:screenOrientation="portrait"></activity>
         <!--播放视频-->
         <activity
+            android:name=".activity.player.VideoPlayerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".activity.player.PlayerVideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"></activity>
         <!--播放视频-->
         <activity
