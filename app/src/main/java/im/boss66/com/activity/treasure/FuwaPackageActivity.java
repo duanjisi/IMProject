@@ -608,9 +608,15 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                     long time4 = System.currentTimeMillis();
                     if(time4-time3>1000){
                         time3 = time4;
+
+
                         if(et_price.getText().length()>0){
 
-                            sellFuwa(Double.parseDouble(et_price.getText().toString()));
+                            if(Double.parseDouble(et_price.getText().toString())==0){
+                                ToastUtil.showShort(context,"出售金额必须大于0");
+                            }else{
+                                sellFuwa(Double.parseDouble(et_price.getText().toString()));
+                            }
                         }else{
                             ToastUtil.showShort(context,"请填写出售金额");
                         }
@@ -652,7 +658,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             tv_content.setVisibility(View.VISIBLE);
             et_price.setInputType(InputType.TYPE_CLASS_TEXT);
         } else {
-            InputFilter[] filters = {new InputFilter.LengthFilter(8)};
+            InputFilter[] filters = {new InputFilter.LengthFilter(10)};
             et_price.setFilters(filters);
             tv_price.setText("出售价格");
             et_price.setHint("");
