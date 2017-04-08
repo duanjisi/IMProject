@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -76,7 +77,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
     private List<FuwaEntity.Data> fuwaList = new ArrayList<>();
 
-    private int choosePosition;
+    private int choosePosition;     //福娃列表的选中位置
     private long time1 = 0L; //防止快速点击
 
 
@@ -134,7 +135,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     private View view1;
     private int vp_position =0;
     private List<View> views=new ArrayList<>();
-    private List<ImageView> mDataList = new ArrayList<>();
     private LinearLayout ll_points;
     private ViewPager vp_fuwa;
 
@@ -145,6 +145,13 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     private int count; //福娃vp 页数
     private TextView tv_num; //当前页
     private TextView tv_count; //总页数
+    private EditText et_price;
+
+    private  boolean flag = false; // 用来控制出售还是赠送
+    private TextView tv_price;
+    private TextView tv_confirm;
+    private TextView tv_yuan;
+    private TextView tv_content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,7 +192,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void showData(List<FuwaEntity.Data> data) {
-        fuwaList.clear();
+        fuwaList.clear();    //先把之前的数据清空
         for (FuwaEntity.Data bill : data) {
             boolean state = false;
             for (FuwaEntity.Data bills : fuwaList) {
@@ -225,6 +232,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
 
 
+        //拿到所有id
         List<String> ids = new ArrayList<>();
         for(FuwaEntity.Data bills : fuwaList){
             String id = bills.getId();
@@ -232,6 +240,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         }
 
 
+        //没有的补上对象，一共66个
         for(int i =1;i<67;i++){
             String id = String.valueOf(i);
             if(!ids.contains(id)){
@@ -242,6 +251,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             }
         }
 
+        //排序
         Collections.sort(fuwaList, new Comparator<FuwaEntity.Data>() {
             @Override
             public int compare(FuwaEntity.Data data1, FuwaEntity.Data data2) {
@@ -275,7 +285,14 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                     choosePosition = postion;
                     vp_position=0; //点击后给vp_position设为0
                     if(fuwaList.get(choosePosition).getIdList()!=null&&fuwaList.get(choosePosition).getIdList().size()>0){
-                        showFuwaDialog(context);
+                        if(dialog==null){
+
+                            showFuwaDialog(context);
+                        }else if(!dialog.isShowing()){
+                            setVp();
+                            dialog.show();
+
+                        }
 
                         time1 = time2;
                     }
@@ -322,10 +339,8 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
     //弹第一个福娃dialog
     private void showFuwaDialog(final Context context) {
-//        mDataList.clear(); //清空圆点list
-        views.clear();   //清空views
+
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-        // 不同页面加载不同的popup布局
         View view = inflater.inflate(R.layout.pop_fuwa_item, null);
 
         dialog = new Dialog(context, R.style.dialog_ios_style);
@@ -340,14 +355,10 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         img_left = (ImageView) view.findViewById(R.id.img_left);
         img_right = (ImageView) view.findViewById(R.id.img_right);
 
-        //页数
-        count = fuwaList.get(choosePosition).getIdList().size();
-        if(count>1){
-            img_right.setVisibility(View.VISIBLE);
-            ll_points.setVisibility(View.VISIBLE);
-            tv_num.setText("1");
-            tv_count.setText("/"+count);
-        }
+        vp_fuwa = (ViewPager) view.findViewById(R.id.vp_fuwa);
+
+        setVp();
+
 
 
         img_left.setOnClickListener(new View.OnClickListener() {
@@ -373,53 +384,33 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         dialog.findViewById(R.id.ll_sell).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //先访问接口拿福娃详情
-                showFuwaDialog2(context, false);
+                if(dialog2==null){
+                    flag= false;
+                    showFuwaDialog2(context);
+                }else if(!dialog2.isShowing()){
+                    flag= false;
+                    setDialog2Content(flag);
+                    dialog2.show();
+
+                }
             }
         });
 
         dialog.findViewById(R.id.ll_give).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showFuwaDialog2(context, true);
+                if(dialog2==null){
+                    flag= true;
+                    showFuwaDialog2(context);
+                }else if(!dialog2.isShowing()){
+                    flag= true;
+                    setDialog2Content(flag);
+                    dialog2.show();
+                }
             }
         });
 
-        vp_fuwa = (ViewPager) view.findViewById(R.id.vp_fuwa);
 
-        for (int i = 0; i < fuwaList.get(choosePosition).getIdList().size(); i++) {
-            view1 = LayoutInflater.from(context).inflate(R.layout.item_fuwa_vp, null);
-            views.add(view1);
-        }
-
-//        if(count>1){
-//            //初始化圆点
-//            for (int i = 0; i < count; i++) {
-//                ImageView img = new ImageView(context.getApplicationContext());
-//
-//                //添加底部灰点
-//                if (i == 0) {
-//                    img.setBackgroundResource(R.drawable.gift_yuandian2);
-//                } else {
-//                    img.setBackgroundResource(R.drawable.gift_yuandian);
-//                }
-//                //指定其大小
-//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(12, 12);
-//                if (i != 0)
-//                    params.leftMargin = 20;
-//                img.setLayoutParams(params);
-//                mDataList.add(img);
-//                ll_points.addView(img);
-//            }
-//        }
-
-        if(fuwaList.get(choosePosition).getIdList()!=null&&fuwaList.get(choosePosition).getIdList().size()>0){
-
-            fuwa_gid = fuwaList.get(choosePosition).getIdList().get(0); //首页的gid
-            initFuwaDetail(fuwa_gid);       //给第一个view初始化
-        }
-
-        vp_fuwa.setAdapter(new ViewAdapter(views));
 
         vp_fuwa.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -430,16 +421,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
             @Override
             public void onPageSelected(int position) {
-//                //测出页面滚动时小红点移动的距离，并通过setLayoutParams(params)不断更新其位置
-//                if(mDataList.size()>1){
-//                    for (int i = 0; i < mDataList.size(); i++) {
-//                        if (i == position) {
-//                            mDataList.get(i).setBackgroundResource(R.drawable.gift_yuandian2);
-//                        } else {
-//                            mDataList.get(i).setBackgroundResource(R.drawable.gift_yuandian);
-//                        }
-//                    }
-//                }
 
                 if(count>1){
                     tv_num.setText(position+1+"");
@@ -474,7 +455,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
             }
         });
-        vp_fuwa.setCurrentItem(0);
 
 
         ImageView img_cancle = (ImageView) dialog.findViewById(R.id.img_cancle);
@@ -494,6 +474,44 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         dialogWindow.setAttributes(params);
 
         dialog.show();
+    }
+
+    //设置vp
+    private void setVp() {
+        views.clear();   //清空views
+        //页数
+        count = fuwaList.get(choosePosition).getIdList().size();
+        //初始化vp下面的数字和左右icon
+        if(count>1){
+            img_left.setVisibility(View.VISIBLE);
+            img_right.setVisibility(View.VISIBLE);
+            tv_num.setText("1");
+            tv_count.setText("/"+count);
+        }else{
+            img_left.setVisibility(View.INVISIBLE);
+            img_right.setVisibility(View.INVISIBLE);
+            tv_num.setText("1");
+            tv_count.setText("/1");
+        }
+
+
+
+        //初始化vp的view
+        for (int i = 0; i < fuwaList.get(choosePosition).getIdList().size(); i++) {
+            view1 = LayoutInflater.from(context).inflate(R.layout.item_fuwa_vp, null);
+            views.add(view1);
+        }
+
+
+
+        //给第一个view初始化数据
+        if(fuwaList.get(choosePosition).getIdList()!=null&&fuwaList.get(choosePosition).getIdList().size()>0){
+            fuwa_gid = fuwaList.get(choosePosition).getIdList().get(0); //首页的gid
+            initFuwaDetail(fuwa_gid);
+        }
+
+        vp_fuwa.setAdapter(new ViewAdapter(views));
+
     }
 
     class ViewAdapter extends PagerAdapter {
@@ -516,14 +534,18 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-
-            container.removeView(viewList.get(position));
+            if (position < viewList.size()) {      //防止vp重新初始化越界崩溃
+                container.removeView(viewList.get(position));
+            }
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            container.addView(viewList.get(position));//千万别忘记添加到container
-            return viewList.get(position);
+            if (position < viewList.size()) {
+                container.addView(viewList.get(position));//千万别忘记添加到container
+                return viewList.get(position);
+            }
+            return null;
         }
     }
 
@@ -545,8 +567,9 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-    //第二个个福娃dialog2
-    private void showFuwaDialog2(final Context context, final boolean flag) {
+
+    //第二个福娃dialog2
+    private void showFuwaDialog2(final Context context) {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         // 不同页面加载不同的popup布局
@@ -556,24 +579,88 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         dialog2.setContentView(view);
         dialog2.setCancelable(true);
         dialog2.setCanceledOnTouchOutside(false);
+        et_price = (EditText) dialog2.findViewById(R.id.et_price);
+        tv_price = (TextView) dialog2.findViewById(R.id.tv_price);
+        tv_yuan = (TextView) dialog2.findViewById(R.id.tv_yuan);
+        tv_confirm = (TextView) dialog2.findViewById(R.id.tv_confirm);
+        tv_content = (TextView) dialog2.findViewById(R.id.tv_content);
 
-        final EditText et_price = (EditText) dialog2.findViewById(R.id.et_price);
+        setDialog2Content(flag);
+
+        TextView tv_confirm = (TextView) dialog2.findViewById(R.id.tv_confirm);
+        tv_confirm.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                if (flag) { //赠送
+                    long time22 = System.currentTimeMillis();
+                    if(time22-time11>1000){
+                        time11=time22;
+                        if(et_price.getText().length()>0){
+
+                            giveFuwa(et_price.getText().toString());
+                        }else{
+                            ToastUtil.showShort(context,"请填写接收人口令");
+                        }
+                    }
+                } else { //出售
+                    long time4 = System.currentTimeMillis();
+                    if(time4-time3>1000){
+                        time3 = time4;
+                        if(et_price.getText().length()>0){
+
+                            sellFuwa(Double.parseDouble(et_price.getText().toString()));
+                        }else{
+                            ToastUtil.showShort(context,"请填写出售金额");
+                        }
+                    }
+
+                }
+            }
+        });
+        ImageView img_cancle = (ImageView) dialog2.findViewById(R.id.img_cancle);
+        img_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog2.dismiss();
+            }
+        });
+
+        //设置dialog大小
+        Window dialogWindow = dialog2.getWindow();
+        WindowManager manager = ((FuwaPackageActivity) context).getWindowManager();
+        WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+        dialogWindow.setGravity(Gravity.CENTER);
+        Display d = manager.getDefaultDisplay(); // 获取屏幕宽、高度
+        params.width = (int) (d.getWidth() * 0.9); // 宽度设置为屏幕的0.9，根据实际情况调整
+        dialogWindow.setAttributes(params);
+
+        dialog2.show();
+    }
+
+    private void setDialog2Content(boolean flag) {
         if (flag) {
             //输入中文口令，赠送
-            et_price.setMaxEms(18);
-            TextView tv_price = (TextView) dialog2.findViewById(R.id.tv_price);
+            InputFilter[] filters = {new InputFilter.LengthFilter(25)};
+            et_price.setFilters(filters);
             tv_price.setText("接收口令");
-
             et_price.setHint("填写接收人的口令");
-            et_price.setInputType(InputType.TYPE_CLASS_TEXT);
-            TextView tv_yuan = (TextView) dialog2.findViewById(R.id.tv_yuan);
-            tv_yuan.setVisibility(View.INVISIBLE);
-            TextView tv_confirm = (TextView) dialog2.findViewById(R.id.tv_confirm);
+            et_price.setText("");
             tv_confirm.setText("确认赠送");
-            TextView tv_content = (TextView) dialog2.findViewById(R.id.tv_content);
+            tv_yuan.setVisibility(View.INVISIBLE);
             tv_content.setVisibility(View.VISIBLE);
+            et_price.setInputType(InputType.TYPE_CLASS_TEXT);
         } else {
-            et_price.setMaxEms(10);
+            InputFilter[] filters = {new InputFilter.LengthFilter(8)};
+            et_price.setFilters(filters);
+            tv_price.setText("出售价格");
+            et_price.setHint("");
+            et_price.setText("");
+            tv_confirm.setText("确认出售");
+            tv_yuan.setVisibility(View.VISIBLE);
+            tv_content.setVisibility(View.INVISIBLE);
+            et_price.setInputType(InputType.TYPE_CLASS_NUMBER| InputType.TYPE_TEXT_FLAG_CAP_WORDS); //数字和
             et_price.addTextChangedListener(new TextWatcher() {     //输入金额的edittext监听
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before,
@@ -611,62 +698,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                 }
             });
         }
-        TextView tv_confirm = (TextView) dialog2.findViewById(R.id.tv_confirm);
-        tv_confirm.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-
-                if (flag) { //赠送
-                    long time22 = System.currentTimeMillis();
-                    if(time22-time11>1000){
-                        time11=time22;
-                        if(et_price.getText().length()>0){
-
-                            giveFuwa(et_price.getText().toString());
-                        }else{
-                            ToastUtil.showShort(context,"请填写接收人口令");
-                        }
-                    }else{
-                    }
-
-
-
-                } else { //出售
-                    long time4 = System.currentTimeMillis();
-                    if(time4-time3>1000){
-                        time3 = time4;
-                        if(et_price.getText().length()>0){
-
-                            sellFuwa(Double.parseDouble(et_price.getText().toString()));
-                        }else{
-                            ToastUtil.showShort(context,"请填写出售金额");
-                        }
-                    }else{
-                    }
-
-
-                }
-            }
-        });
-        ImageView img_cancle = (ImageView) dialog2.findViewById(R.id.img_cancle);
-        img_cancle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog2.dismiss();
-            }
-        });
-
-        //设置dialog大小
-        Window dialogWindow = dialog2.getWindow();
-        WindowManager manager = ((FuwaPackageActivity) context).getWindowManager();
-        WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
-        dialogWindow.setGravity(Gravity.CENTER);
-        Display d = manager.getDefaultDisplay(); // 获取屏幕宽、高度
-        params.width = (int) (d.getWidth() * 0.9); // 宽度设置为屏幕的0.9，根据实际情况调整
-        dialogWindow.setAttributes(params);
-
-        dialog2.show();
     }
 
     //赠送福娃
