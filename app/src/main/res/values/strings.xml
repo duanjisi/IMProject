@@ -275,4 +275,5 @@
     <string name="about_app_bottom_2">佛山市老板六六科技有限公司</string>
     <string name="copy">复制</string>
     <string name="rewarding">转发</string>
+    <string name="recomm_prefecture_video_erro">视频播放错误，请重试!</string>
 </resources>
