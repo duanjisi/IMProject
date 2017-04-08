@@ -609,6 +609,8 @@
         <receiver android:name=".receiver.BootReceiver">
             <intent-filter>
                 <action android:name="local.chat.service.close"></action>
+                <!-- 监听的动作类型，这里是监听网络连接的状态  -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 

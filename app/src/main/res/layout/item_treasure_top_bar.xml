@@ -189,7 +189,7 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/tv_tips"
+            android:id="@+id/tv_bottom_tips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

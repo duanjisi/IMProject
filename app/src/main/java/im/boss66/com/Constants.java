@@ -20,6 +20,7 @@ public class Constants {
         public static final String CHAT_AGREE_FRIENDSHIP = "local.agree.us.friendship";
         public static final String CHAT_SERVICE_CLOSE = "local.chat.service.close";
         public static final String MAP_MARKER_REFRESH = "local.mapview.marker.refresh";
+        public static final String NET_CONENECT_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
         //显示主页
         public static final String SHOW_HOME_ACTION = "im.boss66.com.SHOW_HOME_ACTION";
     }

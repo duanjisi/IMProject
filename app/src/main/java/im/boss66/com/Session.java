@@ -17,6 +17,7 @@ public class Session extends Observable {
     public static final int ACTION_STOP_CHAT_SERVICE = 1016;//发送信息
     public static final int ACTION_PREV_CLOSE_ACTIVITY = 1017;//关闭上一个activity
     public static final int ACTION_CONTACTS_REFRESH_PAGER = 1018;//刷新通讯录数据
+    public static final int ACTION_RE_CONNECT_WEBSOCKET = 1019;//刷新通讯录数据
 //    public static final int ACTION_STOP_PUSH_SERVICE = 1019;//关闭推送服务
 
     public Session() {
@@ -87,6 +88,13 @@ public class Session extends Observable {
         SessionInfo sin = new SessionInfo();
         sin.setAction(ACTION_PREV_CLOSE_ACTIVITY);
         sin.setData(imagePath);
+        this.setChanged();
+        this.notifyObservers(sin);
+    }
+
+    public void reConnectNet() {
+        SessionInfo sin = new SessionInfo();
+        sin.setAction(ACTION_RE_CONNECT_WEBSOCKET);
         this.setChanged();
         this.notifyObservers(sin);
     }

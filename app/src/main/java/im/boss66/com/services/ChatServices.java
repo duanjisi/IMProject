@@ -57,15 +57,14 @@ public class ChatServices extends Service implements Observer {
         super.onCreate();
         Session.getInstance().addObserver(this);
         mMsgDB = App.getInstance().getMessageDB();// 发送数据库
-        mConnection = App.getInstance().getWebSocket();
-        startConnection();
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-//        userid = intent.getExtras().getString("userid", "");
         userid = App.getInstance().getAccount().getUser_id();
+        mConnection = App.getInstance().getWebSocket();
+        startConnection();
     }
 
     @Override
@@ -115,9 +114,12 @@ public class ChatServices extends Service implements Observer {
                 @Override
                 public void onClose(int code, String reason) {
                     MycsLog.i("info", "======reason:" + reason);
-                    startConnection();
+//                    startConnection();
 //                    for (int i = 0; i < callbacks.size(); i++)
 //                        ((receiveMessageCallback) callbacks.get(i)).onNotify("", reason);
+                    if (App.getInstance().isLogin()) {
+                        LocalBroadcastManager.getInstance(ChatServices.this).sendBroadcast(new Intent(Constants.Action.CHAT_SERVICE_CLOSE));
+                    }
                 }
             });
         } catch (Exception e) {
@@ -307,6 +309,12 @@ public class ChatServices extends Service implements Observer {
         } else if (sin.getAction() == Session.ACTION_STOP_CHAT_SERVICE) {
 //            stopSelf();
             stopChatService(this);
+        } else if (sin.getAction() == Session.ACTION_RE_CONNECT_WEBSOCKET) {
+            if (mConnection != null) {
+                if (!mConnection.isConnected()) {
+                    startConnection();
+                }
+            }
         }
     }
 

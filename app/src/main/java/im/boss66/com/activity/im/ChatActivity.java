@@ -1269,7 +1269,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             File file = null;
             if (isImage) {
                 String fileName = FileUtils.getFileNameFromPath(path);
-                String compressPath = FileUtils.compressImage(path, CHATPHOTO_PATH + fileName, 30);
+                String compressPath = FileUtils.compressImage(path, CHATPHOTO_PATH + fileName, 100);
                 file = new File(compressPath);
             } else {
                 file = new File(path);

@@ -127,8 +127,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_toLeftOf="@+id/iv_arrow_icon1"
+                    android:layout_toRightOf="@+id/tv_groups_name"
+                    android:gravity="right"
+                    android:singleLine="true"
                     android:text="不一样的大家庭"
                     android:textColor="@color/bottom_text_color_default" />
 
@@ -265,8 +269,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    swwy:switchStatus="open"
-                    android:layout_marginRight="15.4dp" />
+                    android:layout_marginRight="15.4dp"
+                    swwy:switchStatus="open" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -307,8 +311,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="48.5dip"
                 android:layout_below="@+id/rl_set_top"
-                android:visibility="gone"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -434,8 +438,8 @@
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/rl_group1"
                 android:layout_marginTop="32dp"
-                android:visibility="gone"
-                android:background="@drawable/bg_long_item">
+                android:background="@drawable/bg_long_item"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -467,8 +471,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/rl_chat_file"
-                android:visibility="gone"
-                android:background="@drawable/bg_long_item">
+                android:background="@drawable/bg_long_item"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -501,8 +505,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/rl_chat_content"
-                android:visibility="gone"
-                android:background="@drawable/bg_long_item">
+                android:background="@drawable/bg_long_item"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -535,8 +539,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="48.5dp"
                 android:layout_below="@+id/rl_chat_bg"
-                android:visibility="gone"
-                android:background="@drawable/bg_long_item">
+                android:background="@drawable/bg_long_item"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"

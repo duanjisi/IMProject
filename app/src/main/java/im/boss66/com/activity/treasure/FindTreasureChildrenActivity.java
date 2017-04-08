@@ -109,7 +109,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private LatLonPoint mEndPoint;
     private final int ROUTE_TYPE_WALK = 3;
     private ProgressDialog progDialog = null;// 搜索时进度条
-    private float distance = 0;
+    //    private float distance = 0;
     private ChildEntity currentChild;
     private View topBar;
     private HashMap<String, Marker> markerMap = new HashMap<>();
@@ -137,6 +137,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private ImageView handler;
     private TextView tv_location, tv_distanc_start, tv_distanc_target, tv_time, tv_num, tv_detail;
     private Button btn_catch;
+    private TextView tvTips;
     private PermissionListener permissionListener;
     private RelativeLayout titleBar;
     private Resources resources;
@@ -171,6 +172,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         tv_num = (TextView) findViewById(R.id.tv_num);
         tv_detail = (TextView) findViewById(R.id.tv_detail);
         btn_catch = (Button) findViewById(R.id.btn_catch);
+        tvTips = (TextView) findViewById(R.id.tv_bottom_tips);
         titleBar = (RelativeLayout) findViewById(R.id.rl_top_bar);
 
         slidingDrawer.setOnDrawerOpenListener(new SlidingDrawer.OnDrawerOpenListener() {
@@ -482,7 +484,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         if (slidingDrawer.getVisibility() != View.VISIBLE) {
             UIUtils.showView(slidingDrawer);
         }
-
+        float distance = 0;
         this.currentChild = child;
         if (markerMap != null && markerMap.size() != 0) {
             Marker target = markerMap.get(child.getGid());
@@ -492,16 +494,23 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         double longitude = mLocMarker.getPosition().longitude;
         mLatLng = new LatLng(latitude, longitude);
 //        mLatLng = mLocMarker.getPosition();
-//        Log.i("info", "===============distance:" + distance);
+        Log.i("info", "===============distance:" + distance);
         if (topBar.getVisibility() != View.VISIBLE) {
             topBar.setVisibility(View.VISIBLE);
-            if (distance > 20 || distance == 0) {
-                topBar.findViewById(R.id.btn_catch).setVisibility(View.GONE);
-                topBar.findViewById(R.id.tv_tips).setVisibility(View.VISIBLE);
-            } else {
-                topBar.findViewById(R.id.btn_catch).setVisibility(View.VISIBLE);
-                topBar.findViewById(R.id.tv_tips).setVisibility(View.GONE);
-            }
+//            if (distance > 20 || distance == 0) {
+//                topBar.findViewById(R.id.btn_catch).setVisibility(View.GONE);
+//                topBar.findViewById(R.id.tv_tips).setVisibility(View.VISIBLE);
+//            } else {
+//                topBar.findViewById(R.id.btn_catch).setVisibility(View.VISIBLE);
+//                topBar.findViewById(R.id.tv_tips).setVisibility(View.GONE);
+//            }
+        }
+        if (distance > 20 || distance == 0) {
+            btn_catch.setVisibility(View.GONE);
+            tvTips.setVisibility(View.VISIBLE);
+        } else {
+            btn_catch.setVisibility(View.VISIBLE);
+            tvTips.setVisibility(View.GONE);
         }
 
         if (!slidingDrawer.isOpened()) {

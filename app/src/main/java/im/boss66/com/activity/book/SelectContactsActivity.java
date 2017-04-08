@@ -84,6 +84,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     private String groupid;
     private String classType, memberUserNames;
     private List<String> userIdList;
+    private List<String> nameList;
     private HorizontalScrollView horizontalScrollView;
     private boolean flag = false;
 
@@ -105,6 +106,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
             isCreateGroup = bundle.getBoolean("isCreateGroup", false);
             if (isCreateGroup) {
                 userIdList = new ArrayList<>();
+                nameList = new ArrayList<>();
             }
         }
         imageLoader = ImageLoaderUtils.createImageLoader(context);
@@ -288,6 +290,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
             public void onSuccess(String pojo) {
                 onAddMember();
             }
+
             @Override
             public void onFailure(String msg) {
                 cancelLoadingDialog();
@@ -311,14 +314,18 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 
     private void requestGroupCreate() {//建群请求
         String member_ids = null;
+        String grpName = "";
         if (isCreateGroup) {
             member_ids = user_ids;
             for (String id : userIdList) {
                 member_ids = member_ids + "," + id;
             }
+            grpName = getGroupName();
         } else {
             member_ids = userid + "," + getMemberIds();
+            grpName = getMemberNames();
         }
+
         Log.i("info", "member_ids:" + member_ids);
         if (member_ids.equals("")) {
             showToast("请选择群成员!", true);
@@ -328,8 +335,13 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
             showToast("群成员不够!", true);
             return;
         }
+        if (TextUtils.isEmpty(grpName)) {
+            showToast("群名称为空!", true);
+            return;
+        }
+
         showLoadingDialog();
-        GroupCreateRequest request = new GroupCreateRequest(TAG, userid, member_ids, "我的群");
+        GroupCreateRequest request = new GroupCreateRequest(TAG, userid, member_ids, grpName);
         request.send(new BaseModelRequest.RequestCallback<GroupEntity>() {
             @Override
             public void onSuccess(GroupEntity pojo) {
@@ -343,6 +355,21 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
                 showToast(msg, true);
             }
         });
+    }
+
+    private String getGroupName() {
+        String name = "";
+        Log.i("info", "==========nameList:" + nameList);
+        if (nameList != null && nameList.size() != 0) {
+            Log.i("info", "==========nameList.toString():" + nameList.toString());
+            for (int i = 0; i < nameList.size(); i++) {
+                Log.i("info", "==========name:" + name);
+                if (i < 3) {
+                    name = name + "、" + nameList.get(i);
+                }
+            }
+        }
+        return name;
     }
 
     private void bindDatas(GroupEntity groupEntity) {
@@ -386,6 +413,27 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         }
     }
 
+    private String getMemberNames() {
+        String names = "";
+        int count = 0;
+        for (int i = 0; i < contactList.size(); i++) {
+            EaseUser user = contactList.get(i);
+            if (user.isChecked()) {
+                count++;
+                if (count < 4) {
+                    String name = user.getUsername();
+                    if (!TextUtils.isEmpty(name)) {
+                        if (names.equals("")) {
+                            names = name;
+                        } else {
+                            names = names + "、" + name;
+                        }
+                    }
+                }
+            }
+        }
+        return names;
+    }
 
     private class loadDrawableTask extends AsyncTask<Void, Integer, Drawable> {
 
@@ -491,6 +539,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         String uid = user.getUserid();
         if (isCreateGroup) {
             userIdList.add(uid);
+            nameList.add(user.getNick());
         }
         UIUtils.hindView(iv_tag);
 //        ViewTreeObserver vto = linearLayout.getViewTreeObserver();
@@ -555,6 +604,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         String uid = user.getUserid();
         if (isCreateGroup && userIdList.contains(uid)) {
             userIdList.remove(uid);
+            nameList.remove(user.getNick());
         }
         int count = linearLayout.getChildCount();
         if (count != 0) {
