@@ -483,7 +483,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         count = fuwaList.get(choosePosition).getIdList().size();
         //初始化vp下面的数字和左右icon
         if(count>1){
-            img_left.setVisibility(View.VISIBLE);
+            img_left.setVisibility(View.INVISIBLE);
             img_right.setVisibility(View.VISIBLE);
             tv_num.setText("1");
             tv_count.setText("/"+count);
