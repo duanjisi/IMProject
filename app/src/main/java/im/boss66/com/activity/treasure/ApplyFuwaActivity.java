@@ -277,7 +277,7 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
         String url = HttpUrl.APPLY_FUWA +"?userid="+ App.getInstance().getUid()
                 +"&name="+et_name.getText().toString()+"&phone="+et_phone.getText().toString()
                 +"&shop="+applyType+"&purpose="+et_use.getText().toString()+"&region="+mCurrentProviceName+""+mCurrentCityName
-                +"&number="+et_num.getText().toString();
+                +"&number="+et_num.getText().toString()+"&time="+System.currentTimeMillis();
 
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {

@@ -609,10 +609,10 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             public void onClick(View view) {
                 if (zhifubao) {
                     requestAlipayTrade();
-                    showToast("支付宝", false);
+//                    showToast("支付宝", false);
                 } else {
                     requestWxTrade();
-                    showToast("微信", false);
+//                    showToast("微信", false);
                 }
                 dialog3.dismiss();
             }
