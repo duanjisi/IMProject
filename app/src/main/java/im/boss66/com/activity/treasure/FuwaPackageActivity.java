@@ -177,8 +177,11 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                 if (!TextUtils.isEmpty(res)) {
                     FuwaEntity entity = JSON.parseObject(res, FuwaEntity.class);
                     List<FuwaEntity.Data> data = entity.getData();
-                    if (data != null && data.size() > 0) {
+                    if (data != null ) {
                         showData(data);
+                    }else{
+//                        //没有数据的话
+//                        fuwaList=new ArrayList<Data>();
                     }
                 }
             }
@@ -311,7 +314,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
     private void initFuwaDetail(String fuwa_gid) {
 
-        String url = HttpUrl.FUWA_DETAIL + fuwa_gid;
+        String url = HttpUrl.FUWA_DETAIL + fuwa_gid+"&time="+System.currentTimeMillis();
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
@@ -716,7 +719,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         String sigh = "/donate" + "?token=" + string + "&fuwagid=" + fuwa_gid + "&fromuser=" + uid + "&platform=boss66";
 
         sigh = MD5Util.getStringMD5(sigh);
-        url = url + "&sign=" + sigh;
+        url = url + "&sign=" + sigh+"&time="+System.currentTimeMillis();
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
@@ -751,7 +754,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         String url = HttpUrl.SELL_FUWA + "?id=" + fuwa_id + "&owner=" + uid + "&amount=" + price + "&fuwagid=" + fuwa_gid;
         String sigh = "/sell" + "?id=" + fuwa_id + "&owner=" + uid + "&amount=" + price + "&fuwagid=" + fuwa_gid + "&platform=boss66";
         sigh = MD5Util.getStringMD5(sigh);
-        url = url + "&sign=" + sigh;
+        url = url + "&sign=" + sigh+"&time="+System.currentTimeMillis();
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override

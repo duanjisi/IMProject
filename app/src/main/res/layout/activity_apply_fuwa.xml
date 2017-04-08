@@ -105,7 +105,7 @@
                     android:textCursorDrawable="@null"
                     android:gravity="center_vertical|right"
                     android:inputType="number"
-                    android:maxLength="11"
+                    android:maxLength="15"
                     android:textColorHint="@color/bg_rectangle"
                     android:hint="请填写"
                     android:layout_alignParentRight="true"
@@ -264,7 +264,7 @@
                     android:layout_centerVertical="true"
                     android:id="@+id/tv_job"
                     style="@style/personal_data_tv_style"
-                    android:text="区域" />
+                    android:text="区域*" />
 
                 <TextView
                     android:text="请选择福娃藏在哪个地域"

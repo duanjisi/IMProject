@@ -286,7 +286,6 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
                 String res = responseInfo.result;
                 try {
                     JSONObject jsonObject = new JSONObject(res);
-
                     if(jsonObject.getInt("code")==0){
                         handler.obtainMessage(1).sendToTarget();
                     }else{

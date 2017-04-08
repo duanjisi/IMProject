@@ -144,7 +144,7 @@ public class NewsActivity extends ABaseActivity implements View.OnClickListener 
 
                             handler.obtainMessage(1).sendToTarget();
                         }else{
-                            ToastUtil.show(NewsActivity.this,newsEntity.getMessage(), Toast.LENGTH_SHORT);
+//                            ToastUtil.show(NewsActivity.this,newsEntity.getMessage(), Toast.LENGTH_SHORT);
                         }
                     }
 
@@ -156,7 +156,14 @@ public class NewsActivity extends ABaseActivity implements View.OnClickListener 
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(e.getMessage(), false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
             }
         });
     }
