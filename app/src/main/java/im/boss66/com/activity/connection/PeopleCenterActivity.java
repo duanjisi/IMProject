@@ -212,7 +212,14 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
             @Override
             public void onFailure(HttpException e, String s) {
                 cancelLoadingDialog();
-                showToast(e.getMessage(), false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
             }
         });
     }
@@ -525,7 +532,14 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
             @Override
             public void onFailure(HttpException e, String s) {
                 cancelLoadingDialog();
-                showToast(e.getMessage(), false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
             }
         });
     }
@@ -577,7 +591,14 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
             @Override
             public void onFailure(HttpException e, String s) {
                 //cancelLoadingDialog();
-                showToast(s, false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
             }
         });
     }
@@ -623,7 +644,14 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
             @Override
             public void onFailure(HttpException e, String s) {
                 cancelLoadingDialog();
-                showToast("删除失败", false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast("删除失败", false);
+                }
             }
         });
     }
@@ -661,7 +689,14 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(e.getMessage(), false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
             }
         });
     }
@@ -732,7 +767,14 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(s, false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
             }
         });
     }
@@ -768,7 +810,14 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast(e.getMessage(), false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
             }
         });
     }
@@ -897,6 +946,14 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
 
             @Override
             public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
             }
         });
     }

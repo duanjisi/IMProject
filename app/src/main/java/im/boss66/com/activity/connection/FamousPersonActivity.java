@@ -115,7 +115,14 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
             @Override
             public void onFailure(HttpException e, String s) {
                 cancelLoadingDialog();
-                showToast(e.getMessage(), false);
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
             }
         });
     }

@@ -277,7 +277,7 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
         String url = HttpUrl.APPLY_FUWA +"?userid="+ App.getInstance().getUid()
                 +"&name="+et_name.getText().toString()+"&phone="+et_phone.getText().toString()
                 +"&shop="+applyType+"&purpose="+et_use.getText().toString()+"&region="+mCurrentProviceName+""+mCurrentCityName
-                +"&number="+et_num.getText().toString()+"&time="+System.currentTimeMillis();
+                +"&number="+et_num.getText().toString();
 
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
@@ -286,7 +286,6 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
                 String res = responseInfo.result;
                 try {
                     JSONObject jsonObject = new JSONObject(res);
-
                     if(jsonObject.getInt("code")==0){
                         handler.obtainMessage(1).sendToTarget();
                     }else{
