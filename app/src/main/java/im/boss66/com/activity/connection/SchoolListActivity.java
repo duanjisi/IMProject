@@ -182,7 +182,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
 
             @Override
             public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
+
                 int code = e.getExceptionCode();
                 if (code == 401) {
                     Intent intent = new Intent();
