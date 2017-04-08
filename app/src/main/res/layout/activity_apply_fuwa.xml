@@ -105,7 +105,7 @@
                     android:textCursorDrawable="@null"
                     android:gravity="center_vertical|right"
                     android:inputType="number"
-                    android:maxLength="11"
+                    android:maxLength="15"
                     android:textColorHint="@color/bg_rectangle"
                     android:hint="请填写"
                     android:layout_alignParentRight="true"
