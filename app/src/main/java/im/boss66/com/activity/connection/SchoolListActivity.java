@@ -151,7 +151,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
 
-        url = url + "?us_id=" + schoolListEntity.getResult().get(position).getUs_id();
+        url = url + "?us_id=" + schoolListEntity.getResult().get(position).getUs_id()+"&time="+System.currentTimeMillis();
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
             @Override
