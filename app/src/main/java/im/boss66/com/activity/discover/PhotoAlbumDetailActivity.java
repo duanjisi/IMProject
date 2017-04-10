@@ -3,9 +3,8 @@ package im.boss66.com.activity.discover;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -421,6 +420,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                 }
                 break;
             case R.id.fl_video:
+                Log.i("info", "=============videoUrl:" + videoUrl);
                 Intent intent = new Intent(this, VideoPlayerNewActivity.class);
                 intent.putExtra("videoPath", videoUrl);
                 intent.putExtra("imgurl", videoImgUrl);

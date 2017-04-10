@@ -76,14 +76,14 @@ import im.boss66.com.widget.dialog.PeopleDataDialog;
 public class MainActivity extends BaseActivity implements Observer {
     private final static String TAG = MainActivity.class.getSimpleName();
     private PermissionListener permissionListener;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 1:
-                    if(school_list!=null&&school_list.size()>0&&hometown_list!=null&&hometown_list.size()>0){
-                        SharedPreferencesMgr.setBoolean("setSuccess2",true);
+                    if (school_list != null && school_list.size() > 0 && hometown_list != null && hometown_list.size() > 0) {
+                        SharedPreferencesMgr.setBoolean("setSuccess2", true);
                     }
                     break;
             }
@@ -126,11 +126,17 @@ public class MainActivity extends BaseActivity implements Observer {
         setContentView(R.layout.activity_main);
         initViews();
 
-        if(SharedPreferencesMgr.getBoolean("setSuccess2",false)){
+        if (SharedPreferencesMgr.getBoolean("setSuccess2", false)) {
             return;
         }
         initData();
+        testBranch();
     }
+
+    private void testBranch() {
+        Log.i("info", "==================");
+    }
+
     private void initData() {
         MyInfoRequest request = new MyInfoRequest(TAG);
         request.send(new BaseDataRequest.RequestCallback<String>() {
@@ -546,7 +552,7 @@ public class MainActivity extends BaseActivity implements Observer {
                 case R.id.rb_contact:
                     mViewPager.setCurrentItem(VIEW_PAGER_PAGE_3);
 //                   设置成功不弹窗
-                    if(SharedPreferencesMgr.getBoolean("setSuccess2",false)){
+                    if (SharedPreferencesMgr.getBoolean("setSuccess2", false)) {
                         return;
                     }
                     if (peopleDataDialog == null) {
@@ -713,6 +719,7 @@ public class MainActivity extends BaseActivity implements Observer {
                 public void onPreExecute() {
 
                 }
+
                 @Override
                 public void onComplete() {//解压完成，删除压缩包文件
                     FileUtil.deleteFile(file.getPath().toString());

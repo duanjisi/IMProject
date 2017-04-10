@@ -5,9 +5,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.pili.pldroid.player.AVOptions;
@@ -16,7 +16,6 @@ import com.pili.pldroid.player.widget.PLVideoTextureView;
 
 import im.boss66.com.R;
 import im.boss66.com.Utils.NetworkUtil;
-import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 
 /**
@@ -45,6 +44,7 @@ public class VideoPlayerNewActivity extends BaseActivity {
         mVideoView.setScreenOnWhilePlaying(true);
         int codec = getIntent().getIntExtra("mediaCodec", AVOptions.MEDIA_CODEC_SW_DECODE);
         mVideoPath = getIntent().getStringExtra("videoPath");
+        Log.i("info", "=============mVideoPath:" + mVideoPath);
         mMediaController = new MediaController(this, false, mIsLiveStreaming == 1);
         mMediaController.setMediaPlayer(mVideoView);
         mVideoView.setDisplayOrientation(270);
