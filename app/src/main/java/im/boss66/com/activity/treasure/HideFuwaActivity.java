@@ -450,7 +450,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         }
         int xOff = UIUtils.getScreenWidth(this) / 2 - rl_address.getWidth() / 3;
         int xOffDp = UIUtils.px2dip(this, xOff);
-        int v_with = rl_address.getWidth();
         popWindow.showAsDropDown(rl_address, -xOffDp, 0);
     }
 

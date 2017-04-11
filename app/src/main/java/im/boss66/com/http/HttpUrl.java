@@ -13,7 +13,9 @@ public class HttpUrl {
     public static final String UPLOAD_AUDIO_URL = BASE_URL + "upload/writev1?";
     public static final String UPLOAD_IMAGE_URL = BASE_URL + "upload/writev2?";
     public static final String UPLOAD_VIDEO_URL = BASE_URL + "upload/writev3?";
-
+    //
+    public static final String[] BASE_FUWA = {"http://wsimali.66boss.com:9090/", "http://fuwa2.66boss.com:9090/"};
+    public static int FUWA_TAG = 1;
     /**
      * android版本更新
      */
@@ -237,11 +239,11 @@ public class HttpUrl {
     public static final String SEARY_MY_SELL_FUWA = "http://wsimali.66boss.com:9090/msg/querymysell?userid=";
 
     //藏福娃
-    public static final String HIDE_MY_FUWA = BASE_FUWA_URL + "hide?owner=";
+    public static final String HIDE_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/hide?owner=";
     //捉福娃
-    public static final String CATCH_MY_FUWA = BASE_FUWA_URL + "capture?user=";
+    public static final String CATCH_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/capture?user=";
     //福娃消息
-    public static final String FUWA_MSG = "http://wsimali.66boss.com:9090/msg/myinfo?userid=";
+    public static final String FUWA_MSG = BASE_FUWA[FUWA_TAG] + "msg/myinfo?userid=";
     //微信支付购买福娃
     public static final String FUWA_PAY_WX = MAIN_URL + "api/pay/weixin";
     //支付宝购买福娃
