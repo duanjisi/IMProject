@@ -200,6 +200,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         if (intent != null) {
             fuwaId = intent.getStringExtra("gid");
             String imgUrl = intent.getStringExtra("pic");
+            Log.i("imgUrl:", imgUrl);
             fuwaNum = intent.getStringExtra("id");
             if (!TextUtils.isEmpty(imgUrl)) {
                 imageLoader.displayImage(imgUrl, iv_thread,
@@ -429,7 +430,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                                 if (!previewing && isTakePic) {
                                     mCamera.takePicture(null, null, mPictureCallback);
                                     isTakePic = false;
-                                    Log.i("onSensorChanged", "拍照");
                                 }
                             }
                         }

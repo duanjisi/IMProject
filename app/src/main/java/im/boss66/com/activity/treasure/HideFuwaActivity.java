@@ -11,6 +11,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -159,7 +160,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         } catch (IOException e) {
             MycsLog.e("IOException:" + e.getMessage());
         } catch (RuntimeException runtimeException) {
-            MycsLog.e("open camera error:" + runtimeException.getMessage());
+//            MycsLog.e("open camera error:" + runtimeException.getMessage());
             showToast(R.string.error_open_camera_error, false);
             finish();
         }
@@ -183,7 +184,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
      */
     Camera.PreviewCallback mPreviewCallback = new Camera.PreviewCallback() {
         public void onPreviewFrame(byte[] data, Camera camera) {
-            Log.i("mPreviewCallback", "jinlai");
+//            Log.i("mPreviewCallback", "jinlai");
         }
     };
 
@@ -191,6 +192,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         @Override
         public void onPictureTaken(byte[] bytes, Camera camera) {
             try {
+                if (Build.VERSION.SDK_INT >= 24) {
+                    mCamera.stopPreview();
+                }
                 bitmapImg = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 if (bitmapImg != null) {
                     String imageName = System.currentTimeMillis() + ".jpg";
@@ -274,6 +278,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 canFocusIn = true;
                 isHideOk = true;
                 mCamera.startPreview();
+                autoFocusHandler.postDelayed(doAutoFocus, 800);
                 break;
             case R.id.iv_show_address:
                 if (popWindow != null) {
