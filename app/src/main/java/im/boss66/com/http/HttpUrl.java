@@ -13,7 +13,6 @@ public class HttpUrl {
     public static final String UPLOAD_AUDIO_URL = BASE_URL + "upload/writev1?";
     public static final String UPLOAD_IMAGE_URL = BASE_URL + "upload/writev2?";
     public static final String UPLOAD_VIDEO_URL = BASE_URL + "upload/writev3?";
-
     /**
      * android版本更新
      */
@@ -201,7 +200,8 @@ public class HttpUrl {
     public static final String COMMUNITY_GET_NEW_MSG = MAIN_URL + "api/v1/contactsmsg/getnewest";
 
     //商会详情页
-    public static final String CLUB_DETATIL = MAIN_URL + "hometown/cofc";
+//    public static final String CLUB_DETATIL = MAIN_URL + "hometown/cofc";
+    public static final String CLUB_DETATIL = MAIN_URL + "web/hometown/cofc";
     //学校动态列表
     public static final String SCHOOL_NEWS = MAIN_URL + "api/v1/school/message";
     //家乡动态列表
