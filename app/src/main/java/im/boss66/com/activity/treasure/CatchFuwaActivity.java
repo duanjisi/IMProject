@@ -200,6 +200,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         if (intent != null) {
             fuwaId = intent.getStringExtra("gid");
             String imgUrl = intent.getStringExtra("pic");
+            Log.i("imgUrl:", imgUrl);
             fuwaNum = intent.getStringExtra("id");
             if (!TextUtils.isEmpty(imgUrl)) {
                 imageLoader.displayImage(imgUrl, iv_thread,

@@ -43,6 +43,7 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -325,6 +326,9 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
 
     private void hideFuwaServer() {
         showLoadingDialog();
+        if (TextUtils.isEmpty(recommond)) {
+            recommond = "暂无活动介绍";
+        }
         String url = HttpUrl.HIDE_MY_FUWA + userId + "&fuwagid=" +
                 selectId + "&pos=" + address + "&geohash=" + geohash
                 + "&detail=" + recommond + "&validtime=" + validtime;
@@ -372,7 +376,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
             tv_time = (TextView) view.findViewById(R.id.tv_time);
             iv_time = (ImageView) view.findViewById(R.id.iv_time);
             iv_video = (ImageView) view.findViewById(R.id.iv_video);
-            iv_video_img = (ImageView) view.findViewById(R.id.iv_video);
+            iv_video_img = (ImageView) view.findViewById(R.id.iv_video_img);
             fl_video_dialog_img = (FrameLayout) view.findViewById(R.id.fl_video_dialog_img);
 
             rl_time.setOnClickListener(this);
@@ -623,7 +627,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
             tv_time_2.setOnClickListener(this);
             tv_time_3.setOnClickListener(this);
             tv_time_4.setOnClickListener(this);
-            popWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
+            popWindow = new PopupWindow(popupView, rl_time.getWidth(), WindowManager.LayoutParams.WRAP_CONTENT, true);
             popWindow.setAnimationStyle(R.style.hide_fuwa_pop_anim);
             popWindow.setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
             popWindow.setFocusable(true);
@@ -631,7 +635,8 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
         }
         int xOff = UIUtils.getScreenWidth(this) / 2 - rl_time.getWidth() / 3;
         int xOffDp = UIUtils.px2dip(this, xOff);
-        popWindow.showAsDropDown(rl_time, -xOffDp, 0);
+        popWindow.showAsDropDown(rl_time, 0, 10);
+        //popWindow.showAsDropDown(rl_time);
     }
 
     private void setPopTime(int tag) {
@@ -671,7 +676,8 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
                     if (videoBitmap != null && iv_video_img != null) {
                         fl_video_dialog_img.setVisibility(View.VISIBLE);
                         iv_video.setVisibility(View.GONE);
-                        Glide.with(this).load(videoBitmap).into(iv_video_img);
+                        iv_video_img.setImageBitmap(videoBitmap);
+//                        Glide.with(this).load(videoBitmap).into(iv_video_img);
                     }
                     media.release();
                 }

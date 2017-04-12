@@ -11,6 +11,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -191,6 +192,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         @Override
         public void onPictureTaken(byte[] bytes, Camera camera) {
             try {
+                if (Build.VERSION.SDK_INT >= 24) {
+                    mCamera.stopPreview();
+                }
                 bitmapImg = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 if (bitmapImg != null) {
                     String imageName = System.currentTimeMillis() + ".jpg";
@@ -214,12 +218,14 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
 
     Camera.AutoFocusCallback autoFocusCB = new Camera.AutoFocusCallback() {
         public void onAutoFocus(boolean success, Camera camera) {
+            Log.i("autoFocus:",""+success + "   3");
             autoFocusHandler.postDelayed(doAutoFocus, 1000);
         }
     };
 
     private Runnable doAutoFocus = new Runnable() {
         public void run() {
+            Log.i("autoFocus:",""+previewing + "   2");
             if (previewing) {
                 mCamera.autoFocus(autoFocusCB);
                 isTakePic = true;
@@ -271,6 +277,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 bt_catch.setVisibility(View.GONE);
                 tv_bottom.setVisibility(View.VISIBLE);
                 previewing = true;
+                Log.i("autoFocus:",""+previewing + "   1");
                 canFocusIn = true;
                 isHideOk = true;
                 mCamera.startPreview();
@@ -336,6 +343,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                     if (canFocusIn) {
                         if (stamp - lastStaticStamp > DELEY_DURATION) {
                             //移动后静止一段时间，可以发生对焦行为
+                            Log.i("检测手机静止:", "canFocusIn:" + canFocusIn
+                                    + "   isFocusing:" + isFocusing + "   previewing:" + previewing +
+                                    "  isTakePic:" + isTakePic + "   isHideOk:" + isHideOk);
                             if (!isFocusing) {
                                 canFocusIn = false;
                                 if (!previewing && isTakePic && isHideOk) {

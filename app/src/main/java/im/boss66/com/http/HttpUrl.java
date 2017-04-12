@@ -226,9 +226,9 @@ public class HttpUrl {
     public static final String SEARCH_FUWA_SELL = "http://wsimali.66boss.com:9090/msg/querysell";
 
     //查自己的福娃
-    public static final String QUERY_MY_FUWA = "http://wsimali.66boss.com:9090/api/querymy?user=";
+    public static final String QUERY_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/querymy?user=";
     //福娃详情
-    public static final String FUWA_DETAIL = "http://wsimali.66boss.com:9090/api/querydetail?fuwagid=";
+    public static final String FUWA_DETAIL = BASE_FUWA[FUWA_TAG] + "api/querydetail?fuwagid=";
     //出售福娃
     public static final String SELL_FUWA = "http://wsimali.66boss.com:9090/msg/sell";
     //赠送福娃
