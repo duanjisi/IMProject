@@ -8,10 +8,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -43,8 +45,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.net.ssl.SSLSocketFactory;
 
 import im.boss66.com.App;
 import im.boss66.com.Constants;
@@ -447,7 +447,12 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {    //打开相机
             if (imageUri != null) {
-                String path = Utils.getPath(this, imageUri);
+                String path;
+                if (Build.VERSION.SDK_INT < 24) {
+                    path = Utils.getPath(this, imageUri);
+                } else {
+                    path = imageUri.toString();
+                }
                 if (!TextUtils.isEmpty(path)) {
                     imgList.add(path);
                     showImg();
@@ -560,17 +565,27 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
             @Override
             public void onRequestPermissionSuccess() {
                 if (cameraType == OPEN_CAMERA) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    String imageName = getNowTime() + ".jpg";
-                    // 指定调用相机拍照后照片的储存路径
-                    File dir = new File(savePath);
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-                    File file = new File(dir, imageName);
-                    imageUri = Uri.fromFile(file);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
+                    if (Build.VERSION.SDK_INT < 24) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        String imageName = getNowTime() + ".jpg";
+                        // 指定调用相机拍照后照片的储存路径
+                        File dir = new File(savePath);
+                        if (!dir.exists()) {
+                            dir.mkdirs();
+                        }
+                        File file = new File(dir, imageName);
+                        imageUri = Uri.fromFile(file);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivityForResult(intent, OPEN_CAMERA);
+                        }
+                    } else {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        String imageName = getNowTime() + ".jpg";
+                        File file = new File(savePath, imageName);
+                        imageUri = FileProvider.getUriForFile(FriendSendNewMsgActivity.this, "im.boss66.com.fileProvider", file);//这里进行替换uri的获得方式
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//这里加入flag
                         startActivityForResult(intent, OPEN_CAMERA);
                     }
                 } else if (cameraType == OPEN_ALBUM) {

@@ -155,8 +155,6 @@
 -keep public class com.umeng.socialize.* {*;}
 -keep public class javax.**
 -keep public class android.webkit.**
-
--keep class com.facebook.**
 -keep class com.umeng.scrshot.**
 -keep public class com.tencent.** {*;}
 -keep class com.umeng.socialize.sensor.**
@@ -329,6 +327,11 @@
 -keep class com.github.jdsjlzx.**{*;}
 ####################LRecyclerview end##################
 
+# Do not strip any method/class that is annotated with @DoNotStrip
+-keep @com.facebook.common.internal.DoNotStrip class *
+-keepclassmembers class * {
+    @com.facebook.common.internal.DoNotStrip *;
+}
 #-libraryjars libs/autobahn.jar
 #-libraryjars libs/httpmime-4.1.3.jar
 #-libraryjars libs/android-async-http-1.4.5.jar

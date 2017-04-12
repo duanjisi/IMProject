@@ -6,10 +6,12 @@ import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.text.TextUtils;
@@ -39,7 +41,6 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -586,17 +587,27 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                     startActivityForResult(mIntent, RECORD_VIDEO);
                     //openActivity(RecordVideoActivity.class);
                 } else if (cameraType == OPEN_CAMERA) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    String imageName = getNowTime() + ".png";
-                    // 指定调用相机拍照后照片的储存路径
-                    File dir = new File(savePath);
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-                    File file = new File(dir, imageName);
-                    imageUri = Uri.fromFile(file);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
+                    if (Build.VERSION.SDK_INT < 24) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        String imageName = getNowTime() + ".jpg";
+                        // 指定调用相机拍照后照片的储存路径
+                        File dir = new File(savePath);
+                        if (!dir.exists()) {
+                            dir.mkdirs();
+                        }
+                        File file = new File(dir, imageName);
+                        imageUri = Uri.fromFile(file);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivityForResult(intent, OPEN_CAMERA);
+                        }
+                    } else {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        String imageName = getNowTime() + ".jpg";
+                        File file = new File(savePath, imageName);
+                        imageUri = FileProvider.getUriForFile(PersonalPhotoAlbumActivity.this, "im.boss66.com.fileProvider", file);//这里进行替换uri的获得方式
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//这里加入flag
                         startActivityForResult(intent, OPEN_CAMERA);
                     }
                 } else if (cameraType == OPEN_ALBUM) {
