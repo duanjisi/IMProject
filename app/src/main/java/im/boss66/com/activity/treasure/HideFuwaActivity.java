@@ -160,7 +160,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         } catch (IOException e) {
             MycsLog.e("IOException:" + e.getMessage());
         } catch (RuntimeException runtimeException) {
-            MycsLog.e("open camera error:" + runtimeException.getMessage());
+//            MycsLog.e("open camera error:" + runtimeException.getMessage());
             showToast(R.string.error_open_camera_error, false);
             finish();
         }
@@ -184,7 +184,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
      */
     Camera.PreviewCallback mPreviewCallback = new Camera.PreviewCallback() {
         public void onPreviewFrame(byte[] data, Camera camera) {
-            Log.i("mPreviewCallback", "jinlai");
+//            Log.i("mPreviewCallback", "jinlai");
         }
     };
 
@@ -218,14 +218,12 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
 
     Camera.AutoFocusCallback autoFocusCB = new Camera.AutoFocusCallback() {
         public void onAutoFocus(boolean success, Camera camera) {
-            Log.i("autoFocus:",""+success + "   3");
             autoFocusHandler.postDelayed(doAutoFocus, 1000);
         }
     };
 
     private Runnable doAutoFocus = new Runnable() {
         public void run() {
-            Log.i("autoFocus:",""+previewing + "   2");
             if (previewing) {
                 mCamera.autoFocus(autoFocusCB);
                 isTakePic = true;
@@ -277,10 +275,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 bt_catch.setVisibility(View.GONE);
                 tv_bottom.setVisibility(View.VISIBLE);
                 previewing = true;
-                Log.i("autoFocus:",""+previewing + "   1");
                 canFocusIn = true;
                 isHideOk = true;
                 mCamera.startPreview();
+                autoFocusHandler.postDelayed(doAutoFocus, 800);
                 break;
             case R.id.iv_show_address:
                 if (popWindow != null) {
@@ -343,9 +341,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                     if (canFocusIn) {
                         if (stamp - lastStaticStamp > DELEY_DURATION) {
                             //移动后静止一段时间，可以发生对焦行为
-                            Log.i("检测手机静止:", "canFocusIn:" + canFocusIn
-                                    + "   isFocusing:" + isFocusing + "   previewing:" + previewing +
-                                    "  isTakePic:" + isTakePic + "   isHideOk:" + isHideOk);
                             if (!isFocusing) {
                                 canFocusIn = false;
                                 if (!previewing && isTakePic && isHideOk) {

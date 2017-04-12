@@ -430,7 +430,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                                 if (!previewing && isTakePic) {
                                     mCamera.takePicture(null, null, mPictureCallback);
                                     isTakePic = false;
-                                    Log.i("onSensorChanged", "拍照");
                                 }
                             }
                         }
