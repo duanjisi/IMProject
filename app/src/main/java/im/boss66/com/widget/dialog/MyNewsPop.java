@@ -27,7 +27,7 @@ public class MyNewsPop extends BasePopuWindow implements View.OnClickListener {
 
     @Override
     protected View getRootView(LayoutInflater inflater) {
-        view = inflater.inflate(R.layout.pop_connection, null);
+        view = inflater.inflate(R.layout.pop_connection2, null);
         tv_add_people = (TextView) view.findViewById(R.id.tv_add_people);
         tv_add_people.setText("发布消息");
         tv_personal_center = (TextView) view.findViewById(R.id.tv_personal_center);

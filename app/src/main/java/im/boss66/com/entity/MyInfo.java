@@ -9,29 +9,29 @@ public class MyInfo {
 
 
     /**
-     * status : 200
+     * name : INDEX
      * version : v1
-     * name : Contacts for Api v1
      * message : succeed
-     * result : {"school_list":[{"name":"江西工程职业学院-勿删","count":0,"school_id":17,"logo":"","brief_desc":"江西工程职业学院是经江西省人民政府批准设立、国家教育部备案、省教育厅主管、在江西广播电视大学新校区基础上建立的一所培养高级应用型专业人才的省属公办普通高等院校。","banner":"https://imgcdn.66boss.com/contact/emo_School/2017/02/28/2017-02-28034256184468.jpg"},{"name":"江西工程职业学院-勿删","count":0,"school_id":17,"logo":"","brief_desc":"江西工程职业学院是经江西省人民政府批准设立、国家教育部备案、省教育厅主管、在江西广播电视大学新校区基础上建立的一所培养高级应用型专业人才的省属公办普通高等院校。","banner":"https://imgcdn.66boss.com/contact/emo_School/2017/02/28/2017-02-28034256184468.jpg"}],"hometown_list":[{"name":"闽侯县","count":0,"hometown_id":15,"logo":"https://imgcdn.66boss.com/contact/emo_Hometown/2017/03/07/2017-03-07031249557390.jpg","brief_desc":"闽侯（hòu）县，是福建省福州市下辖的一个县，1913年由闽县和侯官县合并而成，地处福建省福州市西南侧，总面积2136平方公里，常住人口67万人，人口以汉族为主，有畲族、苗族、壮族等少数民族。","banner":"https://imgcdn.66boss.com/contact/emo_Hometown/2017/03/07/2017-03-07031249557390.jpg"}]}
-     * type : yii\Response
      * code : 1
+     * status : 200
+     * type : app\modules\api\modules\v1\controllers\ContactsController
+     * result : {"school_list":[{"school_id":18,"name":"清华大学","logo":"https://imgcdn.66boss.com/contact/emo_School/2017/03/22/2017-03-22163432506173.jpeg","banner":"https://imgcdn.66boss.com/contact/emo_School/2017/03/22/2017-03-22163432850532.jpeg","brief_desc":"清华大学是名牌大学","count":1},{"school_id":6,"name":"中山大学","logo":"","banner":"https://imgcdn.66boss.com/contact/emo_School/2017/03/07/2017-03-07100303433868.png","brief_desc":"fsadf","count":0}],"hometown_list":[{"hometown_id":36,"name":"广东 广州 番禺区","logo":"https://imgcdn.66boss.com/contact/emo_Hometown/2017/04/01/2017-04-01092419910950.png","banner":"https://imgcdn.66boss.com/contact/emo_Hometown/2017/04/01/2017-04-01092419910950.png","brief_desc":"无简介","count":1}],"cofc_list":[{"cofc_id":"6","name":"测试商会","logo":"https://imgcdn.66boss.com/cofc/logo/2017/04/12/58ede15e0117f.jpg","banner":"https://imgcdn.66boss.com/cofc/banner/2017/04/12/58ede15e0128c.jpg","brief_desc":"这是测试商会","count":"2"}],"clan_list":[{"clan_id":"6","name":"测试宗亲","logo":"https://imgcdn.66boss.com/clan/logo/2017/04/12/58edfaa90eb85.jpg","banner":"https://imgcdn.66boss.com/clan/banner/2017/04/12/58edfaa90ed5c.jpg","brief_desc":"这是测试宗亲","count":"1"}]}
      */
 
-    private int status;
-    private String version;
     private String name;
+    private String version;
     private String message;
-    private ResultBean result;
-    private String type;
     private int code;
+    private int status;
+    private String type;
+    private ResultBean result;
 
-    public int getStatus() {
-        return status;
+    public String getName() {
+        return name;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getVersion() {
@@ -42,36 +42,12 @@ public class MyInfo {
         this.version = version;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public ResultBean getResult() {
-        return result;
-    }
-
-    public void setResult(ResultBean result) {
-        this.result = result;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public int getCode() {
@@ -82,9 +58,35 @@ public class MyInfo {
         this.code = code;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public ResultBean getResult() {
+        return result;
+    }
+
+    public void setResult(ResultBean result) {
+        this.result = result;
+    }
+
     public static class ResultBean {
         private List<SchoolListBean> school_list;
         private List<HometownListBean> hometown_list;
+        private List<CofcListBean> cofc_list;
+        private List<ClanListBean> clan_list;
 
         public List<SchoolListBean> getSchool_list() {
             return school_list;
@@ -102,38 +104,38 @@ public class MyInfo {
             this.hometown_list = hometown_list;
         }
 
+        public List<CofcListBean> getCofc_list() {
+            return cofc_list;
+        }
+
+        public void setCofc_list(List<CofcListBean> cofc_list) {
+            this.cofc_list = cofc_list;
+        }
+
+        public List<ClanListBean> getClan_list() {
+            return clan_list;
+        }
+
+        public void setClan_list(List<ClanListBean> clan_list) {
+            this.clan_list = clan_list;
+        }
+
         public static class SchoolListBean {
             /**
-             * name : 江西工程职业学院-勿删
-             * count : 0
-             * school_id : 17
-             * logo :
-             * brief_desc : 江西工程职业学院是经江西省人民政府批准设立、国家教育部备案、省教育厅主管、在江西广播电视大学新校区基础上建立的一所培养高级应用型专业人才的省属公办普通高等院校。
-             * banner : https://imgcdn.66boss.com/contact/emo_School/2017/02/28/2017-02-28034256184468.jpg
+             * school_id : 18
+             * name : 清华大学
+             * logo : https://imgcdn.66boss.com/contact/emo_School/2017/03/22/2017-03-22163432506173.jpeg
+             * banner : https://imgcdn.66boss.com/contact/emo_School/2017/03/22/2017-03-22163432850532.jpeg
+             * brief_desc : 清华大学是名牌大学
+             * count : 1
              */
 
-            private String name;
-            private int count;
             private int school_id;
+            private String name;
             private String logo;
-            private String brief_desc;
             private String banner;
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
-            public int getCount() {
-                return count;
-            }
-
-            public void setCount(int count) {
-                this.count = count;
-            }
+            private String brief_desc;
+            private int count;
 
             public int getSchool_id() {
                 return school_id;
@@ -143,20 +145,20 @@ public class MyInfo {
                 this.school_id = school_id;
             }
 
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
             public String getLogo() {
                 return logo;
             }
 
             public void setLogo(String logo) {
                 this.logo = logo;
-            }
-
-            public String getBrief_desc() {
-                return brief_desc;
-            }
-
-            public void setBrief_desc(String brief_desc) {
-                this.brief_desc = brief_desc;
             }
 
             public String getBanner() {
@@ -166,31 +168,13 @@ public class MyInfo {
             public void setBanner(String banner) {
                 this.banner = banner;
             }
-        }
 
-        public static class HometownListBean {
-            /**
-             * name : 闽侯县
-             * count : 0
-             * hometown_id : 15
-             * logo : https://imgcdn.66boss.com/contact/emo_Hometown/2017/03/07/2017-03-07031249557390.jpg
-             * brief_desc : 闽侯（hòu）县，是福建省福州市下辖的一个县，1913年由闽县和侯官县合并而成，地处福建省福州市西南侧，总面积2136平方公里，常住人口67万人，人口以汉族为主，有畲族、苗族、壮族等少数民族。
-             * banner : https://imgcdn.66boss.com/contact/emo_Hometown/2017/03/07/2017-03-07031249557390.jpg
-             */
-
-            private String name;
-            private int count;
-            private int hometown_id;
-            private String logo;
-            private String brief_desc;
-            private String banner;
-
-            public String getName() {
-                return name;
+            public String getBrief_desc() {
+                return brief_desc;
             }
 
-            public void setName(String name) {
-                this.name = name;
+            public void setBrief_desc(String brief_desc) {
+                this.brief_desc = brief_desc;
             }
 
             public int getCount() {
@@ -200,6 +184,24 @@ public class MyInfo {
             public void setCount(int count) {
                 this.count = count;
             }
+        }
+
+        public static class HometownListBean {
+            /**
+             * hometown_id : 36
+             * name : 广东 广州 番禺区
+             * logo : https://imgcdn.66boss.com/contact/emo_Hometown/2017/04/01/2017-04-01092419910950.png
+             * banner : https://imgcdn.66boss.com/contact/emo_Hometown/2017/04/01/2017-04-01092419910950.png
+             * brief_desc : 无简介
+             * count : 1
+             */
+
+            private int hometown_id;
+            private String name;
+            private String logo;
+            private String banner;
+            private String brief_desc;
+            private int count;
 
             public int getHometown_id() {
                 return hometown_id;
@@ -207,6 +209,14 @@ public class MyInfo {
 
             public void setHometown_id(int hometown_id) {
                 this.hometown_id = hometown_id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
             }
 
             public String getLogo() {
@@ -217,6 +227,14 @@ public class MyInfo {
                 this.logo = logo;
             }
 
+            public String getBanner() {
+                return banner;
+            }
+
+            public void setBanner(String banner) {
+                this.banner = banner;
+            }
+
             public String getBrief_desc() {
                 return brief_desc;
             }
@@ -225,12 +243,144 @@ public class MyInfo {
                 this.brief_desc = brief_desc;
             }
 
+            public int getCount() {
+                return count;
+            }
+
+            public void setCount(int count) {
+                this.count = count;
+            }
+        }
+
+        public static class CofcListBean {
+            /**
+             * cofc_id : 6
+             * name : 测试商会
+             * logo : https://imgcdn.66boss.com/cofc/logo/2017/04/12/58ede15e0117f.jpg
+             * banner : https://imgcdn.66boss.com/cofc/banner/2017/04/12/58ede15e0128c.jpg
+             * brief_desc : 这是测试商会
+             * count : 2
+             */
+
+            private String cofc_id;
+            private String name;
+            private String logo;
+            private String banner;
+            private String brief_desc;
+            private String count;
+
+            public String getCofc_id() {
+                return cofc_id;
+            }
+
+            public void setCofc_id(String cofc_id) {
+                this.cofc_id = cofc_id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getLogo() {
+                return logo;
+            }
+
+            public void setLogo(String logo) {
+                this.logo = logo;
+            }
+
             public String getBanner() {
                 return banner;
             }
 
             public void setBanner(String banner) {
                 this.banner = banner;
+            }
+
+            public String getBrief_desc() {
+                return brief_desc;
+            }
+
+            public void setBrief_desc(String brief_desc) {
+                this.brief_desc = brief_desc;
+            }
+
+            public String getCount() {
+                return count;
+            }
+
+            public void setCount(String count) {
+                this.count = count;
+            }
+        }
+
+        public static class ClanListBean {
+            /**
+             * clan_id : 6
+             * name : 测试宗亲
+             * logo : https://imgcdn.66boss.com/clan/logo/2017/04/12/58edfaa90eb85.jpg
+             * banner : https://imgcdn.66boss.com/clan/banner/2017/04/12/58edfaa90ed5c.jpg
+             * brief_desc : 这是测试宗亲
+             * count : 1
+             */
+
+            private String clan_id;
+            private String name;
+            private String logo;
+            private String banner;
+            private String brief_desc;
+            private String count;
+
+            public String getClan_id() {
+                return clan_id;
+            }
+
+            public void setClan_id(String clan_id) {
+                this.clan_id = clan_id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getLogo() {
+                return logo;
+            }
+
+            public void setLogo(String logo) {
+                this.logo = logo;
+            }
+
+            public String getBanner() {
+                return banner;
+            }
+
+            public void setBanner(String banner) {
+                this.banner = banner;
+            }
+
+            public String getBrief_desc() {
+                return brief_desc;
+            }
+
+            public void setBrief_desc(String brief_desc) {
+                this.brief_desc = brief_desc;
+            }
+
+            public String getCount() {
+                return count;
+            }
+
+            public void setCount(String count) {
+                this.count = count;
             }
         }
     }

@@ -525,6 +525,9 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"></activity>
+        <!--申请创建-->
+        <activity android:name=".activity.connection.ApplyCreateActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
         <!-- 支付宝end -->
 
         <!-- 微信入口 -->
