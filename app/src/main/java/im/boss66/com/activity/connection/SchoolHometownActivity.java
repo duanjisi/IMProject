@@ -99,7 +99,6 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     private final static String TAG = SchoolHometownActivity.class.getSimpleName();
 
     private MyNewsPop myNewsPop;
-    private RelativeLayout rl_top_bar;
     private boolean isSchool; // 是否是学校
     private LRecyclerView rcv_news;
     private LRecyclerViewAdapter mLRecyclerViewAdapter = null;
@@ -133,6 +132,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     private String commentFromId, commentPid;
     private CommunityMsgListener communityMsgListener;
     private String CuiUid;
+    private RelativeLayout rl_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +157,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     }
 
     private void initViews() {
+        rl_title = (RelativeLayout) findViewById(R.id.title);
         ll_edit_text = (LinearLayout) findViewById(R.id.ll_edit_text);
         et_send = (EditText) findViewById(R.id.et_send);
         bt_send = (Button) findViewById(R.id.bt_send);
@@ -188,7 +189,6 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 return true;
             }
         });
-        rl_top_bar = (RelativeLayout) findViewById(R.id.rl_top_bar);
 
         //rcv 设置
         rcv_news = (LRecyclerView) findViewById(R.id.rcv_news);
@@ -282,10 +282,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         switch (view.getId()) {
             case R.id.iv_headright_view:
                 if (myNewsPop == null) {
-                    showPop(view);
+                    showPop(rl_title);
                 } else {
                     if (!myNewsPop.isShowing()) {
-                        showPop(view);
+                        showPop(rl_title);
                     }
                 }
                 //改为朋友圈的发消息先。

@@ -383,8 +383,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
-                Log.i("info", "================eCode:" + eCode);
-                showToast("========eCode:" + eCode, true);
                 if (eCode == StatusCode.ST_CODE_SUCCESSED) {
                     showToast("分享成功!", true);
                 }
