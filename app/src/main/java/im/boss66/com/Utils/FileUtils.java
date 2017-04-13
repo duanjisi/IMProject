@@ -273,6 +273,48 @@ public class FileUtils {
     }
 
     /**
+     * 按尺寸压缩图片
+     *
+     * @param imageUri  图片路径
+     * @param desWidth 压缩的图片宽度
+     * @return Bitmap 对象
+     */
+
+    public static Bitmap compressImageFromFile(Context context, Uri imageUri, float desWidth) {
+
+        InputStream inputStream = null;
+        Bitmap bitmap = null;
+        try {
+            inputStream = context.getContentResolver().openInputStream(imageUri);
+            BitmapFactory.Options newOpts = new BitmapFactory.Options();
+            newOpts.inJustDecodeBounds = true;//只读边,不读内容
+            bitmap = BitmapFactory.decodeStream(inputStream, null, newOpts);
+            newOpts.inJustDecodeBounds = false;
+            int w = newOpts.outWidth;
+            int h = newOpts.outHeight;
+            float desHeight = desWidth * h / w;
+            int be = 1;
+            if (w > h && w > desWidth) {
+                be = (int) (newOpts.outWidth / desWidth);
+            } else if (w < h && h > desHeight) {
+                be = (int) (newOpts.outHeight / desHeight);
+            }
+            if (be <= 0)
+                be = 1;
+            newOpts.inSampleSize = be;//设置采样率
+
+//        newOpts.inPreferredConfig = Config.ARGB_8888;//该模式是默认的,可不设
+            newOpts.inPurgeable = true;// 同时设置才会有效
+            newOpts.inInputShareable = true;//。当系统内存不够时候图片自动被回收
+
+            bitmap = BitmapFactory.decodeStream(inputStream, null, newOpts);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    /**
      * 压缩图片（质量压缩）
      *
      * @param image
@@ -343,9 +385,9 @@ public class FileUtils {
                 handler.obtainMessage(SUCCESS).sendToTarget();
             }
         } catch (Exception e) {
-            Log.i("info","========Exception:"+e.getMessage());
+            Log.i("info", "========Exception:" + e.getMessage());
             e.printStackTrace();
-            Log.i("liwya",e.getMessage());
+            Log.i("liwya", e.getMessage());
             errorStr = e.getMessage();
             handler.obtainMessage(FAILED, errorStr).sendToTarget();
         }

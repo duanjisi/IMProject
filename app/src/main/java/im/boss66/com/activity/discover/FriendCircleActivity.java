@@ -2,15 +2,18 @@ package im.boss66.com.activity.discover;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -53,8 +56,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -571,6 +577,17 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     path = Utils.getPath(this, imageUri);
                 } else {
                     path = imageUri.toString();
+//                    ContentResolver contentProvider = getContentResolver();
+//                    ParcelFileDescriptor mInputPFD;
+//                    try {
+//                        //获取contentProvider图片
+//                        mInputPFD = contentProvider.openFileDescriptor(imageUri, "r");
+//                        FileDescriptor fileDescriptor = mInputPFD.getFileDescriptor();
+//                        //mImageView.setImageBitmap(BitmapFactory.decodeFileDescriptor(fileDescriptor));
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
+
                 }
                 Bundle bundle = new Bundle();
                 bundle.putString("sendType", "photo");

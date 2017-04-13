@@ -211,6 +211,13 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
                     path = Utils.getPath(this, imageUri);
                 } else {
                     path = imageUri.toString();
+                    if(Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
+                            path.contains("/IMProject/")){
+                        String[] arr = path.split("/IMProject/");
+                        if (arr != null && arr.length >1){
+                            path = savePath + arr[1];
+                        }
+                    }
                 }
                 if (!TextUtils.isEmpty(path)) {
                     ClipImageActivity.prepare()

@@ -350,9 +350,17 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
             }
         }
         if (SEND_TYPE_PHOTO.equals(sendType) && imgList != null) {
+            int wid = UIUtils.getScreenWidth(this);
             for (int i = 0; i < imgList.size(); i++) {
                 String path = imgList.get(i);
-                Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
+                if(Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
+                        path.contains("/IMProject/")){
+                    String[] arr = path.split("/IMProject/");
+                    if (arr != null && arr.length >1){
+                        path = savePath + arr[1];
+                    }
+                }
+                Bitmap bitmap = FileUtils.compressImageFromFile(path, wid);
                 if (bitmap != null) {
                     File file = FileUtils.compressImage(bitmap);
                     if (file != null) {
