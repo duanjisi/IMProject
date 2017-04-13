@@ -32,6 +32,7 @@
     <color name="text_color_grey">#8d1800</color>
     <color name="line_red">#ff7f5b</color>
     <color name="line_red2">#cf241c</color>
+    <color name="fuwa_kouling">#d3000f</color>
 
     <!--<color name="chat_background">@color/window_bg</color>-->
     <!--<color name="chat_title_name">@color/color_bai</color>-->

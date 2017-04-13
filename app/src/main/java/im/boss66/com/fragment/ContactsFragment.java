@@ -167,16 +167,16 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
     private PopupWindow popupWindow;
 
-    private void showPop(View parent) {
+            private void showPop(View parent) {
 
-        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.pop_connection, null);
-        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
-        view.findViewById(R.id.tv_add_people).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                final View view = LayoutInflater.from(getActivity()).inflate(R.layout.pop_connection, null);
+                popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+                view.findViewById(R.id.tv_add_people).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
-                Intent intent = new Intent(getActivity(), AddPeopleActivity.class);
-                startActivity(intent);
+                        Intent intent = new Intent(getActivity(), AddPeopleActivity.class);
+                        startActivity(intent);
                 popupWindow.dismiss();
 
             }
