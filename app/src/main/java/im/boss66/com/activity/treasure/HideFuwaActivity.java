@@ -160,7 +160,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         } catch (IOException e) {
             MycsLog.e("IOException:" + e.getMessage());
         } catch (RuntimeException runtimeException) {
-            MycsLog.e("open camera error:" + runtimeException.getMessage());
+//            MycsLog.e("open camera error:" + runtimeException.getMessage());
             showToast(R.string.error_open_camera_error, false);
             finish();
         }
@@ -184,7 +184,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
      */
     Camera.PreviewCallback mPreviewCallback = new Camera.PreviewCallback() {
         public void onPreviewFrame(byte[] data, Camera camera) {
-            Log.i("mPreviewCallback", "jinlai");
+//            Log.i("mPreviewCallback", "jinlai");
         }
     };
 
@@ -278,6 +278,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 canFocusIn = true;
                 isHideOk = true;
                 mCamera.startPreview();
+                autoFocusHandler.postDelayed(doAutoFocus, 800);
                 break;
             case R.id.iv_show_address:
                 if (popWindow != null) {
@@ -454,7 +455,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         }
         int xOff = UIUtils.getScreenWidth(this) / 2 - rl_address.getWidth() / 3;
         int xOffDp = UIUtils.px2dip(this, xOff);
-        int v_with = rl_address.getWidth();
         popWindow.showAsDropDown(rl_address, -xOffDp, 0);
     }
 
