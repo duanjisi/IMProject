@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -402,6 +404,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         filter.addAction(Constants.Action.REFRSH_CHAT_PAGER_DATAS);
         filter.addAction(Constants.Action.EXIT_CURRETN_GROUP_REFRESH_DATAS);
         filter.addAction(Constants.Action.REFRSH_CHAT_PAGER);
+        filter.addAction(Constants.Action.REFRSH_CHAT_PAGER_NAME);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(mLocalBroadcastReceiver, filter);
         // 消息
@@ -836,27 +839,53 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private String photoPath = "";
+    private String savePath = Environment.getExternalStorageDirectory() + "/myimage/";
 
     private void takePhoto() {
-        String status = Environment.getExternalStorageState();
-        // 检测手机是否有sd卡
-        if (status.equals(Environment.MEDIA_MOUNTED)) {
-            // 创建存放照片的文件夹
-            File dir = new File(Environment.getExternalStorageDirectory() + "/myimage/");
+//        String status = Environment.getExternalStorageState();
+//        // 检测手机是否有sd卡
+//        if (status.equals(Environment.MEDIA_MOUNTED)) {
+//            // 创建存放照片的文件夹
+//            File dir = new File(Environment.getExternalStorageDirectory() + "/myimage/");
+//            if (!dir.exists()) {
+//                dir.mkdirs();
+//            }
+//            // 开启照相机
+//            Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            File file = new File(dir, String.valueOf(System.currentTimeMillis())
+//                    + ".jpg");
+//            photoPath = file.getPath();
+//            Uri imageUri = Uri.fromFile(file);
+//            openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//            openCameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+//            startActivityForResult(openCameraIntent, Code.Request.TAKE_PHOTO);
+//        } else {
+//            Toast.makeText(context, "没有储存卡", Toast.LENGTH_LONG).show();
+//        }
+
+        if (Build.VERSION.SDK_INT < 24) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            String imageName = System.currentTimeMillis() + ".jpg";
+            // 指定调用相机拍照后照片的储存路径
+            File dir = new File(savePath);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            // 开启照相机
-            Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File file = new File(dir, String.valueOf(System.currentTimeMillis())
-                    + ".jpg");
+            File file = new File(dir, imageName);
             photoPath = file.getPath();
             Uri imageUri = Uri.fromFile(file);
-            openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            openCameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-            startActivityForResult(openCameraIntent, Code.Request.TAKE_PHOTO);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(intent, Code.Request.TAKE_PHOTO);
+            }
         } else {
-            Toast.makeText(context, "没有储存卡", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            String imageName = System.currentTimeMillis() + ".jpg";
+            File file = new File(savePath, imageName);
+            Uri imageUri = FileProvider.getUriForFile(ChatActivity.this, "im.boss66.com.fileProvider", file);//这里进行替换uri的获得方式
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//这里加入flag
+            startActivityForResult(intent, Code.Request.TAKE_PHOTO);
         }
     }
 
@@ -2209,6 +2238,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 mMsgListView.setSelection(adapter.getCount() - position - 1);
             } else if (Constants.Action.REFRSH_CHAT_PAGER.equals(action)) {
                 adapter.notifyDataSetChanged();
+            } else if (Constants.Action.REFRSH_CHAT_PAGER_NAME.equals(action)) {
+                String data = intent.getStringExtra("title");
+                if (!TextUtils.isEmpty(data)) {
+                    tvTitle.setText(data);
+                    ConversationHelper.getInstance().updateConversationTitle(toUid, data);
+                }
             } else if (Constants.Action.EXIT_CURRETN_GROUP_REFRESH_DATAS.equals(action)) {
                 finish();
             }

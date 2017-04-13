@@ -150,6 +150,13 @@ public class ConversationHelper extends ColumnHelper<BaseConversation> {
                 sql, new String[]{entity.getConversation_id(), userId});
     }
 
+    public void updateConversationTitle(String conversation_id, String name) {
+        String sql = ConversationColumn.CONVERSATION_ID + " = ?" + " and " + ConversationColumn.USER_ID + " =?";
+        ContentValues values = new ContentValues();
+        values.put(ConversationColumn.USER_NAME, name);
+        DBHelper.getInstance(mContext).update(ConversationColumn.TABLE_NAME, values,
+                sql, new String[]{conversation_id, userId});
+    }
 
     //    select * from table where num =3 uniodn select * from table where num !=3
     public void sortTop(String conversationId) {

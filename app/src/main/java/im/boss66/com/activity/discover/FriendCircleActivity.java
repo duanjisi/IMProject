@@ -207,6 +207,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         iv_bg = (ImageView) header.findViewById(R.id.iv_bg);
         ImageView iv_head = (ImageView) header.findViewById(R.id.iv_head);
         TextView tv_name = (TextView) header.findViewById(R.id.tv_name);
+        tv_name.getLayoutParams().width = sceenW / 3 * 2;
         ll_new = (LinearLayout) header.findViewById(R.id.ll_new);
         iv_new = (ImageView) header.findViewById(R.id.iv_new);
         tv_new_count = (TextView) header.findViewById(R.id.tv_new_count);
@@ -792,7 +793,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     //发表评论
     private void createComment(String content, String pid, String uid_to) {
         if (bt_send != null) {
-            bt_send.setText("");
+            et_send.setText("");
         }
         CircleCommentCreateRequest request = new CircleCommentCreateRequest(TAG, String.valueOf(feedId), content, pid, uid_to);
         request.send(new BaseDataRequest.RequestCallback<String>() {
