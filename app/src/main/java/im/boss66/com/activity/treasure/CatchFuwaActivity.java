@@ -89,7 +89,9 @@ import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.VerifyApplyActivity;
+import im.boss66.com.activity.player.VideoPlayerNewActivity;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.ChildEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.RoundImageView;
@@ -139,6 +141,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private int sceenW, sceenH;
     private RelativeLayout rl_user;
     private String fuwaUserId;
+    private ChildEntity currentChild;
+    private String videoUrl, videoBgUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,13 +203,20 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         });
         Intent intent = getIntent();
         if (intent != null) {
-            fuwaId = intent.getStringExtra("gid");
-            String imgUrl = intent.getStringExtra("pic");
-            Log.i("imgUrl:", imgUrl);
-            fuwaNum = intent.getStringExtra("id");
-            if (!TextUtils.isEmpty(imgUrl)) {
-                imageLoader.displayImage(imgUrl, iv_thread,
-                        ImageLoaderUtils.getDisplayImageOptions());
+            currentChild = (ChildEntity) intent.getSerializableExtra("obj");
+//            fuwaId = intent.getStringExtra("gid");
+//            String imgUrl = intent.getStringExtra("pic");
+//            Log.i("imgUrl:", imgUrl);
+//            fuwaNum = intent.getStringExtra("id");
+            if (currentChild != null) {
+                fuwaUserId = currentChild.getHider();
+                fuwaId = currentChild.getGid();
+                fuwaNum = currentChild.getId();
+                String imgUrl = currentChild.getPic();
+                if (!TextUtils.isEmpty(imgUrl)) {
+                    imageLoader.displayImage(imgUrl, iv_thread,
+                            ImageLoaderUtils.getDisplayImageOptions());
+                }
             }
         }
     }
@@ -290,6 +301,14 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 Intent intent = new Intent(context, VerifyApplyActivity.class);
                 intent.putExtra("userid", fuwaUserId);
                 startActivity(intent);
+                break;
+            case R.id.iv_video_photo:
+                if (!TextUtils.isEmpty(videoUrl)) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("videoPath", videoUrl);
+                    bundle.putString("imgurl", videoBgUrl);
+                    openActivity(VideoPlayerNewActivity.class, bundle);
+                }
                 break;
         }
     }
@@ -664,11 +683,30 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             ImageView iv_close_user = (ImageView) dialog_view.findViewById(R.id.iv_close_user);
             iv_close_user.setOnClickListener(this);
             tv_add_friend.setOnClickListener(this);
+            iv_video_photo.setOnClickListener(this);
 
-            if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(fuwaUserId) && userId.equals(fuwaUserId)){
+            if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(fuwaUserId) && userId.equals(fuwaUserId)) {
                 tv_add_friend.setVisibility(View.GONE);
             }
-
+            if (currentChild != null) {
+                String name = currentChild.getName();
+                if (!TextUtils.isEmpty(name)) {
+                    tv_user_name.setText(name);
+                }
+                String area = currentChild.getLocation();
+                if (!TextUtils.isEmpty(area)) {
+                    tv_user_area.setText(area);
+                }
+                videoUrl = currentChild.getVideo();
+                if (!TextUtils.isEmpty(videoUrl)) {
+                    String[] arr = videoUrl.split(".");
+                    if (arr != null && arr.length > 1) {
+                        arr[arr.length - 1] = ".jpg";
+                        videoBgUrl = String.valueOf(arr);
+                        Glide.with(this).load(videoBgUrl).error(R.drawable.zf_default_message_image).into(iv_video_photo);
+                    }
+                }
+            }
             RelativeLayout.LayoutParams rlParams = (RelativeLayout.LayoutParams) rl_user.getLayoutParams();
             rlParams.width = sceenW;
             rlParams.height = sceenH;

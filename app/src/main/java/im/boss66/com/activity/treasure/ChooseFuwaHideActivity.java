@@ -485,7 +485,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
             allDetailSize = fuwaItem.getIdList().size();
             tv_selected_tag.setText("1/" + allDetailSize);
             for (int i = 0; i < allDetailSize; i++) {
-                View view1 = LayoutInflater.from(context).inflate(R.layout.item_fuwa_vp, null);
+                View view1 = LayoutInflater.from(context).inflate(R.layout.item_fuwa_detail, null);
                 views.add(view1);
             }
             hasLoad.add(0);
@@ -526,7 +526,9 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
         tv_from = (TextView) view.findViewById(R.id.tv_from);
         tv_catch = (TextView) view.findViewById(R.id.tv_catch);
         String fuwa_id = fuwaItem.getId();
-        tv_number.setText(fuwa_id);
+        if (!TextUtils.isEmpty(fuwa_id)){
+            tv_number.setText(fuwa_id);
+        }
         tv_fuwa_num.setText(fuwa_id + "号福娃");
         String creator = fuwaDetailEntity.getData().getCreator();
         String pos = fuwaDetailEntity.getData().getPos();

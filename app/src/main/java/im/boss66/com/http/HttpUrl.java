@@ -213,7 +213,7 @@ public class HttpUrl {
     //获取用户信息
     public static final String SEARCH_USER_INFO = MAIN_URL + "ucenter/userinfo/index";
     //查询周围的福娃
-    public static final String FIND_AROUND_CHILDREN = BASE_FUWA_URL + "query?";
+    public static final String FIND_AROUND_CHILDREN = BASE_FUWA[FUWA_TAG] + "api/query?";
     //同学推荐
     public static final String SCHOOLMATE_LIST = MAIN_URL + "api/v1/search/same-school";
     //同乡推荐
@@ -223,20 +223,20 @@ public class HttpUrl {
     //搜索人脉用户
     public static final String SEARCH_PEOPLE = MAIN_URL + "api/v1/search/user";
     //查询所有的福娃出售
-    public static final String SEARCH_FUWA_SELL =BASE_FUWA[FUWA_TAG] + "msg/querysell";
+    public static final String SEARCH_FUWA_SELL = BASE_FUWA[FUWA_TAG] + "msg/querysell";
 
     //查自己的福娃
-    public static final String QUERY_MY_FUWA =BASE_FUWA[FUWA_TAG] + "api/querymy?user=";
+    public static final String QUERY_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/querymy?user=";
     //福娃详情
-    public static final String FUWA_DETAIL =BASE_FUWA[FUWA_TAG] + "api/querydetail?fuwagid=";
+    public static final String FUWA_DETAIL = BASE_FUWA[FUWA_TAG] + "api/querydetail?fuwagid=";
     //出售福娃
-    public static final String SELL_FUWA = BASE_FUWA[FUWA_TAG] +"msg/sell";
+    public static final String SELL_FUWA = BASE_FUWA[FUWA_TAG] + "msg/sell";
     //赠送福娃
-    public static final String GIVE_FUWA =BASE_FUWA[FUWA_TAG] + "api/donate";
+    public static final String GIVE_FUWA = BASE_FUWA[FUWA_TAG] + "api/donate";
     //福娃排行榜
     public static final String FUWA_TOPLIST = "http://wsim.66boss.com/toplist/top.html?user=";
     //查自己出售的福娃
-    public static final String SEARY_MY_SELL_FUWA = BASE_FUWA[FUWA_TAG] +"/msg/querymysell?userid=";
+    public static final String SEARY_MY_SELL_FUWA = BASE_FUWA[FUWA_TAG] + "/msg/querymysell?userid=";
 
     //藏福娃
     public static final String HIDE_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/hide?owner=";
