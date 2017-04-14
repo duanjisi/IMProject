@@ -213,7 +213,7 @@ public class HttpUrl {
     //获取用户信息
     public static final String SEARCH_USER_INFO = MAIN_URL + "ucenter/userinfo/index";
     //查询周围的福娃
-    public static final String FIND_AROUND_CHILDREN = BASE_FUWA_URL + "query?";
+    public static final String FIND_AROUND_CHILDREN = BASE_FUWA[FUWA_TAG] + "api/query?";
     //同学推荐
     public static final String SCHOOLMATE_LIST = MAIN_URL + "api/v1/search/same-school";
     //同乡推荐

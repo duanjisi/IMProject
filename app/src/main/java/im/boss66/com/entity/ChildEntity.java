@@ -1,9 +1,11 @@
 package im.boss66.com.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by Johnny on 2017/3/15.
  */
-public class ChildEntity {
+public class ChildEntity implements Serializable{
     private String distance = "";
     private String pic = "";
     private String gid = "";
@@ -11,6 +13,13 @@ public class ChildEntity {
     private String pos = "";
     private String id = "";
     private String detail = "";
+    private String avatar = "";
+    private String name = "";
+    private String gender = "";
+    private String signature = "";
+    private String location = "";
+    private String video = "";
+    private String hider;
 
     public String getDistance() {
         return distance;
@@ -66,5 +75,61 @@ public class ChildEntity {
 
     public void setDetail(String detail) {
         this.detail = detail;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
+    }
+
+    public String getHider() {
+        return hider;
+    }
+
+    public void setHider(String hider) {
+        this.hider = hider;
     }
 }

@@ -306,9 +306,10 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             case R.id.btn_catch:
                 if (currentChild != null) {
                     Intent intent = new Intent(context, CatchFuwaActivity.class);
-                    intent.putExtra("pic", currentChild.getPic());
-                    intent.putExtra("gid", currentChild.getGid());
-                    intent.putExtra("id", currentChild.getId());
+//                    intent.putExtra("pic", currentChild.getPic());
+//                    intent.putExtra("gid", currentChild.getGid());
+//                    intent.putExtra("id", currentChild.getId());
+                    intent.putExtra("obj", currentChild);
                     startActivity(intent);
                 }
                 break;

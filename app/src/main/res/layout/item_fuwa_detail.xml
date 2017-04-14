@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_fuwa"
+        android:layout_width="110dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/fuwa_bgs">
+
+        <ImageView
+            android:id="@+id/img_fuwa"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:src="@drawable/fuwabig"
+            android:layout_margin="10dp" />
+
+        <TextView
+            android:id="@+id/tv_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/number_bg"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/actionsheet_red" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_fuwa_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/rl_fuwa"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@id/rl_fuwa"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="19dp" />
+
+    <TextView
+        android:id="@+id/tv_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_fuwa_num"
+        android:layout_below="@id/tv_fuwa_num"
+        android:layout_marginTop="10dp"
+        android:text=""
+        android:textColor="@color/bg_rectangle"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_catch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_from"
+        android:layout_below="@id/tv_from"
+        android:layout_marginTop="15dp"
+        android:text=""
+        android:textColor="@color/bg_rectangle"
+        android:textSize="15sp" />
+
+</RelativeLayout>
