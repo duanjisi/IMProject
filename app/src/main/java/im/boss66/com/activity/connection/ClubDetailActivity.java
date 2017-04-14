@@ -34,6 +34,7 @@ public class ClubDetailActivity extends WebBaseActivity {
             title  =intent.getStringExtra("name");
         }
         setTitleUrl();
+
     }
 
     @Override

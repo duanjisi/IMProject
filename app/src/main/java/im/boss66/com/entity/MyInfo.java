@@ -84,9 +84,9 @@ public class MyInfo {
 
     public static class ResultBean {
         private List<SchoolListBean> school_list;
-        private List<HometownListBean> hometown_list;
-        private List<CofcListBean> cofc_list;
-        private List<ClanListBean> clan_list;
+        private List<SchoolListBean> hometown_list;
+        private List<SchoolListBean> cofc_list;
+        private List<SchoolListBean> clan_list;
 
         public List<SchoolListBean> getSchool_list() {
             return school_list;
@@ -96,27 +96,27 @@ public class MyInfo {
             this.school_list = school_list;
         }
 
-        public List<HometownListBean> getHometown_list() {
+        public List<SchoolListBean> getHometown_list() {
             return hometown_list;
         }
 
-        public void setHometown_list(List<HometownListBean> hometown_list) {
+        public void setHometown_list(List<SchoolListBean> hometown_list) {
             this.hometown_list = hometown_list;
         }
 
-        public List<CofcListBean> getCofc_list() {
+        public List<SchoolListBean> getCofc_list() {
             return cofc_list;
         }
 
-        public void setCofc_list(List<CofcListBean> cofc_list) {
+        public void setCofc_list(List<SchoolListBean> cofc_list) {
             this.cofc_list = cofc_list;
         }
 
-        public List<ClanListBean> getClan_list() {
+        public List<SchoolListBean> getClan_list() {
             return clan_list;
         }
 
-        public void setClan_list(List<ClanListBean> clan_list) {
+        public void setClan_list(List<SchoolListBean> clan_list) {
             this.clan_list = clan_list;
         }
 
@@ -131,11 +131,57 @@ public class MyInfo {
              */
 
             private int school_id;
+            private int hometown_id;
+            private String cofc_id;
+            private String clan_id;
             private String name;
             private String logo;
             private String banner;
             private String brief_desc;
             private int count;
+            private String type;      //我的学校 我的家乡...
+
+            private int from;
+
+            public int getFrom() {
+                return from;
+            }
+
+            public void setFrom(int from) {
+                this.from = from;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
+
+            public int getHometown_id() {
+                return hometown_id;
+            }
+
+            public void setHometown_id(int hometown_id) {
+                this.hometown_id = hometown_id;
+            }
+
+            public String getCofc_id() {
+                return cofc_id;
+            }
+
+            public void setCofc_id(String cofc_id) {
+                this.cofc_id = cofc_id;
+            }
+
+            public String getClan_id() {
+                return clan_id;
+            }
+
+            public void setClan_id(String clan_id) {
+                this.clan_id = clan_id;
+            }
 
             public int getSchool_id() {
                 return school_id;
@@ -186,202 +232,7 @@ public class MyInfo {
             }
         }
 
-        public static class HometownListBean {
-            /**
-             * hometown_id : 36
-             * name : 广东 广州 番禺区
-             * logo : https://imgcdn.66boss.com/contact/emo_Hometown/2017/04/01/2017-04-01092419910950.png
-             * banner : https://imgcdn.66boss.com/contact/emo_Hometown/2017/04/01/2017-04-01092419910950.png
-             * brief_desc : 无简介
-             * count : 1
-             */
-
-            private int hometown_id;
-            private String name;
-            private String logo;
-            private String banner;
-            private String brief_desc;
-            private int count;
-
-            public int getHometown_id() {
-                return hometown_id;
-            }
-
-            public void setHometown_id(int hometown_id) {
-                this.hometown_id = hometown_id;
-            }
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
-            public String getLogo() {
-                return logo;
-            }
-
-            public void setLogo(String logo) {
-                this.logo = logo;
-            }
-
-            public String getBanner() {
-                return banner;
-            }
-
-            public void setBanner(String banner) {
-                this.banner = banner;
-            }
-
-            public String getBrief_desc() {
-                return brief_desc;
-            }
-
-            public void setBrief_desc(String brief_desc) {
-                this.brief_desc = brief_desc;
-            }
-
-            public int getCount() {
-                return count;
-            }
-
-            public void setCount(int count) {
-                this.count = count;
-            }
-        }
-
-        public static class CofcListBean {
-            /**
-             * cofc_id : 6
-             * name : 测试商会
-             * logo : https://imgcdn.66boss.com/cofc/logo/2017/04/12/58ede15e0117f.jpg
-             * banner : https://imgcdn.66boss.com/cofc/banner/2017/04/12/58ede15e0128c.jpg
-             * brief_desc : 这是测试商会
-             * count : 2
-             */
-
-            private String cofc_id;
-            private String name;
-            private String logo;
-            private String banner;
-            private String brief_desc;
-            private String count;
-
-            public String getCofc_id() {
-                return cofc_id;
-            }
-
-            public void setCofc_id(String cofc_id) {
-                this.cofc_id = cofc_id;
-            }
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
-            public String getLogo() {
-                return logo;
-            }
-
-            public void setLogo(String logo) {
-                this.logo = logo;
-            }
-
-            public String getBanner() {
-                return banner;
-            }
-
-            public void setBanner(String banner) {
-                this.banner = banner;
-            }
-
-            public String getBrief_desc() {
-                return brief_desc;
-            }
-
-            public void setBrief_desc(String brief_desc) {
-                this.brief_desc = brief_desc;
-            }
-
-            public String getCount() {
-                return count;
-            }
-
-            public void setCount(String count) {
-                this.count = count;
-            }
-        }
-
-        public static class ClanListBean {
-            /**
-             * clan_id : 6
-             * name : 测试宗亲
-             * logo : https://imgcdn.66boss.com/clan/logo/2017/04/12/58edfaa90eb85.jpg
-             * banner : https://imgcdn.66boss.com/clan/banner/2017/04/12/58edfaa90ed5c.jpg
-             * brief_desc : 这是测试宗亲
-             * count : 1
-             */
-
-            private String clan_id;
-            private String name;
-            private String logo;
-            private String banner;
-            private String brief_desc;
-            private String count;
-
-            public String getClan_id() {
-                return clan_id;
-            }
-
-            public void setClan_id(String clan_id) {
-                this.clan_id = clan_id;
-            }
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
-            public String getLogo() {
-                return logo;
-            }
-
-            public void setLogo(String logo) {
-                this.logo = logo;
-            }
-
-            public String getBanner() {
-                return banner;
-            }
-
-            public void setBanner(String banner) {
-                this.banner = banner;
-            }
-
-            public String getBrief_desc() {
-                return brief_desc;
-            }
-
-            public void setBrief_desc(String brief_desc) {
-                this.brief_desc = brief_desc;
-            }
-
-            public String getCount() {
-                return count;
-            }
-
-            public void setCount(String count) {
-                this.count = count;
-            }
-        }
     }
+
+
 }

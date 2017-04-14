@@ -1,7 +1,9 @@
 package im.boss66.com.activity.connection;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -33,12 +36,14 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.ABaseActivity;
+import im.boss66.com.activity.discover.FriendCircleActivity;
 import im.boss66.com.activity.discover.PhotoAlbumLookPicActivity;
 import im.boss66.com.activity.event.CreateSuccess;
 import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.CreateClanRequest;
 import im.boss66.com.http.request.CreateClubRequest;
+import im.boss66.com.widget.ActionSheet;
 import im.boss66.com.widget.wheel.ArrayWheelAdapter;
 import im.boss66.com.widget.wheel.OnWheelChangedListener;
 import im.boss66.com.widget.wheel.WheelView;
@@ -47,7 +52,7 @@ import im.boss66.com.widget.wheel.WheelView;
  * 申请宗亲，商会
  * Created by liw on 2017/4/13.
  */
-public class ApplyCreateActivity extends ABaseActivity implements View.OnClickListener, OnWheelChangedListener {
+public class ApplyCreateActivity extends ABaseActivity implements View.OnClickListener, OnWheelChangedListener, ActionSheet.OnSheetItemClickListener {
 
     private final static String TAG = ApplyCreateActivity.class.getSimpleName();
 
@@ -102,11 +107,17 @@ public class ApplyCreateActivity extends ABaseActivity implements View.OnClickLi
     private String city_id;
     private String county_id;
     private String name;
+    private int from;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply_create);
+        Intent intent = getIntent();
+        if(intent!=null){
+            from = intent.getIntExtra("from", -1);
+        }
+
         initViews();
         initCityData();
     }
@@ -117,8 +128,16 @@ public class ApplyCreateActivity extends ABaseActivity implements View.OnClickLi
         findViewById(R.id.tv_headlift_view).setOnClickListener(this);
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
         tv_headcenter_view.setText("创建");
-        findViewById(R.id.rl_choose).setOnClickListener(this);
+
+        RelativeLayout rl_choose = (RelativeLayout) findViewById(R.id.rl_choose);
+        if(from==-1){
+            rl_choose.setOnClickListener(this);
+        }
+
         tv_type = (TextView) findViewById(R.id.tv_type);
+        if(from==2){
+            tv_type.setText("商会");
+        }
         et_name = (EditText) findViewById(R.id.et_name);
         Editable ea = et_name.getText();
         et_name.setSelection(ea.length());
@@ -150,6 +169,7 @@ public class ApplyCreateActivity extends ABaseActivity implements View.OnClickLi
         return jsonDate;
 
     }
+    private long time1;
 
     @Override
     public void onClick(View v) {
@@ -159,11 +179,7 @@ public class ApplyCreateActivity extends ABaseActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.rl_choose:
-                if (Typedialog == null) {
-                    showPop();
-                } else if (!Typedialog.isShowing()) {
-                    Typedialog.show();
-                }
+                showActionSheet();
 
                 break;
             case R.id.rl_area:
@@ -173,6 +189,10 @@ public class ApplyCreateActivity extends ABaseActivity implements View.OnClickLi
 
             case R.id.tv_create:
 
+                long time2 = System.currentTimeMillis();
+                if(time2-time1<1000){
+                    return;
+                }
                 name = et_name.getText().toString();
                 String type = tv_type.getText().toString();
                 String area = tv_area.getText().toString();
@@ -185,15 +205,24 @@ public class ApplyCreateActivity extends ABaseActivity implements View.OnClickLi
                     }else{
                         //创建商会
                         createClub();
-
                     }
-
                 }else{
                     ToastUtil.showShort(context,"请完善资料");
                 }
+                time1 = time2;
                 break;
 
         }
+    }
+    private void showActionSheet() {
+        ActionSheet actionSheet = new ActionSheet(this)
+                .builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true);
+            actionSheet.addSheetItem("宗亲", ActionSheet.SheetItemColor.Black,this)
+                    .addSheetItem("商会", ActionSheet.SheetItemColor.Black,
+                            this);
+        actionSheet.show();
     }
 
     private void createClub() {
@@ -405,38 +434,7 @@ public class ApplyCreateActivity extends ABaseActivity implements View.OnClickLi
 
     }
 
-    private void showPop() {
 
-        View view = LayoutInflater.from(this).inflate(R.layout.pop_choose, null);
-        Typedialog = new Dialog(this, R.style.Dialog_full);
-        Typedialog.setContentView(view);
-        view.findViewById(R.id.tv_clan).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tv_type.setText("宗亲");
-                Typedialog.dismiss();
-
-            }
-        });
-        view.findViewById(R.id.tv_club).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tv_type.setText("商会");
-                Typedialog.dismiss();
-            }
-        });
-
-        Window dialogWindow = Typedialog.getWindow();
-        dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp.gravity = Gravity.BOTTOM;
-        dialogWindow.setAttributes(lp);
-        Typedialog.setCanceledOnTouchOutside(true);
-        Typedialog.show();
-
-    }
 
     @Override
     public void onChanged(WheelView wheel, int oldValue, int newValue) {
@@ -450,4 +448,17 @@ public class ApplyCreateActivity extends ABaseActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    public void onClick(int which) {
+
+        switch (which){
+            case 1:
+                tv_type.setText("宗亲");
+                break;
+            case 2:
+                tv_type.setText("商会");
+                break;
+        }
+
+    }
 }

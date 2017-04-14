@@ -528,6 +528,11 @@
         <!--申请创建-->
         <activity android:name=".activity.connection.ApplyCreateActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+        <!--宗亲商会页-->
+        <activity android:name=".activity.connection.ClanClubActivity"></activity>
+        <!--宗亲和商会web详情页-->
+        <activity android:name=".activity.connection.ClanCofcDetailActivity"></activity>
+
         <!-- 支付宝end -->
 
         <!-- 微信入口 -->
