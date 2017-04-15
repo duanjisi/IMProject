@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.im.SelectConversationActivity;
 import im.boss66.com.db.MessageDB;
 import im.boss66.com.entity.MessageItem;
@@ -32,6 +34,7 @@ public class ChatDialog extends BaseDialog implements View.OnClickListener {
 
     public ChatDialog(Context context, Intent intent) {
         super(context);
+        dialog.setCanceledOnTouchOutside(true);
         initViews(intent);
     }
 
@@ -42,6 +45,12 @@ public class ChatDialog extends BaseDialog implements View.OnClickListener {
         tvRewarding = (TextView) dialog.findViewById(R.id.tv_rewarding);
         tvDelete = (TextView) dialog.findViewById(R.id.tv_delete);
 
+        LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) tvCopy.getLayoutParams();
+        params.width= UIUtils.getScreenWidth(context)*8/10;
+        tvCopy.setLayoutParams(params);
+        tvCopy.setPadding(40,0,0,0);
+        tvRewarding.setPadding(40,0,0,0);
+        tvDelete.setPadding(40,0,0,0);
         tvCopy.setOnClickListener(this);
         tvRewarding.setOnClickListener(this);
         tvDelete.setOnClickListener(this);
@@ -60,10 +69,16 @@ public class ChatDialog extends BaseDialog implements View.OnClickListener {
             tvCopy.setBackgroundResource(R.drawable.actionsheet_top_selector);
             tvRewarding.setBackgroundResource(R.drawable.actionsheet_middle_selector);
             tvDelete.setBackgroundResource(R.drawable.actionsheet_bottom_selector);
+            tvCopy.setPadding(40,0,0,0);
+            tvRewarding.setPadding(40,0,0,0);
+            tvDelete.setPadding(40,0,0,0);
         } else {
             tvCopy.setVisibility(View.GONE);
             tvRewarding.setBackgroundResource(R.drawable.actionsheet_top_selector);
             tvDelete.setBackgroundResource(R.drawable.actionsheet_bottom_selector);
+            tvCopy.setPadding(40,0,0,0);
+            tvRewarding.setPadding(40,0,0,0);
+            tvDelete.setPadding(40,0,0,0);
         }
     }
 
