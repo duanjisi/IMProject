@@ -30,6 +30,7 @@ import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.EmojiGroupDetailsActivity;
 import im.boss66.com.adapter.EmoStoreAdapter;
+import im.boss66.com.adapter.SearchCircleAdapter;
 import im.boss66.com.adapter.UserAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.EmoStore;
