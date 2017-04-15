@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.umeng.socialize.bean.HandlerRequestCode;
@@ -101,6 +102,8 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
+        SHARE_MEDIA shareMedia = null;
+        UMediaObject uMediaObject = null;
         switch (view.getId()) {
 
             case R.id.img_more:
@@ -136,7 +139,118 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
             case R.id.btn_store://藏福娃
                 openActivity(HideFuwaActivity.class);
                 break;
+
+            case R.id.weixin_share_linear:
+                shareMedia = SHARE_MEDIA.WEIXIN;
+                if (!mController.getConfig().getSsoHandler(HandlerRequestCode.WX_REQUEST_CODE).isClientInstalled()) {
+                    showToast(R.string.notice_weixin_not_install, false);
+                    return;
+                }
+                //设置微信好友分享内容
+                WeiXinShareContent weixinContent = new WeiXinShareContent();
+                //设置分享文字
+                weixinContent.setShareContent(shareContent);
+                //设置title
+//                weixinContent.setTitle(TextUtils.isEmpty(title) ? mWebView.getTitle() : title);
+                weixinContent.setTitle(title);
+                //设置分享内容跳转URL
+                weixinContent.setTargetUrl(targetUrl);
+                if (imageUrl != null && !imageUrl.equals("")) {
+                    //设置分享图片
+                    weixinContent.setShareImage(new UMImage(context, imageUrl));
+                } else {
+                    weixinContent.setShareImage(new UMImage(context, R.drawable.logo_tips));
+                }
+                uMediaObject = weixinContent;
+                postShare(shareMedia,uMediaObject);
+                break;
+            case R.id.weixin_circle_share_linear:
+                shareMedia = SHARE_MEDIA.WEIXIN_CIRCLE;
+                if (!mController.getConfig().getSsoHandler(HandlerRequestCode.WX_REQUEST_CODE).isClientInstalled()) {
+                    showToast(R.string.notice_weixin_not_install, false);
+                    return;
+                }
+                //设置微信朋友圈分享内容
+                CircleShareContent circleMedia = new CircleShareContent();
+                circleMedia.setShareContent(shareContent);
+                //设置朋友圈title
+                circleMedia.setTitle(title);
+                circleMedia.setTargetUrl(targetUrl);
+                if (imageUrl != null) {
+                    //设置分享图片
+                    circleMedia.setShareImage(new UMImage(context, imageUrl));
+                } else {
+                    circleMedia.setShareImage(new UMImage(context, R.drawable.logo_tips));
+                }
+                uMediaObject = circleMedia;
+                postShare(shareMedia,uMediaObject);
+                break;
+            case R.id.qq_share_linear:
+                shareMedia = SHARE_MEDIA.QQ;
+                if (!mController.getConfig().getSsoHandler(HandlerRequestCode.QQ_REQUEST_CODE).isClientInstalled()) {
+                    showToast(R.string.notice_qq_not_install, false);
+                    return;
+                }
+                QQShareContent qqShareContent = new QQShareContent();
+                qqShareContent.setShareContent(shareContent);
+                qqShareContent.setTitle(title);
+                if (imageUrl != null && !imageUrl.equals("")) {
+                    //设置分享图片
+                    qqShareContent.setShareImage(new UMImage(context, imageUrl));
+                } else {
+                    qqShareContent.setShareImage(new UMImage(context, R.drawable.logo_tips));
+                }
+
+                qqShareContent.setTargetUrl(targetUrl);
+                uMediaObject = qqShareContent;
+                postShare(shareMedia,uMediaObject);
+                break;
+            case R.id.qq_zone_share_linear:
+                shareMedia = SHARE_MEDIA.QZONE;
+                QZoneShareContent qzone = new QZoneShareContent();
+//                // 设置分享文字
+//                qzone.setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能 -- QZone");
+//                // 设置点击消息的跳转URL
+//                qzone.setTargetUrl("http://www.baidu.com");
+//                // 设置分享内容的标题
+//                qzone.setTitle("QZone title");
+                // 设置分享图片
+                qzone.setShareContent(shareContent);
+                qzone.setTitle(title);
+                qzone.setTargetUrl(targetUrl);
+                if (imageUrl != null && !imageUrl.equals("")) {
+                    //设置分享图片
+                    qzone.setShareImage(new UMImage(context, imageUrl));
+                } else {
+                    qzone.setShareImage(new UMImage(context, R.drawable.logo_tips));
+                }
+                uMediaObject = qzone;
+                postShare(shareMedia,uMediaObject);
+                break;
+            case R.id.btn_cancel:
+                shareDialog.dismiss();
+                break;
         }
+    }
+
+
+    private void postShare(SHARE_MEDIA shareMedia, UMediaObject uMediaObject){
+        mController.setShareMedia(uMediaObject);
+        mController.postShare(context, shareMedia, new SocializeListeners.SnsPostListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
+                Log.i("info", "================eCode:" + eCode);
+//                showToast("========eCode:" + eCode, true);
+                if (eCode == StatusCode.ST_CODE_SUCCESSED) {
+                    showToast("分享成功!", true);
+                }
+            }
+        });
     }
 
     private void showTopPop(View parent) {
@@ -283,6 +397,13 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 //                    }
 //                }
 
+                //用我之前那个dialog，然后加上这边的分享逻辑。
+                if(shareDialog==null){
+                    showDialog();
+                }else if(!shareDialog.isShowing()){
+                    shareDialog.show();
+                }
+
             }
         });
 
@@ -315,7 +436,34 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
     private String targetUrl = "http://www.baidu.com";
     private String title = "嗨萌寻宝";
     private String imageUrl;
+    private Dialog shareDialog;
 
+
+
+    private void showDialog() {
+        shareDialog = new Dialog(this, R.style.Dialog_full);
+        View view_dialog = View.inflate(this,
+                R.layout.pop_share, null);
+        view_dialog.findViewById(R.id.weixin_share_linear).setOnClickListener(this);
+        view_dialog.findViewById(R.id.weixin_circle_share_linear).setOnClickListener(this);
+        view_dialog.findViewById(R.id.qq_share_linear).setOnClickListener(this);
+        view_dialog.findViewById(R.id.qq_zone_share_linear).setOnClickListener(this);
+        view_dialog.findViewById(R.id.btn_cancel).setOnClickListener(this);
+
+        shareDialog.setContentView(view_dialog);
+        Window dialogWindow = shareDialog.getWindow();
+        dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
+
+
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity = Gravity.BOTTOM;
+        dialogWindow.setAttributes(lp);
+        shareDialog.setCanceledOnTouchOutside(true);
+        shareDialog.show();
+    }
     //分享回调
     @Override
     public void onItemSelected(SHARE_MEDIA shareMedia) {
@@ -418,5 +566,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
             }
         });
 
+
     }
+
 }

@@ -99,7 +99,8 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     private final static String TAG = SchoolHometownActivity.class.getSimpleName();
 
     private MyNewsPop myNewsPop;
-    private boolean isSchool; // 是否是学校
+    private RelativeLayout rl_top_bar;
+    private int from; // 从哪里跳过来
     private LRecyclerView rcv_news;
     private LRecyclerViewAdapter mLRecyclerViewAdapter = null;
     private CirclePresenter presenter;
@@ -132,7 +133,6 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     private String commentFromId, commentPid;
     private CommunityMsgListener communityMsgListener;
     private String CuiUid;
-    private RelativeLayout rl_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,18 +146,17 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         sceenW = UIUtils.getScreenWidth(context);
         Intent intent = getIntent();
         if (intent != null) {
-            isSchool = intent.getBooleanExtra("isSchool", false);
+            from = intent.getIntExtra("from", -1);
             title = intent.getStringExtra("name");
-            if (isSchool) {
+            if (from==1) {
                 school_id = intent.getIntExtra("school_id", -1);
-            } else {
+            } else if(from==2) {
                 hometown_id = intent.getIntExtra("hometown_id", -1);
             }
         }
     }
 
     private void initViews() {
-        rl_title = (RelativeLayout) findViewById(R.id.title);
         ll_edit_text = (LinearLayout) findViewById(R.id.ll_edit_text);
         et_send = (EditText) findViewById(R.id.et_send);
         bt_send = (Button) findViewById(R.id.bt_send);
@@ -177,10 +176,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 Bundle bundle = new Bundle();
                 bundle.putString("sendType", "text");
                 bundle.putString("feedType", "1");
-                if (isSchool) {
+                if (from==1) {
                     bundle.putString("id_value", "1");
                     bundle.putInt("id_value_ext", school_id);
-                } else {
+                } else if(from==2){
                     bundle.putString("id_value", "2");
                     bundle.putInt("id_value_ext", hometown_id);
                 }
@@ -189,6 +188,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 return true;
             }
         });
+        rl_top_bar = (RelativeLayout) findViewById(R.id.rl_top_bar);
 
         //rcv 设置
         rcv_news = (LRecyclerView) findViewById(R.id.rcv_news);
@@ -215,7 +215,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         TextView tv_famous_person = (TextView) header.findViewById(R.id.tv_famous_person);
         TextView tv_club = (TextView) header.findViewById(R.id.tv_club);
 
-        if (!isSchool) {
+        if (from==2) {
             tv_club.setText("商会");
         }
         TextView tv_news = (TextView) header.findViewById(R.id.tv_news);
@@ -282,10 +282,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         switch (view.getId()) {
             case R.id.iv_headright_view:
                 if (myNewsPop == null) {
-                    showPop(rl_title);
+                    showPop(view);
                 } else {
                     if (!myNewsPop.isShowing()) {
-                        showPop(rl_title);
+                        showPop(view);
                     }
                 }
                 //改为朋友圈的发消息先。
@@ -294,18 +294,18 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             case R.id.tv_introduce: // 简介
                 Intent intent = new Intent(this, IntroduceActivity.class);
                 intent.putExtra("title", title);
-                if (isSchool) {
+                if (from==1) {
                     intent.putExtra("school_id", school_id);
-                } else {
+                } else if(from==2){
                     intent.putExtra("hometown_id", hometown_id);
                 }
                 startActivity(intent);
                 break;
             case R.id.tv_famous_person: // 名人
                 Intent intent1 = new Intent(this, FamousPersonActivity.class);
-                if (isSchool) {
+                if (from==1) {
                     intent1.putExtra("school_id", school_id);
-                } else {
+                } else if(from==2){
                     intent1.putExtra("hometown_id", hometown_id);
                 }
                 startActivity(intent1);
@@ -313,9 +313,9 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 break;
             case R.id.tv_club: // 社团 或 商会
                 Intent intent2 = new Intent(this, ClubActivity.class);
-                if (isSchool) {
+                if (from==1) {
                     intent2.putExtra("school_id", school_id);
-                } else {
+                } else if(from==2){
                     intent2.putExtra("hometown_id", hometown_id);
                 }
                 startActivity(intent2);
@@ -323,9 +323,9 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             case R.id.tv_news: // 动态
                 Intent intent3 = new Intent(this, NewsActivity.class);
                 intent3.putExtra("name", title);
-                if (isSchool) {
+                if (from==1) {
                     intent3.putExtra("school_id", school_id);
-                } else {
+                } else if(from==2){
                     intent3.putExtra("hometown_id", hometown_id);
                 }
                 startActivity(intent3);
@@ -409,9 +409,9 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         } else {
             url = url + "?page=" + page + "&size=" + 20;
         }
-        if (isSchool) {
+        if (from==1) {
             url = url + "&id_value=" + 1 + "&id_value_ext=" + school_id;
-        } else {
+        } else if(from==2){
             url = url + "&id_value=" + 2 + "&id_value_ext=" + hometown_id;
         }
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
@@ -916,10 +916,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 bundle.putInt("type", OPEN_CAMERA);
                 bundle.putString("img", path);
                 bundle.putString("classType", "SchoolHometownActivity");
-                if (isSchool) {
+                if (from==1) { 
                     bundle.putString("id_value", "1");
                     bundle.putInt("id_value_ext", school_id);
-                } else {
+                } else if(from==2){
                     bundle.putString("id_value", "2");
                     bundle.putInt("id_value_ext", hometown_id);
                 }
@@ -933,10 +933,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             bundle.putStringArrayList("imglist", selectPicList);
             bundle.putString("classType", "SchoolHometownActivity");
             bundle.putString("feedType", "1");
-            if (isSchool) {
+            if (from==1) {
                 bundle.putString("id_value", "1");
                 bundle.putInt("id_value_ext", school_id);
-            } else {
+            } else if(from==2){
                 bundle.putString("id_value", "2");
                 bundle.putInt("id_value_ext", hometown_id);
             }
@@ -970,10 +970,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 bundle.putString("videoPath", videoPath);
                 bundle.putString("classType", "SchoolHometownActivity");
                 bundle.putString("feedType", "2");
-                if (isSchool) {
+                if (from==1) {
                     bundle.putString("id_value", "1");
                     bundle.putInt("id_value_ext", school_id);
-                } else {
+                } else if(from==2){
                     bundle.putString("id_value", "2");
                     bundle.putInt("id_value_ext", hometown_id);
                 }

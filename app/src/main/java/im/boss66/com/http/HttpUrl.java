@@ -250,8 +250,10 @@ public class HttpUrl {
     public static final String FUWA_PAY_ALIPAY = MAIN_URL + "api/pay/alipay";
     //支付系统通知购买成功
     public static final String SYSTEM_PAY_NOTICE = "http://wsimali.66boss.com:9090/msg/notice?";
-    //名人详情页
+    //家乡名人详情页
     public static final String FAMOUSPERSON_DETAIL = MAIN_URL + "web/hometown/celebrity";
+    //学校名人页
+    public static final String SCHOOL_PERSON_DETAIL = MAIN_URL + "web/school/celebrity";
     //学校社团详情页
     public static final String SCHOOL_CLUB_DETATIL = MAIN_URL + "web/school/league";
     //家乡动态详情页
@@ -263,5 +265,21 @@ public class HttpUrl {
 
     //修改密码
     public static final String CHANGE_USER_PW = MAIN_URL + "/ucenter/psw/index";
+    //创建宗亲
+    public static final String CREATE_CLAN = MAIN_URL + "api/v1/clan/create";
+    //创建商会
+    public static final String CREATE_CLUB = MAIN_URL + "api/v1/cofc/create";
+    //删除宗亲
+    public static final String DELETE_CLAN = MAIN_URL + "api/v1/clan/delete";
+    //删除商会
+    public static final String DELETE_CLUB = MAIN_URL + "api/v1/cofc/delete";
+    //宗亲web页
+    public static final String CLAN_DETAIL = MAIN_URL + "web/clan";
+    //商会web页
+    public static final String COFC_DETAIL = MAIN_URL + "web/cofc";
+    //获取宗亲详情
+    public static final String CLAN_INFO = MAIN_URL+"api/v1/clan";
+    //获取商会详情
+    public static final String COFC_INFO = MAIN_URL+"api/v1/cofc";
 
 }
