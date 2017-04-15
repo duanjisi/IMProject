@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ public class SearchCircleAdapter extends ABaseAdapter<SearchCofriendEntity> {
         super(context);
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         sceenW = UIUtils.getScreenWidth(context);
+        Log.i("info","===========");
     }
 
     @Override
