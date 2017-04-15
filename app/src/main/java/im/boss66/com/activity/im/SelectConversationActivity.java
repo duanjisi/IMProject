@@ -193,7 +193,9 @@ public class SelectConversationActivity extends BaseActivity implements View.OnK
             public void onClick(View v) {
                 Intent intent = new Intent(context, SelectContactsActivity.class);
                 intent.putExtra("forwarding", true);
-                startActivity(intent);
+                intent.putExtra("user_ids", getUser_ids());
+//                intent.putExtra("isAddMember", true);
+                startActivityForResult(intent, 100);
             }
         });
         query.setOnKeyListener(this);
@@ -432,6 +434,23 @@ public class SelectConversationActivity extends BaseActivity implements View.OnK
         return users;
     }
 
+    private String getUser_ids() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < contactList.size(); i++) {
+            EaseUser user = contactList.get(i);
+            if (user.isChecked() && !user.getMsgType().equals("group")) {
+                String userid = user.getUserid();
+                sb.append(userid + ",");
+            }
+        }
+        String str = sb.toString();
+        if (!str.contains(",")) {
+            return "";
+        } else {
+            return str.substring(0, str.lastIndexOf(","));
+        }
+    }
+
     private String getMemberIds() {
         StringBuilder sb = new StringBuilder();
         StringBuilder sb_name = new StringBuilder();
@@ -653,6 +672,38 @@ public class SelectConversationActivity extends BaseActivity implements View.OnK
             if (Constants.Action.EXIT_CURRENT_ACTIVITY.equals(action)) {
                 finish();
             }
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 100:
+                    if (data != null) {
+                        ArrayList<EaseUser> users = (ArrayList<EaseUser>) data.getSerializableExtra("list");
+                        if (users != null && users.size() != 0) {
+                            showMultiDialog(users);
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void showMultiDialog(ArrayList<EaseUser> users) {
+        printStr(users);
+        ArrayList<EaseUser> list = getCheckedMembers();
+        list.addAll(users);
+        multiDialog.showDialog(list, messageItem);
+    }
+
+
+    private void printStr(ArrayList<EaseUser> users) {
+        for (EaseUser user : users) {
+            Log.i("info", "==========nick:" + user.getUsername());
         }
     }
 }

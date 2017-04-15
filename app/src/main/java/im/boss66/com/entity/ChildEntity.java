@@ -13,12 +13,12 @@ public class ChildEntity implements Serializable {
     private String pos = "";
     private String id = "";
     private String detail = "";
-    private String avatar = "";
-    private String name = "";
-    private String gender = "";
-    private String signature = "";
-    private String location = "";
-    private String video = "";
+//    private String avatar = "";
+//    private String name = "";
+//    private String gender = "";
+//    private String signature = "";
+//    private String location = "";
+//    private String video = "";
 
     public String getDistance() {
         return distance;
@@ -76,51 +76,51 @@ public class ChildEntity implements Serializable {
         this.detail = detail;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getSignature() {
-        return signature;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getVideo() {
-        return video;
-    }
-
-    public void setVideo(String video) {
-        this.video = video;
-    }
+//    public String getAvatar() {
+//        return avatar;
+//    }
+//
+//    public void setAvatar(String avatar) {
+//        this.avatar = avatar;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public String getGender() {
+//        return gender;
+//    }
+//
+//    public void setGender(String gender) {
+//        this.gender = gender;
+//    }
+//
+//    public String getSignature() {
+//        return signature;
+//    }
+//
+//    public void setSignature(String signature) {
+//        this.signature = signature;
+//    }
+//
+//    public String getLocation() {
+//        return location;
+//    }
+//
+//    public void setLocation(String location) {
+//        this.location = location;
+//    }
+//
+//    public String getVideo() {
+//        return video;
+//    }
+//
+//    public void setVideo(String video) {
+//        this.video = video;
+//    }
 }

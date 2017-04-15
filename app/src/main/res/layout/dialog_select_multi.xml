@@ -37,7 +37,6 @@
             android:scrollbars="none"
             android:verticalSpacing="8dp"
             android:visibility="gone">
-
         </GridView>
 
         <RelativeLayout

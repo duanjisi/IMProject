@@ -328,16 +328,16 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private void showDetail(final Context context, View parent, ChildEntity entity) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         // 不同页面加载不同的popup布局
-        View view = inflater.inflate(R.layout.popwindow_item_detail, null);
+        View view = inflater.inflate(R.layout.popwindow_item_detail2, null);
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.FILL_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT, false);
         popupWindow.setAnimationStyle(R.style.PopupTitleBarAnim);
 
-        ImageView iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
+//        ImageView iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
         TextView tvTips = (TextView) view.findViewById(R.id.tv_tips);
-        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
-        TextView tv_sign = (TextView) view.findViewById(R.id.tv_sign);
-        TextView tv_address = (TextView) view.findViewById(R.id.tv_address);
+//        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
+//        TextView tv_sign = (TextView) view.findViewById(R.id.tv_sign);
+//        TextView tv_address = (TextView) view.findViewById(R.id.tv_address);
 
         String detail = entity.getDetail();
         if (!TextUtils.isEmpty(detail)) {
@@ -345,20 +345,22 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         } else {
             tvTips.setText(resources.getString(R.string.no_act));
         }
-        tv_name.setText(entity.getName());
-        tv_sign.setText(entity.getSignature());
-        tv_address.setText(entity.getLocation());
-        String imageUrl = entity.getAvatar();
-        if (!TextUtils.isEmpty(imageUrl)) {
-            imageLoader.displayImage(imageUrl, iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
-        }
+//        tv_name.setText(entity.getName());
+//        tv_sign.setText(entity.getSignature());
+//        tv_address.setText(entity.getLocation());
+//        String imageUrl = entity.getAvatar();
+//        if (!TextUtils.isEmpty(imageUrl)) {
+//            imageLoader.displayImage(imageUrl, iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
+//        }
         int[] location = new int[2];
         parent.getLocationOnScreen(location);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
         popupWindow.setBackgroundDrawable(getDrawableFromRes(R.drawable.bg_popwindow));
-        popupWindow.showAsDropDown(parent);
+        if (!isFinishing()) {
+            popupWindow.showAsDropDown(parent);
+        }
     }
 
     private Drawable getDrawableFromRes(int resId) {
@@ -454,9 +456,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         for (Marker marker : markers) {
             Object object = marker.getObject();
             if (object != null) {
-                Log.i("info", "==============object:" + object.toString());
                 if (object.toString().equals(gid)) {
-                    Log.i("info", "==============delete");
                     marker.remove();
                     if (slidingDrawer.getVisibility() != View.GONE) {
                         UIUtils.hindView(slidingDrawer);
@@ -468,9 +468,33 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 }
             }
         }
+        removeCautch(gid);
         aMap.invalidate();
     }
 
+
+    private void removeCautch(String gid) {
+        if (markerMap != null && markerMap.size() != 0) {
+            for (Map.Entry<String, Marker> entry : markerMap.entrySet()) {
+                Marker target = entry.getValue();
+                Object object = target.getObject();
+                if (object != null) {
+                    if (object.toString().equals(gid)) {
+                        markerMap.remove(target);
+                    }
+                }
+//                String snippet = target.getSnippet();
+//                if (snippet != null && !snippet.equals("")) {
+//                    ChildEntity childEntity = JSON.parseObject(snippet, ChildEntity.class);
+//                    if (childEntity != null) {
+//                        if (childEntity.getGid().equals(gid)) {
+//                            markerMap.remove(target);
+//                        }
+//                    }
+//                }
+            }
+        }
+    }
 
     private boolean isMarkerClick(LatLng latLng) {
         boolean flag = false;
@@ -568,7 +592,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                     if (snippet != null && !snippet.equals("")) {
                         ChildEntity childEntity = JSON.parseObject(snippet, ChildEntity.class);
                         if (childEntity != null) {
-//                            childs.add(childEntity);
                             if (!isContain(childs, childEntity)) {
                                 childs.add(childEntity);
                             }
@@ -831,6 +854,8 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         markerMap.clear();
         latMap = null;
         markerMap = null;
+        popup = null;
+        popupWindow = null;
     }
 
     private void childrenRequest(CameraPosition cameraPosition) {
@@ -980,6 +1005,9 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 intent.putExtra("gid", entity.getGid());
                 intent.putExtra("id", entity.getId());
                 startActivity(intent);
+                if (popup != null && popup.isShowing()) {
+                    popup.dismiss();
+                }
             }
         }
     }
@@ -988,18 +1016,23 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     public void update(Observable observable, Object o) {
         SessionInfo sin = (SessionInfo) o;
         if (sin.getAction() == Session.ACTION_SELECTED_FUWA_CHILD) {
-            ChildEntity data = (ChildEntity) sin.getData();
-            if (popupWindow == null) {
-                if (currentChild != null && data != null) {
-                    showDetail(context, titleBar, data);
-                }
-            } else {
-                if (!popupWindow.isShowing()) {
-                    if (currentChild != null && data != null) {
-                        showDetail(context, titleBar, data);
+            final ChildEntity data = (ChildEntity) sin.getData();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (popupWindow == null) {
+                        if (currentChild != null && data != null) {
+                            showDetail(context, titleBar, data);
+                        }
+                    } else {
+                        if (!popupWindow.isShowing()) {
+                            if (currentChild != null && data != null) {
+                                showDetail(context, titleBar, data);
+                            }
+                        }
                     }
                 }
-            }
+            }, 500);
         }
     }
 

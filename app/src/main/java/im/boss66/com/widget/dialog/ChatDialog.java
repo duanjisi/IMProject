@@ -45,21 +45,21 @@ public class ChatDialog extends BaseDialog implements View.OnClickListener {
         tvRewarding = (TextView) dialog.findViewById(R.id.tv_rewarding);
         tvDelete = (TextView) dialog.findViewById(R.id.tv_delete);
 
-        LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) tvCopy.getLayoutParams();
-        params.width= UIUtils.getScreenWidth(context)*8/10;
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tvCopy.getLayoutParams();
+        params.width = UIUtils.getScreenWidth(context) * 8 / 10;
         tvCopy.setLayoutParams(params);
 
-        LinearLayout.LayoutParams params2= (LinearLayout.LayoutParams) tvRewarding.getLayoutParams();
-        params.width= UIUtils.getScreenWidth(context)*8/10;
+        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) tvRewarding.getLayoutParams();
+        params2.width = UIUtils.getScreenWidth(context) * 8 / 10;
         tvRewarding.setLayoutParams(params2);
 
-        LinearLayout.LayoutParams params3= (LinearLayout.LayoutParams) tvDelete.getLayoutParams();
-        params.width= UIUtils.getScreenWidth(context)*8/10;
+        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) tvDelete.getLayoutParams();
+        params3.width = UIUtils.getScreenWidth(context) * 8 / 10;
         tvDelete.setLayoutParams(params3);
 
-        tvCopy.setPadding(40,0,0,0);
-        tvRewarding.setPadding(40,0,0,0);
-        tvDelete.setPadding(40,0,0,0);
+        tvCopy.setPadding(40, 0, 0, 0);
+        tvRewarding.setPadding(40, 0, 0, 0);
+        tvDelete.setPadding(40, 0, 0, 0);
         tvCopy.setOnClickListener(this);
         tvRewarding.setOnClickListener(this);
         tvDelete.setOnClickListener(this);
@@ -78,16 +78,16 @@ public class ChatDialog extends BaseDialog implements View.OnClickListener {
             tvCopy.setBackgroundResource(R.drawable.actionsheet_top_selector);
             tvRewarding.setBackgroundResource(R.drawable.actionsheet_middle_selector);
             tvDelete.setBackgroundResource(R.drawable.actionsheet_bottom_selector);
-            tvCopy.setPadding(40,0,0,0);
-            tvRewarding.setPadding(40,0,0,0);
-            tvDelete.setPadding(40,0,0,0);
+            tvCopy.setPadding(40, 0, 0, 0);
+            tvRewarding.setPadding(40, 0, 0, 0);
+            tvDelete.setPadding(40, 0, 0, 0);
         } else {
             tvCopy.setVisibility(View.GONE);
             tvRewarding.setBackgroundResource(R.drawable.actionsheet_top_selector);
             tvDelete.setBackgroundResource(R.drawable.actionsheet_bottom_selector);
-            tvCopy.setPadding(40,0,0,0);
-            tvRewarding.setPadding(40,0,0,0);
-            tvDelete.setPadding(40,0,0,0);
+            tvCopy.setPadding(40, 0, 0, 0);
+            tvRewarding.setPadding(40, 0, 0, 0);
+            tvDelete.setPadding(40, 0, 0, 0);
         }
     }
 

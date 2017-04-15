@@ -146,18 +146,29 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         tvOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(classType) && "FriendCircleWhoSeeActivity".equals(classType)) {
-                    String member_ids = getMemberIds();
-                    Intent intent = new Intent();
-                    intent.putExtra("member_id", member_ids);
-                    intent.putExtra("memberUserNames", memberUserNames);
-                    setResult(RESULT_OK, intent);
-                    finish();
+                if (isWarding) {
+                    ArrayList<EaseUser> users = getCheckedMembers();
+                    if (users != null && users.size() != 0) {
+                        Intent intent = new Intent();
+//                        intent.putParcelableArrayListExtra("list", users);
+                        intent.putExtra("list", users);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
                 } else {
-                    if (isAddMember) {
-                        addMemberRequest();
+                    if (!TextUtils.isEmpty(classType) && "FriendCircleWhoSeeActivity".equals(classType)) {
+                        String member_ids = getMemberIds();
+                        Intent intent = new Intent();
+                        intent.putExtra("member_id", member_ids);
+                        intent.putExtra("memberUserNames", memberUserNames);
+                        setResult(RESULT_OK, intent);
+                        finish();
                     } else {
-                        requestGroupCreate();
+                        if (isAddMember) {
+                            addMemberRequest();
+                        } else {
+                            requestGroupCreate();
+                        }
                     }
                 }
             }
@@ -169,7 +180,13 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         rl_select_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openActivity(GroupChatActivity.class);
+                Intent intent = new Intent(context, GroupChatActivity.class);
+                if (isWarding) {
+                    intent.putExtra("forwarding", true);
+                    startActivityForResult(intent, 100);
+                } else {
+                    startActivity(intent);
+                }
             }
         });
         query.setOnKeyListener(this);
@@ -210,6 +227,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         if (isAddMember || isCreateGroup) {
             for (int i = 0; i < contactList.size(); i++) {
                 EaseUser user = contactList.get(i);
+                user.setMsgType("unicast");
                 initEntity(user);
             }
         }
@@ -384,6 +402,17 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
             startActivity(intent);
             finish();
         }
+    }
+
+    private ArrayList<EaseUser> getCheckedMembers() {
+        ArrayList<EaseUser> users = new ArrayList<>();
+        for (int i = 0; i < contactList.size(); i++) {
+            EaseUser user = contactList.get(i);
+            if (user.isChecked()) {
+                users.add(user);
+            }
+        }
+        return users;
     }
 
     private String getMemberIds() {
@@ -688,6 +717,28 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 
             if (user.isChecked()) {
                 user.setChecked(false);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 100:
+                    if (data != null) {
+//                        ArrayList<EaseUser> users = (ArrayList<EaseUser>) data.getSerializableExtra("list");
+                        EaseUser user = (EaseUser) data.getSerializableExtra("user");
+                        if (user != null) {
+                            Intent intent = new Intent();
+                            ArrayList<EaseUser> users = new ArrayList<>();
+                            intent.putExtra("list", users);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    }
+                    break;
             }
         }
     }

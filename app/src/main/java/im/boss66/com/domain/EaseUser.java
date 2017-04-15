@@ -13,7 +13,6 @@
  */
 package im.boss66.com.domain;
 
-import com.hyphenate.chat.EMContact;
 
 public class EaseUser extends EMContact {
 

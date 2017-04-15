@@ -1,15 +1,23 @@
-package im.boss66.com.domain;
+package im.boss66.com.entity;
 
 import android.os.Parcel;
-
-import java.io.Serializable;
+import android.os.Parcelable;
 
 /**
- * Created by Johnny on 2017/1/14.
+ * Created by Johnny on 2017/4/15.
  */
-public class EMContact implements Serializable {
+public class EMContact implements Parcelable {
     protected String username;
     protected String nick;
+//    public static final Creator<EMContact> CREATOR = new Creator() {
+//        public EMContact createFromParcel(Parcel var1) {
+//            return new EMContact(var1, null);
+//        }
+//
+//        public EMContact[] newArray(int var1) {
+//            return new EMContact[var1];
+//        }
+//    };
 
     protected EMContact() {
     }

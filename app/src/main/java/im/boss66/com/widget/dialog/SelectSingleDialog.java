@@ -123,6 +123,8 @@ public class SelectSingleDialog extends BaseDialog implements View.OnClickListen
                 cancelLoadingDialog();
                 dismiss();
                 Intent intent = new Intent(Constants.Action.EXIT_CURRENT_ACTIVITY);
+                Intent intent1 = new Intent(Constants.Action.REFRSH_CHAT_PAGER_DATAS);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent1);
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 break;
         }
