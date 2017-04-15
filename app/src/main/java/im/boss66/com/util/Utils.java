@@ -21,24 +21,61 @@ import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import im.boss66.com.App;
+import im.boss66.com.Session;
+import im.boss66.com.Utils.Base64Utils;
+import im.boss66.com.Utils.PrefKey;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.ImageGridActivity;
+import im.boss66.com.db.MessageDB;
+import im.boss66.com.db.dao.ConversationHelper;
+import im.boss66.com.domain.EaseUser;
+import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.BaseConversation;
+import im.boss66.com.entity.MessageItem;
 
 public class Utils {
 
     private Utils() {
     }
 
-    ;
+    public static String getMd5(String string) {
+        if (TextUtils.isEmpty(string)) {
+            return "";
+        }
+        MessageDigest md5 = null;
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+            byte[] bytes = md5.digest(string.getBytes());
+            String result = "";
+            for (byte b : bytes) {
+                String temp = Integer.toHexString(b & 0xff);
+                if (temp.length() == 1) {
+                    temp = "0" + temp;
+                }
+                result += temp;
+            }
+            return result;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
     @SuppressLint("NewApi")
     public static void enableStrictMode() {
@@ -317,5 +354,151 @@ public class Utils {
             sdf.applyPattern(strPattern);
         }
         return sdf == null ? "NULL" : sdf.format(l);
+    }
+
+    public static void sendMessage(Context context, MessageItem item, EaseUser user, String msg) {
+        boolean isGroupChat = false;
+        String toUid = user.getUserid();
+        String title = user.getNick();
+        String toAvatar = user.getAvatar();
+        if (user.getMsgType().equals("group")) {
+            isGroupChat = true;
+        } else {
+            isGroupChat = false;
+        }
+        MessageDB mMsgDB = App.getInstance().getMessageDB();
+        AccountEntity account = App.getInstance().getAccount();
+        String mMsgId = account.getUser_id() + "_" + toUid;
+
+        MessageItem mode = new MessageItem(
+                item.getMsgType(), "",
+                System.currentTimeMillis(), item.getMessage(), 0,
+                false, 0, item.getVoiceTime(), "" + System.currentTimeMillis(),
+                account.getUser_name(), account.getUser_id(), account.getAvatar());
+
+        MessageItem data = mMsgDB.saveMsg(mMsgId, mode);// 消息保存数据库
+        Session.getInstance().sendImMessage(getString(data.getMsgType(), data.getMessage(), toUid, isGroupChat, title, toAvatar));
+        if (data.getMsgType() == MessageItem.MESSAGE_TYPE_TXT) {
+            saveConversation(context, isGroupChat, title, toAvatar, toUid, data.getMsgType(), data.getMessage());
+        } else {
+            saveConversation(context, isGroupChat, title, toAvatar, toUid, data.getMsgType(), "");
+        }
+
+        if (!TextUtils.isEmpty(msg)) {
+            MessageItem mode1 = new MessageItem(
+                    MessageItem.MESSAGE_TYPE_TXT, "",
+                    System.currentTimeMillis(), msg, 0,
+                    false, 0, item.getVoiceTime(), "" + System.currentTimeMillis(),
+                    account.getUser_name(), account.getUser_id(), account.getAvatar());
+
+            MessageItem data1 = mMsgDB.saveMsg(mMsgId, mode1);// 消息保存数据库
+            Session.getInstance().sendImMessage(getString(MessageItem.MESSAGE_TYPE_TXT, msg, toUid, isGroupChat, title, toAvatar));
+            saveConversation(context, isGroupChat, title, toAvatar, toUid, MessageItem.MESSAGE_TYPE_TXT, msg);
+//            if (data1.getMsgType() == MessageItem.MESSAGE_TYPE_TXT) {
+//                saveConversation(context, isGroupChat, title, toAvatar, toUid, MessageItem.MESSAGE_TYPE_TXT, msg);
+//            } else {
+//                saveConversation(context, isGroupChat, title, toAvatar, toUid, MessageItem.MESSAGE_TYPE_TXT, "");
+//            }
+        }
+    }
+
+    private static String getString(int msgType, String code, String toUid, boolean isGroupChat, String title, String toAvatar) {
+        String tag = "";
+        if (isGroupChat) {
+            tag = "group";
+        } else {
+            tag = "unicast";
+        }
+        String str = "";
+        switch (msgType) {
+            case MessageItem.MESSAGE_TYPE_EMOTION:
+                str = "emotion_" + toUid + "_" + code + "_" + tag + "_" + getExtension(isGroupChat, title, toAvatar);
+                break;
+            case MessageItem.MESSAGE_TYPE_IMG:
+                str = "picture_" + toUid + "_" + code + "_" + tag + "_" + getExtension(isGroupChat, title, toAvatar);
+                break;
+            case MessageItem.MESSAGE_TYPE_VIDEO:
+                str = "video_" + toUid + "_" + code + "_" + tag + "_" + getExtension(isGroupChat, title, toAvatar);
+                break;
+            case MessageItem.MESSAGE_TYPE_TXT:
+                str = "text_" + toUid + "_" + code + "_" + tag + "_" + getExtension(isGroupChat, title, toAvatar);
+                break;
+            case MessageItem.MESSAGE_TYPE_AUDIO:
+                str = "audio_" + toUid + "_" + code + "_" + tag + "_" + getExtension(isGroupChat, title, toAvatar);
+                break;
+        }
+        return str;
+    }
+
+    private static String getExtension(boolean isGroupChat, String title, String toAvatar) {
+        JSONObject object = new JSONObject();
+        AccountEntity account = App.getInstance().getAccount();
+        String userid = account.getUser_id();
+        try {
+            object.put("sender", account.getUser_name());
+            object.put("senderID", userid);
+            object.put("senderAvartar", account.getAvatar());
+            if (isGroupChat) {
+                object.put("conversation", title);
+                object.put("conversationAvartar", toAvatar);
+            } else {
+                object.put("conversation", account.getUser_name());
+                object.put("conversationAvartar", account.getAvatar());
+            }
+            return Base64Utils.encodeBase64(object.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static void saveConversation(Context context, boolean isGroupChat, String name, String avatar, String userid, int type, String content) {
+        BaseConversation sation = new BaseConversation();
+        sation.setUser_name(name);
+        sation.setAvatar(avatar);
+        sation.setConversation_id(userid);
+        if (isGroupChat) {
+            sation.setNewest_msg_type("group");
+        } else {
+            sation.setNewest_msg_type("unicast");
+        }
+        sation.setNewest_msg_time("" + System.currentTimeMillis());
+        ConversationHelper.getInstance().save(sation);
+        String msg = "";
+        switch (type) {
+            case MessageItem.MESSAGE_TYPE_TXT:
+                msg = "我：" + content;
+                break;
+            case MessageItem.MESSAGE_TYPE_EMOTION:
+                if (isGroupChat) {
+                    msg = "我发了一条[表情]";
+                } else {
+                    msg = "[表情]";
+                }
+                break;
+            case MessageItem.MESSAGE_TYPE_IMG:
+                if (isGroupChat) {
+                    msg = "我发了一条[图片]";
+                } else {
+                    msg = "[图片]";
+                }
+                break;
+            case MessageItem.MESSAGE_TYPE_AUDIO:
+                if (isGroupChat) {
+                    msg = "我发了一条[声音]";
+                } else {
+                    msg = "[声音]";
+                }
+                break;
+            case MessageItem.MESSAGE_TYPE_VIDEO:
+                if (isGroupChat) {
+                    msg = "我发了一条[视频]";
+                } else {
+                    msg = "[视频]";
+                }
+                break;
+        }
+        String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + userid;
+        PreferenceUtils.putString(context, noticeKey, msg);
     }
 }

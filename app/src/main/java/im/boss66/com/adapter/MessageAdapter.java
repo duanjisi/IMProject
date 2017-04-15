@@ -23,6 +23,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,7 +41,6 @@ import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.discover.ImagePagerActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
-import im.boss66.com.activity.im.CopyTextActivity;
 import im.boss66.com.activity.player.VideoPlayerNewActivity;
 import im.boss66.com.db.dao.EmoHelper;
 import im.boss66.com.entity.EmoEntity;
@@ -48,6 +48,7 @@ import im.boss66.com.entity.EmotionEntity;
 import im.boss66.com.entity.MessageItem;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.EmoParseRequest;
+import im.boss66.com.widget.dialog.ChatDialog;
 import im.boss66.com.xlistview.GifTextView;
 
 /**
@@ -91,6 +92,7 @@ public class MessageAdapter extends BaseAdapter {
     private Handler mHandler = new Handler();
     private int mImageHeight;
     private String toUid;
+    private ChatDialog chatDialog;
 
     public MessageAdapter(Context context, List<MessageItem> msgList) {
         this.mContext = context;
@@ -127,6 +129,18 @@ public class MessageAdapter extends BaseAdapter {
             notifyDataSetChanged();
         }
     }
+
+    public void removeItem(MessageItem item) {
+        Iterator iterator = mMsgList.iterator();
+        while (iterator.hasNext()) {
+            MessageItem mode = (MessageItem) iterator.next();
+            if (mode.getMsgId().equals(item.getMsgId())) {
+                iterator.remove();
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 
     public void setmMsgList(List<MessageItem> msgList) {
         mMsgList = msgList;
@@ -295,9 +309,19 @@ public class MessageAdapter extends BaseAdapter {
             public boolean onLongClick(View v) {
                 CharSequence msg = ((TextView) v).getText();
                 if (msg != null && !msg.equals("")) {
-                    Intent intent = new Intent(mContext, CopyTextActivity.class);
+//                    Intent intent = new Intent(mContext, CopyTextActivity.class);
+//                    intent.putExtra("msg", msg);
+//                    intent.putExtra("toUid", toUid);
+//                    intent.putExtra("item", mItem);
+//                    intent.putExtra("is_txt", true);
+//                    mContext.startActivity(intent);
+                    Intent intent = new Intent();
                     intent.putExtra("msg", msg);
-                    mContext.startActivity(intent);
+                    intent.putExtra("toUid", toUid);
+                    intent.putExtra("item", mItem);
+                    intent.putExtra("is_txt", true);
+                    chatDialog = new ChatDialog(mContext, intent);
+                    chatDialog.showDialog();
                 }
                 return false;
             }
@@ -346,6 +370,24 @@ public class MessageAdapter extends BaseAdapter {
         } else {
             requestParseEmo(holder, emo_code);
         }
+
+        holder.rlMessage.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+//                Intent intent = new Intent(mContext, CopyTextActivity.class);
+//                intent.putExtra("toUid", toUid);
+//                intent.putExtra("item", mItem);
+//                intent.putExtra("is_txt", false);
+//                mContext.startActivity(intent);
+                Intent intent = new Intent();
+                intent.putExtra("toUid", toUid);
+                intent.putExtra("item", mItem);
+                intent.putExtra("is_txt", false);
+                chatDialog = new ChatDialog(mContext, intent);
+                chatDialog.showDialog();
+                return false;
+            }
+        });
     }
 
     private Bitmap getBitmap(EmoEntity entity) {
@@ -450,52 +492,25 @@ public class MessageAdapter extends BaseAdapter {
                     ImagePagerActivity.startImagePagerActivity(mContext, photoUrls, position, imageSize, false);
                 }
             });
-//            Bitmap bitmap = imageLoader.loadImageSync(imageUrl);
-//            Log.i("info", "=====bitmap:" + bitmap);
-
-//            imageLoader.displayImage(imageUrl, holder.ivphoto, ImageLoaderUtils.getDisplayImageOptions(), new ImageLoadingListener() {
-//                @Override
-//                public void onLoadingStarted(String s, View view) {
-//                }
-//
-//                @Override
-//                public void onLoadingFailed(String s, View view, FailReason failReason) {
-//
-//                }
-//
-//                @Override
-//                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-//                    Log.i("info", "=====bitmap:" + bitmap);
-//                    if (bitmap != null) {
-//                        scalImage(holder, bitmap);
-//                    }
-//                }
-//
-//                @Override
-//                public void onLoadingCancelled(String s, View view) {
-//
-//                }
-//            });
-
-//            imageLoader.displayImage(imageUrl, holder.ivphoto, ImageLoaderUtils.getDisplayScaleImageOptions());
-//            Bitmap bitmap = MessageBitmapCache.getInstance().get(
-//                    mItem.getMessage());
-//            if (!mItem.isComMeg()) {
-//                bitmap = BubbleImageHelper.getInstance(mContext)
-//                        .getBubbleImageBitmap(bitmap,
-//                                R.drawable.zf_mine_image_default_bk);
-//            } else {
-//                bitmap = BubbleImageHelper.getInstance(mContext)
-//                        .getBubbleImageBitmap(bitmap,
-//                                R.drawable.zf_other_image_default_bk);
-//            }
-//
-//            if (bitmap != null) {
-////                holder.ivphoto.setLayoutParams(new FrameLayout.LayoutParams(
-////                        FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-//                holder.ivphoto.setImageBitmap(bitmap);
-//            }
             holder.flPickLayout.setVisibility(View.VISIBLE);
+
+            holder.ivphoto.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+//                    Intent intent = new Intent(mContext, CopyTextActivity.class);
+//                    intent.putExtra("toUid", toUid);
+//                    intent.putExtra("item", mItem);
+//                    intent.putExtra("is_txt", false);
+//                    mContext.startActivity(intent);
+                    Intent intent = new Intent();
+                    intent.putExtra("toUid", toUid);
+                    intent.putExtra("item", mItem);
+                    intent.putExtra("is_txt", false);
+                    chatDialog = new ChatDialog(mContext, intent);
+                    chatDialog.showDialog();
+                    return false;
+                }
+            });
         } else {
             holder.flPickLayout.setVisibility(View.GONE);
         }
@@ -626,6 +641,17 @@ public class MessageAdapter extends BaseAdapter {
                 }
             }
         });
+//        holder.msg.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                Intent intent = new Intent(mContext, CopyTextActivity.class);
+//                intent.putExtra("toUid", toUid);
+//                intent.putExtra("item", mItem);
+//                intent.putExtra("is_txt", false);
+//                mContext.startActivity(intent);
+//                return false;
+//            }
+//        });
     }
 
     private void handleVideoMessage(final VideoMessageHolder holder,
@@ -650,6 +676,24 @@ public class MessageAdapter extends BaseAdapter {
                     intent.putExtra("videoPath", videoPath);
                     intent.putExtra("imgurl", cover);
                     mContext.startActivity(intent);
+                }
+            });
+
+            holder.rlMessage.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+//                    Intent intent = new Intent(mContext, CopyTextActivity.class);
+//                    intent.putExtra("toUid", toUid);
+//                    intent.putExtra("item", mItem);
+//                    intent.putExtra("is_txt", false);
+//                    mContext.startActivity(intent);
+                    Intent intent = new Intent();
+                    intent.putExtra("toUid", toUid);
+                    intent.putExtra("item", mItem);
+                    intent.putExtra("is_txt", false);
+                    chatDialog = new ChatDialog(mContext, intent);
+                    chatDialog.showDialog();
+                    return false;
                 }
             });
         }

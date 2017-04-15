@@ -13,6 +13,7 @@ public class Constants {
     public static final class Action {
         public static final String EMOJI_EDITED_SEND = "local.EMOJI_EDITED_SEND_ACTION";
         public static final String REFRSH_CHAT_PAGER_DATAS = "local.refresh.chat.pager.datas";
+        public static final String REMOVE_CHAT_MESSAGE_DATA = "local.remove.chat.message.data";
         public static final String REFRSH_CHAT_PAGER_NAME = "local.refresh.chat.pager.title.name";
         public static final String REFRSH_CHAT_PAGER = "local.refresh.chat.pager";
         public static final String EXIT_CURRETN_GROUP_REFRESH_DATAS = "local.exist.current.group.refresh.data";
@@ -22,6 +23,7 @@ public class Constants {
         public static final String CHAT_SERVICE_CLOSE = "local.chat.service.close";
         public static final String MAP_MARKER_REFRESH = "local.mapview.marker.refresh";
         public static final String NET_CONENECT_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
+        public static final String EXIT_CURRENT_ACTIVITY = "im.boss66.com.EXIT_CURRENT_ACTIVITY";
         //显示主页
         public static final String SHOW_HOME_ACTION = "im.boss66.com.SHOW_HOME_ACTION";
     }

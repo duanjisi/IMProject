@@ -1,26 +1,25 @@
-package im.boss66.com.activity.im;
+package im.boss66.com.widget.dialog;
 
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
-import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.im.SelectConversationActivity;
 import im.boss66.com.db.MessageDB;
 import im.boss66.com.entity.MessageItem;
 
 /**
- * Created by Johnny on 2016/10/3.
+ * Created by Johnny on 2017/4/14.
  */
-public class CopyTextActivity extends BaseActivity implements View.OnClickListener {
-
+public class ChatDialog extends BaseDialog implements View.OnClickListener {
     private TextView tvCopy;
     private TextView tvRewarding;
     private TextView tvDelete;
@@ -31,25 +30,23 @@ public class CopyTextActivity extends BaseActivity implements View.OnClickListen
     private CharSequence message;
     private boolean isTxt = false;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_copy_text);
-        setContentView(R.layout.dialog_chat);
-        initViews();
+    public ChatDialog(Context context, Intent intent) {
+        super(context);
+        initViews(intent);
     }
 
-    private void initViews() {
+
+    private void initViews(Intent intent) {
         mMsgDB = App.getInstance().getMessageDB();
-        tvCopy = (TextView) findViewById(R.id.tv_copy);
-        tvRewarding = (TextView) findViewById(R.id.tv_rewarding);
-        tvDelete = (TextView) findViewById(R.id.tv_delete);
+        tvCopy = (TextView) dialog.findViewById(R.id.tv_copy);
+        tvRewarding = (TextView) dialog.findViewById(R.id.tv_rewarding);
+        tvDelete = (TextView) dialog.findViewById(R.id.tv_delete);
 
         tvCopy.setOnClickListener(this);
         tvRewarding.setOnClickListener(this);
         tvDelete.setOnClickListener(this);
 
-        Bundle bundle = getIntent().getExtras();
+        Bundle bundle = intent.getExtras();
         if (bundle != null) {
             toUid = bundle.getString("toUid", "");
             messageItem = (MessageItem) bundle.getSerializable("item");
@@ -70,10 +67,15 @@ public class CopyTextActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        finish();
-        return true;
+    protected int getView() {
+        return R.layout.dialog_chat;
+    }
+
+    @Override
+    protected int getDialogStyleId() {
+        return R.style.dialog_ios_style;
     }
 
     @Override
@@ -83,14 +85,14 @@ public class CopyTextActivity extends BaseActivity implements View.OnClickListen
                 if (!message.equals("")) {
                     ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                     cmb.setText(message);
-                    showToast("已复制", true);
+                    Toast.makeText(context, "已复制", Toast.LENGTH_SHORT);
                 }
                 break;
             case R.id.tv_rewarding:
                 if (messageItem != null) {
                     Intent intent = new Intent(context, SelectConversationActivity.class);
                     intent.putExtra("item", messageItem);
-                    startActivity(intent);
+                    context.startActivity(intent);
                 }
                 break;
             case R.id.tv_delete:
@@ -102,18 +104,12 @@ public class CopyTextActivity extends BaseActivity implements View.OnClickListen
                 }
                 break;
         }
-        finish();
+        dismiss();
     }
 
-//    public void copy(View view) {
-//        if (!message.equals("")) {
-//            ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-//            cmb.setText(message);
-//            showToast("已复制", true);
-//        }
-//        finish();
-//    }
-//    public void rewarding(View view) {
-//
-//    }
+    public void showDialog() {
+        if (dialog != null && !isShowing()) {
+            show();
+        }
+    }
 }

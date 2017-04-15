@@ -195,6 +195,10 @@
         <activity
             android:name=".activity.book.SelectContactsActivity"
             android:screenOrientation="portrait"></activity>
+        <!--选择最近聊天成员-->
+        <activity
+            android:name=".activity.im.SelectConversationActivity"
+            android:screenOrientation="portrait"></activity>
         <!--手机联系人-->
         <activity
             android:name=".activity.book.PhoneContactsActivity"

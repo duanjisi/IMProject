@@ -18,8 +18,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SlidingDrawer;
@@ -64,15 +66,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Session;
+import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.adapter.FuwaAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BaseChildren;
 import im.boss66.com.entity.ChildEntity;
@@ -96,10 +103,11 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         AMap.OnMarkerClickListener,
         AMap.OnCameraChangeListener,
         RouteSearch.OnRouteSearchListener,
-        AMap.OnMapClickListener {
+        AMap.OnMapClickListener,
+        Observer {
     private static final String TAG = FindTreasureChildrenActivity.class.getSimpleName();
     private LocalBroadcastReceiver mLocalBroadcastReceiver;
-    private PopupWindow popupWindow;
+    private PopupWindow popupWindow, popup;
     private MapView mMapView = null;
     private AMap aMap;
     //    private MarkerOptions markerOptions;
@@ -146,6 +154,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        Session.getInstance().addObserver(this);
         setContentView(R.layout.activity_treasure_children);
         initViews();
         getPermission();
@@ -306,9 +315,10 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             case R.id.btn_catch:
                 if (currentChild != null) {
                     Intent intent = new Intent(context, CatchFuwaActivity.class);
-                    intent.putExtra("pic", currentChild.getPic());
-                    intent.putExtra("gid", currentChild.getGid());
-                    intent.putExtra("id", currentChild.getId());
+//                    intent.putExtra("pic", currentChild.getPic());
+//                    intent.putExtra("gid", currentChild.getGid());
+//                    intent.putExtra("id", currentChild.getId());
+                    intent.putExtra("obj", currentChild);
                     startActivity(intent);
                 }
                 break;
@@ -323,13 +333,24 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 ViewGroup.LayoutParams.WRAP_CONTENT, false);
         popupWindow.setAnimationStyle(R.style.PopupTitleBarAnim);
 
+        ImageView iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
         TextView tvTips = (TextView) view.findViewById(R.id.tv_tips);
+        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
+        TextView tv_sign = (TextView) view.findViewById(R.id.tv_sign);
+        TextView tv_address = (TextView) view.findViewById(R.id.tv_address);
+
         String detail = entity.getDetail();
-        Log.i("info", "=====detail:" + detail);
         if (!TextUtils.isEmpty(detail)) {
             tvTips.setText(detail);
         } else {
             tvTips.setText(resources.getString(R.string.no_act));
+        }
+        tv_name.setText(entity.getName());
+        tv_sign.setText(entity.getSignature());
+        tv_address.setText(entity.getLocation());
+        String imageUrl = entity.getAvatar();
+        if (!TextUtils.isEmpty(imageUrl)) {
+            imageLoader.displayImage(imageUrl, iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
         }
         int[] location = new int[2];
         parent.getLocationOnScreen(location);
@@ -481,9 +502,9 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
 
     private void catchChild(ChildEntity child) {
-        if (slidingDrawer.getVisibility() != View.VISIBLE) {
-            UIUtils.showView(slidingDrawer);
-        }
+//        if (slidingDrawer.getVisibility() != View.VISIBLE) {
+//            UIUtils.showView(slidingDrawer);
+//        }
         float distance = 0;
         this.currentChild = child;
         if (markerMap != null && markerMap.size() != 0) {
@@ -495,35 +516,80 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         mLatLng = new LatLng(latitude, longitude);
 //        mLatLng = mLocMarker.getPosition();
         Log.i("info", "===============distance:" + distance);
-        if (topBar.getVisibility() != View.VISIBLE) {
-            topBar.setVisibility(View.VISIBLE);
-//            if (distance > 20 || distance == 0) {
-//                topBar.findViewById(R.id.btn_catch).setVisibility(View.GONE);
-//                topBar.findViewById(R.id.tv_tips).setVisibility(View.VISIBLE);
-//            } else {
-//                topBar.findViewById(R.id.btn_catch).setVisibility(View.VISIBLE);
-//                topBar.findViewById(R.id.tv_tips).setVisibility(View.GONE);
-//            }
-        }
-        if (distance > 20 || distance == 0) {
+        if (distance > 30 || distance == 0) {
+            if (slidingDrawer.getVisibility() != View.VISIBLE) {
+                UIUtils.showView(slidingDrawer);
+            }
+            if (topBar.getVisibility() != View.VISIBLE) {
+                topBar.setVisibility(View.VISIBLE);
+            }
             btn_catch.setVisibility(View.GONE);
             tvTips.setVisibility(View.VISIBLE);
-        } else {
-            btn_catch.setVisibility(View.VISIBLE);
-            tvTips.setVisibility(View.GONE);
+            if (!slidingDrawer.isOpened()) {
+                slidingDrawer.animateOpen();
+            }
+            String[] strs = child.getGeo().split("-");
+            mEndPoint = new LatLonPoint(Double.parseDouble(strs[1]), Double.parseDouble(strs[0]));
+            if (location != null) {
+                mStartPoint = new LatLonPoint(location.getLatitude(), location.getLongitude());
+            }
+            searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WALK_DEFAULT);
+        } else {//扑捉范围内
+            if (popup == null) {
+                showChildrenPop(titleBar);
+            } else {
+                if (!popup.isShowing()) {
+                    showChildrenPop(titleBar);
+                }
+            }
+//            btn_catch.setVisibility(View.VISIBLE);
+//            tvTips.setVisibility(View.GONE);
         }
-
-        if (!slidingDrawer.isOpened()) {
-            slidingDrawer.animateOpen();
-        }
-
-        String[] strs = child.getGeo().split("-");
-        mEndPoint = new LatLonPoint(Double.parseDouble(strs[1]), Double.parseDouble(strs[0]));
-        if (location != null) {
-            mStartPoint = new LatLonPoint(location.getLatitude(), location.getLongitude());
-        }
-        searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WALK_DEFAULT);
+//        if (!slidingDrawer.isOpened()) {
+//            slidingDrawer.animateOpen();
+//        }
+//        String[] strs = child.getGeo().split("-");
+//        mEndPoint = new LatLonPoint(Double.parseDouble(strs[1]), Double.parseDouble(strs[0]));
+//        if (location != null) {
+//            mStartPoint = new LatLonPoint(location.getLatitude(), location.getLongitude());
+//        }
+//        searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WALK_DEFAULT);
     }
+
+    private ArrayList<ChildEntity> getRoundChildren() {
+        ArrayList<ChildEntity> childs = null;
+        if (markerMap != null && markerMap.size() != 0) {
+            childs = new ArrayList<>();
+            for (Map.Entry<String, Marker> entry : markerMap.entrySet()) {
+                Marker target = entry.getValue();
+                float distance = AMapUtils.calculateLineDistance(mLocMarker.getPosition(), target.getPosition());
+                if (distance < 30) {
+                    String snippet = target.getSnippet();
+                    if (snippet != null && !snippet.equals("")) {
+                        ChildEntity childEntity = JSON.parseObject(snippet, ChildEntity.class);
+                        if (childEntity != null) {
+//                            childs.add(childEntity);
+                            if (!isContain(childs, childEntity)) {
+                                childs.add(childEntity);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return childs;
+    }
+
+    private boolean isContain(ArrayList<ChildEntity> childs, ChildEntity entity) {
+        boolean flag = false;
+        for (ChildEntity mode : childs) {
+            if (mode.getGid().equals(entity.getGid())) {
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
@@ -607,7 +673,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 } else {
                     mCircle.setCenter(location);
 //                    mCircle.setRadius(amapLocation.getAccuracy());
-                    mCircle.setRadius(20);
+                    mCircle.setRadius(30);
                     mLocMarker.setPosition(location);
                     mPersonMarker.setPosition(location);
                 }
@@ -732,7 +798,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         options.strokeColor(STROKE_COLOR);
         options.center(latlng);
 //        options.radius(radius);
-        options.radius(20);
+        options.radius(30);
         mCircle = aMap.addCircle(options);
     }
 
@@ -865,6 +931,77 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 ).request(permissionListener);
     }
 
+    private FuwaAdapter mAdapter;
+
+    private void showChildrenPop(View parent) {
+        if (slidingDrawer.getVisibility() != View.GONE) {
+            UIUtils.hindView(slidingDrawer);
+            if (walkRouteOverlay != null) {
+                walkRouteOverlay.removeFromMap();
+                walkRouteOverlay = null;
+            }
+        }
+        View view = View.inflate(this, R.layout.dialog_good_list, null);
+        popup = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popup.setAnimationStyle(R.style.hide_fuwa_pop_anim);
+        popup.setOutsideTouchable(true);
+//        popupWindow.setTouchable(true);
+        popup.setFocusable(true);
+        popup.setBackgroundDrawable(getDrawableFromRes(R.drawable.bg_popwindow));
+        ListView listView = (ListView) view.findViewById(R.id.listView);
+        mAdapter = new FuwaAdapter(this);
+        listView.setOnItemClickListener(new ItemClickListener());
+        listView.setAdapter(mAdapter);
+        ArrayList<ChildEntity> goods = getRoundChildren();
+        if (goods != null && goods.size() != 0) {
+            if (goods.size() > 4) {
+                ViewGroup.LayoutParams layoutParams = listView.getLayoutParams();
+                layoutParams.height = UIUtils.getScreenHeight(this) / 2 - 50;    //获取屏幕高度
+                listView.setLayoutParams(layoutParams);
+            }
+            mAdapter.initData(goods);
+        }
+//        int xOff = UIUtils.getScreenWidth(this) / 2 - parent.getWidth() / 3;
+//        int xOffDp = UIUtils.px2dip(this, xOff);
+//        popupWindow.showAtLocation(parent, 0, 0, Gravity.END);
+//        popupWindow.showAsDropDown(parent, -xOffDp, 0);
+        popup.showAsDropDown(parent, 0, 0);
+    }
+
+
+    private class ItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            ChildEntity entity = (ChildEntity) adapterView.getItemAtPosition(i);
+            if (entity != null) {
+                Intent intent = new Intent(context, CatchFuwaActivity.class);
+                intent.putExtra("pic", entity.getPic());
+                intent.putExtra("gid", entity.getGid());
+                intent.putExtra("id", entity.getId());
+                startActivity(intent);
+            }
+        }
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        SessionInfo sin = (SessionInfo) o;
+        if (sin.getAction() == Session.ACTION_SELECTED_FUWA_CHILD) {
+            ChildEntity data = (ChildEntity) sin.getData();
+            if (popupWindow == null) {
+                if (currentChild != null && data != null) {
+                    showDetail(context, titleBar, data);
+                }
+            } else {
+                if (!popupWindow.isShowing()) {
+                    if (currentChild != null && data != null) {
+                        showDetail(context, titleBar, data);
+                    }
+                }
+            }
+        }
+    }
 
     private class LocalBroadcastReceiver extends BroadcastReceiver {
         @Override
@@ -878,5 +1015,4 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             }
         }
     }
-
 }

@@ -1,18 +1,23 @@
 package im.boss66.com.widget.dialog;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import im.boss66.com.R;
+import im.boss66.com.widget.DialogFactory;
 
 
 /**
  * Created by admin on 2017/2/20.
  */
 public abstract class BaseDialog {
+
+    // 进度条
+    private ProgressDialog mProgressDialog;
+
     protected Context context;
     protected Dialog dialog;
 
@@ -50,5 +55,40 @@ public abstract class BaseDialog {
         return dialog.isShowing();
     }
 
+    /**
+     * 显示加载进度条
+     *
+     * @return: void
+     */
+    protected void showLoadingDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = createProgressDialog();
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.show();
+        } else {
+            if (!mProgressDialog.isShowing()) {
+                mProgressDialog.show();
+            }
+        }
+    }
 
+    private ProgressDialog createProgressDialog() {
+        ProgressDialog dialog = DialogFactory.createProgressDialog(context);
+        dialog.setMessage(context.getResources().getString(R.string.loading));
+        dialog.setIndeterminate(true);
+        // dialog.setCanceledOnTouchOutside(false);
+        // dialog.setCancelable(false);
+        return dialog;
+    }
+
+    /**
+     * 取消加载进度条
+     *
+     * @return: void
+     */
+    protected void cancelLoadingDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
 }

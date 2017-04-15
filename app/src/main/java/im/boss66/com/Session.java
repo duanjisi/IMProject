@@ -4,6 +4,8 @@ import android.content.Context;
 
 import java.util.Observable;
 
+import im.boss66.com.entity.ChildEntity;
+
 /**
  * Created by Johnny on 2017/1/17.
  */
@@ -18,6 +20,7 @@ public class Session extends Observable {
     public static final int ACTION_PREV_CLOSE_ACTIVITY = 1017;//关闭上一个activity
     public static final int ACTION_CONTACTS_REFRESH_PAGER = 1018;//刷新通讯录数据
     public static final int ACTION_RE_CONNECT_WEBSOCKET = 1019;//刷新通讯录数据
+    public static final int ACTION_SELECTED_FUWA_CHILD = 1020;//选择当前福娃详情
 //    public static final int ACTION_STOP_PUSH_SERVICE = 1019;//关闭推送服务
 
     public Session() {
@@ -95,6 +98,14 @@ public class Session extends Observable {
     public void reConnectNet() {
         SessionInfo sin = new SessionInfo();
         sin.setAction(ACTION_RE_CONNECT_WEBSOCKET);
+        this.setChanged();
+        this.notifyObservers(sin);
+    }
+
+    public void selectedFuwa(ChildEntity childEntity) {
+        SessionInfo sin = new SessionInfo();
+        sin.setAction(ACTION_SELECTED_FUWA_CHILD);
+        sin.setData(childEntity);
         this.setChanged();
         this.notifyObservers(sin);
     }
