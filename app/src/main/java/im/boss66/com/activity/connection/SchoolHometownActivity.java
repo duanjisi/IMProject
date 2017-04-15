@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.bumptech.glide.Glide;
 import com.github.jdsjlzx.interfaces.OnLoadMoreListener;
 import com.github.jdsjlzx.interfaces.OnRefreshListener;
 import com.github.jdsjlzx.recyclerview.LRecyclerView;
@@ -240,7 +241,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         ;
         iv_bg.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
 
-
+        Glide.with(context).load(R.drawable.bg_top).into(iv_bg);
         mLRecyclerViewAdapter.addHeaderView(header);
         rcv_news.setFooterViewHint("拼命加载中", "我是有底线的", "网络不给力啊，点击再试一次吧");
         //rcv设置adapter以及刷新
@@ -275,6 +276,8 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             }
         });
         getCommunityList();
+
+
     }
 
     @Override

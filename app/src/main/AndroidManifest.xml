@@ -532,6 +532,8 @@
         <activity android:name=".activity.connection.ClanClubActivity"></activity>
         <!--宗亲和商会web详情页-->
         <activity android:name=".activity.connection.ClanCofcDetailActivity"></activity>
+        <!--编辑宗亲商会页-->
+        <activity android:name=".activity.connection.EditClanCofcActivity"></activity>
 
         <!-- 支付宝end -->
 
