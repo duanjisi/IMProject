@@ -10,7 +10,6 @@
         <ImageView
             android:id="@+id/iv_bg"
             android:scaleType="centerCrop"
-            android:src="@drawable/bg_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <LinearLayout
@@ -27,21 +26,23 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="6dp"
-                android:paddingBottom="7dp"
+                android:paddingBottom="6dp"
                 android:text="关注"
                 android:background="@drawable/shape_follow"
                 android:textColor="@color/white"
                 android:textSize="15.4sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="80dp"
+                android:gravity="center"
+                android:layout_height="35dp" />
             <TextView
+                android:layout_marginTop="5dp"
                 android:visibility="invisible"
                 android:id="@+id/tv_count"
                 android:text="0人"
                 android:layout_alignLeft="@id/tv_follow"
                 android:layout_below="@id/tv_follow"
-                android:textColor="@color/bt_bg_gray1"
-                android:textSize="13sp"
+                android:textColor="@color/white"
+                android:textSize="15.4sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
