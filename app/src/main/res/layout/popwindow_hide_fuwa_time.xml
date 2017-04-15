@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_fuwa_gary_round"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/dp_14"
+    android:paddingRight="@dimen/dp_14">
+
+    <TextView
+        android:id="@+id/tv_time_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp_14"
+        android:paddingTop="@dimen/dp_14"
+        android:text="72小时"
+        android:textColor="@color/white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bg_rectangle" />
+
+    <TextView
+        android:id="@+id/tv_time_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp_14"
+        android:paddingTop="@dimen/dp_14"
+        android:text="一个月"
+        android:textColor="@color/white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bg_rectangle" />
+
+    <TextView
+        android:id="@+id/tv_time_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp_14"
+        android:paddingTop="@dimen/dp_14"
+        android:text="一年"
+        android:textColor="@color/white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bg_rectangle" />
+
+    <TextView
+        android:id="@+id/tv_time_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp_14"
+        android:paddingTop="@dimen/dp_14"
+        android:text="三年"
+        android:textColor="@color/white" />
+
+</LinearLayout>

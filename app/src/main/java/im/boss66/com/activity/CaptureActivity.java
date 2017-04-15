@@ -41,6 +41,8 @@ import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -56,6 +58,7 @@ import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
+import im.boss66.com.activity.event.FuwaGid;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.BaseModelRequest;
 import im.boss66.com.http.request.AddFriendRequest;
@@ -264,6 +267,9 @@ public class CaptureActivity extends BaseActivity {
                 }
             });
 
+        }else if(true){       //扫描二维码赠送,后期加上url规范
+            EventBus.getDefault().post(new FuwaGid(result));
+            finish();
         }
     }
     private void onAddMember() {

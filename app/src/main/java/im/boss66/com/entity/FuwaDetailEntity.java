@@ -49,6 +49,15 @@ public class FuwaDetailEntity {
         private String pos;
         private String creator;
         private String fuwaId;
+        private boolean awarded;
+
+        public boolean isAwarded() {
+            return awarded;
+        }
+
+        public void setAwarded(boolean awarded) {
+            this.awarded = awarded;
+        }
 
         public String getPos() {
             return pos;

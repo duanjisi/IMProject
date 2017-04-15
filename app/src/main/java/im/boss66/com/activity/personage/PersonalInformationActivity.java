@@ -14,6 +14,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.config.LoginStatus;
 import im.boss66.com.entity.AccountEntity;
@@ -102,6 +103,8 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
         rl_sex.setOnClickListener(this);
         rl_area.setOnClickListener(this);
         rl_signature.setOnClickListener(this);
+        int sceenW = UIUtils.getScreenWidth(this);
+        tv_name.getLayoutParams().width = sceenW / 3 * 2;
     }
 
     @Override

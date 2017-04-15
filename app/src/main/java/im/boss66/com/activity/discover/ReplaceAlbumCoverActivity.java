@@ -5,14 +5,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
@@ -31,16 +33,16 @@ import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtils;
-import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
+import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.personage.ClipImageActivity;
 import im.boss66.com.config.LoginStatus;
 import im.boss66.com.entity.AlbumCoverEntity;
-import im.boss66.com.entity.ChangeAvatarEntity;
+import im.boss66.com.entity.EditClanCofcEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.util.Utils;
@@ -59,11 +61,24 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
     private final int REQUEST_CLIP_IMAGE = 3;//裁剪
     private PermissionListener permissionListener;
     private int cameraType;//1:相机 2：相册
+    private boolean forClanClub;     //是否从人脉页跳转过来
+    private boolean isClan;
+    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_replace_album_cover);
+        Intent intent = getIntent();
+        if(intent!=null){
+            Bundle bundle = intent.getExtras();
+            if(bundle!=null){
+
+                forClanClub = bundle.getBoolean("forClanClub", false);
+                isClan = bundle.getBoolean("isClan", false);
+                id = bundle.getString("id");
+            }
+        }
         initView();
     }
 
@@ -98,11 +113,20 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
     }
 
     private void uploadImageFile(String path) {
+        if(forClanClub){
+            if(isClan){
+                upLoadClanImage(path);
+            }else {
+                upLoadCofcImage(path);
+            }
+            return;
+        }
         showLoadingDialog();
         String main = HttpUrl.CHANE_ALBUM_COVER;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
+        Log.i("uploadImageFile",path);
         if (bitmap != null) {
             File file = FileUtils.compressImage(bitmap);
             if (file != null) {
@@ -158,6 +182,128 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
         });
     }
 
+    private void upLoadCofcImage(String path) {
+
+        showLoadingDialog();
+        String main = HttpUrl.EDIT_COFC;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
+        Log.i("uploadImageFile",path);
+        if (bitmap != null) {
+            File file = FileUtils.compressImage(bitmap);
+            if (file != null) {
+                params.addBodyParameter("banner", file);
+            }
+        }
+        params.addBodyParameter("access_token", access_token);
+        params.addBodyParameter("cofc_id", id);
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                try {
+                    cancelLoadingDialog();
+                    EditClanCofcEntity entity = JSON.parseObject(responseInfo.result, EditClanCofcEntity.class);
+                    if (entity != null) {
+                        if (entity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            if (entity.getCode() == 1) {
+                                EditClanCofcEntity.ResultBean result = entity.getResult();
+                                ToastUtil.showShort(context, "更改成功");
+                                String banner = result.getBanner();
+                                Intent intent = new Intent();
+                                intent.putExtra("banner",banner);
+                                setResult(RESULT_OK,intent);
+                                finish();
+                            }else {
+                                ToastUtil.showShort(context, "更改失败");
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    ToastUtil.showShort(context, "上传失败");
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast("上传失败", false);
+                }
+            }
+        });
+    }
+
+    private void upLoadClanImage(String path) {
+
+        showLoadingDialog();
+        String main = HttpUrl.EDIT_CLAN;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
+        Log.i("uploadImageFile",path);
+        if (bitmap != null) {
+            File file = FileUtils.compressImage(bitmap);
+            if (file != null) {
+                params.addBodyParameter("banner", file);
+            }
+        }
+        params.addBodyParameter("access_token", access_token);
+        params.addBodyParameter("clan_id", id);
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                try {
+                    cancelLoadingDialog();
+                    EditClanCofcEntity entity = JSON.parseObject(responseInfo.result, EditClanCofcEntity.class);
+                    if (entity != null) {
+                        if (entity.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            if (entity.getCode() == 1) {
+                                EditClanCofcEntity.ResultBean result = entity.getResult();
+                                ToastUtil.showShort(context, "更改成功");
+                                String banner = result.getBanner();
+                                Intent intent = new Intent();
+                                intent.putExtra("banner",banner);
+                                setResult(RESULT_OK,intent);
+                                finish();
+                            }else {
+                                ToastUtil.showShort(context, "更改失败");
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    ToastUtil.showShort(context, "上传失败");
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast("上传失败", false);
+                }
+            }
+        });
+
+
+    }
+
     private void goLogin() {
         Intent intent = new Intent();
         intent.setAction(Constants.ACTION_LOGOUT_RESETING);
@@ -169,7 +315,19 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {    //打开相机
             if (imageUri != null) {
-                String path = Utils.getPath(this, imageUri);
+                String path;
+                if (Build.VERSION.SDK_INT < 24) {
+                    path = Utils.getPath(this, imageUri);
+                } else {
+                    path = imageUri.toString();
+                    if(Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
+                            path.contains("/IMProject/")){
+                        String[] arr = path.split("/IMProject/");
+                        if (arr != null && arr.length >1){
+                            path = savePath + arr[1];
+                        }
+                    }
+                }
                 if (!TextUtils.isEmpty(path)) {
                     ClipImageActivity.prepare()
                             .aspectX(2).aspectY(2)//裁剪框横向及纵向上的比例
@@ -214,17 +372,27 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
             @Override
             public void onRequestPermissionSuccess() {
                 if (cameraType == OPEN_CAMERA) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    String imageName = getNowTime() + ".png";
-                    // 指定调用相机拍照后照片的储存路径
-                    File dir = new File(savePath);
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-                    File file = new File(dir, imageName);
-                    imageUri = Uri.fromFile(file);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
+                    if (Build.VERSION.SDK_INT < 24) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        String imageName = getNowTime() + ".jpg";
+                        // 指定调用相机拍照后照片的储存路径
+                        File dir = new File(savePath);
+                        if (!dir.exists()) {
+                            dir.mkdirs();
+                        }
+                        File file = new File(dir, imageName);
+                        imageUri = Uri.fromFile(file);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivityForResult(intent, OPEN_CAMERA);
+                        }
+                    } else {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        String imageName = getNowTime() + ".jpg";
+                        File file = new File(savePath, imageName);
+                        imageUri = FileProvider.getUriForFile(ReplaceAlbumCoverActivity.this, "im.boss66.com.fileProvider", file);//这里进行替换uri的获得方式
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//这里加入flag
                         startActivityForResult(intent, OPEN_CAMERA);
                     }
                 } else if (cameraType == OPEN_ALBUM) {

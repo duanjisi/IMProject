@@ -7,12 +7,14 @@ import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -205,6 +207,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         iv_bg = (ImageView) header.findViewById(R.id.iv_bg);
         ImageView iv_head = (ImageView) header.findViewById(R.id.iv_head);
         TextView tv_name = (TextView) header.findViewById(R.id.tv_name);
+        tv_name.getLayoutParams().width = sceenW / 3 * 2;
         ll_new = (LinearLayout) header.findViewById(R.id.ll_new);
         iv_new = (ImageView) header.findViewById(R.id.iv_new);
         tv_new_count = (TextView) header.findViewById(R.id.tv_new_count);
@@ -563,7 +566,23 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             getFriendCircleList();
         } else if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {//打开相机
             if (imageUri != null) {
-                String path = Utils.getPath(this, imageUri);
+                String path = null;
+                if (Build.VERSION.SDK_INT < 24) {
+                    path = Utils.getPath(this, imageUri);
+                } else {
+                    path = imageUri.toString();
+//                    ContentResolver contentProvider = getContentResolver();
+//                    ParcelFileDescriptor mInputPFD;
+//                    try {
+//                        //获取contentProvider图片
+//                        mInputPFD = contentProvider.openFileDescriptor(imageUri, "r");
+//                        FileDescriptor fileDescriptor = mInputPFD.getFileDescriptor();
+//                        //mImageView.setImageBitmap(BitmapFactory.decodeFileDescriptor(fileDescriptor));
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
+
+                }
                 Bundle bundle = new Bundle();
                 bundle.putString("sendType", "photo");
                 bundle.putInt("type", OPEN_CAMERA);
@@ -785,7 +804,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     //发表评论
     private void createComment(String content, String pid, String uid_to) {
         if (bt_send != null) {
-            bt_send.setText("");
+            et_send.setText("");
         }
         CircleCommentCreateRequest request = new CircleCommentCreateRequest(TAG, String.valueOf(feedId), content, pid, uid_to);
         request.send(new BaseDataRequest.RequestCallback<String>() {
@@ -952,17 +971,27 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     startActivityForResult(mIntent, RECORD_VIDEO);
                     //openActivity(RecordVideoActivity.class);
                 } else if (cameraType == OPEN_CAMERA) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    String imageName = getNowTime() + ".jpg";
-                    // 指定调用相机拍照后照片的储存路径
-                    File dir = new File(savePath);
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-                    File file = new File(dir, imageName);
-                    imageUri = Uri.fromFile(file);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
+                    if (Build.VERSION.SDK_INT < 24) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        String imageName = getNowTime() + ".jpg";
+                        // 指定调用相机拍照后照片的储存路径
+                        File dir = new File(savePath);
+                        if (!dir.exists()) {
+                            dir.mkdirs();
+                        }
+                        File file = new File(dir, imageName);
+                        imageUri = Uri.fromFile(file);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivityForResult(intent, OPEN_CAMERA);
+                        }
+                    } else {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        String imageName = getNowTime() + ".jpg";
+                        File file = new File(savePath, imageName);
+                        imageUri = FileProvider.getUriForFile(FriendCircleActivity.this, "im.boss66.com.fileProvider", file);//这里进行替换uri的获得方式
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//这里加入flag
                         startActivityForResult(intent, OPEN_CAMERA);
                     }
                 } else if (cameraType == OPEN_ALBUM) {

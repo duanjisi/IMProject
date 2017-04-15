@@ -15,7 +15,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.App;
@@ -24,7 +23,6 @@ import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.EmojiGroupDetailsActivity;
 import im.boss66.com.adapter.EmoStoreAdapter;
-import im.boss66.com.adapter.SearchCircleAdapter;
 import im.boss66.com.adapter.UserAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BaseEmoStore;

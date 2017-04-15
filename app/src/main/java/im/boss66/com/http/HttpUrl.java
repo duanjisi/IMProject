@@ -13,7 +13,9 @@ public class HttpUrl {
     public static final String UPLOAD_AUDIO_URL = BASE_URL + "upload/writev1?";
     public static final String UPLOAD_IMAGE_URL = BASE_URL + "upload/writev2?";
     public static final String UPLOAD_VIDEO_URL = BASE_URL + "upload/writev3?";
-
+    //
+    public static final String[] BASE_FUWA = {"http://wsimali.66boss.com:9090/", "http://fuwa2.66boss.com:9090/"};
+    public static int FUWA_TAG = 1;
     /**
      * android版本更新
      */
@@ -201,7 +203,7 @@ public class HttpUrl {
     public static final String COMMUNITY_GET_NEW_MSG = MAIN_URL + "api/v1/contactsmsg/getnewest";
 
     //商会详情页
-    public static final String CLUB_DETATIL = MAIN_URL + "hometown/cofc";
+    public static final String CLUB_DETATIL = MAIN_URL + "web/hometown/cofc";
     //学校动态列表
     public static final String SCHOOL_NEWS = MAIN_URL + "api/v1/school/message";
     //家乡动态列表
@@ -211,7 +213,7 @@ public class HttpUrl {
     //获取用户信息
     public static final String SEARCH_USER_INFO = MAIN_URL + "ucenter/userinfo/index";
     //查询周围的福娃
-    public static final String FIND_AROUND_CHILDREN = BASE_FUWA_URL + "query?";
+    public static final String FIND_AROUND_CHILDREN = BASE_FUWA[FUWA_TAG] + "api/query?";
     //同学推荐
     public static final String SCHOOLMATE_LIST = MAIN_URL + "api/v1/search/same-school";
     //同乡推荐
@@ -221,35 +223,37 @@ public class HttpUrl {
     //搜索人脉用户
     public static final String SEARCH_PEOPLE = MAIN_URL + "api/v1/search/user";
     //查询所有的福娃出售
-    public static final String SEARCH_FUWA_SELL = "http://wsimali.66boss.com:9090/msg/querysell";
+    public static final String SEARCH_FUWA_SELL = BASE_FUWA[FUWA_TAG] + "msg/querysell";
 
     //查自己的福娃
-    public static final String QUERY_MY_FUWA = "http://wsimali.66boss.com:9090/api/querymy?user=";
+    public static final String QUERY_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/querymy?user=";
     //福娃详情
-    public static final String FUWA_DETAIL = "http://wsimali.66boss.com:9090/api/querydetail?fuwagid=";
+    public static final String FUWA_DETAIL = BASE_FUWA[FUWA_TAG] + "api/querydetail?fuwagid=";
     //出售福娃
-    public static final String SELL_FUWA = "http://wsimali.66boss.com:9090/msg/sell";
+    public static final String SELL_FUWA = BASE_FUWA[FUWA_TAG] + "msg/sell";
     //赠送福娃
-    public static final String GIVE_FUWA = "http://wsimali.66boss.com:9090/api/donate";
+    public static final String GIVE_FUWA = BASE_FUWA[FUWA_TAG] + "api/donate";
     //福娃排行榜
     public static final String FUWA_TOPLIST = "http://wsim.66boss.com/toplist/top.html?user=";
     //查自己出售的福娃
-    public static final String SEARY_MY_SELL_FUWA = "http://wsimali.66boss.com:9090/msg/querymysell?userid=";
+    public static final String SEARY_MY_SELL_FUWA = BASE_FUWA[FUWA_TAG] + "/msg/querymysell?userid=";
 
     //藏福娃
-    public static final String HIDE_MY_FUWA = BASE_FUWA_URL + "hide?owner=";
+    public static final String HIDE_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/hide?owner=";
     //捉福娃
-    public static final String CATCH_MY_FUWA = BASE_FUWA_URL + "capture?user=";
+    public static final String CATCH_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/capture?user=";
     //福娃消息
-    public static final String FUWA_MSG = "http://wsimali.66boss.com:9090/msg/myinfo?userid=";
+    public static final String FUWA_MSG = BASE_FUWA[FUWA_TAG] + "msg/myinfo?userid=";
     //微信支付购买福娃
     public static final String FUWA_PAY_WX = MAIN_URL + "api/pay/weixin";
     //支付宝购买福娃
     public static final String FUWA_PAY_ALIPAY = MAIN_URL + "api/pay/alipay";
     //支付系统通知购买成功
     public static final String SYSTEM_PAY_NOTICE = "http://wsimali.66boss.com:9090/msg/notice?";
-    //名人详情页
+    //家乡名人详情页
     public static final String FAMOUSPERSON_DETAIL = MAIN_URL + "web/hometown/celebrity";
+    //学校名人页
+    public static final String SCHOOL_PERSON_DETAIL = MAIN_URL + "web/school/celebrity";
     //学校社团详情页
     public static final String SCHOOL_CLUB_DETATIL = MAIN_URL + "web/school/league";
     //家乡动态详情页
@@ -261,5 +265,33 @@ public class HttpUrl {
 
     //修改密码
     public static final String CHANGE_USER_PW = MAIN_URL + "/ucenter/psw/index";
+    //创建宗亲
+    public static final String CREATE_CLAN = MAIN_URL + "api/v1/clan/create";
+    //创建商会
+    public static final String CREATE_CLUB = MAIN_URL + "api/v1/cofc/create";
+    //删除宗亲
+    public static final String DELETE_CLAN = MAIN_URL + "api/v1/clan/delete";
+    //删除商会
+    public static final String DELETE_CLUB = MAIN_URL + "api/v1/cofc/delete";
+    //宗亲web页
+    public static final String CLAN_DETAIL = MAIN_URL + "web/clan";
+    //商会web页
+    public static final String COFC_DETAIL = MAIN_URL + "web/cofc";
+    //获取宗亲详情
+    public static final String CLAN_INFO = MAIN_URL+"api/v1/clan";
+    //获取商会详情
+    public static final String COFC_INFO = MAIN_URL+"api/v1/cofc";
+    //关注宗亲
+    public static final String FOLLOW_CLAN = MAIN_URL+"api/v1/clan/follow";
+    //取消关注宗亲
+    public static final String CANCEL_FOLLOW_CLAN = MAIN_URL+"api/v1/clan/unfollow";
+    //关注商会
+    public static final String FOLLOW_COFC = MAIN_URL+"api/v1/cofc/follow";
+    //取消关注商会
+    public static final String CANCEL_FOLLOW_COFC = MAIN_URL+"api/v1/cofc/unfollow";
+    //修改宗亲
+    public static final String EDIT_CLAN= MAIN_URL+"api/v1/clan/update";
+    //修改商会
+    public static final String EDIT_COFC= MAIN_URL+"api/v1/cofc/update";
 
 }

@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity implements Observer {
 
     private MyInfo myInfo;
     private List<MyInfo.ResultBean.SchoolListBean> school_list; //学校
-    private List<MyInfo.ResultBean.HometownListBean> hometown_list; //家乡
+    private List<MyInfo.ResultBean.SchoolListBean> hometown_list; //家乡
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

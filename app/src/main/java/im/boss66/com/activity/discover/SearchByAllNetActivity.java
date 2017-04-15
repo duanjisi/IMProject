@@ -1,7 +1,6 @@
 package im.boss66.com.activity.discover;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -16,9 +15,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -34,7 +30,6 @@ import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.im.EmojiGroupDetailsActivity;
 import im.boss66.com.adapter.EmoStoreAdapter;
-import im.boss66.com.adapter.SearchCircleAdapter;
 import im.boss66.com.adapter.UserAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.EmoStore;

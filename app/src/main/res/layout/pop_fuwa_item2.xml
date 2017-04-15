@@ -34,12 +34,12 @@
 
             <RelativeLayout
                 android:layout_marginLeft="20dp"
-                android:background="@drawable/shape_fuwa_edit"
+                android:background="@drawable/shape_fuwa_edit2"
                 android:layout_width="175dp"
                 android:layout_height="35dp">
 
                 <EditText
-                    android:maxLength="15"
+                    android:maxLength="10"
                     android:inputType="numberDecimal"
                     android:textColor="@color/white"
                     android:id="@+id/et_price"
@@ -86,19 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:id="@+id/tv_content"
-            android:visibility="gone"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="12dp"
-            android:textSize="12sp"
-            android:textColor="@color/bg_rectangle"
-            android:text="填写接收人的口令，接收人即可获得你赠送的福娃"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
     </RelativeLayout>
 
 

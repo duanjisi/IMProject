@@ -85,7 +85,7 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
             public void onClick(View view) {
                 Intent intent = new Intent();
                 intent.putExtra("lits", imgUrls);
-                setResult(RESULT_OK,intent);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -123,7 +123,6 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
             }
         });
         viewPager.setCurrentItem(startPos);
-
         addGuideView(guideGroup, startPos, imgUrls);
 
     }
@@ -369,7 +368,7 @@ public class ImagePagerActivity extends BaseActivity implements ActionSheet.OnSh
                     if (imgUrls.size() > page) {
                         imgUrls.remove(page);
                         mAdapter.notifyDataSetChanged();
-                        tv_indicator.setText(1 + "/" + mAdapter.getCount());
+                        tv_indicator.setText((viewPager.getCurrentItem() + 1) + "/" + mAdapter.getCount());
                     }
                 } else {
                     Bundle bundle = new Bundle();

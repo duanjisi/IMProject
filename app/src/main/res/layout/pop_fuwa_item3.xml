@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:background="@drawable/bg_fuwa_pop"
+        android:layout_width="320dp"
+        android:layout_height="270dp">
+
+        <ImageView
+            android:clickable="true"
+            android:id="@+id/img_cancle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="15dp"
+            android:src="@drawable/fuwa_close" />
+
+
+
+            <RelativeLayout
+                android:id="@+id/rl_left"
+                android:layout_alignLeft="@id/tv_confirm"
+                android:layout_marginTop="100dp"
+                android:background="@drawable/shape_fuwa_edit2"
+                android:layout_width="175dp"
+                android:layout_height="35dp">
+
+                <EditText
+                    android:maxLength="25"
+                    android:textColor="@color/white"
+                    android:id="@+id/et_price"
+                    android:textSize="15sp"
+                    android:layout_centerInParent="true"
+                    android:paddingLeft="10dp"
+                    android:hint="填写接收人口令"
+                    android:textColorHint="@color/bg_rectangle"
+                    android:background="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+            </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_scan"
+            android:layout_marginLeft="18dp"
+            android:layout_toRightOf="@id/rl_left"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/shape_fuwa_edit"
+            android:layout_width="50dp"
+            android:layout_height="35dp">
+
+            <ImageView
+                android:layout_centerInParent="true"
+                android:src="@drawable/scan"
+                android:layout_width="25dp"
+                android:layout_height="25dp" />
+
+        </RelativeLayout>
+
+
+
+        <TextView
+            android:clickable="true"
+            android:id="@+id/tv_confirm"
+            android:paddingLeft="90dp"
+            android:paddingRight="90dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="40dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/text_color_yellow"
+            android:textSize="18sp"
+            android:text="确认赠送"
+            android:background="@drawable/shape_fuwa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/tv_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="12dp"
+            android:textSize="12sp"
+            android:textColor="@color/bg_rectangle"
+            android:text="填写接收人的口令，接收人即可获得你赠送的福娃"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

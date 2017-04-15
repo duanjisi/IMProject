@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:id="@+id/pop_layout"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5.5dp"
+        android:background="@drawable/shape"
+        android:orientation="vertical">
+        <TextView
+            android:layout_marginTop="11dp"
+            android:textColor="@color/fuwa_kouling"
+            android:gravity="center"
+            android:textSize="17.6sp"
+            android:id="@+id/my_word"
+            android:clickable="true"
+            android:layout_gravity="center"
+            android:text="我的口令"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp" />
+        <View
+            android:layout_marginRight="15.4dp"
+            android:layout_marginLeft="15.4dp"
+            android:background="@color/pop_line_red"
+            android:layout_width="match_parent"
+            android:layout_height="0.55dp"/>
+        <TextView
+            android:textColor="@color/fuwa_kouling"
+            android:gravity="center"
+            android:textSize="17.6sp"
+            android:id="@+id/check_fuwa"
+            android:clickable="true"
+            android:layout_gravity="center"
+            android:text="验证福娃"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp" />
+        </LinearLayout>
+
+
+
+</RelativeLayout>

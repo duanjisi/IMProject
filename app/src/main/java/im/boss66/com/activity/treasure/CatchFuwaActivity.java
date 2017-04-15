@@ -30,6 +30,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -87,7 +88,10 @@ import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.im.VerifyApplyActivity;
+import im.boss66.com.activity.player.VideoPlayerNewActivity;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.ChildEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.RoundImageView;
@@ -128,8 +132,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
 
     private Dialog dialog;
-    private ImageView iv_success_catch;
-    // private Button bt_catch;
     private String userId, fuwaId;
     private File imgFile;
     private ImageLoader imageLoader;
@@ -137,6 +139,10 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private String fuwaNum;
     private View dialog_view;
     private int sceenW, sceenH;
+    private RelativeLayout rl_user;
+    private String fuwaUserId;
+    private ChildEntity currentChild;
+    private String videoUrl, videoBgUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +155,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private void initView() {
         imageLoader = ImageLoaderUtils.createImageLoader(this);
         userId = App.getInstance().getUid();
-        iv_success_catch = (ImageView) findViewById(R.id.iv_success_catch);
         iv_success = (ImageView) findViewById(R.id.iv_success);
         sceenH = UIUtils.getScreenHeight(this);
         sceenW = UIUtils.getScreenWidth(this);
@@ -198,12 +203,20 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         });
         Intent intent = getIntent();
         if (intent != null) {
-            fuwaId = intent.getStringExtra("gid");
-            String imgUrl = intent.getStringExtra("pic");
-            fuwaNum = intent.getStringExtra("id");
-            if (!TextUtils.isEmpty(imgUrl)) {
-                imageLoader.displayImage(imgUrl, iv_thread,
-                        ImageLoaderUtils.getDisplayImageOptions());
+            currentChild = (ChildEntity) intent.getSerializableExtra("obj");
+//            fuwaId = intent.getStringExtra("gid");
+//            String imgUrl = intent.getStringExtra("pic");
+//            Log.i("imgUrl:", imgUrl);
+//            fuwaNum = intent.getStringExtra("id");
+            if (currentChild != null) {
+                fuwaUserId = currentChild.getHider();
+                fuwaId = currentChild.getGid();
+                fuwaNum = currentChild.getId();
+                String imgUrl = currentChild.getPic();
+                if (!TextUtils.isEmpty(imgUrl)) {
+                    imageLoader.displayImage(imgUrl, iv_thread,
+                            ImageLoaderUtils.getDisplayImageOptions());
+                }
             }
         }
     }
@@ -277,6 +290,24 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         sharePopup.show(dialog.getWindow().getDecorView());
                     }
+                }
+                break;
+            case R.id.iv_close_user:
+                if (rl_user != null && rl_user.getVisibility() == View.VISIBLE) {
+                    rl_user.setVisibility(View.INVISIBLE);
+                }
+                break;
+            case R.id.tv_add_friend:
+                Intent intent = new Intent(context, VerifyApplyActivity.class);
+                intent.putExtra("userid", fuwaUserId);
+                startActivity(intent);
+                break;
+            case R.id.iv_video_photo:
+                if (!TextUtils.isEmpty(videoUrl)) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("videoPath", videoUrl);
+                    bundle.putString("imgurl", videoBgUrl);
+                    openActivity(VideoPlayerNewActivity.class, bundle);
                 }
                 break;
         }
@@ -382,8 +413,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
-                Log.i("info", "================eCode:" + eCode);
-                showToast("========eCode:" + eCode, true);
                 if (eCode == StatusCode.ST_CODE_SUCCESSED) {
                     showToast("分享成功!", true);
                 }
@@ -429,7 +458,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                                 if (!previewing && isTakePic) {
                                     mCamera.takePicture(null, null, mPictureCallback);
                                     isTakePic = false;
-                                    Log.i("onSensorChanged", "拍照");
                                 }
                             }
                         }
@@ -639,10 +667,74 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             dialog.setContentView(dialog_view);
 
             LinearLayout ll_dialog = (LinearLayout) dialog_view.findViewById(R.id.ll_dialog);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ll_dialog.getLayoutParams();
-            layoutParams.width = (int) (sceenW * 0.8);
-            layoutParams.height = (int) (sceenH * 0.8);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) ll_dialog.getLayoutParams();
+            layoutParams.width = (int) (sceenW * 0.9);
+            layoutParams.height = (int) (sceenH * 0.7);
             ll_dialog.setLayoutParams(layoutParams);
+
+            rl_user = (RelativeLayout) dialog_view.findViewById(R.id.rl_user);
+            RelativeLayout rl_video = (RelativeLayout) dialog_view.findViewById(R.id.rl_video);
+            LinearLayout ll_user = (LinearLayout) dialog_view.findViewById(R.id.ll_user);
+            ImageView iv_video_photo = (ImageView) dialog_view.findViewById(R.id.iv_video_photo);
+            ImageView iv_video_play = (ImageView) dialog_view.findViewById(R.id.iv_video_play);
+            RoundImageView riv_user_head = (RoundImageView) dialog_view.findViewById(R.id.riv_user_head);
+            TextView tv_user_name = (TextView) dialog_view.findViewById(R.id.tv_user_name);
+            TextView tv_user_area = (TextView) dialog_view.findViewById(R.id.tv_user_area);
+            TextView tv_add_friend = (TextView) dialog_view.findViewById(R.id.tv_add_friend);
+            ImageView iv_close_user = (ImageView) dialog_view.findViewById(R.id.iv_close_user);
+            iv_close_user.setOnClickListener(this);
+            tv_add_friend.setOnClickListener(this);
+            iv_video_photo.setOnClickListener(this);
+
+            if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(fuwaUserId) && userId.equals(fuwaUserId)) {
+                tv_add_friend.setVisibility(View.GONE);
+            }
+            if (currentChild != null) {
+                String name = currentChild.getName();
+                if (!TextUtils.isEmpty(name)) {
+                    tv_user_name.setText(name);
+                }
+                String area = currentChild.getLocation();
+                if (!TextUtils.isEmpty(area)) {
+                    tv_user_area.setText(area);
+                }
+                videoUrl = currentChild.getVideo();
+                if (!TextUtils.isEmpty(videoUrl)) {
+                    rl_video.setVisibility(View.VISIBLE);
+                    String[] arr = videoUrl.split(".");
+                    if (arr != null && arr.length > 1) {
+                        arr[arr.length - 1] = ".jpg";
+                        videoBgUrl = String.valueOf(arr);
+                        Glide.with(this).load(videoBgUrl).error(R.drawable.zf_default_message_image).into(iv_video_photo);
+                    }
+                }else {
+                    rl_video.setVisibility(View.GONE);
+                }
+                String head = currentChild.getAvatar();
+                Glide.with(this).load(head).error(R.drawable.zf_default_message_image).into(riv_user_head);
+            }
+            RelativeLayout.LayoutParams rlParams = (RelativeLayout.LayoutParams) rl_user.getLayoutParams();
+            rlParams.width = sceenW;
+            rlParams.height = sceenH;
+            rl_user.setLayoutParams(rlParams);
+
+            RelativeLayout.LayoutParams llParams = (RelativeLayout.LayoutParams) ll_user.getLayoutParams();
+            llParams.width = (int) (sceenW * 0.8);
+            llParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            ll_user.setLayoutParams(llParams);
+
+            RelativeLayout.LayoutParams ivVideoParams = (RelativeLayout.LayoutParams) iv_video_photo.getLayoutParams();
+            ivVideoParams.width = sceenW / 5 * 3;
+            ivVideoParams.height = sceenW / 5 * 3;
+            iv_video_photo.setLayoutParams(ivVideoParams);
+            RelativeLayout.LayoutParams ivVideoPlayParams = (RelativeLayout.LayoutParams) iv_video_play.getLayoutParams();
+            ivVideoPlayParams.width = sceenW / 5;
+            ivVideoPlayParams.height = sceenW / 5;
+            iv_video_play.setLayoutParams(ivVideoPlayParams);
+            RelativeLayout.LayoutParams ivHeadParams = (RelativeLayout.LayoutParams) riv_user_head.getLayoutParams();
+            ivHeadParams.width = sceenW / 7;
+            ivHeadParams.height = sceenW / 7;
+            riv_user_head.setLayoutParams(ivHeadParams);
 
             Window dialogWindow = dialog.getWindow();
             WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
@@ -651,7 +743,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             dialogWindow.setAttributes(params);
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
-
 
             AccountEntity sAccount = App.getInstance().getAccount();
             if (sAccount != null) {
