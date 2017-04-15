@@ -142,8 +142,8 @@ public class RecommendAdapter extends BaseRecycleViewAdapter {
                                 @Override
                                 public void onSuccess(String str) {
                                     Toast.makeText(context, "已发送", Toast.LENGTH_SHORT).show();
-                                    holder1.tv_add_follow.setText("    已发送");
-                                    holder1.tv_add_follow.setBackgroundResource(R.drawable.shape_null);
+                                    holder1.tv_add_follow.setText("已发送");
+                                    holder1.tv_add_follow.setBackgroundResource(R.drawable.shape_isfollow);
                                     holder1.tv_add_follow.setTextColor(Color.GRAY);
                                 }
 
@@ -160,7 +160,7 @@ public class RecommendAdapter extends BaseRecycleViewAdapter {
                 });
             }else{
                 holder1.tv_add_follow.setClickable(false);
-                holder1.tv_add_follow.setText("已经添加");
+                holder1.tv_add_follow.setText("已添加");
                 holder1.tv_add_follow.setBackgroundResource(R.drawable.shape_null);
                 holder1.tv_add_follow.setTextColor(Color.GRAY);
 
