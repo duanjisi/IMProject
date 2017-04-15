@@ -48,6 +48,15 @@ public class ChatDialog extends BaseDialog implements View.OnClickListener {
         LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) tvCopy.getLayoutParams();
         params.width= UIUtils.getScreenWidth(context)*8/10;
         tvCopy.setLayoutParams(params);
+
+        LinearLayout.LayoutParams params2= (LinearLayout.LayoutParams) tvRewarding.getLayoutParams();
+        params.width= UIUtils.getScreenWidth(context)*8/10;
+        tvRewarding.setLayoutParams(params);
+
+        LinearLayout.LayoutParams params3= (LinearLayout.LayoutParams) tvDelete.getLayoutParams();
+        params.width= UIUtils.getScreenWidth(context)*8/10;
+        tvDelete.setLayoutParams(params);
+
         tvCopy.setPadding(40,0,0,0);
         tvRewarding.setPadding(40,0,0,0);
         tvDelete.setPadding(40,0,0,0);
