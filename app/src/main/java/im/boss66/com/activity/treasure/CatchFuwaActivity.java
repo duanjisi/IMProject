@@ -673,6 +673,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             ll_dialog.setLayoutParams(layoutParams);
 
             rl_user = (RelativeLayout) dialog_view.findViewById(R.id.rl_user);
+            RelativeLayout rl_video = (RelativeLayout) dialog_view.findViewById(R.id.rl_video);
             LinearLayout ll_user = (LinearLayout) dialog_view.findViewById(R.id.ll_user);
             ImageView iv_video_photo = (ImageView) dialog_view.findViewById(R.id.iv_video_photo);
             ImageView iv_video_play = (ImageView) dialog_view.findViewById(R.id.iv_video_play);
@@ -699,12 +700,15 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 }
                 videoUrl = currentChild.getVideo();
                 if (!TextUtils.isEmpty(videoUrl)) {
+                    rl_video.setVisibility(View.VISIBLE);
                     String[] arr = videoUrl.split(".");
                     if (arr != null && arr.length > 1) {
                         arr[arr.length - 1] = ".jpg";
                         videoBgUrl = String.valueOf(arr);
                         Glide.with(this).load(videoBgUrl).error(R.drawable.zf_default_message_image).into(iv_video_photo);
                     }
+                }else {
+                    rl_video.setVisibility(View.GONE);
                 }
                 String head = currentChild.getAvatar();
                 Glide.with(this).load(head).error(R.drawable.zf_default_message_image).into(riv_user_head);
