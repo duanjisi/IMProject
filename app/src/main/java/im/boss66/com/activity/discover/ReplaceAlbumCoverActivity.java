@@ -14,6 +14,7 @@ import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
@@ -32,6 +33,7 @@ import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtils;
+import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
@@ -40,6 +42,7 @@ import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.personage.ClipImageActivity;
 import im.boss66.com.config.LoginStatus;
 import im.boss66.com.entity.AlbumCoverEntity;
+import im.boss66.com.entity.ChangeAvatarEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.util.Utils;
@@ -168,11 +171,18 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {    //打开相机
             if (imageUri != null) {
-                String path;
+                String path = null;
                 if (Build.VERSION.SDK_INT < 24) {
                     path = Utils.getPath(this, imageUri);
                 } else {
                     path = imageUri.toString();
+                }
+                if(Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
+                        path.contains("/IMProject/")){
+                    String[] arr = path.split("/IMProject/");
+                    if (arr != null && arr.length >1){
+                        path = savePath + arr[1];
+                    }
                 }
                 if (!TextUtils.isEmpty(path)) {
                     ClipImageActivity.prepare()

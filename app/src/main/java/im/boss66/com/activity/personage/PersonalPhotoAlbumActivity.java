@@ -347,7 +347,12 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
             }
         } else if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {//打开相机
             if (imageUri != null) {
-                String path = Utils.getPath(this, imageUri);
+                String path = null;
+                if (Build.VERSION.SDK_INT < 24) {
+                    path = Utils.getPath(this, imageUri);
+                } else {
+                    path = imageUri.toString();
+                }
                 Bundle bundle = new Bundle();
                 bundle.putString("sendType", "photo");
                 bundle.putInt("type", OPEN_CAMERA);

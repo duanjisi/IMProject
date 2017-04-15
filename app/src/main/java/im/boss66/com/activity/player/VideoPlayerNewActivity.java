@@ -47,7 +47,6 @@ public class VideoPlayerNewActivity extends BaseActivity {
         mVideoPath = getIntent().getStringExtra("videoPath");
         mMediaController = new MediaController(this, false, mIsLiveStreaming == 1);
         mMediaController.setMediaPlayer(mVideoView);
-        mVideoView.setDisplayOrientation(270);
         mVideoView.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_PAVED_PARENT);
         mVideoView.setMediaController(mMediaController);
         setOptions(codec);
@@ -60,6 +59,14 @@ public class VideoPlayerNewActivity extends BaseActivity {
             mVideoView.setCoverView(iv_coverView);
         }
         mVideoView.setVideoPath(mVideoPath);
+        mVideoView.setOnVideoSizeChangedListener(new PLMediaPlayer.OnVideoSizeChangedListener() {
+            @Override
+            public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int width, int height, int videoSar, int videoDen) {
+                if (width > height) {
+                    mVideoView.setDisplayOrientation(270);
+                }
+            }
+        });
         mVideoView.start();
         iv_close.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -17,7 +17,12 @@ public class FamousPersonDetailActivity extends WebBaseActivity {
         Intent intent = getIntent();
         if(intent!=null){
             int id = intent.getIntExtra("id", -1);
-            url = HttpUrl.FAMOUSPERSON_DETAIL+"?id="+id;
+            boolean isSchool= intent.getBooleanExtra("isSchool",false);
+            if(isSchool){
+                url = HttpUrl.SCHOOL_PERSON_DETAIL+"?id="+id;
+            }else{
+                url = HttpUrl.FAMOUSPERSON_DETAIL+"?id="+id;
+            }
             title = intent.getStringExtra("name");
         }
         setTitleUrl();

@@ -2,7 +2,9 @@ package im.boss66.com.activity.personage;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,10 +13,13 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
@@ -33,6 +38,7 @@ import java.util.Date;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
@@ -41,6 +47,7 @@ import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.discover.ReplaceAlbumCoverActivity;
 import im.boss66.com.config.LoginStatus;
 import im.boss66.com.entity.ChangeAvatarEntity;
 import im.boss66.com.http.HttpUrl;
@@ -66,7 +73,6 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
     private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
     private ImageLoader imageLoader;
     private Uri imageUri;
-    private String imageName;
     private String access_token;
     private boolean isHeadChange = false;
     private String headurl;
@@ -206,11 +212,18 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {    //打开相机
             if (imageUri != null) {
-                String path;
+                String path = null;
                 if (Build.VERSION.SDK_INT < 24) {
                     path = Utils.getPath(this, imageUri);
                 } else {
                     path = imageUri.toString();
+                }
+                if(Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
+                        path.contains("/IMProject/")){
+                    String[] arr = path.split("/IMProject/");
+                    if (arr != null && arr.length >1){
+                        path = savePath + arr[1];
+                    }
                 }
                 if (!TextUtils.isEmpty(path)) {
                     ClipImageActivity.prepare()
@@ -319,10 +332,9 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onRequestPermissionSuccess() {
                 if (cameraType == OPEN_CAMERA) {
-
                     if (Build.VERSION.SDK_INT < 24) {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        imageName = getNowTime() + ".jpg";
+                        String imageName = getNowTime() + ".jpg";
                         // 指定调用相机拍照后照片的储存路径
                         File dir = new File(savePath);
                         if (!dir.exists()) {
@@ -343,7 +355,6 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//这里加入flag
                         startActivityForResult(intent, OPEN_CAMERA);
                     }
-
                 } else if (cameraType == OPEN_ALBUM) {
                     MultiImageSelector.create(context).
                             showCamera(false).

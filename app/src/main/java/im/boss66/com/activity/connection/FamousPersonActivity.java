@@ -41,6 +41,7 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
     private String url;
     private RecyclerView rcv_famous_people;
     private FamousPeopleAdapter adapter;
+    private boolean isSchool;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -68,9 +69,11 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
             if (intent.getExtras().containsKey("school_id")) {
                 id = intent.getIntExtra("school_id", -1);
                 url = HttpUrl.SCHOOL_FAMOUS_PEOPLE;
+                isSchool = true;
             } else {
                 id = intent.getIntExtra("hometown_id", -1);
                 url = HttpUrl.BUSINESS_FAMOUS_PEOPLE;
+                isSchool = false;
 
             }
 
@@ -143,6 +146,7 @@ public class FamousPersonActivity extends ABaseActivity implements View.OnClickL
                 String name = result.get(postion).getName();
                 Intent intent = new Intent(FamousPersonActivity.this,FamousPersonDetailActivity.class);
                 intent.putExtra("id",id);
+                intent.putExtra("isSchool",isSchool);
                 intent.putExtra("name",name);
                 startActivity(intent);
             }

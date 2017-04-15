@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.net.ssl.SSLSocketFactory;
+
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
@@ -352,6 +354,13 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         if (SEND_TYPE_PHOTO.equals(sendType) && imgList != null) {
             for (int i = 0; i < imgList.size(); i++) {
                 String path = imgList.get(i);
+                if(Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
+                        path.contains("/IMProject/")){
+                    String[] arr = path.split("/IMProject/");
+                    if (arr != null && arr.length >1){
+                        path = savePath + arr[1];
+                    }
+                }
                 Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
                 if (bitmap != null) {
                     File file = FileUtils.compressImage(bitmap);
@@ -447,7 +456,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {    //打开相机
             if (imageUri != null) {
-                String path;
+                String path = null;
                 if (Build.VERSION.SDK_INT < 24) {
                     path = Utils.getPath(this, imageUri);
                 } else {
