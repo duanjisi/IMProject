@@ -706,6 +706,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                         Glide.with(this).load(videoBgUrl).error(R.drawable.zf_default_message_image).into(iv_video_photo);
                     }
                 }
+                String head = currentChild.getAvatar();
+                Glide.with(this).load(head).error(R.drawable.zf_default_message_image).into(riv_user_head);
             }
             RelativeLayout.LayoutParams rlParams = (RelativeLayout.LayoutParams) rl_user.getLayoutParams();
             rlParams.width = sceenW;
