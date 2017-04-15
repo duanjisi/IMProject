@@ -63,12 +63,23 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 case 1:
                     ClanCofcEntity.ResultBean result = clanCofcEntity.getResult();
                     if(result!=null){
+                        tv_count.setVisibility(View.VISIBLE);
+                        tv_follow.setVisibility(View.VISIBLE);
                         tv_count.setText(result.getCount()+"人");
                         is_follow = result.getIs_follow();
+                        if(result.getBanner().length()>0){
+                            Glide.with(context).load(result.getBanner()).into(iv_bg);
+                        }
                         if(is_follow ==1){ //关注了
                             tv_follow.setText("已关注");
                             tv_follow.setBackgroundResource(R.drawable.shape_null);
                             tv_follow.setTextColor(Color.GRAY);
+                            //TODO 让人脉首页刷新？
+                        }else {
+                            tv_follow.setText("关注");
+                            tv_follow.setBackgroundResource(R.drawable.shape_follow);
+                            tv_follow.setTextColor(Color.WHITE);
+                            //TODO 让人脉首页刷新？
                         }
                     }
 
@@ -112,7 +123,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 String result = responseInfo.result;
                 if (!TextUtils.isEmpty(result)) {
                     clanCofcEntity = JSON.parseObject(result, ClanCofcEntity.class);
-                    handler.obtainMessage().sendToTarget();
+                    handler.obtainMessage(1).sendToTarget();
                 }
 
 
@@ -246,8 +257,23 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
 
                 if(is_follow==0){ //未关注，点击关注
 
+                    if(isClan){  //宗亲
+                        followClan();
 
-                }else{
+                    }else{
+                        followCofc();
+                    }
+
+
+                }else{ //已经关注，点击取消关注
+                    if(isClan){
+
+                        cancelFollowClan();
+                    }else{
+
+                        cancelFollowCofc();
+
+                    }
 
                 }
                 break;
@@ -256,20 +282,190 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
         }
     }
 
+    private void cancelFollowCofc() {
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        String url = HttpUrl.CANCEL_FOLLOW_COFC+"?cofc_id="+id;
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        if(jsonObject.getInt("code")==1){
+                            initData();
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
+            }
+        });
+
+    }
+
+    private void cancelFollowClan() {
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        String url = HttpUrl.CANCEL_FOLLOW_CLAN+"?clan_id="+id;
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        if(jsonObject.getInt("code")==1){
+                            initData();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
+            }
+        });
+    }
+
+    private void followCofc() {
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        String url = HttpUrl.FOLLOW_COFC+"?cofc_id="+id;
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        if(jsonObject.getInt("code")==1){
+                            initData();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
+            }
+        });
+    }
+
+    private void followClan() {
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        String url = HttpUrl.FOLLOW_CLAN+"?clan_id="+id;
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (!TextUtils.isEmpty(result)) {
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        if(jsonObject.getInt("code")==1){
+                            initData();
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
+            }
+        });
+    }
+
     @Override
     public void onClick(int which) {
         if(which==1){
-//            openActvityForResult(ReplaceAlbumCoverActivity.class, 1);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("forClanClub",true);
+            bundle.putBoolean("isClan",isClan);
+            bundle.putString("id",id);
+            openActvityForResult(ReplaceAlbumCoverActivity.class, 1,bundle);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 1 && resultCode == RESULT_OK) {
-//            SharedPreferences mPreferences = context.getSharedPreferences("albumCover", MODE_PRIVATE);
-//            String albumCover = mPreferences.getString("albumCover", "");
-//            Glide.with(this).load(albumCover).into(iv_bg);
-//        }
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+
+            if(data!=null){
+                String banner = data.getStringExtra("banner");
+                Glide.with(this).load(banner).into(iv_bg);
+
+            }
+        }
     }
 }

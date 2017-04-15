@@ -281,5 +281,17 @@ public class HttpUrl {
     public static final String CLAN_INFO = MAIN_URL+"api/v1/clan";
     //获取商会详情
     public static final String COFC_INFO = MAIN_URL+"api/v1/cofc";
+    //关注宗亲
+    public static final String FOLLOW_CLAN = MAIN_URL+"api/v1/clan/follow";
+    //取消关注宗亲
+    public static final String CANCEL_FOLLOW_CLAN = MAIN_URL+"api/v1/clan/unfollow";
+    //关注商会
+    public static final String FOLLOW_COFC = MAIN_URL+"api/v1/cofc/follow";
+    //取消关注商会
+    public static final String CANCEL_FOLLOW_COFC = MAIN_URL+"api/v1/cofc/unfollow";
+    //修改宗亲
+    public static final String EDIT_CLAN= MAIN_URL+"api/v1/clan/update";
+    //修改商会
+    public static final String EDIT_COFC= MAIN_URL+"api/v1/cofc/update";
 
 }
