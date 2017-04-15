@@ -161,7 +161,7 @@ public class RecommendAdapter extends BaseRecycleViewAdapter {
             }else{
                 holder1.tv_add_follow.setClickable(false);
                 holder1.tv_add_follow.setText("已添加");
-                holder1.tv_add_follow.setBackgroundResource(R.drawable.shape_null);
+                holder1.tv_add_follow.setBackgroundResource(R.drawable.shape_isfollow);
                 holder1.tv_add_follow.setTextColor(Color.GRAY);
 
             }
