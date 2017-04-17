@@ -145,7 +145,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     private View view1;
     private int vp_position =0;
     private List<View> views=new ArrayList<>();
-    private LinearLayout ll_points;
     private ViewPager vp_fuwa;
 
     private long time11 = 0; //出售防快速点击
@@ -357,7 +356,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         dialog.setContentView(view);
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(false);
-        ll_points = (LinearLayout) view.findViewById(R.id.ll_points);
 
         tv_num = (TextView) view.findViewById(R.id.tv_num);
         tv_count = (TextView) view.findViewById(R.id.tv_count);
@@ -831,7 +829,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
 
     }
-
 
     @Override
     public void onClick(View view) {

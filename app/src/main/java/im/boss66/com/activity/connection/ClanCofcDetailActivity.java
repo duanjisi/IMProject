@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import im.boss66.com.R;
 import im.boss66.com.activity.base.WebBaseActivity;
+import im.boss66.com.activity.event.EditWeb;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.widget.ActionSheet;
 
@@ -21,6 +25,7 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         Intent intent = getIntent();
         if (intent != null) {
             id = intent.getStringExtra("id");
@@ -45,6 +50,16 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEvent(EditWeb event){
+        webview.loadUrl(url);
+    }
     @Override
     protected void setTitleUrl() {
         tv_headcenter_view.setText(title);

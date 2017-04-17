@@ -64,14 +64,23 @@ public class EditClanCofcActivity extends ABaseActivity implements View.OnClickL
                 break;
             case R.id.rl_info:
                 intent = new Intent(this, EditTextActivity.class);
+                intent.putExtra("type","rl_info");
+                intent.putExtra("isClan",isClan);
+                intent.putExtra("id",id);
                 startActivity(intent);
                 break;
             case R.id.rl_location:
                 intent = new Intent(this, EditTextActivity.class);
+                intent.putExtra("type","rl_location");
+                intent.putExtra("isClan",isClan);
+                intent.putExtra("id",id);
                 startActivity(intent);
                 break;
             case R.id.rl_phone:
                 intent = new Intent(this, EditTextActivity.class);
+                intent.putExtra("type","rl_phone");
+                intent.putExtra("isClan",isClan);
+                intent.putExtra("id",id);
                 startActivity(intent);
                 break;
 
