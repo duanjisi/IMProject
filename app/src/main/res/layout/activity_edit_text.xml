@@ -5,12 +5,26 @@
     android:layout_height="match_parent">
     <include layout="@layout/head_view" />
 
-    <EditText
-        android:gravity="top"
-        android:background="@drawable/shape_edit_clan"
+    <RelativeLayout
         android:layout_margin="20dp"
         android:layout_width="match_parent"
-        android:layout_height="150dp" />
+        android:layout_height="150dp">
+        <EditText
+            android:id="@+id/et_content"
+            android:maxLength="50"
+            android:gravity="top"
+            android:background="@drawable/shape_edit_clan"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" />
+        <TextView
+            android:id="@+id/tv_num"
+            android:text="还可输入50字"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/tv_ok"
