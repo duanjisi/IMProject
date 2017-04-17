@@ -38,7 +38,7 @@ public class EaseUser extends EMContact {
     protected String request_status = "";
 
     protected String request_status_mess = "";
-    protected String msgType;
+    protected String msgType = "";
 
     public EaseUser() {
     }

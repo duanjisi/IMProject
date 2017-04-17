@@ -224,7 +224,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
 //            }
 //        });
 
-        if (isAddMember || isCreateGroup) {
+        if (isAddMember || isCreateGroup || isWarding) {
             for (int i = 0; i < contactList.size(); i++) {
                 EaseUser user = contactList.get(i);
                 user.setMsgType("unicast");
@@ -409,6 +409,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
         for (int i = 0; i < contactList.size(); i++) {
             EaseUser user = contactList.get(i);
             if (user.isChecked()) {
+                user.setMsgType("unicast");
                 users.add(user);
             }
         }
@@ -733,6 +734,7 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
                         if (user != null) {
                             Intent intent = new Intent();
                             ArrayList<EaseUser> users = new ArrayList<>();
+                            users.add(user);
                             intent.putExtra("list", users);
                             setResult(RESULT_OK, intent);
                             finish();

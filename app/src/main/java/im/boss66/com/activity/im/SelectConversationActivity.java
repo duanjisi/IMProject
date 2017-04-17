@@ -194,6 +194,7 @@ public class SelectConversationActivity extends BaseActivity implements View.OnK
                 Intent intent = new Intent(context, SelectContactsActivity.class);
                 intent.putExtra("forwarding", true);
                 intent.putExtra("user_ids", getUser_ids());
+                Log.i("info", "================user_ids:" + getUser_ids());
 //                intent.putExtra("isAddMember", true);
                 startActivityForResult(intent, 100);
             }

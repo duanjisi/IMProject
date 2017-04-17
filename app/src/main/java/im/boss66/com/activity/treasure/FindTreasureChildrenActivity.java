@@ -64,6 +64,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -475,24 +476,37 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
     private void removeCautch(String gid) {
         if (markerMap != null && markerMap.size() != 0) {
-            for (Map.Entry<String, Marker> entry : markerMap.entrySet()) {
+            Iterator<Map.Entry<String, Marker>> it = markerMap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String, Marker> entry = it.next();
                 Marker target = entry.getValue();
                 Object object = target.getObject();
                 if (object != null) {
                     if (object.toString().equals(gid)) {
-                        markerMap.remove(target);
+                        it.remove();
                     }
                 }
-//                String snippet = target.getSnippet();
-//                if (snippet != null && !snippet.equals("")) {
-//                    ChildEntity childEntity = JSON.parseObject(snippet, ChildEntity.class);
-//                    if (childEntity != null) {
-//                        if (childEntity.getGid().equals(gid)) {
-//                            markerMap.remove(target);
-//                        }
+            }
+
+//            for (Map.Entry<String, Marker> entry : markerMap.entrySet()) {
+//                Marker target = entry.getValue();
+//                Object object = target.getObject();
+//                if (object != null) {
+//                    if (object.toString().equals(gid)) {
+//                        markerMap.remove(target);
 //                    }
 //                }
-            }
+//
+////                String snippet = target.getSnippet();
+////                if (snippet != null && !snippet.equals("")) {
+////                    ChildEntity childEntity = JSON.parseObject(snippet, ChildEntity.class);
+////                    if (childEntity != null) {
+////                        if (childEntity.getGid().equals(gid)) {
+////                            markerMap.remove(target);
+////                        }
+////                    }
+////                }
+//            }
         }
     }
 

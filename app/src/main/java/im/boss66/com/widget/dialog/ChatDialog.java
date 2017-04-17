@@ -31,6 +31,7 @@ public class ChatDialog extends BaseDialog implements View.OnClickListener {
     private MessageItem messageItem;
     private CharSequence message;
     private boolean isTxt = false;
+    private boolean isVoice = false;
 
     public ChatDialog(Context context, Intent intent) {
         super(context);
@@ -70,24 +71,34 @@ public class ChatDialog extends BaseDialog implements View.OnClickListener {
             messageItem = (MessageItem) bundle.getSerializable("item");
             message = bundle.getCharSequence("msg", "");
             isTxt = bundle.getBoolean("is_txt", false);
+            isVoice = bundle.getBoolean("isVoice", false);
             MsgTab = App.getInstance().getUid() + "_" + toUid;
         }
 
-        if (isTxt) {
-            tvCopy.setVisibility(View.VISIBLE);
-            tvCopy.setBackgroundResource(R.drawable.actionsheet_top_selector);
-            tvRewarding.setBackgroundResource(R.drawable.actionsheet_middle_selector);
-            tvDelete.setBackgroundResource(R.drawable.actionsheet_bottom_selector);
+        if (isVoice) {
+            tvCopy.setVisibility(View.GONE);
+            tvRewarding.setVisibility(View.GONE);
+            tvDelete.setBackgroundResource(R.drawable.shape_nearby_bt_bg_white_dark);
             tvCopy.setPadding(40, 0, 0, 0);
             tvRewarding.setPadding(40, 0, 0, 0);
             tvDelete.setPadding(40, 0, 0, 0);
         } else {
-            tvCopy.setVisibility(View.GONE);
-            tvRewarding.setBackgroundResource(R.drawable.actionsheet_top_selector);
-            tvDelete.setBackgroundResource(R.drawable.actionsheet_bottom_selector);
-            tvCopy.setPadding(40, 0, 0, 0);
-            tvRewarding.setPadding(40, 0, 0, 0);
-            tvDelete.setPadding(40, 0, 0, 0);
+            if (isTxt) {
+                tvCopy.setVisibility(View.VISIBLE);
+                tvCopy.setBackgroundResource(R.drawable.actionsheet_top_selector);
+                tvRewarding.setBackgroundResource(R.drawable.actionsheet_middle_selector);
+                tvDelete.setBackgroundResource(R.drawable.actionsheet_bottom_selector);
+                tvCopy.setPadding(40, 0, 0, 0);
+                tvRewarding.setPadding(40, 0, 0, 0);
+                tvDelete.setPadding(40, 0, 0, 0);
+            } else {
+                tvCopy.setVisibility(View.GONE);
+                tvRewarding.setBackgroundResource(R.drawable.actionsheet_top_selector);
+                tvDelete.setBackgroundResource(R.drawable.actionsheet_bottom_selector);
+                tvCopy.setPadding(40, 0, 0, 0);
+                tvRewarding.setPadding(40, 0, 0, 0);
+                tvDelete.setPadding(40, 0, 0, 0);
+            }
         }
     }
 

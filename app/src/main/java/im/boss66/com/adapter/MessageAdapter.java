@@ -641,17 +641,18 @@ public class MessageAdapter extends BaseAdapter {
                 }
             }
         });
-//        holder.msg.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                Intent intent = new Intent(mContext, CopyTextActivity.class);
-//                intent.putExtra("toUid", toUid);
-//                intent.putExtra("item", mItem);
-//                intent.putExtra("is_txt", false);
-//                mContext.startActivity(intent);
-//                return false;
-//            }
-//        });
+        holder.msg.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("toUid", toUid);
+                intent.putExtra("item", mItem);
+                intent.putExtra("isVoice", true);
+                chatDialog = new ChatDialog(mContext, intent);
+                chatDialog.showDialog();
+                return false;
+            }
+        });
     }
 
     private void handleVideoMessage(final VideoMessageHolder holder,
