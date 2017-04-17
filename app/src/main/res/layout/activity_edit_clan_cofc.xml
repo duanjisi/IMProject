@@ -20,6 +20,13 @@
             android:text="添加logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/img_logo"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
     </RelativeLayout>
 
     <RelativeLayout

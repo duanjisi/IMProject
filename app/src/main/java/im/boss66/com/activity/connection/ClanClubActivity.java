@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -476,7 +477,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
     public void onClick(int which) {
         if (which == 1) {
             Bundle bundle = new Bundle();
-            bundle.putBoolean("forClanClub", true);
+            bundle.putBoolean("fromClanClub", true);
             bundle.putBoolean("isClan", isClan);
             bundle.putString("id", id);
             openActvityForResult(ReplaceAlbumCoverActivity.class, 1, bundle);
@@ -489,8 +490,8 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
         if (requestCode == 1 && resultCode == RESULT_OK) {
 
             if (data != null) {
-                String banner = data.getStringExtra("banner");
-                Glide.with(this).load(banner).into(iv_bg);
+                String imgurl = data.getStringExtra("imgurl");
+                Glide.with(this).load(imgurl).into(iv_bg);
 
             }
         }

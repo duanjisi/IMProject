@@ -16,13 +16,14 @@ import im.boss66.com.widget.ActionSheet;
 public class ClanCofcDetailActivity extends WebBaseActivity implements ActionSheet.OnSheetItemClickListener {
 
     private boolean isClan;
+    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         if (intent != null) {
-            String id = intent.getStringExtra("id");
+            id = intent.getStringExtra("id");
             title= intent.getStringExtra("name");
             isClan = intent.getBooleanExtra("isClan", false);
             if(isClan){
@@ -65,6 +66,7 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
             case 1:
                 Intent intent = new Intent(this, EditClanCofcActivity.class);
                 intent.putExtra("isClan",isClan);
+                intent.putExtra("id",id);
                 startActivity(intent);
                 break;
         }
