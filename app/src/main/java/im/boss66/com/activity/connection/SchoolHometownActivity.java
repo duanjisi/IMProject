@@ -131,7 +131,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     private EditText et_send;
     private Button bt_send;
     private boolean isReply;
-    private String commentFromId, commentPid;
+    private String commentFromId;
     private CommunityMsgListener communityMsgListener;
     private String CuiUid;
 
@@ -1069,7 +1069,6 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             commentId = commentConfig.commentId;
             isReply = commentConfig.isReply;
             commentFromId = commentConfig.commentFromId;
-            commentPid = commentConfig.pid;
             uidFromName = commentConfig.uid_to_name;
         }
         if (View.VISIBLE == visibility) {

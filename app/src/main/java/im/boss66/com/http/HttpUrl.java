@@ -175,7 +175,7 @@ public class HttpUrl {
     public static final String CLEAR_CIRCLE_MSG_LIST = MAIN_URL + "api/v1/message/flushall";
     //获取最新朋友圈消息通知
     public static final String GET_CIRCLE_NEWEST_MSG = MAIN_URL + "api/v1/message/getnewest";
-    //获取获取帖子列表
+    //获取帖子列表
     public static final String GET_COMMUNITY_LIST = MAIN_URL + "api/v1/contactsfeed";
     //删除帖子
     public static final String DELETE_COMMUNITY = MAIN_URL + "api/v1/contactsfeed/delete";

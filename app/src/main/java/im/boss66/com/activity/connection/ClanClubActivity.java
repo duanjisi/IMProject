@@ -3,7 +3,9 @@ package im.boss66.com.activity.connection;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +21,8 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.github.jdsjlzx.interfaces.OnLoadMoreListener;
+import com.github.jdsjlzx.interfaces.OnRefreshListener;
 import com.github.jdsjlzx.recyclerview.LRecyclerView;
 import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
 import com.lidroid.xutils.HttpUtils;
@@ -30,22 +34,35 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.ABaseActivity;
+import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.activity.discover.ReplaceAlbumCoverActivity;
 import im.boss66.com.adapter.CommunityListAdapter;
+import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.CircleItem;
 import im.boss66.com.entity.ClanCofcEntity;
+import im.boss66.com.entity.CommentConfig;
+import im.boss66.com.entity.FriendCircle;
+import im.boss66.com.entity.FriendCircleEntity;
+import im.boss66.com.entity.FriendCircleItem;
 import im.boss66.com.http.HttpUrl;
+import im.boss66.com.listener.CircleContractListener;
+import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.ActionSheet;
 
 /**
  * Created by liw on 2017/4/14.
  */
-public class ClanClubActivity extends ABaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener {
+public class ClanClubActivity extends ABaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener
+,CircleContractListener.View{
 
     private boolean isClan;  //是否是宗亲
     private String name;    //标题
@@ -57,6 +74,22 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
     private ImageView iv_bg;
     private String url;
     private ClanCofcEntity clanCofcEntity;
+
+    private String access_token;
+    private int page = 0;
+    private boolean isOnRefresh = false, isAddNew = false;
+    private List<FriendCircle> allList;
+    private CirclePresenter presenter;
+    private int cameraType;//1:相机 2：相册 3：视频
+    private final int OPEN_CAMERA = 1;//相机
+    private final int OPEN_ALBUM = 2;//相册
+    private Uri imageUri;
+    private final int RECORD_VIDEO = 3;//视频
+    private PermissionListener permissionListener;
+    private String commentId;
+    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    private String curUid;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -72,9 +105,9 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                         is_follow = result.getIs_follow();
 
                         String banner = result.getBanner();
-                        if(banner.length()>0){
+                        if (banner.length() > 0) {
                             Glide.with(context).load(banner).into(iv_bg);
-                        }else {
+                        } else {
                             Glide.with(context).load(R.drawable.bg_top).into(iv_bg);
                         }
 
@@ -96,8 +129,8 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                     tv_follow.setText("已关注");
                     tv_follow.setBackgroundResource(R.drawable.shape_isfollow);
                     tv_follow.setTextColor(Color.GRAY);
-                    count = Integer.parseInt(count) + 1+"";
-                    tv_count.setText(count+"人");
+                    count = Integer.parseInt(count) + 1 + "";
+                    tv_count.setText(count + "人");
                     break;
 
                 case 3: //取消关注
@@ -105,8 +138,8 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                     tv_follow.setText("关注");
                     tv_follow.setBackgroundResource(R.drawable.shape_follow);
                     tv_follow.setTextColor(Color.WHITE);
-                    count = Integer.parseInt(count) -1+"";
-                    tv_count.setText(count+"人");
+                    count = Integer.parseInt(count) - 1 + "";
+                    tv_count.setText(count + "人");
                     break;
             }
         }
@@ -219,10 +252,47 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
         rcv_news.setLayoutManager(layoutManager);
 
         adapter = new CommunityListAdapter(this);
+        // 回调接口和adapter设置
+        presenter = new CirclePresenter(this);
+        AccountEntity sAccount = App.getInstance().getAccount();
+        access_token = sAccount.getAccess_token();
+        curUid = sAccount.getUser_id();
+        adapter.getCurUserId(curUid);
+        adapter.setCirclePresenter(presenter);
         mLRecyclerViewAdapter = new LRecyclerViewAdapter(adapter);
         mLRecyclerViewAdapter.addHeaderView(header);
+        rcv_news.setFooterViewHint("拼命加载中", "我是有底线的", "网络不给力啊，点击再试一次吧");
+        rcv_news.setLoadMoreEnabled(true);
         rcv_news.setAdapter(mLRecyclerViewAdapter);
-
+        rcv_news.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        rcv_news.refreshComplete(20);
+                        isOnRefresh = true;
+                        isAddNew = false;
+                        getCommunityList();
+                    }
+                }, 1000);
+            }
+        });
+        rcv_news.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        rcv_news.setNoMore(true);
+                        isOnRefresh = false;
+                        isAddNew = false;
+                        getCommunityList();
+                    }
+                }, 1000);
+            }
+        });
+        getCommunityList();
 
     }
 
@@ -406,7 +476,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         if (jsonObject.getInt("code") == 1) {
-                            showToast("关注成功",false);
+                            showToast("关注成功", false);
                             handler.obtainMessage(2).sendToTarget();
                         }
                     } catch (JSONException e) {
@@ -447,7 +517,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         if (jsonObject.getInt("code") == 1) {
-                            showToast("关注成功",false);
+                            showToast("关注成功", false);
                             handler.obtainMessage(2).sendToTarget();
 
                         }
@@ -495,5 +565,122 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
 
             }
         }
+    }
+
+    private void getCommunityList() {
+        showLoadingDialog();
+        String curPage, curSize;
+        String url = HttpUrl.GET_COMMUNITY_LIST;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        if (isOnRefresh) {
+            if (page > 0) {
+                curPage = String.valueOf((page - 1));
+                curSize = String.valueOf(20 * page);
+            } else {
+                curPage = "0";
+                curSize = "20";
+            }
+            url = url + "?page=" + curPage + "&size=" + curSize;
+        } else {
+            url = url + "?page=" + page + "&size=" + 20;
+        }
+
+        if (isClan) {
+            url = url + "&id_value=" + 4 + "&id_value_ext=" + id;
+        } else {
+            url = url + "&id_value=" + 3 + "&id_value_ext=" + id;
+        }
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                if (result != null) {
+                    FriendCircleEntity data = JSON.parseObject(result, FriendCircleEntity.class);
+                    if (data != null) {
+                        if (data.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                            return;
+                        }
+                        if (data.getCode() == 1) {
+                            List<FriendCircle> list = data.getResult();
+                            if (list != null && list.size() > 0) {
+                                showData(list);
+                            }
+                        } else {
+                            showToast(data.getMessage(), false);
+                        }
+                    } else {
+                        showToast("没有更多数据了", false);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
+            }
+        });
+    }
+
+    private void showData(List<FriendCircle> list) {
+        if (allList == null) {
+            allList = new ArrayList<>();
+        }
+        if (!isOnRefresh) {
+            page++;
+            allList.addAll(list);
+            adapter.setDatas(allList);
+        } else if (isOnRefresh || isAddNew) {
+            adapter.setDatas(list);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void update2DeleteCircle(int circleId, int postion) {
+
+    }
+
+    @Override
+    public void update2AddFavorite(int circlePosition, int favortId) {
+
+    }
+
+    @Override
+    public void update2DeleteFavort(int circlePosition, int favortId) {
+
+    }
+
+    @Override
+    public void update2AddComment(int circlePosition, FriendCircleItem addItem) {
+
+    }
+
+    @Override
+    public void update2DeleteComment(int circlePosition, String commentId, boolean isLong) {
+
+    }
+
+    @Override
+    public void updateEditTextBodyVisible(int visibility, CommentConfig commentConfig) {
+
+    }
+
+    @Override
+    public void update2loadData(int loadType, List<CircleItem> datas) {
+
     }
 }
