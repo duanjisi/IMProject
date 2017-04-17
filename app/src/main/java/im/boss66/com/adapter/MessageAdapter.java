@@ -93,9 +93,12 @@ public class MessageAdapter extends BaseAdapter {
     private int mImageHeight;
     private String toUid;
     private ChatDialog chatDialog;
+    private boolean isGroupChat = false;
+    private String userid;
 
     public MessageAdapter(Context context, List<MessageItem> msgList) {
         this.mContext = context;
+        userid = App.getInstance().getUid();
         widthScreen = UIUtils.getScreenWidth(context) / 2;
         widthMin = UIUtils.getScreenWidth(context) / 3;
         mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 3;
@@ -110,6 +113,7 @@ public class MessageAdapter extends BaseAdapter {
     public MessageAdapter(Context context, List<MessageItem> msgList, String toUid) {
         this.mContext = context;
         this.toUid = toUid;
+        userid = App.getInstance().getUid();
         widthScreen = UIUtils.getScreenWidth(context) / 2;
         widthMin = UIUtils.getScreenWidth(context) / 4;
         mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 3;
@@ -119,6 +123,10 @@ public class MessageAdapter extends BaseAdapter {
         imageLoader = ImageLoaderUtils.createImageLoader(context);
 //        mSpUtil = PushApplication.getInstance().getSpUtil();
 //        mSoundUtil = SoundUtil.getInstance();
+    }
+
+    public void setGroupChat(boolean groupChat) {
+        isGroupChat = groupChat;
     }
 
     public void removeHeadMsg() {
@@ -139,6 +147,61 @@ public class MessageAdapter extends BaseAdapter {
             }
         }
         notifyDataSetChanged();
+
+        MessageItem lastItem = mMsgList.get(mMsgList.size() - 1);
+        if (lastItem != null) {
+            refreshConversation(lastItem);
+        }
+    }
+
+
+    private void refreshConversation(MessageItem messageItem) {
+        String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + toUid;
+        String sender = "";
+        if (messageItem.getUserid().equals(userid)) {
+            sender = "我";
+        } else {
+            sender = messageItem.getNick();
+        }
+        String msg = "";
+        if (!isGroupChat) {
+            switch (messageItem.getMsgType()) {
+                case MessageItem.MESSAGE_TYPE_EMOTION:
+                    msg = "[动画表情]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_IMG:
+                    msg = "[图片]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_VIDEO:
+                    msg = "[视频]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_AUDIO:
+                    msg = "[声音]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_TXT:
+                    msg = sender + ":" + messageItem.getMessage();
+                    break;
+            }
+        } else {
+            switch (messageItem.getMsgType()) {
+                case MessageItem.MESSAGE_TYPE_EMOTION:
+                    msg = sender + "发了一条 [动画表情]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_IMG:
+                    msg = sender + "发了一条 [图片]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_VIDEO:
+                    msg = sender + "发了一条 [视频]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_AUDIO:
+                    msg = sender + "发了一条 [声音]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_TXT:
+                    msg = sender + ":" + messageItem.getMessage();
+                    break;
+            }
+        }
+        PreferenceUtils.putString(mContext, noticeKey, msg);
     }
 
 
