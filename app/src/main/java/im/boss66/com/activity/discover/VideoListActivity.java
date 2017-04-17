@@ -157,6 +157,8 @@ public class VideoListActivity extends BaseActivity {
                 // path：MediaStore.Audio.Media.DATA
                 String url = cursor.getString(cursor
                         .getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                String mineType = cursor.getString(cursor
+                        .getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE));
                 // duration：MediaStore.Audio.Media.DURATION
                 int duration = cursor
                         .getInt(cursor
@@ -174,7 +176,7 @@ public class VideoListActivity extends BaseActivity {
                     mList.add(entty);
                 }
                 if (url.endsWith(".mp4") || url.endsWith(".MP4")) {
-                    Log.i("VideoEntity:", "title:" + title + "  size:" + size + "     url:" + url);
+                    Log.i("VideoEntity:", "title:" + title + "  size:" + size + "     url:" + url + "    mineType:" + mineType);
                 }
             } while (cursor.moveToNext());
 

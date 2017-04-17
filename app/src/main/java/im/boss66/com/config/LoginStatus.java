@@ -104,7 +104,7 @@ public class LoginStatus {
 
     public void setSex_str(String sex) {
         SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(SEX_STR, sex);
+        editor.putString(SEX, sex);
         editor.apply();
     }
 
