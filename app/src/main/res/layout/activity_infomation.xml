@@ -100,6 +100,7 @@
                     android:layout_toLeftOf="@+id/iv_go_1"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:maxEms="12"
                     android:text="事实上身上事实上事实上事实上身上是谁射射射射射"
                     android:textColor="@color/text_color_gray_b"
                     android:textSize="17.6sp" />

@@ -23,6 +23,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,7 +41,6 @@ import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.discover.ImagePagerActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
-import im.boss66.com.activity.im.CopyTextActivity;
 import im.boss66.com.activity.player.VideoPlayerNewActivity;
 import im.boss66.com.db.dao.EmoHelper;
 import im.boss66.com.entity.EmoEntity;
@@ -48,6 +48,7 @@ import im.boss66.com.entity.EmotionEntity;
 import im.boss66.com.entity.MessageItem;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.EmoParseRequest;
+import im.boss66.com.widget.dialog.ChatDialog;
 import im.boss66.com.xlistview.GifTextView;
 
 /**
@@ -91,9 +92,13 @@ public class MessageAdapter extends BaseAdapter {
     private Handler mHandler = new Handler();
     private int mImageHeight;
     private String toUid;
+    private ChatDialog chatDialog;
+    private boolean isGroupChat = false;
+    private String userid;
 
     public MessageAdapter(Context context, List<MessageItem> msgList) {
         this.mContext = context;
+        userid = App.getInstance().getUid();
         widthScreen = UIUtils.getScreenWidth(context) / 2;
         widthMin = UIUtils.getScreenWidth(context) / 3;
         mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 3;
@@ -108,6 +113,7 @@ public class MessageAdapter extends BaseAdapter {
     public MessageAdapter(Context context, List<MessageItem> msgList, String toUid) {
         this.mContext = context;
         this.toUid = toUid;
+        userid = App.getInstance().getUid();
         widthScreen = UIUtils.getScreenWidth(context) / 2;
         widthMin = UIUtils.getScreenWidth(context) / 4;
         mImageHeight = (UIUtils.getScreenWidth(context) - UIUtils.dip2px(context, 60)) / 3;
@@ -119,6 +125,10 @@ public class MessageAdapter extends BaseAdapter {
 //        mSoundUtil = SoundUtil.getInstance();
     }
 
+    public void setGroupChat(boolean groupChat) {
+        isGroupChat = groupChat;
+    }
+
     public void removeHeadMsg() {
         if (mMsgList.size() - 10 > 10) {
             for (int i = 0; i < 10; i++) {
@@ -127,6 +137,73 @@ public class MessageAdapter extends BaseAdapter {
             notifyDataSetChanged();
         }
     }
+
+    public void removeItem(MessageItem item) {
+        Iterator iterator = mMsgList.iterator();
+        while (iterator.hasNext()) {
+            MessageItem mode = (MessageItem) iterator.next();
+            if (mode.getMsgId().equals(item.getMsgId())) {
+                iterator.remove();
+            }
+        }
+        notifyDataSetChanged();
+
+        MessageItem lastItem = mMsgList.get(mMsgList.size() - 1);
+        if (lastItem != null) {
+            refreshConversation(lastItem);
+        }
+    }
+
+
+    private void refreshConversation(MessageItem messageItem) {
+        String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + toUid;
+        String sender = "";
+        if (messageItem.getUserid().equals(userid)) {
+            sender = "我";
+        } else {
+            sender = messageItem.getNick();
+        }
+        String msg = "";
+        if (!isGroupChat) {
+            switch (messageItem.getMsgType()) {
+                case MessageItem.MESSAGE_TYPE_EMOTION:
+                    msg = "[动画表情]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_IMG:
+                    msg = "[图片]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_VIDEO:
+                    msg = "[视频]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_AUDIO:
+                    msg = "[声音]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_TXT:
+                    msg = sender + ":" + messageItem.getMessage();
+                    break;
+            }
+        } else {
+            switch (messageItem.getMsgType()) {
+                case MessageItem.MESSAGE_TYPE_EMOTION:
+                    msg = sender + "发了一条 [动画表情]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_IMG:
+                    msg = sender + "发了一条 [图片]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_VIDEO:
+                    msg = sender + "发了一条 [视频]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_AUDIO:
+                    msg = sender + "发了一条 [声音]";
+                    break;
+                case MessageItem.MESSAGE_TYPE_TXT:
+                    msg = sender + ":" + messageItem.getMessage();
+                    break;
+            }
+        }
+        PreferenceUtils.putString(mContext, noticeKey, msg);
+    }
+
 
     public void setmMsgList(List<MessageItem> msgList) {
         mMsgList = msgList;
@@ -295,9 +372,19 @@ public class MessageAdapter extends BaseAdapter {
             public boolean onLongClick(View v) {
                 CharSequence msg = ((TextView) v).getText();
                 if (msg != null && !msg.equals("")) {
-                    Intent intent = new Intent(mContext, CopyTextActivity.class);
+//                    Intent intent = new Intent(mContext, CopyTextActivity.class);
+//                    intent.putExtra("msg", msg);
+//                    intent.putExtra("toUid", toUid);
+//                    intent.putExtra("item", mItem);
+//                    intent.putExtra("is_txt", true);
+//                    mContext.startActivity(intent);
+                    Intent intent = new Intent();
                     intent.putExtra("msg", msg);
-                    mContext.startActivity(intent);
+                    intent.putExtra("toUid", toUid);
+                    intent.putExtra("item", mItem);
+                    intent.putExtra("is_txt", true);
+                    chatDialog = new ChatDialog(mContext, intent);
+                    chatDialog.showDialog();
                 }
                 return false;
             }
@@ -346,6 +433,24 @@ public class MessageAdapter extends BaseAdapter {
         } else {
             requestParseEmo(holder, emo_code);
         }
+
+        holder.rlMessage.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+//                Intent intent = new Intent(mContext, CopyTextActivity.class);
+//                intent.putExtra("toUid", toUid);
+//                intent.putExtra("item", mItem);
+//                intent.putExtra("is_txt", false);
+//                mContext.startActivity(intent);
+                Intent intent = new Intent();
+                intent.putExtra("toUid", toUid);
+                intent.putExtra("item", mItem);
+                intent.putExtra("is_txt", false);
+                chatDialog = new ChatDialog(mContext, intent);
+                chatDialog.showDialog();
+                return false;
+            }
+        });
     }
 
     private Bitmap getBitmap(EmoEntity entity) {
@@ -450,52 +555,25 @@ public class MessageAdapter extends BaseAdapter {
                     ImagePagerActivity.startImagePagerActivity(mContext, photoUrls, position, imageSize, false);
                 }
             });
-//            Bitmap bitmap = imageLoader.loadImageSync(imageUrl);
-//            Log.i("info", "=====bitmap:" + bitmap);
-
-//            imageLoader.displayImage(imageUrl, holder.ivphoto, ImageLoaderUtils.getDisplayImageOptions(), new ImageLoadingListener() {
-//                @Override
-//                public void onLoadingStarted(String s, View view) {
-//                }
-//
-//                @Override
-//                public void onLoadingFailed(String s, View view, FailReason failReason) {
-//
-//                }
-//
-//                @Override
-//                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-//                    Log.i("info", "=====bitmap:" + bitmap);
-//                    if (bitmap != null) {
-//                        scalImage(holder, bitmap);
-//                    }
-//                }
-//
-//                @Override
-//                public void onLoadingCancelled(String s, View view) {
-//
-//                }
-//            });
-
-//            imageLoader.displayImage(imageUrl, holder.ivphoto, ImageLoaderUtils.getDisplayScaleImageOptions());
-//            Bitmap bitmap = MessageBitmapCache.getInstance().get(
-//                    mItem.getMessage());
-//            if (!mItem.isComMeg()) {
-//                bitmap = BubbleImageHelper.getInstance(mContext)
-//                        .getBubbleImageBitmap(bitmap,
-//                                R.drawable.zf_mine_image_default_bk);
-//            } else {
-//                bitmap = BubbleImageHelper.getInstance(mContext)
-//                        .getBubbleImageBitmap(bitmap,
-//                                R.drawable.zf_other_image_default_bk);
-//            }
-//
-//            if (bitmap != null) {
-////                holder.ivphoto.setLayoutParams(new FrameLayout.LayoutParams(
-////                        FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-//                holder.ivphoto.setImageBitmap(bitmap);
-//            }
             holder.flPickLayout.setVisibility(View.VISIBLE);
+
+            holder.ivphoto.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+//                    Intent intent = new Intent(mContext, CopyTextActivity.class);
+//                    intent.putExtra("toUid", toUid);
+//                    intent.putExtra("item", mItem);
+//                    intent.putExtra("is_txt", false);
+//                    mContext.startActivity(intent);
+                    Intent intent = new Intent();
+                    intent.putExtra("toUid", toUid);
+                    intent.putExtra("item", mItem);
+                    intent.putExtra("is_txt", false);
+                    chatDialog = new ChatDialog(mContext, intent);
+                    chatDialog.showDialog();
+                    return false;
+                }
+            });
         } else {
             holder.flPickLayout.setVisibility(View.GONE);
         }
@@ -626,6 +704,18 @@ public class MessageAdapter extends BaseAdapter {
                 }
             }
         });
+        holder.msg.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("toUid", toUid);
+                intent.putExtra("item", mItem);
+                intent.putExtra("isVoice", true);
+                chatDialog = new ChatDialog(mContext, intent);
+                chatDialog.showDialog();
+                return false;
+            }
+        });
     }
 
     private void handleVideoMessage(final VideoMessageHolder holder,
@@ -650,6 +740,24 @@ public class MessageAdapter extends BaseAdapter {
                     intent.putExtra("videoPath", videoPath);
                     intent.putExtra("imgurl", cover);
                     mContext.startActivity(intent);
+                }
+            });
+
+            holder.rlMessage.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+//                    Intent intent = new Intent(mContext, CopyTextActivity.class);
+//                    intent.putExtra("toUid", toUid);
+//                    intent.putExtra("item", mItem);
+//                    intent.putExtra("is_txt", false);
+//                    mContext.startActivity(intent);
+                    Intent intent = new Intent();
+                    intent.putExtra("toUid", toUid);
+                    intent.putExtra("item", mItem);
+                    intent.putExtra("is_txt", false);
+                    chatDialog = new ChatDialog(mContext, intent);
+                    chatDialog.showDialog();
+                    return false;
                 }
             });
         }

@@ -195,6 +195,10 @@
         <activity
             android:name=".activity.book.SelectContactsActivity"
             android:screenOrientation="portrait"></activity>
+        <!--选择最近聊天成员-->
+        <activity
+            android:name=".activity.im.SelectConversationActivity"
+            android:screenOrientation="portrait"></activity>
         <!--手机联系人-->
         <activity
             android:name=".activity.book.PhoneContactsActivity"
@@ -513,17 +517,6 @@
         <activity
             android:name=".activity.treasure.ApplyFuwaActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"></activity>
-        <!--申请创建-->
-        <activity android:name=".activity.connection.ApplyCreateActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
-        <!--宗亲商会页-->
-        <activity android:name=".activity.connection.ClanClubActivity"></activity>
-        <!--宗亲和商会web详情页-->
-        <activity android:name=".activity.connection.ClanCofcDetailActivity"></activity>
-        <!--编辑宗亲商会页-->
-        <activity android:name=".activity.connection.EditClanCofcActivity"></activity>
-        <!--编辑宗亲商会文字-->
-        <activity android:name=".activity.connection.EditTextActivity"></activity>
 
         <!--支付宝start-->
         <activity
@@ -536,7 +529,6 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"></activity>
-
         <!-- 支付宝end -->
 
         <!-- 微信入口 -->
@@ -634,7 +626,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="im.boss66.com.fileProvider"
@@ -644,6 +635,5 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 </manifest>

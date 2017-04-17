@@ -33,6 +33,7 @@ import java.util.Date;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
@@ -41,6 +42,7 @@ import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.discover.ReplaceAlbumCoverActivity;
 import im.boss66.com.config.LoginStatus;
 import im.boss66.com.entity.ChangeAvatarEntity;
 import im.boss66.com.http.HttpUrl;
@@ -206,17 +208,17 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {    //打开相机
             if (imageUri != null) {
-                String path;
+                String path = null;
                 if (Build.VERSION.SDK_INT < 24) {
                     path = Utils.getPath(this, imageUri);
                 } else {
                     path = imageUri.toString();
-                    if(Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
-                            path.contains("/IMProject/")){
-                        String[] arr = path.split("/IMProject/");
-                        if (arr != null && arr.length >1){
-                            path = savePath + arr[1];
-                        }
+                }
+                if(Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
+                        path.contains("/IMProject/")){
+                    String[] arr = path.split("/IMProject/");
+                    if (arr != null && arr.length >1){
+                        path = savePath + arr[1];
                     }
                 }
                 if (!TextUtils.isEmpty(path)) {

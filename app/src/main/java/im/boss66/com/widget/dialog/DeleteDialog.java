@@ -5,8 +5,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import im.boss66.com.R;
-import im.boss66.com.activity.connection.EditSchoolActivity;
-import im.boss66.com.activity.connection.SchoolListActivity;
 
 /**
  * Created by liw on 2017/3/2.
@@ -19,7 +17,6 @@ public class DeleteDialog extends BaseDialog implements View.OnClickListener {
         super(context);
         cancle = (TextView) dialog.findViewById(R.id.cancel);
         ok = (TextView) dialog.findViewById(R.id.ok);
-
         tv_save_edit = (TextView) dialog.findViewById(R.id.tv_save_edit);
         tv_save_edit.setText("是否删除");
         cancle.setOnClickListener(this);

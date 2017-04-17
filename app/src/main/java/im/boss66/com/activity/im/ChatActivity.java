@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -46,7 +48,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -402,6 +403,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         filter.addAction(Constants.Action.REFRSH_CHAT_PAGER_DATAS);
         filter.addAction(Constants.Action.EXIT_CURRETN_GROUP_REFRESH_DATAS);
         filter.addAction(Constants.Action.REFRSH_CHAT_PAGER);
+        filter.addAction(Constants.Action.REFRSH_CHAT_PAGER_NAME);
+        filter.addAction(Constants.Action.REMOVE_CHAT_MESSAGE_DATA);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(mLocalBroadcastReceiver, filter);
         // 消息
@@ -410,6 +413,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mRecentDB = mApplication.getRecentDB();// 接收消息数据库
 //        adapter = new MessageAdapter(context, initMsgData());
         adapter = new MessageAdapter(context, initMsgData(), toUid);
+        adapter.setGroupChat(isGroupChat);
         mMsgListView = (MsgListView) findViewById(R.id.msg_listView);
         // 触摸ListView隐藏表情和输入法
         mMsgListView.setOnTouchListener(this);
@@ -836,27 +840,54 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private String photoPath = "";
+    private String savePath = Environment.getExternalStorageDirectory() + "/myimage/";
 
     private void takePhoto() {
-        String status = Environment.getExternalStorageState();
-        // 检测手机是否有sd卡
-        if (status.equals(Environment.MEDIA_MOUNTED)) {
-            // 创建存放照片的文件夹
-            File dir = new File(Environment.getExternalStorageDirectory() + "/myimage/");
+//        String status = Environment.getExternalStorageState();
+//        // 检测手机是否有sd卡
+//        if (status.equals(Environment.MEDIA_MOUNTED)) {
+//            // 创建存放照片的文件夹
+//            File dir = new File(Environment.getExternalStorageDirectory() + "/myimage/");
+//            if (!dir.exists()) {
+//                dir.mkdirs();
+//            }
+//            // 开启照相机
+//            Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            File file = new File(dir, String.valueOf(System.currentTimeMillis())
+//                    + ".jpg");
+//            photoPath = file.getPath();
+//            Uri imageUri = Uri.fromFile(file);
+//            openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//            openCameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+//            startActivityForResult(openCameraIntent, Code.Request.TAKE_PHOTO);
+//        } else {
+//            Toast.makeText(context, "没有储存卡", Toast.LENGTH_LONG).show();
+//        }
+
+        if (Build.VERSION.SDK_INT < 24) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            String imageName = System.currentTimeMillis() + ".jpg";
+            // 指定调用相机拍照后照片的储存路径
+            File dir = new File(savePath);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            // 开启照相机
-            Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File file = new File(dir, String.valueOf(System.currentTimeMillis())
-                    + ".jpg");
+            File file = new File(dir, imageName);
             photoPath = file.getPath();
             Uri imageUri = Uri.fromFile(file);
-            openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            openCameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-            startActivityForResult(openCameraIntent, Code.Request.TAKE_PHOTO);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(intent, Code.Request.TAKE_PHOTO);
+            }
         } else {
-            Toast.makeText(context, "没有储存卡", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            String imageName = System.currentTimeMillis() + ".jpg";
+            File file = new File(savePath, imageName);
+            Uri imageUri = FileProvider.getUriForFile(ChatActivity.this, "im.boss66.com.fileProvider", file);//这里进行替换uri的获得方式
+            photoPath = imageUri.toString();
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//这里加入flag
+            startActivityForResult(intent, Code.Request.TAKE_PHOTO);
         }
     }
 
@@ -901,9 +932,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 MessageItem.MESSAGE_TYPE_EMOTION, mSpUtil.getNick(),
                 System.currentTimeMillis(), faceCode, mSpUtil.getHeadIcon(),
                 false, 0, 0, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
-        adapter.upDateMsg(item);
+        MessageItem data = mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+        adapter.upDateMsg(data);
         mMsgListView.setSelection(adapter.getCount() - 1);
-        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+//        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
 //        mEtMsg.setText("");
 //        if ("".equals(mSpUtil.getUserId())) {
 //            showToast("发送者未登录!", true);
@@ -975,9 +1007,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 MessageItem.MESSAGE_TYPE_IMG, mSpUtil.getNick(),
                 System.currentTimeMillis(), photoPath, mSpUtil.getHeadIcon(),
                 false, 0, 0, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
-        adapter.upDateMsg(item);
+        MessageItem data = mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+        adapter.upDateMsg(data);
         mMsgListView.setSelection(adapter.getCount() - 1);
-        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+//        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
 //        ChatServices.sendMessage(getString(MESSAGE_TYPE_IMG, photoPath));
         Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_IMG, photoPath));
         saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_IMG, "");
@@ -995,9 +1028,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 MessageItem.MESSAGE_TYPE_TXT, mSpUtil.getNick(),
                 System.currentTimeMillis(), msg, mSpUtil.getHeadIcon(),
                 false, 0, 0, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
-        adapter.upDateMsg(item);
+        MessageItem data = mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+        adapter.upDateMsg(data);
         mMsgListView.setSelection(adapter.getCount() - 1);
-        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+//        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
 //        mEtMsg.setText("");
 //        if ("".equals(mSpUtil.getUserId())) {
 //            showToast("发送者未登录!", true);
@@ -1020,9 +1054,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 MessageItem.MESSAGE_TYPE_AUDIO, mSpUtil.getNick(),
                 System.currentTimeMillis(), photoPath, mSpUtil.getHeadIcon(),
                 false, 0, voiceTime, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
-        adapter.upDateMsg(item);
+        MessageItem data = mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+        adapter.upDateMsg(data);
         mMsgListView.setSelection(adapter.getCount() - 1);
-        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+//        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+
 //        mEtMsg.setText("");
 //        if ("".equals(mSpUtil.getUserId())) {
 //            showToast("发送者未登录!", true);
@@ -1101,9 +1137,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 false, 0, 0, "" + System.currentTimeMillis(),
                 account.getUser_name(), account.getUser_id(),
                 account.getAvatar());
-        adapter.upDateMsg(item);
+        MessageItem data = mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+        adapter.upDateMsg(data);
         mMsgListView.setSelection(adapter.getCount() - 1);
-        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+//        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
 //        mEtMsg.setText("");
 //        if ("".equals(mSpUtil.getUserId())) {
 //            showToast("发送者未登录!", true);
@@ -1252,6 +1289,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void uploadImageAudioFile(final String path, final boolean isImage, final int voiceTime) {
+        Log.i("info", "=====imagePath:" + path);
         if (isImage && !isImageFile(path)) {
             showToast("不支持该文件格式!", true);
             return;
@@ -1265,7 +1303,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         final HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         final com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         try {
-
             File file = null;
             if (isImage) {
                 String fileName = FileUtils.getFileNameFromPath(path);
@@ -1385,6 +1422,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 }
             }
         } else if (requestCode == Code.Request.TAKE_PHOTO) {
+            Log.i("info", "=====photoPath:" + photoPath);
             if (photoPath != null && !photoPath.equals("")) {
                 uploadImageAudioFile(photoPath, true, 0);
             }
@@ -1715,7 +1753,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 Log.i("info", "===============add:");
                 ft.attach(fragment);
                 ft.addToBackStack(null);
-                ft.commit();
+//                ft.commit();
+                ft.commitAllowingStateLoss();
                 return fragment;
             } else {
                 return super.instantiateItem(container, position);
@@ -1895,9 +1934,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 MessageItem.MESSAGE_TYPE_AUDIO, mSpUtil.getNick(),
                 System.currentTimeMillis(), photoPath, mSpUtil.getHeadIcon(),
                 false, 0, 0, "" + System.currentTimeMillis(), account.getUser_name(), account.getUser_id(), account.getAvatar());
-        adapter.upDateMsg(item);
+        MessageItem data = mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+        adapter.upDateMsg(data);
         mMsgListView.setSelection(adapter.getCount() - 1);
-        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
+//        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
         // ===发送消息到服务器
 //        com.pzf.liaotian.bean.Message msgItem = new com.pzf.liaotian.bean.Message(
 //                MessageItem.MESSAGE_TYPE_RECORD, System.currentTimeMillis(),
@@ -2209,6 +2249,17 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 mMsgListView.setSelection(adapter.getCount() - position - 1);
             } else if (Constants.Action.REFRSH_CHAT_PAGER.equals(action)) {
                 adapter.notifyDataSetChanged();
+            } else if (Constants.Action.REMOVE_CHAT_MESSAGE_DATA.equals(action)) {
+                MessageItem item = (MessageItem) intent.getSerializableExtra("msg_obj");
+                if (item != null) {
+                    adapter.removeItem(item);
+                }
+            } else if (Constants.Action.REFRSH_CHAT_PAGER_NAME.equals(action)) {
+                String data = intent.getStringExtra("title");
+                if (!TextUtils.isEmpty(data)) {
+                    tvTitle.setText(data);
+                    ConversationHelper.getInstance().updateConversationTitle(toUid, data);
+                }
             } else if (Constants.Action.EXIT_CURRETN_GROUP_REFRESH_DATAS.equals(action)) {
                 finish();
             }

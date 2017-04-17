@@ -144,7 +144,6 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
-        Log.i("uploadImageFile", path);
         if (bitmap != null) {
             File file = FileUtils.compressImage(bitmap);
             if (file != null) {
@@ -292,17 +291,17 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {    //打开相机
             if (imageUri != null) {
-                String path;
+                String path = null;
                 if (Build.VERSION.SDK_INT < 24) {
                     path = Utils.getPath(this, imageUri);
                 } else {
                     path = imageUri.toString();
-                    if (Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
-                            path.contains("/IMProject/")) {
-                        String[] arr = path.split("/IMProject/");
-                        if (arr != null && arr.length > 1) {
-                            path = savePath + arr[1];
-                        }
+                }
+                if(Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
+                        path.contains("/IMProject/")){
+                    String[] arr = path.split("/IMProject/");
+                    if (arr != null && arr.length >1){
+                        path = savePath + arr[1];
                     }
                 }
                 if (!TextUtils.isEmpty(path)) {

@@ -5,7 +5,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.text.TextUtils;
@@ -235,7 +234,6 @@ public class PeopleNearbyActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onClick(int which) {
-        ToastUtil.showShort(this, "" + which);
         switch (which) {
             case 1:
                 sexType = "2";

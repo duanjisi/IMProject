@@ -214,6 +214,11 @@ public class EaseContactList extends RelativeLayout {
         handler.sendMessage(msg);
     }
 
+    public void setShowTag(boolean isShow) {
+        adapter.setShow(isShow);
+        notifyDataSetChanged();
+    }
+
     public void notifyDataSetChanged() {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
