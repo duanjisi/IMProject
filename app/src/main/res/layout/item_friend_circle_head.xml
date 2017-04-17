@@ -30,7 +30,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="18dp"
-                android:text="自己"
+                android:ellipsize="end"
+                android:gravity="right"
+                android:maxLines="1"
                 android:textColor="@color/white"
                 android:textSize="16.5sp" />
 
@@ -38,8 +40,7 @@
                 android:id="@+id/iv_head"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:background="@drawable/bg_rectangle_border"
-                android:src="@drawable/person" />
+                android:background="@drawable/bg_rectangle_border"/>
 
         </LinearLayout>
 
@@ -51,8 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/bg_round_light_black"
-        android:visibility="gone"
-        android:padding="6dp">
+        android:padding="6dp"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_new"
