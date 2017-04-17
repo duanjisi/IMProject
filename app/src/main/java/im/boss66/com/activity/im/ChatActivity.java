@@ -413,6 +413,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mRecentDB = mApplication.getRecentDB();// 接收消息数据库
 //        adapter = new MessageAdapter(context, initMsgData());
         adapter = new MessageAdapter(context, initMsgData(), toUid);
+        adapter.setGroupChat(isGroupChat);
         mMsgListView = (MsgListView) findViewById(R.id.msg_listView);
         // 触摸ListView隐藏表情和输入法
         mMsgListView.setOnTouchListener(this);

@@ -8,6 +8,7 @@
         android:id="@+id/iv_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:src="@drawable/hp_ch_photos" />
 
     <TextView

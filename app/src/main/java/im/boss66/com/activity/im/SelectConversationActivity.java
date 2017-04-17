@@ -194,6 +194,7 @@ public class SelectConversationActivity extends BaseActivity implements View.OnK
                 Intent intent = new Intent(context, SelectContactsActivity.class);
                 intent.putExtra("forwarding", true);
                 intent.putExtra("user_ids", getUser_ids());
+                intent.putExtra("selectedNum", getCheckedMembers().size());
                 Log.i("info", "================user_ids:" + getUser_ids());
 //                intent.putExtra("isAddMember", true);
                 startActivityForResult(intent, 100);
@@ -235,23 +236,42 @@ public class SelectConversationActivity extends BaseActivity implements View.OnK
                         singleDialog.showDialog(user, messageItem);
                     }
                 } else {
-                    ArrayList<EaseUser> list = getCheckedMembers();
-                    if (list.size() < 9) {
-                        boolean isAdded = user.isAdded();
-                        if (!isAdded) {
-                            boolean checked = user.isChecked();
-                            if (!checked) {
+                    boolean isAdded = user.isAdded();
+                    if (!isAdded) {
+                        boolean checked = user.isChecked();
+                        if (!checked) {
+                            ArrayList<EaseUser> list = getCheckedMembers();
+                            if (list.size() < 9) {
                                 addView(user, position);
+                                user.setChecked(!checked);
+                                contactListLayout.refresh();
                             } else {
-                                deleteView(user);
+                                showToast("最多只能选9个", true);
                             }
+                        } else {
+                            deleteView(user);
                             user.setChecked(!checked);
                             contactListLayout.refresh();
                         }
-                        tvOption.setText(getTips());
-                    } else {
-                        showToast("最多只能选9个", true);
                     }
+                    tvOption.setText(getTips());
+//                    ArrayList<EaseUser> list = getCheckedMembers();
+//                    if (list.size() < 9) {
+//                        boolean isAdded = user.isAdded();
+//                        if (!isAdded) {
+//                            boolean checked = user.isChecked();
+//                            if (!checked) {
+//                                addView(user, position);
+//                            } else {
+//                                deleteView(user);
+//                            }
+//                            user.setChecked(!checked);
+//                            contactListLayout.refresh();
+//                        }
+//                        tvOption.setText(getTips());
+//                    } else {
+//                        showToast("最多只能选9个", true);
+//                    }
                 }
             }
         });
@@ -685,7 +705,7 @@ public class SelectConversationActivity extends BaseActivity implements View.OnK
                 case 100:
                     if (data != null) {
                         ArrayList<EaseUser> users = (ArrayList<EaseUser>) data.getSerializableExtra("list");
-                        if (users != null && users.size() != 0) {
+                        if (users != null) {
                             showMultiDialog(users);
                         }
                     }
@@ -695,10 +715,11 @@ public class SelectConversationActivity extends BaseActivity implements View.OnK
     }
 
     private void showMultiDialog(ArrayList<EaseUser> users) {
-        printStr(users);
         ArrayList<EaseUser> list = getCheckedMembers();
         list.addAll(users);
-        multiDialog.showDialog(list, messageItem);
+        if (list.size() != 0) {
+            multiDialog.showDialog(list, messageItem);
+        }
     }
 
 
