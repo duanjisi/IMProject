@@ -524,6 +524,12 @@
         <activity android:name=".activity.connection.EditClanCofcActivity"></activity>
         <!--编辑宗亲商会文字-->
         <activity android:name=".activity.connection.EditTextActivity"></activity>
+        <!--宗亲商会名人列表-->
+        <activity android:name=".activity.connection.ClanCofcPersonActivity"></activity>
+        <!--宗亲商会编辑名人页-->
+        <activity android:name=".activity.connection.EditClanCofcPersonActivity"></activity>
+        <!--宗亲商会名人web页-->
+        <activity android:name=".activity.connection.ClanCofcPersonWebActivity"></activity>
 
         <!--支付宝start-->
         <activity

@@ -267,6 +267,18 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 }
                 break;
             case R.id.tv_famous_person: //名人
+                if (isClan) {
+                    Intent intent = new Intent(this, ClanCofcPersonActivity.class);
+                    intent.putExtra("id", id);
+                    intent.putExtra("isClan", true);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(this, ClanCofcPersonActivity.class);
+                    intent.putExtra("id", id);
+                    intent.putExtra("isClan", false);
+                    startActivity(intent);
+                }
+
                 break;
             case R.id.tv_club:  //动态
                 break;

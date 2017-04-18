@@ -41,6 +41,7 @@ import im.boss66.com.Utils.MakeQRCodeUtil;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.connection.AddPeopleActivity;
 import im.boss66.com.activity.connection.PeopleCenterActivity;
@@ -273,7 +274,9 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 //验证福娃
-                showToast("验证福娃",false);
+//                showToast("验证福娃",false);
+                Intent intent = new Intent(MainTreasureActivity.this, CaptureActivity.class);
+                startActivity(intent);
                 popupWindow.dismiss();
             }
         });
@@ -415,7 +418,8 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         params.weight = width;
         params.height =width;
         img_qr_code.setLayoutParams(params);
-        MakeQRCodeUtil.createQRImage(tv_word.getText().toString(), width, width, img_qr_code);
+        String uri = "fuwa:user:"+tv_word.getText().toString();
+        MakeQRCodeUtil.createQRImage(uri, width, width, img_qr_code);
 
 
 

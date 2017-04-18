@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.dtr.zbar.build.ZBarDecoder;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
@@ -40,8 +41,15 @@ import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +59,7 @@ import java.nio.charset.Charset;
 import java.util.Hashtable;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
@@ -59,8 +68,10 @@ import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.activity.event.FuwaGid;
+import im.boss66.com.entity.ClubEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.BaseModelRequest;
+import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.AddFriendRequest;
 import im.boss66.com.http.request.GroupAddMemsRequest;
 import im.boss66.com.listener.PermissionListener;
@@ -267,11 +278,77 @@ public class CaptureActivity extends BaseActivity {
                 }
             });
 
-        }else if(true){       //扫描二维码赠送,后期加上url规范
-            EventBus.getDefault().post(new FuwaGid(result));
+        }else if(result.contains("fuwa:user:")){       //扫描二维码赠送
+            String code  =result.substring(result.lastIndexOf(":")+1,result.length());
+//            EventBus.getDefault().post(new FuwaGid(gid));
+            Intent intent = new Intent();
+            intent.putExtra("code",code);
+            setResult(RESULT_OK,intent);
             finish();
+        }else if(result.contains("fuwa:fuwa:")){ //商家扫描，兑奖
+
+
+            String gid = result.substring(result.lastIndexOf(":")+1,result.length());
+            scanCode(gid);
+
+
+
         }
     }
+
+    private void scanCode(String gid) {
+
+        showLoadingDialog();
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        String url= HttpUrl.SCAN_CODE;
+        String userid = App.getInstance().getUid();
+        url = url + "?userid=" + userid+"&fuwagid="+gid;
+        httpUtils.send(HttpRequest.HttpMethod.GET, url, params, new RequestCallBack<String>() {
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+
+
+                if (result != null) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String message = jsonObject.getString("message");
+                        showToast(message,false);
+//                        switch (jsonObject.getInt("code")){
+//                            case 0://成功
+//                            break;
+//                            case 1:
+//                                break;
+//                            case 2:
+//                                break;
+//                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        showToast("兑奖失败",false);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
+            }
+        });
+    }
+
     private void onAddMember() {
         try {
             Thread.sleep(1000);
