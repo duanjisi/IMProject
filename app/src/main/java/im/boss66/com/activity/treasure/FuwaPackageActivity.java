@@ -79,8 +79,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
     private int choosePosition;     //福娃列表的选中位置
     private long time1 = 0L; //防止快速点击
-
-
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -158,7 +156,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fuwa_package);
         initViews();
-
         initData();
     }
 

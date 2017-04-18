@@ -361,7 +361,8 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                         path = savePath + arr[1];
                     }
                 }
-                Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
+                int seenW = UIUtils.getScreenWidth(this);
+                Bitmap bitmap = FileUtils.compressImageFromFile(path, seenW);
                 if (bitmap != null) {
                     File file = FileUtils.compressImage(bitmap);
                     if (file != null) {
