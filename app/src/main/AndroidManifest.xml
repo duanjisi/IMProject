@@ -514,7 +514,8 @@
             android:name=".activity.treasure.ApplyFuwaActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"></activity>
         <!--申请创建-->
-        <activity android:name=".activity.connection.ApplyCreateActivity"
+        <activity
+            android:name=".activity.connection.ApplyCreateActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"></activity>
         <!--宗亲商会页-->
         <activity android:name=".activity.connection.ClanClubActivity"></activity>
@@ -530,6 +531,9 @@
         <activity android:name=".activity.connection.EditClanCofcPersonActivity"></activity>
         <!--宗亲商会名人web页-->
         <activity android:name=".activity.connection.ClanCofcPersonWebActivity"></activity>
+
+        <!--视频列表-->
+        <activity android:name=".activity.discover.VideoListActivity"></activity>
 
         <!--支付宝start-->
         <activity

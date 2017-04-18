@@ -144,6 +144,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     private ImageView iv_bg;
     private AccountEntity sAccount;
     private long[] mHits;
+    private final int READ_VIDEO = 4;//本地视频
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -440,11 +441,14 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 .setCancelable(false)
                 .setCanceledOnTouchOutside(true);
         if (type == 1) {//发朋友圈
-            actionSheet.addSheetItem(getString(R.string.small_video), ActionSheet.SheetItemColor.Black,
-                    FriendCircleActivity.this)
+            actionSheet
+                    .addSheetItem(getString(R.string.small_video), ActionSheet.SheetItemColor.Black,
+                            FriendCircleActivity.this)
                     .addSheetItem(getString(R.string.take_photos), ActionSheet.SheetItemColor.Black,
                             FriendCircleActivity.this)
                     .addSheetItem(getString(R.string.from_the_mobile_phone_photo_album_choice), ActionSheet.SheetItemColor.Black,
+                            FriendCircleActivity.this)
+                    .addSheetItem(getString(R.string.local_small_video), ActionSheet.SheetItemColor.Black,
                             FriendCircleActivity.this);
         } else if (type == 2) {//更换相册封面
             actionSheet.addSheetItem(getString(R.string.replace_the_album_cover), ActionSheet.SheetItemColor.Black, FriendCircleActivity.this);
@@ -480,6 +484,10 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 break;
             case 3://从手机相册选择
                 cameraType = OPEN_ALBUM;
+                getPermission();
+                break;
+            case 4:
+                cameraType = READ_VIDEO;
                 getPermission();
                 break;
         }
@@ -632,6 +640,13 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             String albumCover = mPreferences.getString("albumCover", "");
             imageLoader.displayImage(albumCover, iv_bg,
                     ImageLoaderUtils.getDisplayImageOptions());
+        } else if (requestCode == READ_VIDEO && resultCode == RESULT_OK && data != null) {
+            String url = data.getStringExtra("filePath");
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", RECORD_VIDEO);
+            bundle.putString("sendType", "video");
+            bundle.putString("videoPath", url);
+            openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
         }
     }
 
@@ -1000,6 +1015,8 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                             count(9)
                             .multi() // 多选模式, 默认模式;
                             .start(FriendCircleActivity.this, OPEN_ALBUM);
+                } else if (cameraType == READ_VIDEO) {
+                    openActvityForResult(VideoListActivity.class, READ_VIDEO);
                 }
             }
 
@@ -1008,11 +1025,19 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 ToastUtil.showShort(FriendCircleActivity.this, getString(R.string.giving_camera_permissions));
             }
         };
-        PermissionUtil
-                .with(this)
-                .permissions(
-                        PermissionUtil.PERMISSIONS_GROUP_CAMERA //相机权限
-                ).request(permissionListener);
+        if (cameraType == READ_VIDEO) {
+            PermissionUtil
+                    .with(this)
+                    .permissions(
+                            PermissionUtil.PERMISSIONS_SD_READ_WRITE //相机权限
+                    ).request(permissionListener);
+        } else {
+            PermissionUtil
+                    .with(this)
+                    .permissions(
+                            PermissionUtil.PERMISSIONS_GROUP_CAMERA //相机权限
+                    ).request(permissionListener);
+        }
     }
 
     @Override
