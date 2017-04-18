@@ -68,6 +68,7 @@ import im.boss66.com.activity.discover.CircleMessageListActivity;
 import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.activity.discover.FriendSendNewMsgActivity;
 import im.boss66.com.activity.discover.ReplaceAlbumCoverActivity;
+import im.boss66.com.activity.discover.VideoListActivity;
 import im.boss66.com.adapter.CommunityListAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BaseResult;
@@ -134,6 +135,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     private String commentFromId;
     private CommunityMsgListener communityMsgListener;
     private String CuiUid;
+    private final int READ_VIDEO = 4;//本地视频
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -798,6 +800,8 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                     .addSheetItem(getString(R.string.take_photos), ActionSheet.SheetItemColor.Black,
                             SchoolHometownActivity.this)
                     .addSheetItem(getString(R.string.from_the_mobile_phone_photo_album_choice), ActionSheet.SheetItemColor.Black,
+                            SchoolHometownActivity.this)
+                    .addSheetItem(getString(R.string.local_small_video), ActionSheet.SheetItemColor.Black,
                             SchoolHometownActivity.this);
         } else if (type == 4) {//删除评论
             actionSheet.setTitle("删除我的评论");
@@ -827,6 +831,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 break;
             case 3://从手机相册选择
                 cameraType = OPEN_ALBUM;
+                getPermission();
+                break;
+            case 4:
+                cameraType = READ_VIDEO;
                 getPermission();
                 break;
         }
@@ -878,6 +886,8 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                             count(9)
                             .multi() // 多选模式, 默认模式;
                             .start(SchoolHometownActivity.this, OPEN_ALBUM);
+                }else if (cameraType == READ_VIDEO) {
+                    openActvityForResult(VideoListActivity.class, READ_VIDEO);
                 }
             }
 
@@ -886,11 +896,19 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 ToastUtil.showShort(SchoolHometownActivity.this, getString(R.string.giving_camera_permissions));
             }
         };
-        PermissionUtil
-                .with(this)
-                .permissions(
-                        PermissionUtil.PERMISSIONS_GROUP_CAMERA //相机权限
-                ).request(permissionListener);
+        if (cameraType == READ_VIDEO) {
+            PermissionUtil
+                    .with(this)
+                    .permissions(
+                            PermissionUtil.PERMISSIONS_SD_READ_WRITE //相机权限
+                    ).request(permissionListener);
+        } else {
+            PermissionUtil
+                    .with(this)
+                    .permissions(
+                            PermissionUtil.PERMISSIONS_GROUP_CAMERA //相机权限
+                    ).request(permissionListener);
+        }
     }
 
     @Override
@@ -989,6 +1007,15 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             isOnRefresh = true;
             isAddNew = false;
             getCommunityList();
+        }else if (requestCode == READ_VIDEO && resultCode == RESULT_OK && data != null) {
+            String url = data.getStringExtra("filePath");
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", RECORD_VIDEO);
+            bundle.putString("sendType", "video");
+            bundle.putString("videoPath", url);
+            bundle.putString("classType", "SchoolHometownActivity");
+            bundle.putString("feedType", "2");
+            openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
         }
     }
 

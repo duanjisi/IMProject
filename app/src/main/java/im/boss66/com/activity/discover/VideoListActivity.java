@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.hyphenate.util.DateUtils;
 import com.hyphenate.util.TextFormater;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;

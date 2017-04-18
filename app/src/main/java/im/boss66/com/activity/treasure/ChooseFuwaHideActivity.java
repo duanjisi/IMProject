@@ -59,6 +59,7 @@ import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.discover.VideoListActivity;
 import im.boss66.com.adapter.ChooseFuwaHideAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BaseResult;
@@ -66,11 +67,12 @@ import im.boss66.com.entity.FuwaDetailEntity;
 import im.boss66.com.entity.FuwaEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
+import im.boss66.com.widget.ActionSheet;
 
 /**
  * 选择福娃
  */
-public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClickListener {
+public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener {
 
     private TextView tv_back;
     private RecyclerView rv_content;
@@ -108,6 +110,8 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
     private File videoFile;
     private String[] popTime;
     private int validtime = 1;
+    private int cameraType;
+    private final int READ_VIDEO = 4;//本地视频
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -299,7 +303,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
                 showTimeChoosePop();
                 break;
             case R.id.iv_video:
-                getPermission();
+                showActionSheet();
                 break;
             case R.id.tv_time_1:
                 validtime = 1;
@@ -316,6 +320,9 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
             case R.id.tv_time_4:
                 validtime = 4;
                 setPopTime(validtime);
+                break;
+            case R.id.fl_video_dialog_img:
+                showActionSheet();
                 break;
         }
     }
@@ -378,7 +385,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
             iv_video = (ImageView) view.findViewById(R.id.iv_video);
             iv_video_img = (ImageView) view.findViewById(R.id.iv_video_img);
             fl_video_dialog_img = (FrameLayout) view.findViewById(R.id.fl_video_dialog_img);
-
+            fl_video_dialog_img.setOnClickListener(this);
             rl_time.setOnClickListener(this);
             iv_video.setOnClickListener(this);
 
@@ -526,7 +533,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
         tv_from = (TextView) view.findViewById(R.id.tv_from);
         tv_catch = (TextView) view.findViewById(R.id.tv_catch);
         String fuwa_id = fuwaItem.getId();
-        if (!TextUtils.isEmpty(fuwa_id)){
+        if (!TextUtils.isEmpty(fuwa_id)) {
             tv_number.setText(fuwa_id);
         }
         tv_fuwa_num.setText(fuwa_id + "号福娃");
@@ -593,11 +600,13 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void onRequestPermissionSuccess() {
-                Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                //mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-//                mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
-                mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 20 * 1024 * 1024L);
-                startActivityForResult(mIntent, RECORD_VIDEO);
+                if (cameraType == READ_VIDEO) {
+                    openActvityForResult(VideoListActivity.class, READ_VIDEO);
+                } else if (cameraType == RECORD_VIDEO) {
+                    Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                    mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 20 * 1024 * 1024L);
+                    startActivityForResult(mIntent, RECORD_VIDEO);
+                }
             }
 
             @Override
@@ -605,11 +614,19 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
                 ToastUtil.showShort(ChooseFuwaHideActivity.this, getString(R.string.giving_camera2_permissions));
             }
         };
-        PermissionUtil
-                .with(this)
-                .permissions(
-                        PermissionUtil.PERMISSIONS_GROUP_CAMERA //相机权限
-                ).request(permissionListener);
+        if (cameraType == READ_VIDEO) {
+            PermissionUtil
+                    .with(this)
+                    .permissions(
+                            PermissionUtil.PERMISSIONS_SD_READ_WRITE //相机权限
+                    ).request(permissionListener);
+        } else {
+            PermissionUtil
+                    .with(this)
+                    .permissions(
+                            PermissionUtil.PERMISSIONS_GROUP_CAMERA //相机权限
+                    ).request(permissionListener);
+        }
     }
 
     @Override
@@ -671,21 +688,55 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
                 }
                 fis.close();
                 fos.close();
-                if (videoFile != null) {
-                    MediaMetadataRetriever media = new MediaMetadataRetriever();
-                    media.setDataSource(videoFile.getAbsolutePath());
-                    Bitmap videoBitmap = media.getFrameAtTime();
-                    if (videoBitmap != null && iv_video_img != null) {
-                        fl_video_dialog_img.setVisibility(View.VISIBLE);
-                        iv_video.setVisibility(View.GONE);
-                        iv_video_img.setImageBitmap(videoBitmap);
-//                        Glide.with(this).load(videoBitmap).into(iv_video_img);
-                    }
-                    media.release();
-                }
+                showVideo();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (requestCode == READ_VIDEO && resultCode == RESULT_OK && data != null) {
+            String url = data.getStringExtra("filePath");
+            videoFile = new File(url);
+            showVideo();
+        }
+    }
+
+    private void showActionSheet() {
+        ActionSheet actionSheet = new ActionSheet(this)
+                .builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true);
+        actionSheet.addSheetItem(getString(R.string.small_video), ActionSheet.SheetItemColor.Black, this)
+                .addSheetItem(getString(R.string.local_small_video), ActionSheet.SheetItemColor.Black,
+                        this);
+
+        actionSheet.show();
+    }
+
+    @Override
+    public void onClick(int which) {
+        switch (which) {
+            case 1:
+                cameraType = RECORD_VIDEO;
+                getPermission();
+                break;
+            case 2:
+                cameraType = READ_VIDEO;
+                getPermission();
+                break;
+        }
+    }
+
+    private void showVideo() {
+        if (videoFile != null) {
+            MediaMetadataRetriever media = new MediaMetadataRetriever();
+            media.setDataSource(videoFile.getAbsolutePath());
+            Bitmap videoBitmap = media.getFrameAtTime();
+            if (videoBitmap != null && iv_video_img != null) {
+                fl_video_dialog_img.setVisibility(View.VISIBLE);
+                iv_video.setVisibility(View.GONE);
+                iv_video_img.setImageBitmap(videoBitmap);
+//                        Glide.with(this).load(videoBitmap).into(iv_video_img);
+            }
+            media.release();
         }
     }
 

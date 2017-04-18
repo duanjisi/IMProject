@@ -144,7 +144,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     private ImageView iv_bg;
     private AccountEntity sAccount;
     private long[] mHits;
-    private final int READ_VIDEO = 4;//视频
+    private final int READ_VIDEO = 4;//本地视频
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
