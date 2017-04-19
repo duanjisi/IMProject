@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -111,6 +112,7 @@ import im.boss66.com.fragment.FaceLoveFragment;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.services.ChatServices;
+import im.boss66.com.util.Utils;
 import im.boss66.com.widget.InputDetector;
 import im.boss66.com.xlistview.MsgListView;
 
@@ -224,6 +226,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private float mImageHeight;
     private ImageView ivTips;
     private InputDetector mDetector;
+    private Uri imageUri;
     /**
      * 接收到数据，用来更新listView
      */
@@ -840,8 +843,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private String photoPath = "";
-    private String savePath = Environment.getExternalStorageDirectory() + "/myimage/";
-
+    //private String savePath = Environment.getExternalStorageDirectory() + "/myimage/";
+    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
     private void takePhoto() {
 //        String status = Environment.getExternalStorageState();
 //        // 检测手机是否有sd卡
@@ -880,11 +883,19 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 startActivityForResult(intent, Code.Request.TAKE_PHOTO);
             }
         } else {
+//            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            String imageName = System.currentTimeMillis() + ".jpg";
+//            File file = new File(savePath, imageName);
+//            Uri imageUri = FileProvider.getUriForFile(ChatActivity.this, "im.boss66.com.fileProvider", file);//这里进行替换uri的获得方式
+//            photoPath = imageUri.toString();
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//这里加入flag
+//            startActivityForResult(intent, Code.Request.TAKE_PHOTO);
+
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             String imageName = System.currentTimeMillis() + ".jpg";
             File file = new File(savePath, imageName);
-            Uri imageUri = FileProvider.getUriForFile(ChatActivity.this, "im.boss66.com.fileProvider", file);//这里进行替换uri的获得方式
-            photoPath = imageUri.toString();
+            imageUri = FileProvider.getUriForFile(ChatActivity.this, "im.boss66.com.fileProvider", file);//这里进行替换uri的获得方式
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//这里加入flag
             startActivityForResult(intent, Code.Request.TAKE_PHOTO);
@@ -1423,7 +1434,19 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             }
         } else if (requestCode == Code.Request.TAKE_PHOTO) {
             Log.i("info", "=====photoPath:" + photoPath);
+            if (Build.VERSION.SDK_INT < 24) {
+                photoPath = Utils.getPath(this, imageUri);
+            } else {
+                photoPath = imageUri.toString();
+            }
             if (photoPath != null && !photoPath.equals("")) {
+                if(Build.VERSION.SDK_INT >= 24 && photoPath.contains("im.boss66.com.fileProvider") &&
+                        photoPath.contains("/IMProject/")){
+                    String[] arr = photoPath.split("/IMProject/");
+                    if (arr != null && arr.length >1){
+                        photoPath = savePath + arr[1];
+                    }
+                }
                 uploadImageAudioFile(photoPath, true, 0);
             }
         } else if (requestCode == 0) {
@@ -1806,7 +1829,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     break;
                 case R.drawable.hp_ch_camera:
 //                    takePhoto();
-                    getPermission(PermissionUtil.PERMISSIONS_CHAT_CAMERA, OPEN_CAMERA);
+                    getPermission(PermissionUtil.PERMISSIONS_GROUP_CAMERA, OPEN_CAMERA);
                     break;
                 case R.drawable.hp_ch_video:
 //                    Intent intent = new Intent(context, ImageGridActivity.class);
@@ -2266,6 +2289,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
+    }
 //    @Override
 //    public void update(Observable observable, Object o) {
 //        SessionInfo sin = (SessionInfo) o;

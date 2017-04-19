@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import im.boss66.com.R;
@@ -41,6 +42,7 @@ public class AutoUpdateUtil {
                                     int paramInt) {
                                 paramDialogInterface.dismiss();
                                 Intent intent = new Intent();
+                                Log.i("info", "==================updateUrl:" + updateUrl);
                                 intent.putExtra("url", updateUrl);
                                 intent.setClass(context, UpdateService.class);
                                 context.startService(intent);
