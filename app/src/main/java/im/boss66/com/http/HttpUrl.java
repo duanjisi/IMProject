@@ -175,7 +175,7 @@ public class HttpUrl {
     public static final String CLEAR_CIRCLE_MSG_LIST = MAIN_URL + "api/v1/message/flushall";
     //获取最新朋友圈消息通知
     public static final String GET_CIRCLE_NEWEST_MSG = MAIN_URL + "api/v1/message/getnewest";
-    //获取获取帖子列表
+    //获取帖子列表
     public static final String GET_COMMUNITY_LIST = MAIN_URL + "api/v1/contactsfeed";
     //删除帖子
     public static final String DELETE_COMMUNITY = MAIN_URL + "api/v1/contactsfeed/delete";
@@ -294,5 +294,21 @@ public class HttpUrl {
     public static final String EDIT_CLAN= MAIN_URL+"api/v1/clan/update";
     //修改商会
     public static final String EDIT_COFC= MAIN_URL+"api/v1/cofc/update";
+    //验证福娃
+    public static final String SCAN_CODE = BASE_FUWA[FUWA_TAG]+"api/award";
+    //宗亲名人列表
+    public static final String CLAN_PERSON_LIST = MAIN_URL+"api/v1/clan/getcelebrity";
+    //商会名人列表
+    public static final String COFC_PERSON_LIST= MAIN_URL+"api/v1/cofc/getcelebrity";
+    //添加宗亲名人
+    public static final String ADD_CLAN_PERSON = MAIN_URL+"api/v1/clan/addcelebrity";
+    //添加商会名人
+    public static final String ADD_COFC_PERSON = MAIN_URL+"api/v1/cofc/addcelebrity";
+    //宗亲名人web
+    public static final String CLAN_PERSON_WEB =MAIN_URL+"web/clan/celebrity";
+    //商会名人web
+    public static final String COFC_PERSON_WEB = MAIN_URL+"web/cofc/celebrity";
+
+
 
 }

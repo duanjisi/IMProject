@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
@@ -67,6 +68,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
     private boolean fromEditClanClub;
     private String main;
     private String imgurl;    //宗亲商会的背景图或者logo
+    private boolean fromEditPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,12 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                     isClan = bundle.getBoolean("isClan", false);
                     id = bundle.getString("id");
                 }
+                //从名人编辑页跳过来
+                fromEditPerson = bundle.getBoolean("fromEditPerson", false);
+                if(fromEditPerson){
+                    isClan = bundle.getBoolean("isClan", false);
+                    id = bundle.getString("id");
+                }
 
 
             }
@@ -98,7 +106,8 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
 
     private void initView() {
         access_token = App.getInstance().getAccount().getAccess_token();
-        mOutputPath = new File(getExternalCacheDir(), "chosen.jpg").getPath();
+        String imgName = System.currentTimeMillis()+".jpg";
+        mOutputPath = new File(getExternalCacheDir(), imgName).getPath();
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_photo_album = (TextView) findViewById(R.id.tv_photo_album);
@@ -133,9 +142,17 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
             upLoadClanCofcImage(path);
             return;
         }
-        //更换logo
+        //更换宗亲商会logo
         if (fromEditClanClub) {
             upLoadClanCofcImage(path);
+            return;
+        }
+        //更换名人头像
+        if(fromEditPerson){
+            Intent intent = new Intent();
+            intent.putExtra("imgUrl",path);
+            setResult(RESULT_OK,intent);
+            finish();
             return;
         }
 
@@ -261,7 +278,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                         }
                     }
                 } catch (JSONException e) {
-                    ToastUtil.showShort(context, "上传失败");
+                    ToastUtil.showShort(context, "更改失败");
                 }
             }
 
@@ -272,7 +289,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                     goLogin();
                 } else {
                     cancelLoadingDialog();
-                    showToast("上传失败", false);
+                    showToast("更改失败", false);
                 }
             }
         });

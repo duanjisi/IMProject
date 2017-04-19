@@ -39,6 +39,33 @@ public class FuwaEntity {
 
         private String gid;
         private String id;
+        private boolean awarded;
+        private String pos;
+        private String creator;
+
+        public boolean isAwarded() {
+            return awarded;
+        }
+
+        public void setAwarded(boolean awarded) {
+            this.awarded = awarded;
+        }
+
+        public String getPos() {
+            return pos;
+        }
+
+        public void setPos(String pos) {
+            this.pos = pos;
+        }
+
+        public String getCreator() {
+            return creator;
+        }
+
+        public void setCreator(String creator) {
+            this.creator = creator;
+        }
 
         public int getNum() {
             return num;
@@ -52,12 +79,23 @@ public class FuwaEntity {
             return idList;
         }
 
+        private List<FuwaDetail> fuwas = new ArrayList<>();
+
+        public List<FuwaDetail> getFuwas() {
+            return fuwas;
+        }
+
+        public void setFuwas(List<FuwaDetail> fuwas) {
+            this.fuwas = fuwas;
+        }
+
         public void setIdList(List<String> idList) {
             this.idList = idList;
         }
 
         private int num;
         private List<String> idList = new ArrayList<>();
+
 
         public boolean isSel() {
             return isSel;
@@ -69,4 +107,21 @@ public class FuwaEntity {
 
         private boolean isSel = false;
     }
+    public static  class FuwaDetail{
+        public FuwaDetail(String gid, String id, boolean awarded, String pos, String creator) {
+            this.gid = gid;
+            this.id = id;
+            this.awarded = awarded;
+            this.pos = pos;
+            this.creator = creator;
+        }
+
+        public String gid;
+        public String id;
+        public boolean awarded;
+        public String pos;
+        public String creator;
+
+    }
+
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+
 import im.boss66.com.fragment.ImageGridFragment;
 
 public class ImageGridActivity extends FragmentActivity {
@@ -20,7 +21,6 @@ public class ImageGridActivity extends FragmentActivity {
             ft.commit();
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -111,7 +111,8 @@
     <string name="only_look_at_the_boy">只看男生</string>
     <string name="see_all">查看全部</string>
     <string name="friend_circle">朋友圈</string>
-    <string name="small_video">小视频</string>
+    <string name="small_video">拍小视频</string>
+    <string name="local_small_video">本地小视频</string>
     <string name="take_photos">拍照</string>
     <string name="from_the_mobile_phone_photo_album_choice">从手机相册选择</string>
     <string name="replace_the_album_cover">更换相册封面</string>

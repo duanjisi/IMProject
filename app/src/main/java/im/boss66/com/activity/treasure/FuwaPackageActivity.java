@@ -2,6 +2,7 @@ package im.boss66.com.activity.treasure;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -35,6 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.amap.api.maps2d.model.Text;
 import com.bumptech.glide.Glide;
 import com.google.zxing.WriterException;
 import com.lidroid.xutils.HttpUtils;
@@ -53,7 +55,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.WeakHashMap;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
@@ -88,8 +92,13 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
     private List<FuwaEntity.Data> fuwaList = new ArrayList<>();
 
+
     private int choosePosition;     //福娃列表的选中位置
     private long time1 = 0L; //防止快速点击
+
+    private boolean dialog_show  = false;
+
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -98,8 +107,15 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                 case 1:
 
                     break;
-                case 2:
-                    setContent();
+                case 2:  //刷新当前vp页面数据
+                    boolean old_awarded = fuwas.get(vp_position).awarded;
+                    Log.i("liwya","old_awarded"+old_awarded);
+                    Log.i("liwya","new_awarded"+new_awarded);
+                    if(new_awarded!=old_awarded){
+                        fuwas.get(vp_position).awarded=new_awarded;
+                        viewAdapter.setDatas(fuwas);
+                    }
+
                     break;
                 case 3:
                     showToast("出售成功", false);
@@ -126,6 +142,11 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                         }
                     }, 300);
                     break;
+                case 5:
+                    initFuwaDetail(fuwa_gid);     //刷新当前页面view
+                    if(dialog_show){
+                        handler.sendEmptyMessageDelayed(5,3000);
+                    }
 
             }
         }
@@ -137,12 +158,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     private List<String> gidList;
 
     private boolean first = true;  //第一次进页面存储福娃gid list
-    private TextView tv_fuwa_num;
-    private TextView tv_from;
-    private TextView tv_catch;
-    private View view1;
     private int vp_position =0;
-    private List<View> views=new ArrayList<>();
     private ViewPager vp_fuwa;
 
     private long time11 = 0; //出售防快速点击
@@ -158,13 +174,16 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     private ImageView award;   //已兑奖
     private ImageView img_fuwa;  //福娃图片
     private ImageView img_cancle;
+    private  ViewAdapter viewAdapter;
+    private boolean new_awarded;
+    private List<FuwaDetail> fuwas;     //vp的数据list
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fuwa_package);
-        EventBus.getDefault().register(this);
         initViews();
+
         initData();
     }
 
@@ -204,10 +223,13 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             for (FuwaEntity.Data bills : fuwaList) {
                 if (bills.getId().equals(bill.getId())) {
                     List<String> list = bills.getIdList();
+                    List<FuwaDetail> fuwas = bills.getFuwas();
                     String id = bill.getGid();
                     if (!TextUtils.isEmpty(id) && !list.contains(id)) {
                         list.add(id);
+                        fuwas.add(new FuwaDetail(bill.getGid(),bill.getId(),bill.isAwarded(),bill.getPos(),bill.getCreator()));
                         bills.setIdList(list);
+                        bills.setFuwas(fuwas);
                     }
                     int num = bills.getNum();
                     num += bill.getNum();
@@ -218,13 +240,20 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             if (!state) {
                 List<String> list = bill.getIdList();
                 String id = bill.getGid();
+                List<FuwaDetail> fuwas = bill.getFuwas();
                 if (!TextUtils.isEmpty(id) && !list.contains(id)) {
                     list.add(id);
+                    fuwas.add(new FuwaDetail(bill.getGid(),bill.getId(),bill.isAwarded(),bill.getPos(),bill.getCreator()));
                     bill.setIdList(list);
+                    bill.setFuwas(fuwas);
                 }
                 fuwaList.add(bill);
             }
         }
+
+
+
+
         if (first) {
             gidList = new ArrayList<>();
             first = false;
@@ -232,8 +261,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                 List<String> idList = fuwaList.get(i).getIdList();
                 gidList.addAll(idList);
             }
-
-
         }
 
 
@@ -275,6 +302,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
 
     private void initViews() {
+
         findViewById(R.id.tv_headlift_view).setOnClickListener(this);
         rcv_fuwalist = (RecyclerView) findViewById(R.id.rcv_fuwalist);
         rcv_fuwalist.setLayoutManager(new GridLayoutManager(this, 3));
@@ -292,7 +320,6 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                     vp_position=0; //点击后给vp_position设为0
                     if(fuwaList.get(choosePosition).getIdList()!=null&&fuwaList.get(choosePosition).getIdList().size()>0){
                         if(dialog==null){
-
                             showFuwaDialog(context);
                         }else if(!dialog.isShowing()){
                             setVp();
@@ -325,6 +352,8 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                 String res = responseInfo.result;
                 if (!TextUtils.isEmpty(res)) {
                     fuwaDetailEntity = JSON.parseObject(res, FuwaDetailEntity.class);
+                    new_awarded = fuwaDetailEntity.getData().isAwarded();
+
                     handler.obtainMessage(2).sendToTarget();
                 } else {
                     showToast(fuwaDetailEntity.getMessage(), false);
@@ -353,6 +382,12 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         dialog.setContentView(view);
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                dialog_show  =false; //如果vp dismiss
+            }
+        });
 
         tv_num = (TextView) view.findViewById(R.id.tv_num);
         tv_count = (TextView) view.findViewById(R.id.tv_count);
@@ -361,6 +396,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         img_right = (ImageView) view.findViewById(R.id.img_right);
 
         vp_fuwa = (ViewPager) view.findViewById(R.id.vp_fuwa);
+
 
         setVp();
 
@@ -444,9 +480,10 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
 
                 vp_position = position;        //选中后
-                fuwa_gid = fuwaList.get(choosePosition).getIdList().get(position);
-                initFuwaDetail(fuwa_gid);
 
+                fuwa_gid = fuwaList.get(choosePosition).getFuwas().get(vp_position).gid;
+//                fuwa_id = fuwaList.get(choosePosition).getFuwas().get(vp_position).id; //滑动之后福娃id没变化
+                Log.i("liwya",fuwa_gid);
 
             }
 
@@ -478,7 +515,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
     //设置vp
     private void setVp() {
-        views.clear();   //清空views
+
         //页数
         count = fuwaList.get(choosePosition).getIdList().size();
         //初始化vp下面的数字和左右icon
@@ -494,37 +531,47 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             tv_count.setText("/1");
         }
 
+        fuwas = fuwaList.get(choosePosition).getFuwas();
+
+        viewAdapter = new ViewAdapter(fuwas,context);
+
+        vp_fuwa.setAdapter(viewAdapter);
+
+        fuwa_gid = fuwaList.get(choosePosition).getGid();
+        fuwa_id = fuwaList.get(choosePosition).getId();     //设置vp的时候，要拿到fuwaid。用来出售
 
 
-        //初始化vp的view
-        for (int i = 0; i < fuwaList.get(choosePosition).getIdList().size(); i++) {
-            view1 = LayoutInflater.from(context).inflate(R.layout.item_fuwa_vp, null);
-            views.add(view1);
-        }
-
-
-
-        //给第一个view初始化数据
-        if(fuwaList.get(choosePosition).getIdList()!=null&&fuwaList.get(choosePosition).getIdList().size()>0){
-            fuwa_gid = fuwaList.get(choosePosition).getIdList().get(0); //首页的gid
-            initFuwaDetail(fuwa_gid);
-        }
-
-        vp_fuwa.setAdapter(new ViewAdapter(views));
-
+        //vp打开后，循环请求接口.
+        dialog_show=true; //显示
+//        initFuwaDetail(fuwa_gid); 不用一进来就请求
+        handler.sendEmptyMessageDelayed(5,3000);
     }
 
     class ViewAdapter extends PagerAdapter {
-        private List<View> viewList;//数据源
+        private List<FuwaDetail> datas;
+        private LinkedList<View> mViewCache = null;
+        private Context context;
+        private LayoutInflater mLayoutInflater = null;
 
-        public ViewAdapter(List<View> viewList) {
-            this.viewList = viewList;
+
+
+
+        public ViewAdapter(List<FuwaDetail> datas,Context context){
+            this.datas = datas;
+            this.context = context ;
+            this.mLayoutInflater = LayoutInflater.from(context) ;
+            this.mViewCache = new LinkedList<>();
         }
+        public void setDatas(List<FuwaDetail> datas){
+            this.datas = datas;
+            notifyDataSetChanged();
+        }
+
+
 
         @Override
         public int getCount() {
-
-            return viewList.size();
+            return datas!=null?datas.size():0;
         }
 
         @Override
@@ -534,63 +581,77 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            if (position < viewList.size()) {      //防止vp重新初始化越界崩溃
-                container.removeView(viewList.get(position));
+            if (position < datas.size()) {      //防止vp重新初始化越界崩溃
+                View contentView = (View) object;
+                container.removeView(contentView);
+                this.mViewCache.add(contentView);
             }
         }
 
         @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+//        @Override
+//        public int getItemPosition(Object object) {
+//            return super.getItemPosition(object);
+//        }
+
+        @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            if (position < viewList.size()) {
-                container.addView(viewList.get(position));//千万别忘记添加到container
-                return viewList.get(position);
+            if (position < datas.size()) {
+
+                View convertView = null;
+                ViewHolder viewHolder = null;
+                if(mViewCache.size()==0){
+                    convertView =this.mLayoutInflater.inflate(R.layout.item_fuwa_vp,null,false);
+                    TextView tv_fuwa_num = (TextView) convertView.findViewById(R.id.tv_fuwa_num);
+                    TextView tv_from = (TextView) convertView.findViewById(R.id.tv_from);
+                    TextView tv_catch = (TextView) convertView.findViewById(R.id.tv_catch);
+                    ImageView img_fuwa = (ImageView) convertView.findViewById(R.id.img_fuwa);
+                    ImageView award = (ImageView) convertView.findViewById(R.id.award);
+
+                    viewHolder= new ViewHolder();
+                    viewHolder.tv_fuwa_num = tv_fuwa_num;
+                    viewHolder.tv_from = tv_from;
+                    viewHolder.tv_catch = tv_catch;
+                    viewHolder.img_fuwa = img_fuwa;
+                    viewHolder.award = award;
+
+                    convertView.setTag(viewHolder);
+
+                }else{
+                    convertView = mViewCache.removeFirst();
+                    viewHolder = (ViewHolder) convertView.getTag();
+                }
+
+                if(datas.get(position).awarded){
+                    viewHolder.award.setVisibility(View.VISIBLE);
+                }
+                viewHolder.tv_fuwa_num.setText(datas.get(position).id + "号福娃");
+                viewHolder.tv_from.setText("来源于:" + datas.get(position).creator);
+                viewHolder.tv_catch.setText("捕获于：" + datas.get(position).pos);
+                String uri = " fuwa:fuwa:"+datas.get(position).gid;
+                MakeQRCodeUtil.createQRImage(uri, 800, 800, viewHolder.img_fuwa);  //值取大一些，xml里做了限制
+
+                container.addView(convertView ,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT );
+
+                return convertView;
             }
             return null;
         }
-    }
-
-    private void setContent() {
-
-        fuwa_id = fuwaList.get(choosePosition).getId(); //通过点击的位置，拿到id
-
-        View view = views.get(vp_position);    //通过vp位置拿到view
-
-        tv_fuwa_num = (TextView) view.findViewById(R.id.tv_fuwa_num);
-        tv_from = (TextView) view.findViewById(R.id.tv_from);
-        tv_catch = (TextView) view.findViewById(R.id.tv_catch);
-
-        award = (ImageView) view.findViewById(R.id.award); //福娃图片
-        img_fuwa = (ImageView) view.findViewById(R.id.img_fuwa); //福娃图片
 
 
-        if(fuwaDetailEntity.getData().isAwarded()){
-
-            award.setVisibility(View.VISIBLE);
+        public final class ViewHolder{
+            public TextView tv_fuwa_num ;
+            public TextView tv_from ;
+            public TextView tv_catch ;
+            private ImageView img_fuwa;
+            private ImageView award;
         }
-
-        //生成二维码耗时，感觉还是要写个查询接口，然后使用vp的复用。
-        MakeQRCodeUtil.createQRImage(fuwa_gid, 800, 800, img_fuwa);  //值取大一些，xml里做了限制
-
-
-
-        //加上中间图片性能好差，滑动卡顿明显，而且扫不出来
-//        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.fuwabig);
-//        try {
-//            Bitmap bitmap1 = MakeQRCodeUtil.makeQRImage(bitmap, fuwa_gid, 800, 800);
-//
-//           img_fuwa.setImageBitmap(bitmap1);
-//
-//
-//        } catch (WriterException e) {
-//            e.printStackTrace();
-//        }
-
-
-        tv_fuwa_num.setText(fuwa_id + "号福娃");
-        tv_from.setText("来源于:" + fuwaDetailEntity.getData().getCreator());
-        tv_catch.setText("捕获于：" + fuwaDetailEntity.getData().getPos());
-
     }
+
 
     //出售福娃dialog
     private void showSellFuwaDialog(final Context context) {
@@ -708,6 +769,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                 //扫描
                 Intent intent = new Intent(context, CaptureActivity.class);
                 startActivity(intent);
+                startActivityForResult(intent,1);
             }
         });
 
@@ -838,14 +900,20 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onShowMessageEvent(FuwaGid fuwagid) {
-       et_price.setText(fuwagid.getGid());
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1&&resultCode==RESULT_OK){
+            String code = data.getStringExtra("code");
+            et_price.setText(code);
+
+        }
+
     }
 }

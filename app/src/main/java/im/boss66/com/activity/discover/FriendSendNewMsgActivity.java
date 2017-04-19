@@ -101,6 +101,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
     private boolean isSelectCanSee;
     private String classType, feedType, id_value;
     private int id_value_ext;
+    private final int READ_VIDEO = 6;//视频
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
