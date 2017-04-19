@@ -8,38 +8,71 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_copy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/em_context_menu_item_bg"
-        android:clickable="true"
-        android:gravity="center"
-        android:onClick="copy"
-        android:padding="10dp"
+        android:background="@drawable/actionsheet_bottom_selector"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_22"
         android:text="@string/copy"
         android:textColor="@android:color/black"
-        android:textSize="20sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray" />
+        android:textSize="18sp"
+        android:visibility="gone" />
 
     <TextView
+        android:id="@+id/tv_rewarding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/em_context_menu_item_bg"
-        android:clickable="true"
-        android:gravity="center"
-        android:onClick="rewarding"
-        android:padding="10dp"
+        android:background="@drawable/actionsheet_bottom_selector"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_22"
         android:text="@string/rewarding"
         android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:visibility="gone" />
+        android:textSize="18sp" />
 
-    <View
+    <TextView
+        android:id="@+id/tv_delete"
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray"
-        android:visibility="gone" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/actionsheet_bottom_selector"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_22"
+        android:text="@string/delete"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@drawable/actionsheet_bottom_selector"-->
+    <!--android:clickable="true"-->
+    <!--android:gravity="center"-->
+    <!--android:onClick="copy"-->
+    <!--android:padding="10dp"-->
+    <!--android:text="@string/copy"-->
+    <!--android:textColor="@android:color/black"-->
+    <!--android:textSize="20sp" />-->
+
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="1px"-->
+    <!--android:background="@android:color/darker_gray" />-->
+
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@drawable/em_context_menu_item_bg"-->
+    <!--android:clickable="true"-->
+    <!--android:gravity="center"-->
+    <!--android:onClick="rewarding"-->
+    <!--android:padding="10dp"-->
+    <!--android:text="@string/rewarding"-->
+    <!--android:textColor="@android:color/black"-->
+    <!--android:textSize="20sp"-->
+    <!--android:visibility="visible" />-->
+
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="1px"-->
+    <!--android:background="@android:color/darker_gray"-->
+    <!--android:visibility="gone" />-->
 </LinearLayout>

@@ -18,6 +18,7 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.GroupMemAdapter;
+import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.BaseGrpMember;
 import im.boss66.com.entity.GroupEntity;
 import im.boss66.com.http.BaseModelRequest;
@@ -34,6 +35,7 @@ public class GroupChatActivity extends BaseActivity implements View.OnClickListe
     private ListView listView;
     private GroupMemAdapter adapter;
     private String userid;
+    private boolean isWarding = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,10 @@ public class GroupChatActivity extends BaseActivity implements View.OnClickListe
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvTips = (TextView) findViewById(R.id.tv_tips);
         listView = (ListView) findViewById(R.id.listView);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            isWarding = bundle.getBoolean("forwarding", false);
+        }
         tvBack.setOnClickListener(this);
         mLocalBroadcastReceiver = new LocalBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
@@ -116,12 +122,26 @@ public class GroupChatActivity extends BaseActivity implements View.OnClickListe
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             GroupEntity groupEntity = (GroupEntity) adapterView.getItemAtPosition(i);
             if (groupEntity != null) {
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra("isgroup", true);
-                intent.putExtra("toUid", groupEntity.getGroupid());
-                intent.putExtra("title", groupEntity.getName());
-                intent.putExtra("toAvatar", groupEntity.getSnap());
-                startActivity(intent);
+                if (isWarding) {
+                    EaseUser easeUser = new EaseUser();
+                    easeUser.setMsgType("group");
+                    easeUser.setAvatar(groupEntity.getSnap());
+                    easeUser.setInitialLetter("");
+                    easeUser.setNick(groupEntity.getName());
+                    easeUser.setUserName(groupEntity.getName());
+                    easeUser.setUserid(groupEntity.getGroupid());
+                    Intent intent = new Intent();
+                    intent.putExtra("user", easeUser);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(context, ChatActivity.class);
+                    intent.putExtra("isgroup", true);
+                    intent.putExtra("toUid", groupEntity.getGroupid());
+                    intent.putExtra("title", groupEntity.getName());
+                    intent.putExtra("toAvatar", groupEntity.getSnap());
+                    startActivity(intent);
+                }
             }
         }
     }

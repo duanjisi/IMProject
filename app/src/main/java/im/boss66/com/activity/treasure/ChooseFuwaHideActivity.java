@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -51,6 +52,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import im.boss66.com.App;
@@ -416,7 +418,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
             int sceenW = UIUtils.getScreenWidth(context);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) vp_fuwa.getLayoutParams();
             params.width = sceenW / 5 * 3;
-            params.height = sceenW / 5 * 2;
+            params.height = (int) (sceenW / 5 * 2.2);
             vp_fuwa.setLayoutParams(params);
             iv_left = (ImageView) view.findViewById(R.id.iv_left);
             iv_right = (ImageView) view.findViewById(R.id.iv_right);
@@ -727,16 +729,41 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
 
     private void showVideo() {
         if (videoFile != null) {
-            MediaMetadataRetriever media = new MediaMetadataRetriever();
-            media.setDataSource(videoFile.getAbsolutePath());
-            Bitmap videoBitmap = media.getFrameAtTime();
-            if (videoBitmap != null && iv_video_img != null) {
-                fl_video_dialog_img.setVisibility(View.VISIBLE);
-                iv_video.setVisibility(View.GONE);
-                iv_video_img.setImageBitmap(videoBitmap);
-//                        Glide.with(this).load(videoBitmap).into(iv_video_img);
+            String url = videoFile.getAbsolutePath();
+            //MediaMetadataRetriever media = new MediaMetadataRetriever();
+            //media.setDataSource();
+//            Bitmap videoBitmap = media.getFrameAtTime();
+//            if (videoBitmap != null && iv_video_img != null) {
+//                fl_video_dialog_img.setVisibility(View.VISIBLE);
+//                iv_video.setVisibility(View.GONE);
+//                iv_video_img.setImageBitmap(videoBitmap);
+////                        Glide.with(this).load(videoBitmap).into(iv_video_img);
+//            }
+//            media.release();
+
+
+            MediaMetadataRetriever mediaMetadataRetriever = null;
+            try {
+                mediaMetadataRetriever = new MediaMetadataRetriever();
+//                if (Build.VERSION.SDK_INT >= 14)
+//                    mediaMetadataRetriever.setDataSource(url, new HashMap<String, String>());
+//                else
+//                    mediaMetadataRetriever.setDataSource(url);
+                mediaMetadataRetriever.setDataSource(url);
+                Bitmap videoBitmap = mediaMetadataRetriever.getFrameAtTime();
+                if (videoBitmap != null && iv_video_img != null) {
+                    fl_video_dialog_img.setVisibility(View.VISIBLE);
+                    iv_video.setVisibility(View.GONE);
+                    iv_video_img.setImageBitmap(videoBitmap);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (mediaMetadataRetriever != null) {
+                    mediaMetadataRetriever.release();
+                }
             }
-            media.release();
+
         }
     }
 

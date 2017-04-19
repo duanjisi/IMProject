@@ -29,7 +29,10 @@
         android:layout_alignTop="@+id/fl"
         android:layout_marginLeft="11dp"
         android:layout_marginTop="3dp"
+        android:layout_toLeftOf="@+id/rl_right"
         android:layout_toRightOf="@+id/fl"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:text="test_1"
         android:textColor="@color/black"
         android:textSize="16.5sp" />
@@ -45,7 +48,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:text="口浪尖四大皆空拉夫桑"
+        android:text="口浪尖四"
         android:textColor="@color/text_color_gray_6"
         android:textSize="15sp" />
 

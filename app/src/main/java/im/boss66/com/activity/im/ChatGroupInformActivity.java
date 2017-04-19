@@ -425,6 +425,9 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
                         String name = data.getStringExtra("data");
                         if (name != null && !name.equals("")) {
                             tvGroupName.setText(name);
+                            Intent it = new Intent(Constants.Action.REFRSH_CHAT_PAGER_NAME);
+                            it.putExtra("title", name);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(it);
                         }
                     }
                     break;

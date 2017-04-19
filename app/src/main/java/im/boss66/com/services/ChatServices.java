@@ -276,9 +276,9 @@ public class ChatServices extends Service implements Observer {
         } else {
             fromid = datas[1];
         }
-        mMsgDB.saveMsg(userid + "_" + fromid, item);// 保存数据库
+        MessageItem data = mMsgDB.saveMsg(userid + "_" + fromid, item);// 保存数据库
         for (int i = 0; i < callbacks.size(); i++)
-            ((receiveMessageCallback) callbacks.get(i)).onMessageReceive(item, fromid);
+            ((receiveMessageCallback) callbacks.get(i)).onMessageReceive(data, fromid);
     }
 
     private int getDuration(String url) {

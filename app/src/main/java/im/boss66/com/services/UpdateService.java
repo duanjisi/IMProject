@@ -16,6 +16,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -36,7 +37,6 @@ import java.io.InputStream;
 
 import im.boss66.com.Constants;
 import im.boss66.com.R;
-import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.activity.MainActivity;
 
 public class UpdateService extends Service {
@@ -131,16 +131,13 @@ public class UpdateService extends Service {
                                 "/haimeng/apk");
                         if (!rootFile.exists() && !rootFile.isDirectory())
                             rootFile.mkdirs();
-
                         tempFile = new File(
                                 Environment.getExternalStorageDirectory(),
-
                                 "/haimeng/apk/"
-                                        + url.substring(url.lastIndexOf("/") + 1));
+                                        + url.substring(url.lastIndexOf("/") + 1) + ".apk");
                         if (tempFile.exists())
                             tempFile.delete();
                         tempFile.createNewFile();
-
                         // 已读出流作为参数创建一个带有缓冲的输出流
                         BufferedInputStream bis = new BufferedInputStream(is);
 
@@ -201,9 +198,20 @@ public class UpdateService extends Service {
     private void installApk(File file, Context context) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file),
-                "application/vnd.android.package-archive");
+//        intent.setAction(Intent.ACTION_VIEW);
+//        intent.setDataAndType(Uri.fromFile(file),
+//                "application/vnd.android.package-archive");
+        if (Build.VERSION.SDK_INT >= 24) { //判读版本是否在7.0以上
+            //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
+            Uri apkUri =
+                    FileProvider.getUriForFile(context, "im.boss66.com.fileProvider", file);
+            //添加这一句表示对目标应用临时授权该Uri所代表的文件
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(Uri.fromFile(file),
+                    "application/vnd.android.package-archive");
+        }
         context.startActivity(intent);
     }
 
@@ -228,17 +236,15 @@ public class UpdateService extends Service {
                     case 1:
                         break;
                     case 2:
-
                         // 下载完成后清除所有下载信息，执行安装提示
                         download_precent = 0;
                         nm.cancel(notificationId);
                         installApk((File) msg.obj, context);
-
+                        Log.i("info", "==================apk文件已下载本地");
                         // 停止掉当前的服务
                         stopSelf();
                         break;
                     case 3:
-
                         // 更新状态栏上的下载进度信息
                         views.setTextViewText(R.id.tvProcess, "已下载"
                                 + download_precent + "%");

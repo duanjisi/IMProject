@@ -3,12 +3,14 @@ package im.boss66.com.db;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import im.boss66.com.entity.MessageItem;
+import im.boss66.com.util.Utils;
 
 
 /**
@@ -23,10 +25,10 @@ public class MessageDB {
                 null);
     }
 
-    public void saveMsg(String id, MessageItem entity) {
+    public MessageItem saveMsg(String id, MessageItem entity) {
         db.execSQL("CREATE table IF NOT EXISTS _"
                 + id
-                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT)");
+                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT,md5 TEXT)");
         int isCome = 0;
         if (entity.isComMeg()) {// 如果是收到的消息，保存在数据库的值为1
             isCome = 1;
@@ -34,23 +36,45 @@ public class MessageDB {
         db.execSQL(
                 "insert into _"
                         + id
-                        + " (messagetype,name,img,date,isCome,message,isNew,voiceTime,temp,nick,userid,avatar) values(?,?,?,?,?,?,?,?,?,?,?,?)",
+                        + " (messagetype,name,img,date,isCome,message,isNew,voiceTime,temp,nick,userid,avatar,md5) values(?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 new Object[]{entity.getMsgType(), entity.getName(),
                         entity.getHeadImg(), entity.getDate(), isCome,
                         entity.getMessage(), entity.getIsNew(),
                         entity.getVoiceTime(), entity.getTemp(), entity.getNick(),
-                        entity.getUserid(), entity.getAvatar()});
+                        entity.getUserid(), entity.getAvatar(), getMd5Str(entity)});
+
+//        Cursor cur = db.rawQuery("select last_insert_id() from " + "_" + id, null);
+        Cursor cur = db.rawQuery("SELECT * from _" + id
+                + " ORDER BY _id DESC LIMIT " + 1, null);
+        int msgid = -1;
+        if (cur.moveToFirst()) {
+            msgid = cur.getInt(cur.getColumnIndex("_id"));
+        }
+        entity.setMsgId("" + msgid);
+        cur.close();
+        return entity;
+    }
+
+
+    private String getMd5Str(MessageItem item) {
+        String md5 = Utils.getMd5(item.toString());
+        Log.i("info", "==============md5:" + md5);
+        return md5;
     }
 
     public List<MessageItem> getMsg(String id, int pager) {
         List<MessageItem> list = new LinkedList<MessageItem>();
         int num = 10 * (pager + 1);// 本来是准备做滚动到顶端自动加载数据
+//        db.execSQL("CREATE table IF NOT EXISTS _"
+//                + id
+//                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT)");
         db.execSQL("CREATE table IF NOT EXISTS _"
                 + id
-                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT)");
+                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT,md5 TEXT)");
         Cursor c = db.rawQuery("SELECT * from _" + id
                 + " ORDER BY _id DESC LIMIT " + num, null);
         while (c.moveToNext()) {
+            int _id = c.getInt(c.getColumnIndex("_id"));
             String name = c.getString(c.getColumnIndex("name"));
             int img = c.getInt(c.getColumnIndex("img"));
             long date = c.getLong(c.getColumnIndex("date"));
@@ -69,6 +93,7 @@ public class MessageDB {
             }
             MessageItem entity = new MessageItem(msgType, name, date, message,
                     img, isComMsg, isNew, voiceTime, temp, nick, userid, avatar);
+            entity.setMsgId("" + _id);
             list.add(entity);
         }
         c.close();
@@ -96,10 +121,61 @@ public class MessageDB {
     }
 
     public void clearMsgDatas(String id) {
+//        db.execSQL("CREATE table IF NOT EXISTS _"
+//                + id
+//                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER)");
         db.execSQL("CREATE table IF NOT EXISTS _"
                 + id
-                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER)");
+                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT,md5 TEXT)");
         db.execSQL("delete from " + "_" + id);
+    }
+
+    public void clearMsgItem(MessageItem item, String id) {
+//        db.execSQL("CREATE table IF NOT EXISTS _"
+//                + id
+//                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT)");
+        db.execSQL("CREATE table IF NOT EXISTS _"
+                + id
+                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT,md5 TEXT)");
+//        String sql = "delete from " + "_" + id + " where " + getWhere(item);
+        String sql = "delete from " + "_" + id + " where " + "_id=?";
+        Log.i("info", "==========sql:" + sql);
+//        String isCome = "0";
+//        if (item.isComMeg()) {
+//            isCome = "1";
+//        }
+//        String[] bindArgs = {item.getName(),
+//                "" + item.getMsgType(),
+//                "" + item.getHeadImg(),
+//                "" + item.getDate(),
+//                "" + isCome,
+//                "" + item.getMessage(),
+//                "" + item.getNick(),
+//                "" + item.getUserid(),
+//                "" + item.getAvatar()};
+        db.execSQL(sql, new String[]{item.getMsgId()});
+    }
+
+    private String getWhere(MessageItem item) {
+//        String where = "name=" + item.getName() + " and " +
+//                "messagetype=" + item.getMsgType() + " and " +
+//                "img=" + item.getHeadImg() + " and " +
+//                "date=" + item.getDate() + " and " +
+//                "isCome=" + item.isComMeg() + " and " +
+//                "message=" + item.getMessage() + " and " +
+//                "nick=" + item.getNick() + " and " +
+//                "userid=" + item.getUserid() + " and " +
+//                "avatar=" + item.getAvatar();
+        String where = "name=?" + " and " +
+                "messagetype=?" + " and " +
+                "img=?" + " and " +
+                "date=?" + " and " +
+                "isCome=?" + " and " +
+                "message=?" + " and " +
+                "nick=?" + " and " +
+                "userid=?" + " and " +
+                "avatar=?";
+        return where;
     }
 
     public void close() {

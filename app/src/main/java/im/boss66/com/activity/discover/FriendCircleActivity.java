@@ -579,17 +579,6 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                     path = Utils.getPath(this, imageUri);
                 } else {
                     path = imageUri.toString();
-//                    ContentResolver contentProvider = getContentResolver();
-//                    ParcelFileDescriptor mInputPFD;
-//                    try {
-//                        //获取contentProvider图片
-//                        mInputPFD = contentProvider.openFileDescriptor(imageUri, "r");
-//                        FileDescriptor fileDescriptor = mInputPFD.getFileDescriptor();
-//                        //mImageView.setImageBitmap(BitmapFactory.decodeFileDescriptor(fileDescriptor));
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-
                 }
                 Bundle bundle = new Bundle();
                 bundle.putString("sendType", "photo");

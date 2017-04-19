@@ -13,7 +13,6 @@
  */
 package im.boss66.com.domain;
 
-import com.hyphenate.chat.EMContact;
 
 public class EaseUser extends EMContact {
 
@@ -39,7 +38,7 @@ public class EaseUser extends EMContact {
     protected String request_status = "";
 
     protected String request_status_mess = "";
-
+    protected String msgType = "";
 
     public EaseUser() {
     }
@@ -134,6 +133,14 @@ public class EaseUser extends EMContact {
 
     public void setRequest_status_mess(String request_status_mess) {
         this.request_status_mess = request_status_mess;
+    }
+
+    public String getMsgType() {
+        return msgType;
+    }
+
+    public void setMsgType(String msgType) {
+        this.msgType = msgType;
     }
 
     public String getContactName() {

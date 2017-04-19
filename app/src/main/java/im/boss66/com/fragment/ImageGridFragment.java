@@ -182,6 +182,8 @@ public class ImageGridFragment extends Fragment implements OnItemClickListener {
 //            startActivityForResult(intent, 100);
             Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
             mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.5);
+//            mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
+            mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 20 * 1024 * 1024L);
             startActivityForResult(mIntent, RECORD_VIDEO);
         } else {
             VideoEntity vEntty = mList.get(position - 1);

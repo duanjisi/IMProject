@@ -1,12 +1,13 @@
 package im.boss66.com.domain;
 
 import android.os.Parcel;
-import android.os.Parcelable;
+
+import java.io.Serializable;
 
 /**
  * Created by Johnny on 2017/1/14.
  */
-public class EMContact implements Parcelable {
+public class EMContact implements Serializable {
     protected String username;
     protected String nick;
 

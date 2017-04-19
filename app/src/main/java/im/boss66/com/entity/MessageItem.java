@@ -31,11 +31,12 @@ public class MessageItem extends BaseData {
     private boolean isComMeg = true;// 是否为收到的消息
 
     private int isNew;
-    private int voiceTime;
+    private int voiceTime = 0;
     private String temp;//发送时间戳
     private String nick;
     private String userid;
     private String avatar;
+    private String msgId = "";
 
     public MessageItem() {
         // TODO Auto-generated constructor stub
@@ -189,5 +190,58 @@ public class MessageItem extends BaseData {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
+    }
+
+    //注意这里重写了equals方法
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        } else {
+            if (this.getClass() == obj.getClass()) {
+                MessageItem u = (MessageItem) obj;
+                if (this.getAvatar().equals(u.getAvatar()) &&
+                        this.getMessage().equals(u.getMessage()) &&
+                        this.getName().equals(u.getName()) &&
+                        this.getUserid().equals(u.getUserid()) &&
+                        this.getNick().equals(u.getNick()) &&
+                        this.getUserid().equals(u.getUserid()) &&
+                        this.getMsgType() == u.getMsgType() &&
+                        this.getDate() == u.getDate() &&
+                        this.getMsgType() == u.getMsgType()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "MessageItem{" +
+                "msgType=" + msgType +
+                ", name='" + name + '\'' +
+                ", time=" + time +
+                ", message='" + message + '\'' +
+                ", headImg=" + headImg +
+                ", isComMeg=" + isComMeg +
+                ", isNew=" + isNew +
+                ", voiceTime=" + voiceTime +
+                ", temp='" + temp + '\'' +
+                ", nick='" + nick + '\'' +
+                ", userid='" + userid + '\'' +
+                ", avatar='" + avatar + '\'' +
+                '}';
     }
 }

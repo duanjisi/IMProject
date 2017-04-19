@@ -195,6 +195,10 @@
         <activity
             android:name=".activity.book.SelectContactsActivity"
             android:screenOrientation="portrait"></activity>
+        <!--选择最近聊天成员-->
+        <activity
+            android:name=".activity.im.SelectConversationActivity"
+            android:screenOrientation="portrait"></activity>
         <!--手机联系人-->
         <activity
             android:name=".activity.book.PhoneContactsActivity"
@@ -603,6 +607,7 @@
         <service
             android:name=".services.UpdateService"
             android:enabled="true"></service>
+
         <service android:name="im.boss66.com.services.MyPushIntentService" />
 
         <service android:name="im.boss66.com.services.NotificationService"></service>

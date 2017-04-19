@@ -44,6 +44,7 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import im.boss66.com.App;
@@ -101,7 +102,6 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
     private boolean isSelectCanSee;
     private String classType, feedType, id_value;
     private int id_value_ext;
-    private final int READ_VIDEO = 6;//视频
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,13 +222,32 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                             tv_title.setVisibility(View.GONE);
                             rl_video.setVisibility(View.VISIBLE);
                             videoPath = bundle.getString("videoPath");
-                            MediaMetadataRetriever media = new MediaMetadataRetriever();
-                            media.setDataSource(videoPath);
-                            Bitmap bitmap = media.getFrameAtTime();
-                            if (bitmap != null) {
-                                iv_video_bg.setImageBitmap(bitmap);
+//                            MediaMetadataRetriever media = new MediaMetadataRetriever();
+//                            media.setDataSource(videoPath);
+//                            Bitmap bitmap = media.getFrameAtTime();
+//                            if (bitmap != null) {
+//                                iv_video_bg.setImageBitmap(bitmap);
+//                            }
+//                            media.release();
+                            MediaMetadataRetriever mediaMetadataRetriever = null;
+                            try {
+                                mediaMetadataRetriever = new MediaMetadataRetriever();
+//                                if (Build.VERSION.SDK_INT >= 14)
+//                                    mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
+//                                else
+//
+                                mediaMetadataRetriever.setDataSource(videoPath);
+                                Bitmap videoBitmap = mediaMetadataRetriever.getFrameAtTime();
+                                if (videoBitmap != null && iv_video_bg != null) {
+                                    iv_video_bg.setImageBitmap(videoBitmap);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                if (mediaMetadataRetriever != null) {
+                                    mediaMetadataRetriever.release();
+                                }
                             }
-                            media.release();
                         }
                     }
                 }
@@ -351,7 +370,6 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
             }
         }
         if (SEND_TYPE_PHOTO.equals(sendType) && imgList != null) {
-            int wid = UIUtils.getScreenWidth(this);
             for (int i = 0; i < imgList.size(); i++) {
                 String path = imgList.get(i);
                 if(Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
@@ -361,7 +379,8 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                         path = savePath + arr[1];
                     }
                 }
-                Bitmap bitmap = FileUtils.compressImageFromFile(path, wid);
+                int seenW = UIUtils.getScreenWidth(this);
+                Bitmap bitmap = FileUtils.compressImageFromFile(path, seenW);
                 if (bitmap != null) {
                     File file = FileUtils.compressImage(bitmap);
                     if (file != null) {
@@ -456,7 +475,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {    //打开相机
             if (imageUri != null) {
-                String path;
+                String path = null;
                 if (Build.VERSION.SDK_INT < 24) {
                     path = Utils.getPath(this, imageUri);
                 } else {
