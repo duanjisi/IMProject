@@ -307,6 +307,14 @@ public class HttpUrl {
     public static final String CLAN_PERSON_WEB =MAIN_URL+"web/clan/celebrity";
     //商会名人web
     public static final String COFC_PERSON_WEB = MAIN_URL+"web/cofc/celebrity";
+    //删除宗亲名人
+    public static final String DELETE_CLAN_PERSON = MAIN_URL+"api/v1/clan/delcelebrity";
+    //删除商会名人
+    public static final String DELETE_COFC_PERSON = MAIN_URL+"api/v1/cofc/delcelebrity";
+    //编辑宗亲名人
+    public static final String UPDATA_CLAN_PERSON = MAIN_URL+"api/v1/clan/updatecelebrity";
+    //编辑商会名人
+    public static final String UPDATA_COFC_PERSON = MAIN_URL+"api/v1/cofc/updatecelebrity";
 
 
 

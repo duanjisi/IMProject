@@ -43,6 +43,7 @@ import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.personage.ClipImageActivity;
 import im.boss66.com.config.LoginStatus;
 import im.boss66.com.entity.AlbumCoverEntity;
+import im.boss66.com.entity.BaseResult;
 import im.boss66.com.entity.EditClanCofcEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
@@ -93,7 +94,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                 }
                 //从名人编辑页跳过来
                 fromEditPerson = bundle.getBoolean("fromEditPerson", false);
-                if(fromEditPerson){
+                if (fromEditPerson) {
                     isClan = bundle.getBoolean("isClan", false);
                     id = bundle.getString("id");
                 }
@@ -106,7 +107,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
 
     private void initView() {
         access_token = App.getInstance().getAccount().getAccess_token();
-        String imgName = System.currentTimeMillis()+".jpg";
+        String imgName = System.currentTimeMillis() + ".jpg";
         mOutputPath = new File(getExternalCacheDir(), imgName).getPath();
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -148,10 +149,10 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
             return;
         }
         //更换名人头像
-        if(fromEditPerson){
+        if (fromEditPerson) {
             Intent intent = new Intent();
-            intent.putExtra("imgUrl",path);
-            setResult(RESULT_OK,intent);
+            intent.putExtra("imgUrl", path);
+            setResult(RESULT_OK, intent);
             finish();
             return;
         }
@@ -254,28 +255,28 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 try {
                     cancelLoadingDialog();
+                    BaseResult result1 = JSON.parseObject(responseInfo.result,BaseResult.class);
+                    if(result1.getCode()!=1){
+                        showToast("更改失败",false);
+                        return;
+                    }
                     EditClanCofcEntity entity = JSON.parseObject(responseInfo.result, EditClanCofcEntity.class);
                     if (entity != null) {
-                        if (entity.getStatus() == 401) {
-                            Intent intent = new Intent();
-                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                            App.getInstance().sendBroadcast(intent);
-                        } else {
-                            if (entity.getCode() == 1) {
-                                EditClanCofcEntity.ResultBean result = entity.getResult();
-                                ToastUtil.showShort(context, "更改成功");
-                                if(fromClanClub){
-                                    imgurl = result.getBanner();
-                                }else{
-                                    imgurl = result.getLogo();
-                                }
-                                Intent intent = new Intent();
-                                intent.putExtra("imgurl", imgurl);
-                                setResult(RESULT_OK, intent);
-                                finish();
+
+                        if (entity.getCode() == 1) {
+                            EditClanCofcEntity.ResultBean result = entity.getResult();
+                            ToastUtil.showShort(context, "更改成功");
+                            if (fromClanClub) {
+                                imgurl = result.getBanner();
                             } else {
-                                ToastUtil.showShort(context, "更改失败");
+                                imgurl = result.getLogo();
                             }
+                            Intent intent = new Intent();
+                            intent.putExtra("imgurl", imgurl);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        } else {
+                            ToastUtil.showShort(context, "更改失败");
                         }
                     }
                 } catch (JSONException e) {

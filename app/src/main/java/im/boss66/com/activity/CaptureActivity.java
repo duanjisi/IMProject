@@ -98,6 +98,7 @@ public class CaptureActivity extends BaseActivity {
     private boolean barcodeScanned = false;
     private boolean previewing = true;
     private String photo_path;
+    private Handler handler = new Handler();
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -304,7 +305,7 @@ public class CaptureActivity extends BaseActivity {
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
         String url= HttpUrl.SCAN_CODE;
         String userid = App.getInstance().getUid();
-        url = url + "?userid=" + userid+"&fuwagid="+gid;
+        url = url + "?userid=" + userid+"&fuwagid="+gid+"&time="+System.currentTimeMillis();
         httpUtils.send(HttpRequest.HttpMethod.GET, url, params, new RequestCallBack<String>() {
 
             @Override
@@ -317,15 +318,25 @@ public class CaptureActivity extends BaseActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         String message = jsonObject.getString("message");
-                        showToast(message,false);
-//                        switch (jsonObject.getInt("code")){
-//                            case 0://成功
-//                            break;
-//                            case 1:
-//                                break;
-//                            case 2:
-//                                break;
-//                        }
+
+                        switch (jsonObject.getInt("code")){
+                            case 0://成功
+                                showToast("兑奖成功",false);
+                            break;
+                            case 1:
+                                showToast(message,false);
+                                break;
+                            case 2:
+                                showToast(message,false);
+                                break;
+                        }
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                finish();
+                            }
+                        },800);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                         showToast("兑奖失败",false);
