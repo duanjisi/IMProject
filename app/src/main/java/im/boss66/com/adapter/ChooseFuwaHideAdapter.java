@@ -24,15 +24,17 @@ public class ChooseFuwaHideAdapter extends RecyclerView.Adapter<ChooseFuwaHideAd
 
     private List<FuwaEntity.Data> list;
     private static int sceenW;
+    private Context context;
 
     public ChooseFuwaHideAdapter(Context context, List<FuwaEntity.Data> bi) {
         list = bi;
         sceenW = UIUtils.getScreenWidth(context);
+        this.context = context;
     }
 
     @Override
     public FuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hide_fuwa, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_hide_fuwa, parent, false);
         return new FuViewHolder(view);
     }
 

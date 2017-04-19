@@ -48,6 +48,8 @@
         android:layout_alignLeft="@id/tv_fuwa_num"
         android:layout_below="@id/tv_fuwa_num"
         android:layout_marginTop="10dp"
+        android:maxLines="3"
+        android:ellipsize="end"
         android:text=""
         android:textColor="@color/bg_rectangle"
         android:textSize="15sp" />
