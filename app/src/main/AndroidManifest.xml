@@ -585,6 +585,7 @@
         <service
             android:name=".services.UpdateService"
             android:enabled="true"></service>
+
         <service android:name="im.boss66.com.services.MyPushIntentService" />
 
         <service android:name="im.boss66.com.services.NotificationService"></service>

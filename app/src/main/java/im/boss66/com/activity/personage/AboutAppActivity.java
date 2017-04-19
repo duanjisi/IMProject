@@ -6,6 +6,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.AppUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.widget.RoundImageView;
@@ -14,8 +15,7 @@ import im.boss66.com.widget.RoundImageView;
  * 关于本app
  */
 public class AboutAppActivity extends BaseActivity implements View.OnClickListener {
-
-    private TextView tv_back, tv_title;
+    private TextView tv_back, tv_title, tv_version;
     private RoundImageView iv_head;
 
     @Override
@@ -29,12 +29,15 @@ public class AboutAppActivity extends BaseActivity implements View.OnClickListen
         iv_head = (RoundImageView) findViewById(R.id.iv_head);
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_version = (TextView) findViewById(R.id.tv_version);
         tv_title.setText(getString(R.string.about));
         int sceenW = UIUtils.getScreenWidth(this);
         iv_head.setType(1);
-        RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) iv_head.getLayoutParams();
-        params.width = sceenW/6;
-        params.height = sceenW/6;
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv_head.getLayoutParams();
+        params.width = sceenW / 6;
+        params.height = sceenW / 6;
+        String version = "Copyright ©2017嗨萌 Version " + AppUtil.getVersionName(context);
+        tv_version.setText(version);
         iv_head.setLayoutParams(params);
         tv_back.setOnClickListener(this);
     }
