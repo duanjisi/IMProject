@@ -290,6 +290,7 @@ public class CaptureActivity extends BaseActivity {
 
 
             String gid = result.substring(result.lastIndexOf(":")+1,result.length());
+            Log.i("liwya","gid=="+gid);
             scanCode(gid);
 
 
