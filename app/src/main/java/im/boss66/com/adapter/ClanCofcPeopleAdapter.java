@@ -41,6 +41,14 @@ public class ClanCofcPeopleAdapter extends BaseRecycleViewAdapter{
                 itemListener.onItemClick(adapterPosition);
             }
         });
+        holder1.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                int adapterPosition = holder1.getAdapterPosition();
+                itemListener.onItemLongClick(adapterPosition);
+                return true;
+            }
+        });
     }
 
     @Override

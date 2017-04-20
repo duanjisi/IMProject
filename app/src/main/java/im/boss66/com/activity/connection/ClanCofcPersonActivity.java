@@ -1,12 +1,16 @@
 package im.boss66.com.activity.connection;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +21,9 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import im.boss66.com.App;
@@ -26,9 +33,11 @@ import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.adapter.ClanCofcPeopleAdapter;
 import im.boss66.com.adapter.FamousPeopleAdapter;
 import im.boss66.com.entity.ClanCofcPeopleEntity;
+import im.boss66.com.entity.EditClanCofcEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.RecycleViewItemListener;
 import im.boss66.com.widget.ActionSheet;
+import im.boss66.com.widget.dialog.DeleteDialog;
 
 /**
  * Created by liw on 2017/4/18.
@@ -39,6 +48,9 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
     private RecyclerView rcv_famous_people;
     private ClanCofcPeopleAdapter adapter;
     private boolean isClan;
+    private Dialog dialog;
+    private DeleteDialog deleteDialog;
+    private String person_id = "";
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -55,6 +67,11 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
     };
     private ClanCofcPeopleEntity famousPeopleEntity;
     private List<ClanCofcPeopleEntity.ResultBean> result;
+    private String deleteUrl;
+    private int deletePosition;
+    private String person_name;
+    private String person_desc;
+    private String person_photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,20 +152,139 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
             public void onItemClick(int postion) {
                 int id = result.get(postion).getId();
                 String name = result.get(postion).getName();
-                Intent intent = new Intent(ClanCofcPersonActivity.this,ClanCofcPersonWebActivity.class);
-                intent.putExtra("id",id);
-                intent.putExtra("isClan",isClan);
-                intent.putExtra("name",name);
+                Intent intent = new Intent(ClanCofcPersonActivity.this, ClanCofcPersonWebActivity.class);
+                intent.putExtra("id", id);
+                intent.putExtra("isClan", isClan);
+                intent.putExtra("name", name);
                 startActivity(intent);
             }
 
             @Override
             public boolean onItemLongClick(int position) {
-                return false;
+                //
+                deletePosition = position;
+
+                person_id = result.get(deletePosition).getId() + "";
+                person_name = result.get(deletePosition).getName();
+                person_desc = result.get(deletePosition).getDesc();
+                person_photo = result.get(deletePosition).getPhoto();
+
+                if (dialog == null) {
+
+                    showEditDialog();
+                } else if (!dialog.isShowing()) {
+                    dialog.show();
+
+                }
+
+                return true;
             }
+
+
         });
         rcv_famous_people.setLayoutManager(new LinearLayoutManager(this));
         rcv_famous_people.setAdapter(adapter);
+
+        deleteDialog = new DeleteDialog(context);
+        deleteDialog.setListener(new DeleteDialog.CallBack() {
+            @Override
+            public void delete() {
+                //请求删除接口
+                deletePerson();
+            }
+        });
+    }
+
+    private void deletePerson() {
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        if (isClan) {
+            deleteUrl = HttpUrl.DELETE_CLAN_PERSON;
+        } else {
+            deleteUrl = HttpUrl.DELETE_COFC_PERSON;
+        }
+        deleteUrl = deleteUrl + "?id=" + person_id;
+        httpUtils.send(HttpRequest.HttpMethod.POST, deleteUrl, params, new RequestCallBack<String>() {
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result1 = responseInfo.result;
+                if (!TextUtils.isEmpty(result1)) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result1);
+                        if (jsonObject.getInt("code") == 1) {
+
+                            result.remove(result.get(deletePosition));
+                            adapter.setDatas(result);
+
+                            adapter.notifyDataSetChanged();
+                            showToast("删除成功", false);
+                        } else {
+                            showToast("删除失败", false);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
+            }
+        });
+
+    }
+
+    private void showEditDialog() {
+        dialog = new Dialog(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_edit, null);
+        view.findViewById(R.id.tv_edit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ClanCofcPersonActivity.this, EditClanCofcPersonActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("isClan", isClan);
+                bundle.putString("id", id);
+                //名人信息
+                bundle.putString("person_id",person_id);
+                bundle.putString("person_name",person_name);
+                bundle.putString("person_desc",person_desc);
+                bundle.putString("person_photo",person_photo);
+                intent.putExtras(bundle);
+
+                startActivityForResult(intent,2);
+
+
+                dialog.dismiss();
+
+            }
+        });
+        view.findViewById(R.id.tv_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                deleteDialog.show();
+
+            }
+        });
+
+        dialog.setContentView(view);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        //隐藏系统输入盘
+        dialog.show();
     }
 
     @Override
@@ -198,7 +334,14 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
                     initData();
                 }
             }, 500);
-
+        }
+        if (requestCode == 2 && resultCode == RESULT_OK) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    initData();
+                }
+            }, 500);
         }
     }
 }

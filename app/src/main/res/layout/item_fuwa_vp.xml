@@ -46,6 +46,8 @@
         android:layout_height="60dp" />
 
     <TextView
+        android:maxLines="2"
+        android:ellipsize="end"
         android:id="@+id/tv_from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,6 +59,8 @@
         android:textSize="15sp" />
 
     <TextView
+        android:maxLines="2"
+        android:ellipsize="end"
         android:id="@+id/tv_catch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

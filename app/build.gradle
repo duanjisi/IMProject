@@ -66,7 +66,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             zipAlignEnabled true
             debuggable false
             // 移除无用的resource文件
