@@ -299,10 +299,13 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
         TextView tv_famous_person = (TextView) header.findViewById(R.id.tv_famous_person);
         TextView tv_club = (TextView) header.findViewById(R.id.tv_club);
         TextView tv_news = (TextView) header.findViewById(R.id.tv_news);
+
         tv_follow = (TextView) header.findViewById(R.id.tv_follow);
         tv_follow.setOnClickListener(this);
         tv_count = (TextView) header.findViewById(R.id.tv_count);
         tv_club.setText("动态");
+        tv_club.setVisibility(View.GONE);
+        header.findViewById(R.id.view_line).setVisibility(View.GONE);
         if (isClan) {
             tv_news.setText("创建宗亲");
         } else {
