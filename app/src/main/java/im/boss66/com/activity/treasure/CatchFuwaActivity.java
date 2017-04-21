@@ -54,6 +54,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.umeng.socialize.bean.HandlerRequestCode;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
@@ -137,8 +138,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private ImageLoader imageLoader;
     private ImageView iv_success;
     private String fuwaNum;
-    private View dialog_view;
-    private int sceenW, sceenH;
+    private int sceenH;
     private RelativeLayout rl_user;
     private String fuwaUserId;
     private ChildEntity currentChild;
@@ -157,7 +157,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         userId = App.getInstance().getUid();
         iv_success = (ImageView) findViewById(R.id.iv_success);
         sceenH = UIUtils.getScreenHeight(this);
-        sceenW = UIUtils.getScreenWidth(this);
         sharePopup = new SharePopup(context, mController);
         sharePopup.setOnItemSelectedListener(this);
         iv_thread_bg = (ImageView) findViewById(R.id.iv_thread_bg);
@@ -214,8 +213,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 fuwaNum = currentChild.getId();
                 String imgUrl = currentChild.getPic();
                 if (!TextUtils.isEmpty(imgUrl)) {
-                    imageLoader.displayImage(imgUrl, iv_thread,
-                            ImageLoaderUtils.getDisplayImageOptions());
+                    Picasso.with(context).load(imgUrl).error(R.drawable.zf_default_message_image).into(iv_thread);
+//                    imageLoader.displayImage(imgUrl, iv_thread,
+//                            ImageLoaderUtils.getDisplayImageOptions());
                 }
             }
         }
@@ -650,7 +650,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
     private void showDialog() {
         if (dialog == null) {
-            dialog_view = LayoutInflater.from(CatchFuwaActivity.this).inflate(
+            View dialog_view = LayoutInflater.from(context).inflate(
                     R.layout.dialog_catch_fuwa, null);
             int sceenW = UIUtils.getScreenWidth(this);
             int sceenH = UIUtils.getScreenHeight(this);
@@ -669,7 +669,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             LinearLayout ll_dialog = (LinearLayout) dialog_view.findViewById(R.id.ll_dialog);
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) ll_dialog.getLayoutParams();
             layoutParams.width = (int) (sceenW * 0.9);
-            layoutParams.height = (int) (sceenH * 0.7);
+            layoutParams.height = (int) (sceenH * 0.85);
             ll_dialog.setLayoutParams(layoutParams);
 
             rl_user = (RelativeLayout) dialog_view.findViewById(R.id.rl_user);
@@ -699,15 +699,18 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     tv_user_area.setText(area);
                 }
                 videoUrl = currentChild.getVideo();
+                Log.i("videoUrl:", videoUrl);
                 if (!TextUtils.isEmpty(videoUrl)) {
                     rl_video.setVisibility(View.VISIBLE);
-                    String[] arr = videoUrl.split(".");
+                    String[] arr = videoUrl.split("\\.");
                     if (arr != null && arr.length > 1) {
                         arr[arr.length - 1] = ".jpg";
-                        videoBgUrl = String.valueOf(arr);
+                        for (String s : arr) {
+                            videoBgUrl += s;
+                        }
                         Glide.with(this).load(videoBgUrl).error(R.drawable.zf_default_message_image).into(iv_video_photo);
                     }
-                }else {
+                } else {
                     rl_video.setVisibility(View.GONE);
                 }
                 String head = currentChild.getAvatar();

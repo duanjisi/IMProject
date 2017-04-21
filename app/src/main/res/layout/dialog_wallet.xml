@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_round_no_stroke"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp_14"
+        android:paddingLeft="@dimen/dp_22"
+        android:paddingRight="@dimen/dp_22"
+        android:paddingTop="@dimen/dp_14">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="真实姓名"
+            android:textColor="@color/btn_white_pressed" />
+
+        <TextView
+            android:id="@+id/tv_name_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="真实姓名"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tv_alipay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_name"
+            android:layout_marginTop="@dimen/dp_10"
+            android:gravity="right"
+            android:text="支付宝"
+            android:textColor="@color/btn_white_pressed" />
+
+        <TextView
+            android:id="@+id/tv_alipay_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/tv_name_value"
+            android:layout_alignTop="@+id/tv_alipay"
+            android:gravity="right"
+            android:text="真实姓"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tv_withdraw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_alipay"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="提现金额"
+            android:textColor="@color/btn_white_pressed" />
+
+        <TextView
+            android:id="@+id/tv_withdraw_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/tv_alipay_value"
+            android:layout_alignTop="@+id/tv_withdraw"
+            android:text="提"
+            android:textColor="@color/black" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_14"
+        android:background="@color/text_color_gray_a"
+        android:orientation="horizontal"
+        android:paddingTop="1px">
+
+        <Button
+            android:id="@+id/bt_close"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:text="@string/mis_permission_dialog_cancel"
+            android:textColor="@color/color_lan" />
+
+        <Button
+            android:id="@+id/bt_ok"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1px"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:text="确认"
+            android:textColor="@color/actionsheet_red" />
+
+    </LinearLayout>
+
+</LinearLayout>

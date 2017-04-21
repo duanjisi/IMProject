@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
@@ -8,6 +8,7 @@
         android:id="@+id/ll_dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:background="@drawable/choose_bg"
         android:orientation="vertical">
 
@@ -25,8 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:gravity="center"
             android:layout_marginTop="25dp"
+            android:gravity="center"
             android:textColor="@color/white"
             android:textSize="28sp" />
 
@@ -85,18 +86,18 @@
         android:id="@+id/rl_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/translucence"
         android:layout_centerInParent="true"
-        android:padding="@dimen/dp_14"
-        android:orientation="vertical">
+        android:background="@color/translucence"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_14">
 
         <LinearLayout
             android:id="@+id/ll_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:background="@color/white"
             android:orientation="vertical"
-            android:layout_centerInParent="true"
             android:padding="@dimen/dp_18">
 
             <RelativeLayout
@@ -146,24 +147,24 @@
                         android:id="@+id/tv_user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ddddddd收拾收拾是是是"
-                        android:maxLines="1"
                         android:ellipsize="end"
-                        android:textSize="14sp"
                         android:maxEms="8"
-                        android:textColor="@color/red_fuwa"/>
+                        android:maxLines="1"
+                        android:text="ddddddd收拾收拾是是是"
+                        android:textColor="@color/red_fuwa"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_user_area"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_6"
-                        android:text="ddddddd收拾收拾是是是"
-                        android:maxLines="1"
                         android:ellipsize="end"
-                        android:textSize="14sp"
                         android:maxEms="8"
-                        android:textColor="@color/text_color_gray_9"/>
+                        android:maxLines="1"
+                        android:text="ddddddd收拾收拾是是是"
+                        android:textColor="@color/text_color_gray_9"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -171,10 +172,10 @@
                     android:id="@+id/tv_add_friend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/dp_6"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:background="@drawable/bg_round_red"
+                    android:padding="@dimen/dp_6"
                     android:text="+ 好友"
                     android:textColor="#E6CC97"
                     android:textSize="14sp" />
@@ -187,10 +188,10 @@
             android:id="@+id/iv_close_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/dp_18"
-            android:src="@drawable/fuwa_catch_close"/>
+            android:src="@drawable/fuwa_catch_close" />
 
     </RelativeLayout>
-</LinearLayout>
+</RelativeLayout>

@@ -3,6 +3,7 @@ package im.boss66.com.activity.connection;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -48,6 +49,11 @@ public class EditClanCofcPersonActivity extends ABaseActivity implements View.On
     private EditText et_name;
     private EditText et_info;
 
+    private String person_id;
+    private String person_name;
+    private String person_desc;
+    private String person_photo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +64,13 @@ public class EditClanCofcPersonActivity extends ABaseActivity implements View.On
             if (bundle != null) {
                 isClan = bundle.getBoolean("isClan", false);
                 id = bundle.getString("id");
+                if(bundle.containsKey("person_id")){
+                    person_id = bundle.getString("person_id");
+                    person_name = bundle.getString("person_name");
+                    person_desc = bundle.getString("person_desc");
+                    person_photo = bundle.getString("person_photo");
+
+                }
             }
         }
         initViews();
@@ -70,13 +83,24 @@ public class EditClanCofcPersonActivity extends ABaseActivity implements View.On
         et_name = (EditText) findViewById(R.id.et_name);
         et_info = (EditText) findViewById(R.id.et_info);
 
-        tv_headcenter_view.setText("添加名人");
+        if(person_id==null){
+            tv_headcenter_view.setText("添加名人");
+        }else {
+            tv_headcenter_view.setText("编辑名人");
+
+        }
         tv_headlift_view.setOnClickListener(this);
 
         findViewById(R.id.rl_img).setOnClickListener(this);
         findViewById(R.id.tv_save).setOnClickListener(this);
 
         img_headimg = (ImageView) findViewById(R.id.img_headimg);
+        if(person_id!=null){
+            et_name.setText(person_name);
+            et_info.setText(person_desc);
+            Glide.with(context).load(person_photo).into(img_headimg);
+        }
+
     }
 
     @Override
@@ -92,10 +116,20 @@ public class EditClanCofcPersonActivity extends ABaseActivity implements View.On
             case R.id.tv_save:
                 String name = et_name.getText().toString();
                 String info = et_info.getText().toString();
-                if(name.length()>0&&info.length()>0&&imgUrl.length()>0){
-                    saveData(name, info);
-                }else {
-                    ToastUtil.showShort(context,"请完善资料");
+                if(person_id==null){
+                    if(name.length()>0&&info.length()>0&&imgUrl.length()>0){
+
+                        saveData(name, info);
+                    }else {
+                        ToastUtil.showShort(context,"请完善资料");
+                    }
+
+                }else{
+                    if(name.length()>0&&info.length()>0){ //编辑名人可以不传图片
+                        saveData(name, info);
+                    }else {
+                        ToastUtil.showShort(context,"请完善资料");
+                    }
                 }
 
                 break;
@@ -104,31 +138,61 @@ public class EditClanCofcPersonActivity extends ABaseActivity implements View.On
 
     }
 
+
     private void saveData(String name, String info) {
 
 
         showLoadingDialog();
-        if (isClan) {
-            main = HttpUrl.ADD_CLAN_PERSON;
-        } else {
-            main = HttpUrl.ADD_COFC_PERSON;
-        }
-        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
-        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-        Bitmap bitmap = FileUtils.compressImageFromFile(imgUrl, 1080);
-        Log.i("uploadImageFile", imgUrl);
-        if (bitmap != null) {
-            File file = FileUtils.compressImage(bitmap);
-            if (file != null) {
-                params.addBodyParameter("photo", file);
+        if(person_id==null){ //添加名人
+            if (isClan) {
+                main = HttpUrl.ADD_CLAN_PERSON;
+            } else {
+                main = HttpUrl.ADD_COFC_PERSON;
+            }
+        }else{    //编辑名人
+            if (isClan) {
+                main = HttpUrl.UPDATA_CLAN_PERSON;
+            } else {
+                main = HttpUrl.UPDATA_COFC_PERSON;
             }
         }
-        params.addBodyParameter("access_token", access_token);
-        if (isClan) {
-            params.addBodyParameter("clan_id", id);
-        } else {
-            params.addBodyParameter("cofc_id", id);
+
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        if(person_id==null){ //添加名人
+            Bitmap bitmap = FileUtils.compressImageFromFile(imgUrl, 1080);
+            Log.i("uploadImageFile", imgUrl);
+            if (bitmap != null) {
+                File file = FileUtils.compressImage(bitmap);
+                if (file != null) {
+                    params.addBodyParameter("photo", file);
+                }
+            }
+        }else{   //编辑名人
+            if(!TextUtils.isEmpty(imgUrl)){ //如果imgurl不为"" 就上传
+                Bitmap bitmap = FileUtils.compressImageFromFile(imgUrl, 1080);
+                Log.i("uploadImageFile", imgUrl);
+                if (bitmap != null) {
+                    File file = FileUtils.compressImage(bitmap);
+                    if (file != null) {
+                        params.addBodyParameter("photo", file);
+                    }
+                }
+
+            }
         }
+
+        params.addBodyParameter("access_token", access_token);
+        if(person_id==null){ //添加名人
+            if (isClan) {
+                params.addBodyParameter("clan_id", id);
+            } else {
+                params.addBodyParameter("cofc_id", id);
+            }
+        }else{ //编辑名人
+                params.addBodyParameter("cele_id", person_id);
+        }
+
         params.addBodyParameter("name", name);
         params.addBodyParameter("desc", info);
 
@@ -143,16 +207,17 @@ public class EditClanCofcPersonActivity extends ABaseActivity implements View.On
                         JSONObject jsonObject = new JSONObject(result);
                         if (jsonObject.getInt("code") == 1) {
 
-                            ToastUtil.showShort(context, "添加成功");
+
+                            ToastUtil.showShort(context, "保存成功");
                             Intent intent = new Intent();
                             setResult(RESULT_OK,intent);
                             finish();
                         } else {
-                            ToastUtil.showShort(context, "添加失败");
+                            ToastUtil.showShort(context, "保存失败");
                         }
                     } catch (org.json.JSONException e) {
                         e.printStackTrace();
-                        ToastUtil.showShort(context, "添加失败");
+                        ToastUtil.showShort(context, "保存失败");
                     }
 
                 }
@@ -165,7 +230,7 @@ public class EditClanCofcPersonActivity extends ABaseActivity implements View.On
                     goLogin();
                 } else {
                     cancelLoadingDialog();
-                    showToast("添加失败", false);
+                    showToast("保存失败", false);
                 }
             }
         });

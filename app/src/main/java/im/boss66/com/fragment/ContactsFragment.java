@@ -105,6 +105,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private ImageView iv_avatar;
     private ImageLoader imageLoader;
     private AccountEntity account;
+    private String url;
 
     @Nullable
     @Override
@@ -203,22 +204,29 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void delete() {
                 if (isClan) {
-                    deleteClan(clan_id);
+                    deleteClanCofc(clan_id);
                 } else {
-                    deleteClub(cofc_id);
+                    deleteClanCofc(cofc_id);
                 }
+
+
 
             }
         });
-//        imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
+
     }
 
-    private void deleteClub(String cofc_id) {
+    private void deleteClanCofc(String id) {
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        String url = HttpUrl.DELETE_CLUB;
-        url = url + "?cofc_id=" + cofc_id;
+        if(isClan){
+
+            url = HttpUrl.DELETE_CLAN+ "?clan_id=" + id;
+        }else{
+
+            url = HttpUrl.DELETE_CLUB + "?cofc_id=" + id;
+        }
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
             @Override
@@ -228,7 +236,13 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         if (jsonObject.getInt("code") == 1) {
-                            datas.remove(cofcListBean);
+                            if(isClan){
+
+                                datas.remove(clanListBean);
+                            }else{
+
+                                datas.remove(cofcListBean);
+                            }
                             adapter.setDatas(datas);
                             adapter.notifyDataSetChanged();
                             showToast("删除成功", false);
@@ -237,50 +251,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                    }
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(HttpException e, String s) {
-                int code = e.getExceptionCode();
-                if (code == 401) {
-                    Intent intent = new Intent();
-                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                    App.getInstance().sendBroadcast(intent);
-                } else {
-                    showToast(e.getMessage(), false);
-                }
-            }
-        });
-    }
-
-    private void deleteClan(String clan_id) {
-        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
-        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        String url = HttpUrl.DELETE_CLAN;
-        url = url + "?clan_id=" + clan_id;
-        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
-
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                String result = responseInfo.result;
-                if (!TextUtils.isEmpty(result)) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        if (jsonObject.getInt("code") == 1) {
-                            datas.remove(clanListBean);
-                            adapter.setDatas(datas);
-                            adapter.notifyDataSetChanged();
-                            showToast("删除成功", false);
-                        } else {
-                            showToast("删除失败", false);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        showToast("删除失败", false);
                     }
                 }
 

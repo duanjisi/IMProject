@@ -1028,9 +1028,10 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             ChildEntity entity = (ChildEntity) adapterView.getItemAtPosition(i);
             if (entity != null) {
                 Intent intent = new Intent(context, CatchFuwaActivity.class);
-                intent.putExtra("pic", entity.getPic());
-                intent.putExtra("gid", entity.getGid());
-                intent.putExtra("id", entity.getId());
+//                intent.putExtra("pic", entity.getPic());
+//                intent.putExtra("gid", entity.getGid());
+//                intent.putExtra("id", entity.getId());
+                intent.putExtra("obj", entity);
                 startActivity(intent);
                 if (popup != null && popup.isShowing()) {
                     popup.dismiss();
