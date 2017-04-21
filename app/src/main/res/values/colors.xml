@@ -74,6 +74,7 @@
 
     <color name="bottom_text_color_checked">#FD2741</color>
     <color name="bottom_text_color_default">#9A9A9A</color>
+    <color name="menu_text_color_default">#f69600</color>
 
     <color name="alertdialog_line">#c6c6c6</color>
     <color name="actionsheet_blue">#037BFF</color>

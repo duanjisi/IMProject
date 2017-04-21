@@ -22,13 +22,19 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
+import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PrefKey;
 import im.boss66.com.Utils.PreferenceUtils;
@@ -36,9 +42,10 @@ import im.boss66.com.activity.AddFriendActivity;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.book.SelectContactsActivity;
 import im.boss66.com.activity.im.ChatActivity;
-import im.boss66.com.activity.treasure.MainTreasureActivity;
 import im.boss66.com.adapter.ConversationAdapter;
 import im.boss66.com.db.dao.ConversationHelper;
+import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.entity.BaseConversation;
 
 /**
@@ -52,7 +59,10 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
     private RelativeLayout rl_top_bar;
     private Handler handler = new Handler();
     private View view;
-    private TextView tv_game;
+    //    private TextView tv_game;
+    private ImageView iv_avatar;
+    private ImageLoader imageLoader;
+    private AccountEntity account;
 
     @Nullable
     @Override
@@ -73,7 +83,10 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
 //    }
 
     private void initViews(View view) {
-        tv_game = (TextView) view.findViewById(R.id.tv_game);
+//        tv_game = (TextView) view.findViewById(R.id.tv_game);
+        account = App.getInstance().getAccount();
+        imageLoader = ImageLoaderUtils.createImageLoader(getActivity());
+        iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
         rl_top_bar = (RelativeLayout) view.findViewById(R.id.rl_top_bar);
         ivAdd = (ImageView) view.findViewById(R.id.iv_add);
         ivAdd.setOnClickListener(this);
@@ -83,7 +96,8 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new ItemClickListner());
         listView.setOnItemLongClickListener(new ItemLongClickListener());
-        tv_game.setOnClickListener(this);
+//        tv_game.setOnClickListener(this);
+        iv_avatar.setOnClickListener(this);
         initDatas();
     }
 
@@ -93,6 +107,7 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
         if (list != null && list.size() != 0) {
             adapter.initData(list);
         }
+//        imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
     }
 
     @Override
@@ -107,9 +122,12 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
                     }
                 }
                 break;
-            case R.id.tv_game:
-                Intent intent = new Intent(getActivity(), MainTreasureActivity.class);
-                startActivity(intent);
+//            case R.id.tv_game:
+//                Intent intent = new Intent(getActivity(), MainTreasureActivity.class);
+//                startActivity(intent);
+//                break;
+            case R.id.iv_avatar:
+                EventBus.getDefault().post(new ActionEntity(1));
                 break;
         }
     }

@@ -109,7 +109,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void loginSuccessed(AccountEntity entity) {
         App.getInstance().initUser(entity);
         showToast("登录成功!", true);
-        Intent intent = new Intent(context, MainActivity.class);
+//        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, MainAct.class);
         startActivity(intent);
         finish();
     }

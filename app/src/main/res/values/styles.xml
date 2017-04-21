@@ -134,6 +134,24 @@
         <item name="android:textColor">@drawable/sel_main_bottom_navigation_text</item>
     </style>
 
+    <style name="VerticalWeight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="MenuBtn" parent="@style/VerticalWeight">
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">16.5sp</item>
+        <item name="android:drawablePadding">19.8dp</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@drawable/sel_main_menu_navigation_text</item>
+    </style>
+
     <declare-styleable name="EaseSwitchButton">
         <attr name="switchOpenImage" format="reference" />
         <attr name="switchCloseImage" format="reference" />

@@ -5,15 +5,52 @@
     android:background="@color/background_color"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_top"
+    <RelativeLayout
+        android:id="@+id/rl_top_bar"
         android:layout_width="match_parent"
         android:layout_height="50dip"
-        android:background="@color/top_bar_color"
-        android:gravity="center"
-        android:text="个人中心"
-        android:textColor="@color/white"
-        android:textSize="17.5sp" />
+        android:background="@color/top_bar_color">
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_game"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:gravity="center"-->
+        <!--android:paddingLeft="11dp"-->
+        <!--android:paddingRight="16dp"-->
+        <!--android:text="寻宝"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="17.5sp" />-->
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:paddingBottom="12.5dp"
+            android:paddingTop="12.5dp"
+            android:src="@drawable/menu_left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="个人中心"
+            android:textColor="@color/white"
+            android:textSize="17.5sp" />
+    </RelativeLayout>
+    <!--<TextView-->
+    <!--android:id="@+id/tv_top"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="50dip"-->
+    <!--android:background="@color/top_bar_color"-->
+    <!--android:gravity="center"-->
+    <!--android:text="个人中心"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="17.5sp" />-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

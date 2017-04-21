@@ -86,6 +86,7 @@ import im.boss66.com.entity.BaseChildren;
 import im.boss66.com.entity.ChildEntity;
 import im.boss66.com.http.BaseDataModel;
 import im.boss66.com.http.request.AroundChildrenRequest;
+import im.boss66.com.http.request.AroundFateRequest;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.util.AMapUtil;
 import im.boss66.com.util.SensorEventHelper;
@@ -137,6 +138,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
     private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
     private boolean mFirstFix = false;
+    private boolean isFate = false;
     private Marker mLocMarker, mPersonMarker;
     private LatLng mLatLng;
     private SensorEventHelper mSensorHelper;
@@ -184,6 +186,11 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         btn_catch = (Button) findViewById(R.id.btn_catch);
         tvTips = (TextView) findViewById(R.id.tv_bottom_tips);
         titleBar = (RelativeLayout) findViewById(R.id.rl_top_bar);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            isFate = bundle.getBoolean("isFate", false);
+        }
 
         slidingDrawer.setOnDrawerOpenListener(new SlidingDrawer.OnDrawerOpenListener() {
             @Override
@@ -879,7 +886,13 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             Log.i("info", "==============raduis:" + raduis);
             String parms = cameraPosition.target.longitude + "-" + cameraPosition.target.latitude;
             Log.i("info", "==============parms:" + parms);
-            AroundChildrenRequest request = new AroundChildrenRequest(TAG, parms, "" + raduis);
+            BaseDataModel request = null;
+            if (!isFate) {
+                request = new AroundChildrenRequest(TAG, parms, "" + raduis);
+            } else {
+                request = new AroundFateRequest(TAG, parms, "" + raduis);
+            }
+//            AroundChildrenRequest request = new AroundChildrenRequest(TAG, parms, "" + raduis);
             request.send(new BaseDataModel.RequestCallback<BaseChildren>() {
                 @Override
                 public void onSuccess(BaseChildren pojo) {

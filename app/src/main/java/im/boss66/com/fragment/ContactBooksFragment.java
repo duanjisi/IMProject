@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -35,6 +37,7 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
+import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.AddFriendActivity;
 import im.boss66.com.activity.book.NewFriendsActivity;
@@ -42,6 +45,8 @@ import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.activity.discover.SearchByAllNetActivity;
 import im.boss66.com.activity.im.GroupChatActivity;
 import im.boss66.com.domain.EaseUser;
+import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.entity.BaseContact;
 import im.boss66.com.entity.ContactEntity;
 import im.boss66.com.entity.FriendState;
@@ -58,7 +63,8 @@ import im.boss66.com.widget.TopNavigationBar;
  */
 public class ContactBooksFragment extends BaseFragment implements
         Observer,
-        RefreshListView.OnRefreshListener {
+        RefreshListView.OnRefreshListener,
+        View.OnClickListener {
     private final static String TAG = ContactBooksFragment.class.getSimpleName();
     private LocalBroadcastReceiver mLocalBroadcastReceiver;
     private TopNavigationBar topNavigationBar;
@@ -75,6 +81,9 @@ public class ContactBooksFragment extends BaseFragment implements
     private View header;
     private RelativeLayout rl_new_friend, rl_chat_group;
     private static TextView tv_new_nums;
+    private ImageView iv_avatar;
+    private ImageLoader imageLoader;
+    private AccountEntity account;
 
     @Nullable
     @Override
@@ -91,6 +100,9 @@ public class ContactBooksFragment extends BaseFragment implements
     }
 
     private void initViews(View view) {
+        account = App.getInstance().getAccount();
+        imageLoader = ImageLoaderUtils.createImageLoader(getActivity());
+        iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
         contactList = new ArrayList<EaseUser>();
         inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         header = getActivity().getLayoutInflater().inflate(R.layout.item_contact_header, null);
@@ -101,7 +113,7 @@ public class ContactBooksFragment extends BaseFragment implements
         tvSearch = (TextView) view.findViewById(R.id.tv_search);
         query = (EditText) view.findViewById(R.id.query);
         clearSearch = (ImageButton) view.findViewById(R.id.search_clear);
-
+        iv_avatar.setOnClickListener(this);
         mLocalBroadcastReceiver = new LocalBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.Action.CONTACTS_REMOVE_CURRETN_ITEM);
@@ -181,6 +193,7 @@ public class ContactBooksFragment extends BaseFragment implements
             }
         });
         contactListLayout.init(contactList, header);
+//        imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
         request();
         requestNewNums();
 //        initData(null);
@@ -249,6 +262,15 @@ public class ContactBooksFragment extends BaseFragment implements
 //                return true;
 //            }
 //        });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_avatar:
+                EventBus.getDefault().post(new ActionEntity(2));
+                break;
+        }
     }
 
     @Override

@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.umeng.socialize.bean.HandlerRequestCode;
@@ -38,14 +37,9 @@ import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.Base64Utils;
 import im.boss66.com.Utils.MakeQRCodeUtil;
-import im.boss66.com.Utils.MycsLog;
-import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.base.BaseActivity;
-import im.boss66.com.activity.connection.AddPeopleActivity;
-import im.boss66.com.activity.connection.PeopleCenterActivity;
-import im.boss66.com.activity.connection.PersonalDataActivity;
 import im.boss66.com.widget.popupWindows.SharePopup;
 
 /**
@@ -53,8 +47,8 @@ import im.boss66.com.widget.popupWindows.SharePopup;
  * 寻宝首页.
  */
 public class MainTreasureActivity extends BaseActivity implements View.OnClickListener, SharePopup.OnItemSelectedListener {
-    private TextView  tv_apply, tv_rank, tv_game;
-    private ImageView iv_msg, iv_bag, iv_trade,img_more;
+    private TextView tv_apply, tv_rank, tv_game;
+    private ImageView iv_msg, iv_bag, iv_trade, img_more;
     private Button btn_find, btn_store;
 
     private Dialog dialog;
@@ -134,8 +128,8 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
                 break;
             case R.id.btn_find://找福娃
-                openActivity(FindTreasureChildrenActivity.class);
-//                openActivity(CatchFuwaActivity.class);
+                Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
+                intent.putExtra("isFate", false);
                 break;
             case R.id.btn_store://藏福娃
                 openActivity(HideFuwaActivity.class);
@@ -163,7 +157,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                     weixinContent.setShareImage(new UMImage(context, R.drawable.logo_tips));
                 }
                 uMediaObject = weixinContent;
-                postShare(shareMedia,uMediaObject);
+                postShare(shareMedia, uMediaObject);
                 break;
             case R.id.weixin_circle_share_linear:
                 shareMedia = SHARE_MEDIA.WEIXIN_CIRCLE;
@@ -184,7 +178,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                     circleMedia.setShareImage(new UMImage(context, R.drawable.logo_tips));
                 }
                 uMediaObject = circleMedia;
-                postShare(shareMedia,uMediaObject);
+                postShare(shareMedia, uMediaObject);
                 break;
             case R.id.qq_share_linear:
                 shareMedia = SHARE_MEDIA.QQ;
@@ -204,7 +198,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
                 qqShareContent.setTargetUrl(targetUrl);
                 uMediaObject = qqShareContent;
-                postShare(shareMedia,uMediaObject);
+                postShare(shareMedia, uMediaObject);
                 break;
             case R.id.qq_zone_share_linear:
                 shareMedia = SHARE_MEDIA.QZONE;
@@ -226,7 +220,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                     qzone.setShareImage(new UMImage(context, R.drawable.logo_tips));
                 }
                 uMediaObject = qzone;
-                postShare(shareMedia,uMediaObject);
+                postShare(shareMedia, uMediaObject);
                 break;
             case R.id.btn_cancel:
                 shareDialog.dismiss();
@@ -235,7 +229,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    private void postShare(SHARE_MEDIA shareMedia, UMediaObject uMediaObject){
+    private void postShare(SHARE_MEDIA shareMedia, UMediaObject uMediaObject) {
         mController.setShareMedia(uMediaObject);
         mController.postShare(context, shareMedia, new SocializeListeners.SnsPostListener() {
             @Override
@@ -343,10 +337,10 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                 //二维码pop
 //                showToast("二维码",false);
 
-                if(qr_code_dialog==null){
+                if (qr_code_dialog == null) {
                     showCodeDetailDialog(context);
 
-                }else if(!qr_code_dialog.isShowing()){
+                } else if (!qr_code_dialog.isShowing()) {
                     qr_code_dialog.show();
 
                 }
@@ -401,9 +395,9 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 //                }
 
                 //用我之前那个dialog，然后加上这边的分享逻辑。
-                if(shareDialog==null){
+                if (shareDialog == null) {
                     showDialog();
-                }else if(!shareDialog.isShowing()){
+                } else if (!shareDialog.isShowing()) {
                     shareDialog.show();
                 }
 
@@ -413,14 +407,13 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         ImageView img_qr_code = (ImageView) view.findViewById(R.id.img_qr_code);
 
         int width = UIUtils.getScreenWidth(context);
-        width = width*3/5;
+        width = width * 3 / 5;
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) img_qr_code.getLayoutParams();
         params.weight = width;
-        params.height =width;
+        params.height = width;
         img_qr_code.setLayoutParams(params);
-        String uri = "fuwa:user:"+tv_word.getText().toString();
+        String uri = "fuwa:user:" + tv_word.getText().toString();
         MakeQRCodeUtil.createQRImage(uri, width, width, img_qr_code);
-
 
 
         //设置dialog大小
@@ -436,12 +429,11 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    private String shareContent ="我的二维码";
+    private String shareContent = "我的二维码";
     private String targetUrl = "http://www.baidu.com";
     private String title = "嗨萌寻宝";
     private String imageUrl;
     private Dialog shareDialog;
-
 
 
     private void showDialog() {
@@ -468,6 +460,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         shareDialog.setCanceledOnTouchOutside(true);
         shareDialog.show();
     }
+
     //分享回调
     @Override
     public void onItemSelected(SHARE_MEDIA shareMedia) {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<im.boss66.com.widget.SlidingMenu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zhy="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/id_menu"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:scrollbars="none"
+    zhy:rightPadding="100dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
+
+        <include layout="@layout/layout_menu" />
+
+        <FrameLayout
+            android:id="@+id/replaced_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</im.boss66.com.widget.SlidingMenu>

@@ -8,11 +8,11 @@
 
     <ImageView
         android:id="@+id/img_more"
-        android:padding="20dp"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/more"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:padding="20dp"
+        android:src="@drawable/more" />
 
     <ImageView
         android:id="@+id/iv_tag"
