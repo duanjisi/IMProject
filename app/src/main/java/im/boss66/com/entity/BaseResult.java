@@ -21,7 +21,6 @@ public class BaseResult {
     }
 
     private String data;
-
     public int getCode() {
         return code;
     }
