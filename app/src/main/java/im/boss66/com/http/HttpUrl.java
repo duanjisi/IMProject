@@ -254,7 +254,7 @@ public class HttpUrl {
     //名人详情页
     public static final String FAMOUSPERSON_DETAIL = MAIN_URL + "web/hometown/celebrity";
     //学校名人页
-    public static final String SCHOOL_PERSON_DETAIL =MAIN_URL+"web/school/celebrity";
+    public static final String SCHOOL_PERSON_DETAIL = MAIN_URL + "web/school/celebrity";
     //学校社团详情页
     public static final String SCHOOL_CLUB_DETATIL = MAIN_URL + "web/school/league";
     //家乡动态详情页
@@ -279,44 +279,47 @@ public class HttpUrl {
     //商会web页
     public static final String COFC_DETAIL = MAIN_URL + "web/cofc";
     //获取宗亲详情
-    public static final String CLAN_INFO = MAIN_URL+"api/v1/clan";
+    public static final String CLAN_INFO = MAIN_URL + "api/v1/clan";
     //获取商会详情
-    public static final String COFC_INFO = MAIN_URL+"api/v1/cofc";
+    public static final String COFC_INFO = MAIN_URL + "api/v1/cofc";
     //关注宗亲
-    public static final String FOLLOW_CLAN = MAIN_URL+"api/v1/clan/follow";
+    public static final String FOLLOW_CLAN = MAIN_URL + "api/v1/clan/follow";
     //取消关注宗亲
-    public static final String CANCEL_FOLLOW_CLAN = MAIN_URL+"api/v1/clan/unfollow";
+    public static final String CANCEL_FOLLOW_CLAN = MAIN_URL + "api/v1/clan/unfollow";
     //关注商会
-    public static final String FOLLOW_COFC = MAIN_URL+"api/v1/cofc/follow";
+    public static final String FOLLOW_COFC = MAIN_URL + "api/v1/cofc/follow";
     //取消关注商会
-    public static final String CANCEL_FOLLOW_COFC = MAIN_URL+"api/v1/cofc/unfollow";
+    public static final String CANCEL_FOLLOW_COFC = MAIN_URL + "api/v1/cofc/unfollow";
     //修改宗亲
-    public static final String EDIT_CLAN= MAIN_URL+"api/v1/clan/update";
+    public static final String EDIT_CLAN = MAIN_URL + "api/v1/clan/update";
     //修改商会
-    public static final String EDIT_COFC= MAIN_URL+"api/v1/cofc/update";
+    public static final String EDIT_COFC = MAIN_URL + "api/v1/cofc/update";
     //验证福娃
-    public static final String SCAN_CODE = BASE_FUWA[FUWA_TAG]+"api/award";
+    public static final String SCAN_CODE = BASE_FUWA[FUWA_TAG] + "api/award";
     //宗亲名人列表
-    public static final String CLAN_PERSON_LIST = MAIN_URL+"api/v1/clan/getcelebrity";
+    public static final String CLAN_PERSON_LIST = MAIN_URL + "api/v1/clan/getcelebrity";
     //商会名人列表
-    public static final String COFC_PERSON_LIST= MAIN_URL+"api/v1/cofc/getcelebrity";
+    public static final String COFC_PERSON_LIST = MAIN_URL + "api/v1/cofc/getcelebrity";
     //添加宗亲名人
-    public static final String ADD_CLAN_PERSON = MAIN_URL+"api/v1/clan/addcelebrity";
+    public static final String ADD_CLAN_PERSON = MAIN_URL + "api/v1/clan/addcelebrity";
     //添加商会名人
-    public static final String ADD_COFC_PERSON = MAIN_URL+"api/v1/cofc/addcelebrity";
+    public static final String ADD_COFC_PERSON = MAIN_URL + "api/v1/cofc/addcelebrity";
     //宗亲名人web
-    public static final String CLAN_PERSON_WEB =MAIN_URL+"web/clan/celebrity";
+    public static final String CLAN_PERSON_WEB = MAIN_URL + "web/clan/celebrity";
     //商会名人web
-    public static final String COFC_PERSON_WEB = MAIN_URL+"web/cofc/celebrity";
+    public static final String COFC_PERSON_WEB = MAIN_URL + "web/cofc/celebrity";
     //删除宗亲名人
-    public static final String DELETE_CLAN_PERSON = MAIN_URL+"api/v1/clan/delcelebrity";
+    public static final String DELETE_CLAN_PERSON = MAIN_URL + "api/v1/clan/delcelebrity";
     //删除商会名人
-    public static final String DELETE_COFC_PERSON = MAIN_URL+"api/v1/cofc/delcelebrity";
+    public static final String DELETE_COFC_PERSON = MAIN_URL + "api/v1/cofc/delcelebrity";
     //编辑宗亲名人
-    public static final String UPDATA_CLAN_PERSON = MAIN_URL+"api/v1/clan/updatecelebrity";
+    public static final String UPDATA_CLAN_PERSON = MAIN_URL + "api/v1/clan/updatecelebrity";
     //编辑商会名人
-    public static final String UPDATA_COFC_PERSON = MAIN_URL+"api/v1/cofc/updatecelebrity";
+    public static final String UPDATA_COFC_PERSON = MAIN_URL + "api/v1/cofc/updatecelebrity";
 
-
+    //查询余额
+    public static final String QUERY_MY_MONEY = BASE_FUWA[FUWA_TAG] + "msg/querymoney?userid=";
+    //提现
+    public static final String WHITDRAW_MONEY = BASE_FUWA[FUWA_TAG] + "msg/money?";
 
 }

@@ -3,7 +3,7 @@
 
 
     <!--<corners android:radius="3dp" />-->
-    <solid android:color="@color/red_fuwa" />
+    <solid android:color="@color/red_fuwa_alpa_stroke" />
 
     <stroke
         android:width="1dp"
