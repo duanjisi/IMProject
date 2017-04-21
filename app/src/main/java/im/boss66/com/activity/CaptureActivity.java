@@ -263,7 +263,7 @@ public class CaptureActivity extends BaseActivity {
             intent.putExtra("userid", userid);
             startActivity(intent);
             finish();
-        }else if(result.contains("gid=")){ //加群
+        } else if (result.contains("gid=")) { //加群
 
             String gid = result.substring(result.indexOf("=") + 1, result.length());
             GroupAddMemsRequest request = new GroupAddMemsRequest(TAG, gid, App.getInstance().getUid());
@@ -272,6 +272,7 @@ public class CaptureActivity extends BaseActivity {
                 public void onSuccess(String pojo) {
                     onAddMember();
                 }
+
                 @Override
                 public void onFailure(String msg) {
                     cancelLoadingDialog();
@@ -279,20 +280,19 @@ public class CaptureActivity extends BaseActivity {
                 }
             });
 
-        }else if(result.contains("fuwa:user:")){       //扫描二维码赠送
-            String code  =result.substring(result.lastIndexOf(":")+1,result.length());
+        } else if (result.contains("fuwa:user:")) {       //扫描二维码赠送
+            String code = result.substring(result.lastIndexOf(":") + 1, result.length());
 //            EventBus.getDefault().post(new FuwaGid(gid));
             Intent intent = new Intent();
-            intent.putExtra("code",code);
-            setResult(RESULT_OK,intent);
+            intent.putExtra("code", code);
+            setResult(RESULT_OK, intent);
             finish();
-        }else if(result.contains("fuwa:fuwa:")){ //商家扫描，兑奖
+        } else if (result.contains("fuwa:fuwa:")) { //商家扫描，兑奖
 
 
-            String gid = result.substring(result.lastIndexOf(":")+1,result.length());
-            Log.i("liwya","gid=="+gid);
+            String gid = result.substring(result.lastIndexOf(":") + 1, result.length());
+            Log.i("liwya", "gid==" + gid);
             scanCode(gid);
-
 
 
         }
@@ -304,9 +304,9 @@ public class CaptureActivity extends BaseActivity {
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        String url= HttpUrl.SCAN_CODE;
+        String url = HttpUrl.SCAN_CODE;
         String userid = App.getInstance().getUid();
-        url = url + "?userid=" + userid+"&fuwagid="+gid+"&time="+System.currentTimeMillis();
+        url = url + "?userid=" + userid + "&fuwagid=" + gid + "&time=" + System.currentTimeMillis();
         httpUtils.send(HttpRequest.HttpMethod.GET, url, params, new RequestCallBack<String>() {
 
             @Override
@@ -320,15 +320,16 @@ public class CaptureActivity extends BaseActivity {
                         JSONObject jsonObject = new JSONObject(result);
                         String message = jsonObject.getString("message");
 
-                        switch (jsonObject.getInt("code")){
+                        switch (jsonObject.getInt("code")) {
                             case 0://成功
-                                showToast("兑奖成功",false);
-                            break;
+//                                showToast("兑奖成功",false);
+                                showToast(message, false);
+                                break;
                             case 1:
-                                showToast(message,false);
+                                showToast(message, false);
                                 break;
                             case 2:
-                                showToast(message,false);
+                                showToast(message, false);
                                 break;
                         }
                         handler.postDelayed(new Runnable() {
@@ -336,11 +337,11 @@ public class CaptureActivity extends BaseActivity {
                             public void run() {
                                 finish();
                             }
-                        },800);
+                        }, 800);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        showToast("兑奖失败",false);
+                        showToast("兑奖失败", false);
                     }
                 }
 
