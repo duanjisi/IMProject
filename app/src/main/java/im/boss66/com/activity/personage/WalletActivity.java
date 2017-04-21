@@ -101,7 +101,7 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
                 try {
                     amount_f = Float.parseFloat(amount);
                     if (amount_f > nowMoney) {
-                        showToast("提现金额不能大于当前余额", false);
+                        showToast("余额不足", false);
                         return;
                     }
                     if (amount_f < 10) {
@@ -144,6 +144,8 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
                         DecimalFormat format = new DecimalFormat("0.00");
                         String aaa = format.format(new BigDecimal(nowMoney));
                         tv_money.setText("" + aaa);
+                    } else {
+                        showToast("服务器繁忙，请重试", false);
                     }
                 }
             }
@@ -180,6 +182,8 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
                         DecimalFormat format = new DecimalFormat("0.00");
                         String aaa = format.format(new BigDecimal(nowMoney));
                         tv_money.setText(aaa);
+                    } else {
+                        showToast("提现申请失败", false);
                     }
                 }
             }
