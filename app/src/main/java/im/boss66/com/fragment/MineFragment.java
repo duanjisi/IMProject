@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
+
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
@@ -23,6 +25,7 @@ import im.boss66.com.activity.personage.PersonalPhotoAlbumActivity;
 import im.boss66.com.activity.personage.PersonalSetActivity;
 import im.boss66.com.activity.personage.WalletActivity;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.ActionEntity;
 
 /**
  * 个人中心
@@ -34,6 +37,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private TextView tv_name, tv_number;
     private ImageLoader imageLoader;
     private AccountEntity sAccount;
+    private ImageView iv_avatar;
 
     @Nullable
     @Override
@@ -68,10 +72,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             } else {
                 tv_name.setText("" + userid);
             }
+//            imageLoader.displayImage(sAccount.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
         }
     }
 
     private void initViews(View view) {
+        iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
         rl_information = (RelativeLayout) view.findViewById(R.id.rl_information);
         rl_photo = (RelativeLayout) view.findViewById(R.id.rl_photo);
         rl_collect = (RelativeLayout) view.findViewById(R.id.rl_collect);
@@ -87,6 +93,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         rl_wallet.setOnClickListener(this);
         rl_expression.setOnClickListener(this);
         rl_set.setOnClickListener(this);
+        iv_avatar.setOnClickListener(this);
     }
 
     @Override
@@ -113,16 +120,19 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.rl_set://设置
                 openActivity(PersonalSetActivity.class, null);
                 break;
+            case R.id.iv_avatar:
+                EventBus.getDefault().post(new ActionEntity(5));
+                break;
         }
     }
 
-    private void openActivity(Class<?> clazz, Bundle bundle) {
-        Intent intent = new Intent(getActivity(), clazz);
-        if (bundle != null) {
-            intent.putExtras(bundle);
-        }
-        startActivity(intent);
-    }
+//    public void openActivity(Class<?> clazz, Bundle bundle) {
+//        Intent intent = new Intent(getActivity(), clazz);
+//        if (bundle != null) {
+//            intent.putExtras(bundle);
+//        }
+//        startActivity(intent);
+//    }
 
     public void openActvityForResult(Class<?> clazz, int requestCode) {
         Intent intent = new Intent(getActivity(), clazz);

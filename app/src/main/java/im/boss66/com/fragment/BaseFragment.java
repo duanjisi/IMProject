@@ -12,6 +12,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+
 import im.boss66.com.R;
 import im.boss66.com.widget.DialogFactory;
 
@@ -20,6 +23,9 @@ public class BaseFragment extends Fragment {
 
     private ProgressDialog mProgressDialog;
     private LocalBroadcastReceiver mLocalBroadcastReceiver;
+    // 首先在您的Activity中添加如下成员变量
+    final public UMSocialService mController = UMServiceFactory
+            .getUMSocialService("com.umeng.share");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,4 +107,28 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    public void openActivity(Class<?> clazz) {
+        openActivity(clazz, null);
+    }
+
+    public void openActivity(Class<?> clazz, Bundle bundle) {
+        Intent intent = new Intent(getActivity(), clazz);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        startActivity(intent);
+    }
+
+    public void openActvityForResult(Class<?> clazz, int requestCode) {
+        Intent intent = new Intent(getActivity(), clazz);
+        startActivityForResult(intent, requestCode);
+    }
+
+    public void openActvityForResult(Class<?> clazz, int requestCode, Bundle bundle) {
+        Intent intent = new Intent(getActivity(), clazz);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        startActivityForResult(intent, requestCode);
+    }
 }

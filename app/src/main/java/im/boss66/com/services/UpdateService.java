@@ -37,7 +37,7 @@ import java.io.InputStream;
 
 import im.boss66.com.Constants;
 import im.boss66.com.R;
-import im.boss66.com.activity.MainActivity;
+import im.boss66.com.activity.MainAct;
 
 public class UpdateService extends Service {
     private NotificationManager nm;
@@ -62,7 +62,8 @@ public class UpdateService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Intent jumpIntent = new Intent(this, MainActivity.class);
+//        Intent jumpIntent = new Intent(this, MainActivity.class);
+        Intent jumpIntent = new Intent(this, MainAct.class);
         intent.setAction(Constants.Action.SHOW_HOME_ACTION);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, jumpIntent, 0);

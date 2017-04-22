@@ -845,6 +845,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private String photoPath = "";
     //private String savePath = Environment.getExternalStorageDirectory() + "/myimage/";
     private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+
     private void takePhoto() {
 //        String status = Environment.getExternalStorageState();
 //        // 检测手机是否有sd卡
@@ -1440,10 +1441,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 photoPath = imageUri.toString();
             }
             if (photoPath != null && !photoPath.equals("")) {
-                if(Build.VERSION.SDK_INT >= 24 && photoPath.contains("im.boss66.com.fileProvider") &&
-                        photoPath.contains("/IMProject/")){
+                if (Build.VERSION.SDK_INT >= 24 && photoPath.contains("im.boss66.com.fileProvider") &&
+                        photoPath.contains("/IMProject/")) {
                     String[] arr = photoPath.split("/IMProject/");
-                    if (arr != null && arr.length >1){
+                    if (arr != null && arr.length > 1) {
                         photoPath = savePath + arr[1];
                     }
                 }

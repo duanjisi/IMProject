@@ -24,6 +24,7 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,16 +37,18 @@ import java.util.List;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.SharedPreferencesMgr;
-import im.boss66.com.activity.connection.ApplyCreateActivity;
 import im.boss66.com.activity.connection.AddPeopleActivity;
+import im.boss66.com.activity.connection.ApplyCreateActivity;
 import im.boss66.com.activity.connection.ClanClubActivity;
 import im.boss66.com.activity.connection.PeopleCenterActivity;
 import im.boss66.com.activity.connection.PersonalDataActivity;
 import im.boss66.com.activity.connection.SchoolHometownActivity;
 import im.boss66.com.activity.event.CreateSuccess;
 import im.boss66.com.adapter.MyInfoAdapter;
-import im.boss66.com.adapter.MySchoolAdapter;
+import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.entity.MyInfo;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
@@ -99,6 +102,9 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private boolean isClan;
     private MyInfo.ResultBean.SchoolListBean cofcListBean;
     private String cofc_id;
+    private ImageView iv_avatar;
+    private ImageLoader imageLoader;
+    private AccountEntity account;
     private String url;
 
     @Nullable
@@ -117,6 +123,11 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
 
     private void initViews(View view) {
+        account = App.getInstance().getAccount();
+        imageLoader = ImageLoaderUtils.createImageLoader(getActivity());
+        iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
+        rl_top_bar = (RelativeLayout) view.findViewById(R.id.rl_top_bar);
+        iv_avatar.setOnClickListener(this);
 
         rcv_info = (RecyclerView) view.findViewById(R.id.rcv_info);
         rcv_info.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -262,8 +273,6 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     }
 
 
-
-
     @Override
     public void onClick(View view) {
 
@@ -278,7 +287,9 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                 }
 
                 break;
-
+            case R.id.iv_avatar:
+                EventBus.getDefault().post(new ActionEntity(3));
+                break;
         }
     }
 

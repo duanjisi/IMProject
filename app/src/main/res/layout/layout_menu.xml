@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp"
+        android:orientation="vertical">
+
+        <im.boss66.com.widget.CircleImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="83dp"
+            android:layout_height="83dp"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/person" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_avatar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:text="时代发生地方"
+            android:textColor="@color/text_color_black"
+            android:textSize="16.5sp" />
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/bottom_navigation_rg"
+        android:layout_width="160dp"
+        android:layout_height="320dp"
+        android:layout_below="@+id/rl_top"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="42dp"
+        android:orientation="vertical"
+        android:weightSum="6">
+
+        <RadioButton
+            android:id="@+id/rb_treasure_pager"
+            style="@style/MenuBtn"
+            android:checked="true"
+            android:drawableLeft="@drawable/sel_main_game"
+            android:text="@string/main_treasure" />
+
+        <RadioButton
+            android:id="@+id/rb_home_pager"
+            style="@style/MenuBtn"
+            android:drawableLeft="@drawable/sel_main_news"
+            android:text="@string/main_homepager" />
+
+        <RadioButton
+            android:id="@+id/rb_contact_book"
+            style="@style/MenuBtn"
+            android:drawableLeft="@drawable/sel_main_address"
+            android:text="@string/main_contact_book2" />
+
+        <RadioButton
+            android:id="@+id/rb_contact"
+            style="@style/MenuBtn"
+            android:drawableLeft="@drawable/sel_main_connection"
+            android:text="@string/main_contact" />
+
+        <RadioButton
+            android:id="@+id/rb_discover"
+            style="@style/MenuBtn"
+            android:drawableLeft="@drawable/sel_main_find"
+            android:text="@string/main_discover" />
+
+        <RadioButton
+            android:id="@+id/rb_mine"
+            style="@style/MenuBtn"
+            android:drawableLeft="@drawable/sel_main_person"
+            android:text="@string/main_mine2" />
+    </RadioGroup>
+
+</RelativeLayout>

@@ -101,9 +101,23 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
                 });
                 break;
             case "rl_phone":
-                et_content.setInputType(InputType.TYPE_CLASS_PHONE);
-                et_content.setMaxEms(15);
-                tv_num.setVisibility(View.INVISIBLE);
+                et_content.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        tv_num.setText("还可输入" + (50 - et_content.length()) + "字");
+                    }
+                });
                 break;
         }
 

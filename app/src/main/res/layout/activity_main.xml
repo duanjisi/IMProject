@@ -31,7 +31,7 @@
                     android:id="@+id/rb_home_pager"
                     style="@style/MainRadioBtn"
                     android:checked="true"
-                    android:drawableTop="@drawable/sel_main_homepager"
+                    android:drawableTop="@drawable/sel_main_contact"
                     android:text="@string/main_homepager" />
 
                 <RadioButton

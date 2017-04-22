@@ -12,6 +12,18 @@
         android:layout_height="50dip"
         android:background="@color/top_bar_color">
 
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:paddingBottom="12.5dp"
+            android:paddingTop="12.5dp"
+            android:src="@drawable/menu_left" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +39,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:paddingLeft="16dp"
-            android:paddingRight="11dp"
+            android:paddingRight="16dp"
             android:src="@drawable/hp_white_personal" />
     </RelativeLayout>
 

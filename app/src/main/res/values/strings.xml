@@ -35,13 +35,14 @@
     <string name="error_server_down">服务器异常，请稍候再试...</string>
     <string name="other_login">使用其他方式登录</string>
 
-
+    <string name="main_treasure">寻宝</string>
     <string name="main_homepager">消息</string>
     <string name="main_contact_book">通讯</string>
+    <string name="main_contact_book2">通讯录</string>
     <string name="main_contact">人脉</string>
     <string name="main_discover">发现</string>
     <string name="main_mine">个人</string>
-
+    <string name="main_mine2">个人中心</string>
     <!--  摇一摇  -->
     <string name="shark_it_off_ing">正在搜寻同一时\n刻摇晃手机的人</string>
     <string name="shark_it_off">摇晃手机，寻找好友</string>

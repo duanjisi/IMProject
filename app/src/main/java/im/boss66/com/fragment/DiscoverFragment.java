@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,17 +17,21 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.greenrobot.eventbus.EventBus;
 
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.discover.FriendCircleActivity;
 import im.boss66.com.activity.discover.PeopleNearbyActivity;
 import im.boss66.com.activity.discover.SharkItOffActivity;
-import im.boss66.com.activity.treasure.AroundPosActivity;
 import im.boss66.com.activity.treasure.MainTreasureActivity;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.entity.BaseResult;
 import im.boss66.com.entity.CircleNewest;
 import im.boss66.com.entity.CircleNewestEntity;
@@ -42,6 +47,9 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
     private String access_token;
     private boolean isLoad = false;
     private String newCount, newIcon;
+    private ImageView iv_avatar;
+    private ImageLoader imageLoader;
+    private AccountEntity account;
 
     @Nullable
     @Override
@@ -56,6 +64,10 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initViews(View view) {
+        account = App.getInstance().getAccount();
+        imageLoader = ImageLoaderUtils.createImageLoader(getActivity());
+        iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
+
         rl_friends = (RelativeLayout) view.findViewById(R.id.rl_friends);
         rl_richScan = (RelativeLayout) view.findViewById(R.id.rl_richScan);
         rl_shark_it_off = (RelativeLayout) view.findViewById(R.id.rl_shark_it_off);
@@ -70,6 +82,8 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
         rl_people_nearby.setOnClickListener(this);
         rl_shopping.setOnClickListener(this);
         rl_game.setOnClickListener(this);
+        iv_avatar.setOnClickListener(this);
+//        imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
     }
 
     @Override
@@ -106,16 +120,18 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
             case R.id.rl_game:
                 openActivity(MainTreasureActivity.class, null);
                 break;
+            case R.id.iv_avatar:
+                EventBus.getDefault().post(new ActionEntity(4));
+                break;
         }
     }
-
-    private void openActivity(Class<?> clazz, Bundle bundle) {
-        Intent intent = new Intent(getActivity(), clazz);
-        if (bundle != null) {
-            intent.putExtras(bundle);
-        }
-        startActivity(intent);
-    }
+//    public void openActivity(Class<?> clazz, Bundle bundle) {
+//        Intent intent = new Intent(getActivity(), clazz);
+//        if (bundle != null) {
+//            intent.putExtras(bundle);
+//        }
+//        startActivity(intent);
+//    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {

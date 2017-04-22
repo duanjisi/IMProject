@@ -215,6 +215,8 @@ public class HttpUrl {
     public static final String SEARCH_USER_INFO = MAIN_URL + "ucenter/userinfo/index";
     //查询周围的福娃
     public static final String FIND_AROUND_CHILDREN = BASE_FUWA[FUWA_TAG] + "api/query?";
+    //查询周围缘分
+    public static final String FIND_AROUND_FATE = BASE_FUWA[FUWA_TAG] + "api/querystranger?";
     //同学推荐
     public static final String SCHOOLMATE_LIST = MAIN_URL + "api/v1/search/same-school";
     //同乡推荐
@@ -254,7 +256,7 @@ public class HttpUrl {
     //名人详情页
     public static final String FAMOUSPERSON_DETAIL = MAIN_URL + "web/hometown/celebrity";
     //学校名人页
-    public static final String SCHOOL_PERSON_DETAIL = MAIN_URL + "web/school/celebrity";
+    public static final String SCHOOL_PERSON_DETAIL =MAIN_URL+"web/school/celebrity";
     //学校社团详情页
     public static final String SCHOOL_CLUB_DETATIL = MAIN_URL + "web/school/league";
     //家乡动态详情页

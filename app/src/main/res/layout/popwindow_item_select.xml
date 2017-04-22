@@ -41,7 +41,7 @@
             android:id="@+id/tv_add_friends"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:drawableLeft="@drawable/hp_add_contacts"
+            android:drawableLeft="@drawable/hp_white_add"
             android:gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"

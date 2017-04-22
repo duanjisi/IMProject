@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/treasure_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dip">
+
+        <im.boss66.com.widget.CircleImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="41dp"
+            android:layout_height="41dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16.5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/person" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="7.5dp"
+            android:layout_toRightOf="@+id/iv_avatar"
+            android:text="张三"
+            android:textColor="@color/white"
+            android:textSize="16.5sp" />
+
+        <ImageView
+            android:id="@+id/iv_game"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/iv_rank"
+            android:paddingLeft="11dp"
+            android:paddingRight="11dp"
+            android:src="@drawable/home_game_rule" />
+
+        <ImageView
+            android:id="@+id/iv_rank"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/img_more"
+            android:paddingLeft="11dp"
+            android:paddingRight="11dp"
+            android:src="@drawable/home_charts" />
+
+        <ImageView
+            android:id="@+id/img_more"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="16dp"
+            android:paddingRight="11dp"
+            android:src="@drawable/more" />
+    </RelativeLayout>
+
+    <!--<ImageView-->
+    <!--android:id="@+id/img_more"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:padding="20dp"-->
+    <!--android:src="@drawable/more" />-->
+
+    <ImageView
+        android:id="@+id/iv_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="82dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/treasure_heading" />
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_tag"
+        android:layout_marginTop="13dp">
+
+        <ImageView
+            android:id="@+id/iv_msg"
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:layout_toLeftOf="@+id/iv_bag"
+            android:scaleType="centerCrop"
+            android:src="@drawable/treasure_news" />
+
+        <ImageView
+            android:id="@+id/iv_bag"
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="11dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/treasure_bag" />
+
+        <ImageView
+            android:id="@+id/iv_trade"
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:layout_toRightOf="@+id/iv_bag"
+            android:scaleType="centerCrop"
+            android:src="@drawable/treasure_buy" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_find"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/btn_store"
+        android:layout_below="@+id/rl"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_treasure_find_selector"
+        android:text="找福娃"
+        android:textColor="@color/golden_color"
+        android:textSize="19.8sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_find_fate"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_alignRight="@+id/btn_store"
+        android:layout_alignTop="@+id/btn_find"
+        android:background="@drawable/bg_treasure_find_fate_selector"
+        android:text="找缘份"
+        android:textColor="@color/golden_color"
+        android:textSize="19.8sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_store"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/btn_find"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/bg_treasure_store_selector"
+        android:text="藏福娃"
+        android:textColor="@color/golden_color"
+        android:textSize="19.8sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_store"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26.5dp"
+        android:gravity="center"
+        android:text="我要申请福娃 >"
+        android:textColor="@color/golden_color"
+        android:textSize="14sp" />
+
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="54dp"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:visibility="gone">-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:alpha="0.5"-->
+    <!--android:background="@color/black" />-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="54dp"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_game"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="1.0"-->
+    <!--android:gravity="center"-->
+    <!--android:text="游戏规则"-->
+    <!--android:textColor="@color/bg_rectangle"-->
+    <!--android:textSize="14sp" />-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="1.6dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_marginBottom="8dp"-->
+    <!--android:layout_marginTop="8dp"-->
+    <!--android:src="@drawable/line_fuwa" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_rank"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="1.0"-->
+    <!--android:gravity="center"-->
+    <!--android:text="福娃排行榜"-->
+    <!--android:textColor="@color/bg_rectangle"-->
+    <!--android:textSize="14sp" />-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="1.6dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_marginBottom="8dp"-->
+    <!--android:layout_marginTop="8dp"-->
+    <!--android:src="@drawable/line_fuwa" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_apply"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="1.0"-->
+    <!--android:gravity="center"-->
+    <!--android:text="申请福娃"-->
+    <!--android:textColor="@color/bg_rectangle"-->
+    <!--android:textSize="14sp" />-->
+    <!--</LinearLayout>-->
+
+    <!--</RelativeLayout>-->
+
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_rank"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/btn_store"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="39dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:paddingLeft="11dp"-->
+    <!--android:paddingRight="11dp"-->
+    <!--android:text="福娃排行榜 >"-->
+    <!--android:textColor="#d0976f"-->
+    <!--android:textSize="16.5sp" />-->
+</RelativeLayout>

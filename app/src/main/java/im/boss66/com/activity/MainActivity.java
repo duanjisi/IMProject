@@ -130,11 +130,6 @@ public class MainActivity extends BaseActivity implements Observer {
             return;
         }
         initData();
-        testBranch();
-    }
-
-    private void testBranch() {
-        Log.i("info", "==================");
     }
 
     private void initData() {
@@ -187,20 +182,10 @@ public class MainActivity extends BaseActivity implements Observer {
         mPushAgent = PushAgent.getInstance(this);
         mPushAgent.enable(mRegisterCallback);
         mPushAgent.setPushIntentServiceClass(MyPushIntentService.class);
-//        String sha1 = UIUtils.getSHA1(context);
-//        Log.i("info", "=======sha1:" + sha1);
-//        Intent intent = new Intent(context, ChatServices.class);
-//        intent.putExtra("userid", account.getUser_id());
-//        startService(intent);
         ChatServices.startChatService(context);
-//        getPermission(PermissionUtil.PERMISSIONS_SYSTEM_SETTING);
         getPermission(PermissionUtil.PERMISSIONS_SD_READ_WRITE);
         requestLoveStore();
         checkUpdate();
-//        boolean isInitEmo = PreferenceUtils.getBoolean(context, PrefKey.EMO_SYSTEM_INIT, true);
-//        if (isInitEmo) {
-//            initSystemEmos();
-//        }
     }
 
     public InputStream getImageStream(String path) throws Exception {
@@ -710,9 +695,6 @@ public class MainActivity extends BaseActivity implements Observer {
         final String fileName = assetsEmos();
         if (fileName != null && !fileName.equals("")) {
             final File file = new File(Constants.EMO_DIR_PATH, fileName);
-//            if (file.exists()) {
-//                file.delete();
-//            }
             ZipExtractorTask task = new ZipExtractorTask(file.getPath(), Constants.EMO_DIR_PATH,
                     MainActivity.this, true, new ZipExtractorTask.Callback() {
                 @Override
