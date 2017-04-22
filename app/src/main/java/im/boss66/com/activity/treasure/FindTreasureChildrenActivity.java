@@ -336,16 +336,16 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private void showDetail(final Context context, View parent, ChildEntity entity) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         // 不同页面加载不同的popup布局
-        View view = inflater.inflate(R.layout.popwindow_item_detail2, null);
+        View view = inflater.inflate(R.layout.popwindow_item_detail, null);
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.FILL_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT, false);
         popupWindow.setAnimationStyle(R.style.PopupTitleBarAnim);
 
-//        ImageView iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
+        ImageView iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
         TextView tvTips = (TextView) view.findViewById(R.id.tv_tips);
-//        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
-//        TextView tv_sign = (TextView) view.findViewById(R.id.tv_sign);
-//        TextView tv_address = (TextView) view.findViewById(R.id.tv_address);
+        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
+        TextView tv_sign = (TextView) view.findViewById(R.id.tv_sign);
+        TextView tv_address = (TextView) view.findViewById(R.id.tv_address);
 
         String detail = entity.getDetail();
         if (!TextUtils.isEmpty(detail)) {
@@ -353,13 +353,13 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         } else {
             tvTips.setText(resources.getString(R.string.no_act));
         }
-//        tv_name.setText(entity.getName());
-//        tv_sign.setText(entity.getSignature());
-//        tv_address.setText(entity.getLocation());
-//        String imageUrl = entity.getAvatar();
-//        if (!TextUtils.isEmpty(imageUrl)) {
-//            imageLoader.displayImage(imageUrl, iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
-//        }
+        tv_name.setText(entity.getName());
+        tv_sign.setText(entity.getSignature());
+        tv_address.setText(entity.getLocation());
+        String imageUrl = entity.getAvatar();
+        if (!TextUtils.isEmpty(imageUrl)) {
+            imageLoader.displayImage(imageUrl, iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
+        }
         int[] location = new int[2];
         parent.getLocationOnScreen(location);
         popupWindow.setOutsideTouchable(true);

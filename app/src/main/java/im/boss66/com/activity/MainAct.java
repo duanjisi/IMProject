@@ -157,12 +157,12 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         getPermission(PermissionUtil.PERMISSIONS_SD_READ_WRITE);
         requestLoveStore();
         checkUpdate();
+        tv_name.setText(account.getUser_name());
+        imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
         if (SharedPreferencesMgr.getBoolean("setSuccess2", false)) {
             return;
         }
         initData();
-        tv_name.setText(account.getUser_name());
-        imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
     }
 
     private void initFragment() {
@@ -231,6 +231,7 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
                 checkFragment();
 //                设置成功不弹窗
                 if (SharedPreferencesMgr.getBoolean("setSuccess2", false)) {
+                    slidingMenu.toggle();
                     return;
                 }
                 if (peopleDataDialog == null) {
