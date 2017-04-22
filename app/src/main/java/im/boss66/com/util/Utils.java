@@ -18,6 +18,7 @@ import android.os.StrictMode;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 
@@ -369,7 +370,8 @@ public class Utils {
         MessageDB mMsgDB = App.getInstance().getMessageDB();
         AccountEntity account = App.getInstance().getAccount();
         String mMsgId = account.getUser_id() + "_" + toUid;
-
+        Log.i("MessageItem:", "item.getMsgType():" + item.getMsgType() +
+                "   item.getMessage():" + item.getMessage() + "   item.getVoiceTime()" + item.getVoiceTime());
         MessageItem mode = new MessageItem(
                 item.getMsgType(), "",
                 System.currentTimeMillis(), item.getMessage(), 0,

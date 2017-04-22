@@ -28,17 +28,20 @@ import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.im.SelectConversationActivity;
 import im.boss66.com.adapter.PersonalCollectAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BaseResult;
 import im.boss66.com.entity.CollectEntity;
+import im.boss66.com.entity.MessageItem;
 import im.boss66.com.entity.PersonalCollect;
 import im.boss66.com.http.HttpUrl;
+import im.boss66.com.widget.ActionSheet;
 
 /**
  * 收藏
  */
-public class PersonalCollectActivity extends BaseActivity implements View.OnClickListener {
+public class PersonalCollectActivity extends BaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener {
 
     private TextView tv_back, tv_title, tv_right;
     private LRecyclerView rv_collect;
@@ -46,6 +49,8 @@ public class PersonalCollectActivity extends BaseActivity implements View.OnClic
     private int page;
     private PersonalCollectAdapter adapter;
     private List<CollectEntity> allList;
+    private int selectPos;
+    private boolean isUpdate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +85,7 @@ public class PersonalCollectActivity extends BaseActivity implements View.OnClic
         rv_collect.setRefreshProgressStyle(ProgressStyle.Pacman);
         rv_collect.setFooterViewHint("拼命加载中", "我是有底线的", "网络不给力啊，点击再试一次吧");
         rv_collect.setAdapter(mLRecyclerViewAdapter);
+
         rv_collect.setLoadMoreEnabled(true);
         rv_collect.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
@@ -97,9 +103,10 @@ public class PersonalCollectActivity extends BaseActivity implements View.OnClic
                 new PersonalCollectAdapter.RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
+                        int pos = position - 1;
                         int size = adapter.getItemCount();
-                        if (position < size && position >= 0) {
-                            CollectEntity item = (CollectEntity) adapter.getDatas().get(position);
+                        if (pos < size && pos >= 0) {
+                            CollectEntity item = (CollectEntity) adapter.getDatas().get(pos);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("collect", item);
                             openActivity(CollectDetailActivity.class, bundle);
@@ -108,7 +115,8 @@ public class PersonalCollectActivity extends BaseActivity implements View.OnClic
 
                     @Override
                     public void onLongClick(View view, int posotion) {
-
+//                        selectPos = posotion;
+//                        showActionSheet();
                     }
                 }));
         getServerCollect();
@@ -148,6 +156,13 @@ public class PersonalCollectActivity extends BaseActivity implements View.OnClic
                                 List<CollectEntity> list = personalCollect.getResult();
                                 if (list != null && list.size() > 0) {
                                     showData(list);
+                                } else {
+                                    if (isUpdate) {
+                                        allList.clear();
+                                        isUpdate = false;
+                                        adapter.setDatas(allList);
+                                        adapter.notifyDataSetChanged();
+                                    }
                                 }
                             }
                         }
@@ -169,6 +184,10 @@ public class PersonalCollectActivity extends BaseActivity implements View.OnClic
     }
 
     private void showData(List<CollectEntity> list) {
+        if (isUpdate) {
+            allList.clear();
+            isUpdate = false;
+        }
         if (list.size() == 20) {
             page++;
         } else {
@@ -202,6 +221,9 @@ public class PersonalCollectActivity extends BaseActivity implements View.OnClic
                         } else {
                             if (personalCollect.getCode() == 1) {
                                 showToast("刪除成功", false);
+                                page = 0;
+                                isUpdate = true;
+                                getServerCollect();
                             }
                         }
                     }
@@ -227,4 +249,65 @@ public class PersonalCollectActivity extends BaseActivity implements View.OnClic
         App.getInstance().sendBroadcast(intent);
     }
 
+    private void showActionSheet() {
+        ActionSheet actionSheet = new ActionSheet(PersonalCollectActivity.this)
+                .builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true);
+        actionSheet
+//                .addSheetItem("转发", ActionSheet.SheetItemColor.Black,
+//                        PersonalCollectActivity.this)
+                .addSheetItem("删除", ActionSheet.SheetItemColor.Black,
+                        PersonalCollectActivity.this);
+        actionSheet.show();
+    }
+
+    @Override
+    public void onClick(int which) {
+        switch (which) {
+//            case 1:
+//                int size1 = adapter.getItemCount();
+//                if (selectPos < size1 && selectPos >= 0) {
+//                    CollectEntity item = (CollectEntity) adapter.getDatas().get(selectPos);
+//                    String type = item.getType();
+//                    int msgType = 3;
+//                    String msg = "";
+//                    switch (type) {
+//                        case "0":
+//                            msgType = 3;
+//                            msg = item.getText();
+//                            break;
+//                        case "1":
+//                            msgType = 2;
+//                            msg = item.getUrl();
+//                            break;
+//                        case "2":
+//                            msg = item.getUrl();
+//                            msgType = 4;
+//                            break;
+//                    }
+//                    MessageItem messageItem = new MessageItem(
+//                            msgType, "",
+//                            0, msg, 0,
+//                            false, 0, 0, "",
+//                            "", "", "");
+//                    Intent intent = new Intent(context, SelectConversationActivity.class);
+//                    intent.putExtra("item", messageItem);
+//                    startActivity(intent);
+//                }
+//                break;
+            case 1:
+                int size = adapter.getItemCount();
+                if (selectPos < size && selectPos >= 0) {
+                    CollectEntity item = (CollectEntity) adapter.getDatas().get(selectPos);
+                    deleteServerData(item.getId());
+                }
+                break;
+        }
+    }
+
+    public void showDelectDiaglog(int pos) {
+        selectPos = pos;
+        showActionSheet();
+    }
 }
