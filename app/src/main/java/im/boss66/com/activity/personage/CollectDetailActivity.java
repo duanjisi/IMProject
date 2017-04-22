@@ -56,7 +56,7 @@ public class CollectDetailActivity extends BaseActivity {
                     Glide.with(context).load(entity.getThum()).
                             error(R.drawable.zf_default_album_grid_image).into(riv_head);
                     String time = entity.getAdd_time();
-                    tv_time.setText(time);
+                    tv_time.setText("收藏于" + time);
                     String type = entity.getType();
                     switch (type) {
                         case "0":
