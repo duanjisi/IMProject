@@ -252,7 +252,8 @@ public class HttpUrl {
     //支付宝购买福娃
     public static final String FUWA_PAY_ALIPAY = MAIN_URL + "api/pay/alipay";
     //支付系统通知购买成功
-    public static final String SYSTEM_PAY_NOTICE = "http://wsimali.66boss.com:9090/msg/notice?";
+    public static final String SYSTEM_PAY_NOTICE =BASE_FUWA[FUWA_TAG]+"msg/notice?" ;
+
     //名人详情页
     public static final String FAMOUSPERSON_DETAIL = MAIN_URL + "web/hometown/celebrity";
     //学校名人页
@@ -264,8 +265,7 @@ public class HttpUrl {
     //学校动态详情页
     public static final String SCHOOL_NEWS_DETATIL = MAIN_URL + "/web/school/message";
     //申请福娃
-    public static final String APPLY_FUWA = "http://wsimali.66boss.com:9090/msg/apply";
-
+    public static final String APPLY_FUWA =BASE_FUWA[FUWA_TAG]+"msg/apply";
     //修改密码
     public static final String CHANGE_USER_PW = MAIN_URL + "/ucenter/psw/index";
     //创建宗亲
