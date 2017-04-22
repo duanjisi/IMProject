@@ -305,7 +305,7 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
                                     PhotoInfo photoInfo = photos.get(postion);
                                     if (photoInfo != null) {
                                         CommentDialog dialog = new CommentDialog(context, presenter, false,
-                                                false, photoInfo.file_thumb, photoInfo.file_url, 1, entity.getFeed_uid());
+                                                false, photoInfo.file_url, photoInfo.file_thumb, 1, entity.getFeed_uid());
                                         dialog.show();
                                     }
                                 }

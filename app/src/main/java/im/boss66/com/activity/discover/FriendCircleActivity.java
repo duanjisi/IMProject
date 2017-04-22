@@ -1064,6 +1064,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 url = url + "?fromid=" + fromid + "&type=" + type + "&url=" + imgUrl + "&thum=" + thumUrl;
                 break;
         }
+        Log.i("url:",url);
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
