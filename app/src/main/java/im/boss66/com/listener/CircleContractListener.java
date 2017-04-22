@@ -20,6 +20,7 @@ public interface CircleContractListener {
         void update2DeleteComment(int circlePosition, String commentId,boolean isLong);
         void updateEditTextBodyVisible(int visibility, CommentConfig commentConfig);
         void update2loadData(int loadType, List<CircleItem> datas);
+        void update2AddCollect(String url,String thumUrl,int type,String fromid);
     }
 
     interface Presenter{
@@ -28,7 +29,7 @@ public interface CircleContractListener {
         void addFavort(final int circlePosition,final int favortId);
         void deleteFavort(final int circlePosition, final int favortId);
         void deleteComment(final int circlePosition, final String commentId,boolean isLong);
-
+        void addCollect(String url,String thumUrl,int type,String fromid);
     }
 
 }

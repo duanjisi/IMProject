@@ -321,5 +321,11 @@ public class HttpUrl {
     public static final String QUERY_MY_MONEY = BASE_FUWA[FUWA_TAG] + "msg/querymoney?userid=";
     //提现
     public static final String WHITDRAW_MONEY = BASE_FUWA[FUWA_TAG] + "msg/money?";
+    //获取个人收藏
+    public static final String GET_PERSONAL_COLLECT = MAIN_URL + "api/v1/favorites";
+    //刪除个人收藏
+    public static final String DELETE_PERSONAL_COLLECT = MAIN_URL + "api/v1/favorites/delete";
+    //增加到个人收藏
+    public static final String ADD_PERSONAL_COLLECT = MAIN_URL + "api/v1/favorites/add";
 
 }

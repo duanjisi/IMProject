@@ -272,13 +272,14 @@ public class MultiImageView extends LinearLayout {
             Glide.with(getContext()).load(photoInfo.resourceid).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
         }
         imageView.setOnClickListener(new ImageOnClickListener(position));
+        imageView.setOnLongClickListener(new ImageOnClickListener(position));
         imageView.setBackgroundColor(getResources().getColor(R.color.im_font_color_text_hint));
 
 
         return imageView;
     }
 
-    private class ImageOnClickListener implements View.OnClickListener {
+    private class ImageOnClickListener implements View.OnClickListener, View.OnLongClickListener {
 
         private int position;
 
@@ -292,10 +293,20 @@ public class MultiImageView extends LinearLayout {
                 mOnItemClickListener.onItemClick(view, position);
             }
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            if (mOnItemClickListener != null) {
+                mOnItemClickListener.onItemLongClick(view, position);
+            }
+            return true;
+        }
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+        void onItemClick(View view, int position);
+
+        void onItemLongClick(View view, int postion);
     }
 
     public void setFromType(int fromType) {

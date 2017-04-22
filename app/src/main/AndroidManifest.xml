@@ -589,6 +589,15 @@
         <activity
             android:name=".activity.personage.ChangeUserPwActivity"
             android:screenOrientation="portrait"></activity>
+        <!-- 收藏 -->
+        <activity
+            android:name=".activity.personage.PersonalCollectActivity"
+            android:screenOrientation="portrait"></activity>
+        <!-- 收藏詳情 -->
+        <activity
+            android:name=".activity.personage.CollectDetailActivity"
+            android:screenOrientation="portrait"></activity>
+
 
         <!-- 定位需要的服务 -->
         <service android:name="com.amap.api.location.APSService" />

@@ -180,6 +180,11 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                     }
                 }
             }
+
+            @Override
+            public void onItemLongClick(View view, int postion) {
+
+            }
         });
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) et_tx.getLayoutParams();
 
@@ -372,10 +377,10 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         if (SEND_TYPE_PHOTO.equals(sendType) && imgList != null) {
             for (int i = 0; i < imgList.size(); i++) {
                 String path = imgList.get(i);
-                if(Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
-                        path.contains("/IMProject/")){
+                if (Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
+                        path.contains("/IMProject/")) {
                     String[] arr = path.split("/IMProject/");
-                    if (arr != null && arr.length >1){
+                    if (arr != null && arr.length > 1) {
                         path = savePath + arr[1];
                     }
                 }

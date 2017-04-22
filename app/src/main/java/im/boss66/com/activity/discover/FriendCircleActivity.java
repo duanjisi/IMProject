@@ -73,6 +73,7 @@ import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.personage.PersonalPhotoAlbumActivity;
 import im.boss66.com.adapter.FriendCircleAdapter;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.BaseResult;
 import im.boss66.com.entity.CircleCommentListEntity;
 import im.boss66.com.entity.CircleItem;
 import im.boss66.com.entity.CirclePraiseListEntity;
@@ -432,6 +433,12 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     public void update2loadData(int loadType, List<CircleItem> datas) {
 
     }
+
+    @Override
+    public void update2AddCollect(String url, String thumUrl, int type, String fromid) {
+        addCollectToServer(url, thumUrl, type, fromid);
+    }
+
 
     private void showActionSheet(int type) {
         updateEditTextBodyVisible(View.GONE, null);
@@ -1038,5 +1045,57 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         Intent intent = new Intent();
         intent.setAction(Constants.ACTION_LOGOUT_RESETING);
         App.getInstance().sendBroadcast(intent);
+    }
+
+    private void addCollectToServer(String imgUrl, String thumUrl, int type, String fromid) {
+        showLoadingDialog();
+        String url = HttpUrl.ADD_PERSONAL_COLLECT;
+        HttpUtils httpUtils = new HttpUtils(30 * 1000);
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        switch (type) {
+            case 0:
+                url = url + "?fromid=" + fromid + "&type=" + type + "&text=" + imgUrl;
+                break;
+            case 1:
+                url = url + "?fromid=" + fromid + "&type=" + type + "&url=" + imgUrl + "&thum=" + thumUrl;
+                break;
+            case 2:
+                url = url + "?fromid=" + fromid + "&type=" + type + "&url=" + imgUrl + "&thum=" + thumUrl;
+                break;
+        }
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                Log.i("onSuccess:", "" + result);
+                if (result != null) {
+                    BaseResult personalCollect = JSON.parseObject(result, BaseResult.class);
+                    if (personalCollect != null) {
+                        if (personalCollect.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            if (personalCollect.getCode() == 1) {
+                                showToast("收藏成功", false);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    goLogin();
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
+            }
+        });
     }
 }

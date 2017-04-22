@@ -1411,4 +1411,63 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
     public void update2loadData(int loadType, List<CircleItem> datas) {
 
     }
+
+    @Override
+    public void update2AddCollect(String url, String thumUrl, int type, String fromid) {
+        addCollectToServer(url, thumUrl, type, fromid);
+    }
+
+    private void addCollectToServer(String imgUrl, String thumUrl, int type, String fromid) {
+        showLoadingDialog();
+        String url = HttpUrl.ADD_PERSONAL_COLLECT;
+        HttpUtils httpUtils = new HttpUtils(30 * 1000);
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        switch (type) {
+            case 0:
+                url = url + "?fromid=" + fromid + "&type=" + type + "&text=" + imgUrl;
+                break;
+            case 1:
+                url = url + "?fromid=" + fromid + "&type=" + type + "&url=" + imgUrl + "&thum=" + thumUrl;
+                break;
+            case 2:
+                url = url + "?fromid=" + fromid + "&type=" + type + "&url=" + imgUrl + "&thum=" + thumUrl;
+                break;
+        }
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                Log.i("onSuccess:", "" + result);
+                if (result != null) {
+                    BaseResult personalCollect = JSON.parseObject(result, BaseResult.class);
+                    if (personalCollect != null) {
+                        if (personalCollect.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            if (personalCollect.getCode() == 1) {
+                                showToast("收藏成功", false);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
+            }
+        });
+    }
 }
