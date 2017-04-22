@@ -50,9 +50,13 @@ public class FuwaMessageActivity extends BaseActivity implements View.OnClickLis
 
     private void initView() {
         mDbUtils = DbUtils.create(this);
+        list = new ArrayList<>();
         try {
-            list = mDbUtils.findAll(FuwaMsgItem.class);
-            mDbUtils.deleteAll(list);
+            List<FuwaMsgItem> list1 = mDbUtils.findAll(FuwaMsgItem.class);
+            if (list1 != null && list1.size() > 0) {
+                list.addAll(list1);
+            }
+            mDbUtils.deleteAll(list1);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -61,10 +65,6 @@ public class FuwaMessageActivity extends BaseActivity implements View.OnClickLis
         lv_listview = (SlideListView) findViewById(R.id.lv_listview);
 
         tv_back.setOnClickListener(this);
-        if (list == null) {
-            list = new ArrayList<>();
-        }
-
         adapter = new FuwaMessageAdapter(this, list);
         adapter.getDb(mDbUtils);
         lv_listview.setAdapter(adapter);
@@ -97,6 +97,8 @@ public class FuwaMessageActivity extends BaseActivity implements View.OnClickLis
                             if (fuwaMsg != null) {
                                 List<FuwaMsgItem> list_ = fuwaMsg.data;
                                 if (list_ != null && list_.size() > 0) {
+                                    lv_listview.setVisibility(View.VISIBLE);
+                                    tv_empty.setVisibility(View.GONE);
                                     try {
                                         if (list != null && list.size() > 0) {
                                             list_.addAll(list);
