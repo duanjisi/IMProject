@@ -342,6 +342,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         popupWindow.setFocusable(true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(0xb0000000));
         popupWindow.getBackground().setAlpha(0);
+        popupWindow.setAnimationStyle(R.style.PopupTitleBarAnim1);
         popupWindow.showAsDropDown(parent);
         view.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
