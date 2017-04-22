@@ -220,7 +220,7 @@
                 android:layout_height="1px"
                 android:layout_marginLeft="17dp"
                 android:background="@color/bg_gray"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <RelativeLayout
                 android:id="@+id/rl_wallet"
@@ -263,7 +263,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/bg_gray"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <View
                 android:layout_width="match_parent"

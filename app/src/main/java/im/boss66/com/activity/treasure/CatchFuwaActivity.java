@@ -3,6 +3,7 @@ package im.boss66.com.activity.treasure;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -71,9 +72,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -142,7 +146,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout rl_user;
     private String fuwaUserId;
     private ChildEntity currentChild;
-    private String videoUrl, videoBgUrl;
+    private String videoUrl, videoBgUrl = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -493,7 +497,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onPictureTaken(byte[] bytes, Camera camera) {
             try {
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                Bitmap bm = byteToBitmap(bytes);
                 if (bm != null) {
                     String imageName = "hai_meng_fuwa.jpg";
                     // 指定调用相机拍照后照片的储存路径
@@ -699,14 +703,20 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     tv_user_area.setText(area);
                 }
                 videoUrl = currentChild.getVideo();
-                Log.i("videoUrl:", videoUrl);
                 if (!TextUtils.isEmpty(videoUrl)) {
                     rl_video.setVisibility(View.VISIBLE);
                     String[] arr = videoUrl.split("\\.");
                     if (arr != null && arr.length > 1) {
-                        arr[arr.length - 1] = ".jpg";
+                        arr[arr.length - 1] = "jpg";
                         for (String s : arr) {
                             videoBgUrl += s;
+                        }
+                        for (int i = 0; i < arr.length; i++) {
+                            if (i == 0) {
+                                videoBgUrl = arr[i];
+                            } else {
+                                videoBgUrl = videoBgUrl + "." + arr[i];
+                            }
                         }
                         Glide.with(this).load(videoBgUrl).error(R.drawable.zf_default_message_image).into(iv_video_photo);
                     }
@@ -746,7 +756,13 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             dialogWindow.setAttributes(params);
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
-
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    Log.i("onDismiss:", "onDismiss");
+                    finish();
+                }
+            });
             AccountEntity sAccount = App.getInstance().getAccount();
             if (sAccount != null) {
                 String head = sAccount.getAvatar();
@@ -873,5 +889,30 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             finish();
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    public Bitmap byteToBitmap(byte[] imgByte) {
+        InputStream input = null;
+        Bitmap bitmap = null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 8;
+        input = new ByteArrayInputStream(imgByte);
+        SoftReference softRef = new SoftReference(BitmapFactory.decodeStream(
+                input, null, options));
+        bitmap = (Bitmap) softRef.get();
+        if (imgByte != null) {
+            imgByte = null;
+        }
+
+        try {
+            if (input != null) {
+                input.close();
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 }
