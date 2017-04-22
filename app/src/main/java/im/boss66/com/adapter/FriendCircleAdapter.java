@@ -140,7 +140,14 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
             holder.contentTv.setText(UrlUtils.formatUrlString(content));
         }
         holder.contentTv.setVisibility(TextUtils.isEmpty(content) ? View.GONE : View.VISIBLE);
-
+        holder.contentTv.setOnItemLongClickListener(new ExpandTextView.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick() {
+                String content = entity.getContent();
+                CommentDialog dialog = new CommentDialog(context, presenter, false, true, content, null, 0, entity.getFeed_uid());
+                dialog.show();
+            }
+        });
         if (curUserid.equals(entity.getFeed_uid())) {
             holder.deleteBtn.setVisibility(View.VISIBLE);
         } else {
@@ -282,6 +289,19 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                                 }
                                 ImagePagerActivity.startImagePagerActivity(context, photoUrls, position, imageSize, false);
                             }
+
+                            @Override
+                            public void onItemLongClick(View view, int postion) {
+                                List<PhotoInfo> photos = entity.getFiles();
+                                if (photos != null && photos.size() > 0 && photos.size() > postion) {
+                                    PhotoInfo photoInfo = photos.get(postion);
+                                    if (photoInfo != null) {
+                                        CommentDialog dialog = new CommentDialog(context, presenter, false,
+                                                false, photoInfo.file_thumb, photoInfo.file_url, 1, entity.getFeed_uid());
+                                        dialog.show();
+                                    }
+                                }
+                            }
                         });
                     } else {
                         ((ImageViewHolder) holder).multiImageView.setVisibility(View.GONE);
@@ -322,6 +342,19 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                                     context.startActivity(intent);
                                 }
                             }
+                        }
+                    });
+                    ((VideoViewHolder) holder).iv_video_bg.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            List<PhotoInfo> files = entity.getFiles();
+                            if (files != null && files.size() > 0) {
+                                String url = files.get(0).file_url;
+                                String url_img = files.get(0).file_thumb;
+                                CommentDialog dialog = new CommentDialog(context, presenter, false, false, url, url_img, 2, entity.getFeed_uid());
+                                dialog.show();
+                            }
+                            return true;
                         }
                     });
                 }

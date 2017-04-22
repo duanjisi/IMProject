@@ -202,6 +202,11 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                 }
                 ImagePagerActivity.startImagePagerActivity(context, photoUrls, position, imageSize, false);
             }
+
+            @Override
+            public void onItemLongClick(View view, int postion) {
+
+            }
         });
 
         ll_p.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

@@ -87,7 +87,8 @@ import im.boss66.com.widget.RoundImageView;
  * 人脉中心
  * Created by liw on 2017/2/21.
  */
-public class PeopleCenterActivity extends ABaseActivity implements View.OnClickListener, CircleContractListener.View, ActionSheet.OnSheetItemClickListener {
+public class PeopleCenterActivity extends ABaseActivity implements View.OnClickListener,
+        CircleContractListener.View, ActionSheet.OnSheetItemClickListener {
     private final static String TAG = PeopleCenterActivity.class.getSimpleName();
     private LRecyclerView rcv_news;
     private LRecyclerViewAdapter mLRecyclerViewAdapter = null;
@@ -905,6 +906,11 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
     }
 
     @Override
+    public void update2AddCollect(String url, String thumUrl, int type, String fromid) {
+        addCollectToServer(url, thumUrl, type, fromid);
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             if (ll_edit_text != null && ll_edit_text.getVisibility() == View.VISIBLE) {
@@ -953,6 +959,60 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                     App.getInstance().sendBroadcast(intent);
                 } else {
                     showToast(e.getMessage(), false);
+                }
+            }
+        });
+    }
+
+    private void addCollectToServer(String imgUrl, String thumUrl, int type, String fromid) {
+        showLoadingDialog();
+        String url = HttpUrl.ADD_PERSONAL_COLLECT;
+        HttpUtils httpUtils = new HttpUtils(30 * 1000);
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        switch (type) {
+            case 0:
+                url = url + "?fromid=" + fromid + "&type=" + type + "&text=" + imgUrl;
+                break;
+            case 1:
+                url = url + "?fromid=" + fromid + "&type=" + type + "&url=" + imgUrl + "&thum=" + thumUrl;
+                break;
+            case 2:
+                url = url + "?fromid=" + fromid + "&type=" + type + "&url=" + imgUrl + "&thum=" + thumUrl;
+                break;
+        }
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                Log.i("onSuccess:", "" + result);
+                if (result != null) {
+                    BaseResult personalCollect = JSON.parseObject(result, BaseResult.class);
+                    if (personalCollect != null) {
+                        if (personalCollect.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            if (personalCollect.getCode() == 1) {
+                                showToast("收藏成功", false);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
                 }
             }
         });

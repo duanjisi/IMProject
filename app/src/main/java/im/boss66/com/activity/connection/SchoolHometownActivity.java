@@ -151,9 +151,9 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         if (intent != null) {
             from = intent.getIntExtra("from", -1);
             title = intent.getStringExtra("name");
-            if (from==1) {
+            if (from == 1) {
                 school_id = intent.getIntExtra("school_id", -1);
-            } else if(from==2) {
+            } else if (from == 2) {
                 hometown_id = intent.getIntExtra("hometown_id", -1);
             }
         }
@@ -179,10 +179,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 Bundle bundle = new Bundle();
                 bundle.putString("sendType", "text");
                 bundle.putString("feedType", "1");
-                if (from==1) {
+                if (from == 1) {
                     bundle.putString("id_value", "1");
                     bundle.putInt("id_value_ext", school_id);
-                } else if(from==2){
+                } else if (from == 2) {
                     bundle.putString("id_value", "2");
                     bundle.putInt("id_value_ext", hometown_id);
                 }
@@ -218,7 +218,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         TextView tv_famous_person = (TextView) header.findViewById(R.id.tv_famous_person);
         TextView tv_club = (TextView) header.findViewById(R.id.tv_club);
 
-        if (from==2) {
+        if (from == 2) {
             tv_club.setText("商会");
         }
         TextView tv_news = (TextView) header.findViewById(R.id.tv_news);
@@ -299,18 +299,18 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             case R.id.tv_introduce: // 简介
                 Intent intent = new Intent(this, IntroduceActivity.class);
                 intent.putExtra("title", title);
-                if (from==1) {
+                if (from == 1) {
                     intent.putExtra("school_id", school_id);
-                } else if(from==2){
+                } else if (from == 2) {
                     intent.putExtra("hometown_id", hometown_id);
                 }
                 startActivity(intent);
                 break;
             case R.id.tv_famous_person: // 名人
                 Intent intent1 = new Intent(this, FamousPersonActivity.class);
-                if (from==1) {
+                if (from == 1) {
                     intent1.putExtra("school_id", school_id);
-                } else if(from==2){
+                } else if (from == 2) {
                     intent1.putExtra("hometown_id", hometown_id);
                 }
                 startActivity(intent1);
@@ -318,9 +318,9 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 break;
             case R.id.tv_club: // 社团 或 商会
                 Intent intent2 = new Intent(this, ClubActivity.class);
-                if (from==1) {
+                if (from == 1) {
                     intent2.putExtra("school_id", school_id);
-                } else if(from==2){
+                } else if (from == 2) {
                     intent2.putExtra("hometown_id", hometown_id);
                 }
                 startActivity(intent2);
@@ -328,9 +328,9 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             case R.id.tv_news: // 动态
                 Intent intent3 = new Intent(this, NewsActivity.class);
                 intent3.putExtra("name", title);
-                if (from==1) {
+                if (from == 1) {
                     intent3.putExtra("school_id", school_id);
-                } else if(from==2){
+                } else if (from == 2) {
                     intent3.putExtra("hometown_id", hometown_id);
                 }
                 startActivity(intent3);
@@ -414,9 +414,9 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         } else {
             url = url + "?page=" + page + "&size=" + 20;
         }
-        if (from==1) {
+        if (from == 1) {
             url = url + "&id_value=" + 1 + "&id_value_ext=" + school_id;
-        } else if(from==2){
+        } else if (from == 2) {
             url = url + "&id_value=" + 2 + "&id_value_ext=" + hometown_id;
         }
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
@@ -886,7 +886,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                             count(9)
                             .multi() // 多选模式, 默认模式;
                             .start(SchoolHometownActivity.this, OPEN_ALBUM);
-                }else if (cameraType == READ_VIDEO) {
+                } else if (cameraType == READ_VIDEO) {
                     openActvityForResult(VideoListActivity.class, READ_VIDEO);
                 }
             }
@@ -937,10 +937,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 bundle.putInt("type", OPEN_CAMERA);
                 bundle.putString("img", path);
                 bundle.putString("classType", "SchoolHometownActivity");
-                if (from==1) { 
+                if (from == 1) {
                     bundle.putString("id_value", "1");
                     bundle.putInt("id_value_ext", school_id);
-                } else if(from==2){
+                } else if (from == 2) {
                     bundle.putString("id_value", "2");
                     bundle.putInt("id_value_ext", hometown_id);
                 }
@@ -954,10 +954,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             bundle.putStringArrayList("imglist", selectPicList);
             bundle.putString("classType", "SchoolHometownActivity");
             bundle.putString("feedType", "1");
-            if (from==1) {
+            if (from == 1) {
                 bundle.putString("id_value", "1");
                 bundle.putInt("id_value_ext", school_id);
-            } else if(from==2){
+            } else if (from == 2) {
                 bundle.putString("id_value", "2");
                 bundle.putInt("id_value_ext", hometown_id);
             }
@@ -991,10 +991,10 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 bundle.putString("videoPath", videoPath);
                 bundle.putString("classType", "SchoolHometownActivity");
                 bundle.putString("feedType", "2");
-                if (from==1) {
+                if (from == 1) {
                     bundle.putString("id_value", "1");
                     bundle.putInt("id_value_ext", school_id);
-                } else if(from==2){
+                } else if (from == 2) {
                     bundle.putString("id_value", "2");
                     bundle.putInt("id_value_ext", hometown_id);
                 }
@@ -1007,7 +1007,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             isOnRefresh = true;
             isAddNew = false;
             getCommunityList();
-        }else if (requestCode == READ_VIDEO && resultCode == RESULT_OK && data != null) {
+        } else if (requestCode == READ_VIDEO && resultCode == RESULT_OK && data != null) {
             String url = data.getStringExtra("filePath");
             Bundle bundle = new Bundle();
             bundle.putInt("type", RECORD_VIDEO);
@@ -1117,5 +1117,64 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
     @Override
     public void update2loadData(int loadType, List<CircleItem> datas) {
 
+    }
+
+    @Override
+    public void update2AddCollect(String url, String thumUrl, int type, String fromid) {
+        addCollectToServer(url, thumUrl, type, fromid);
+    }
+
+    private void addCollectToServer(String imgUrl, String thumUrl, int type, String fromid) {
+        showLoadingDialog();
+        String url = HttpUrl.ADD_PERSONAL_COLLECT;
+        HttpUtils httpUtils = new HttpUtils(30 * 1000);
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", access_token);
+        switch (type) {
+            case 0:
+                url = url + "?fromid=" + fromid + "&type=" + type + "&text=" + imgUrl;
+                break;
+            case 1:
+                url = url + "?fromid=" + fromid + "&type=" + type + "&url=" + imgUrl + "&thum=" + thumUrl;
+                break;
+            case 2:
+                url = url + "?fromid=" + fromid + "&type=" + type + "&url=" + imgUrl + "&thum=" + thumUrl;
+                break;
+        }
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String result = responseInfo.result;
+                Log.i("onSuccess:", "" + result);
+                if (result != null) {
+                    BaseResult personalCollect = JSON.parseObject(result, BaseResult.class);
+                    if (personalCollect != null) {
+                        if (personalCollect.getStatus() == 401) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                            App.getInstance().sendBroadcast(intent);
+                        } else {
+                            if (personalCollect.getCode() == 1) {
+                                showToast("收藏成功", false);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    cancelLoadingDialog();
+                    showToast(s, false);
+                }
+            }
+        });
     }
 }

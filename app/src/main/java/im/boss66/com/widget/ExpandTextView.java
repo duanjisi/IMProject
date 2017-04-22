@@ -15,7 +15,7 @@ import im.boss66.com.Utils.CircleMovementMethod;
 /**
  * 可收缩的textview
  */
-public class ExpandTextView extends LinearLayout{
+public class ExpandTextView extends LinearLayout {
 
     public static final int DEFAULT_MAX_LINES = 3;
     private TextView contentText;
@@ -47,26 +47,35 @@ public class ExpandTextView extends LinearLayout{
         setOrientation(LinearLayout.VERTICAL);
         LayoutInflater.from(getContext()).inflate(R.layout.layout_magic_text, this);
         contentText = (TextView) findViewById(R.id.contentText);
-        if(showLines > 0){
+        if (showLines > 0) {
             contentText.setMaxLines(showLines);
         }
-
+        contentText.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (onItemLongClickListener != null) {
+                    onItemLongClickListener.onItemLongClick();
+                    return true;
+                }
+                return false;
+            }
+        });
         textPlus = (TextView) findViewById(R.id.textPlus);
         textPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String textStr = textPlus.getText().toString().trim();
-                if("全文".equals(textStr)){
+                if ("全文".equals(textStr)) {
                     contentText.setMaxLines(Integer.MAX_VALUE);
                     textPlus.setText("收起");
                     setExpand(true);
-                }else{
+                } else {
                     contentText.setMaxLines(showLines);
                     textPlus.setText("全文");
                     setExpand(false);
                 }
                 //通知外部状态已变更
-                if(expandStatusListener != null){
+                if (expandStatusListener != null) {
                     expandStatusListener.statusChange(isExpand());
                 }
             }
@@ -77,12 +86,12 @@ public class ExpandTextView extends LinearLayout{
         TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.ExpandTextView, 0, 0);
         try {
             showLines = typedArray.getInt(R.styleable.ExpandTextView_showLines, DEFAULT_MAX_LINES);
-        }finally {
+        } finally {
             typedArray.recycle();
         }
     }
 
-    public void setText(final CharSequence content){
+    public void setText(final CharSequence content) {
         contentText.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
 
             @Override
@@ -91,17 +100,17 @@ public class ExpandTextView extends LinearLayout{
                 contentText.getViewTreeObserver().removeOnPreDrawListener(this);
 
                 int linCount = contentText.getLineCount();
-                if(linCount > showLines){
+                if (linCount > showLines) {
 
-                    if(isExpand){
+                    if (isExpand) {
                         contentText.setMaxLines(Integer.MAX_VALUE);
                         textPlus.setText("收起");
-                    }else{
+                    } else {
                         contentText.setMaxLines(showLines);
                         textPlus.setText("全文");
                     }
                     textPlus.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     textPlus.setVisibility(View.GONE);
                 }
 
@@ -116,21 +125,30 @@ public class ExpandTextView extends LinearLayout{
         contentText.setMovementMethod(new CircleMovementMethod(getResources().getColor(R.color.bg_rectangle)));
     }
 
-    public void setExpand(boolean isExpand){
+    public void setExpand(boolean isExpand) {
         this.isExpand = isExpand;
     }
 
-    public boolean isExpand(){
+    public boolean isExpand() {
         return this.isExpand;
     }
 
-    public void setExpandStatusListener(ExpandStatusListener listener){
+    public void setExpandStatusListener(ExpandStatusListener listener) {
         this.expandStatusListener = listener;
     }
 
-    public static interface ExpandStatusListener{
+    public static interface ExpandStatusListener {
 
         void statusChange(boolean isExpand);
     }
 
+    private OnItemLongClickListener onItemLongClickListener;
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick();
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        this.onItemLongClickListener = onItemLongClickListener;
+    }
 }
