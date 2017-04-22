@@ -3,6 +3,7 @@ package im.boss66.com.activity.treasure;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -589,6 +590,12 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             dialogWindow.setAttributes(lp);
             dialogWindow.setGravity(Gravity.CENTER);
             dialog.setCanceledOnTouchOutside(false);
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    finish();
+                }
+            });
         }
         if (imgFile != null) {
             Picasso

@@ -27,6 +27,7 @@ public class VideoPlayerNewActivity extends BaseActivity {
     private int mIsLiveStreaming = 1;
     private MediaController mMediaController;
     private ImageView iv_coverView, iv_close;
+    private int mVideoRotation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class VideoPlayerNewActivity extends BaseActivity {
         setOptions(codec);
         mVideoView.setOnCompletionListener(mOnCompletionListener);
         mVideoView.setOnErrorListener(mOnErrorListener);
+        mVideoView.setOnInfoListener(mOnInfoListener);
         String imgurl = getIntent().getStringExtra("imgurl");
         if (!TextUtils.isEmpty(imgurl)) {
             iv_coverView.setVisibility(View.VISIBLE);
@@ -62,8 +64,13 @@ public class VideoPlayerNewActivity extends BaseActivity {
         mVideoView.setOnVideoSizeChangedListener(new PLMediaPlayer.OnVideoSizeChangedListener() {
             @Override
             public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int width, int height, int videoSar, int videoDen) {
-                if (width > height) {
-                    mVideoView.setDisplayOrientation(270);
+                if (mVideoRotation == 270) {
+                    //旋转视频
+                    mVideoView.setDisplayOrientation(90);
+                } else {
+                    if (width > height) {
+                        mVideoView.setDisplayOrientation(270);
+                    }
                 }
             }
         });
@@ -81,6 +88,20 @@ public class VideoPlayerNewActivity extends BaseActivity {
         public void onCompletion(PLMediaPlayer plMediaPlayer) {
 //            showToastTips("Play Completed !");
 //            finish();
+        }
+    };
+
+    private PLMediaPlayer.OnInfoListener mOnInfoListener = new PLMediaPlayer.OnInfoListener() {
+        @Override
+        public boolean onInfo(PLMediaPlayer plMediaPlayer, int what, int extra) {
+            switch (what) {
+                case 10001:
+                    //保存视频角度
+                    mVideoRotation = extra;
+
+                    break;
+            }
+            return false;
         }
     };
 
