@@ -355,6 +355,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         mLRecyclerViewAdapter.addHeaderView(header);
         //rcv设置adapter以及刷新
         rcv_news.setAdapter(mLRecyclerViewAdapter);
+        rcv_news.refreshComplete(20);
         rcv_news.setLoadMoreEnabled(true);
         rcv_news.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -518,13 +519,13 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                         if (data.getCode() == 1) {
                             List<FriendCircle> list = data.getResult();
                             if (list != null && list.size() > 0) {
-                                Collections.reverse(list);
                                 showData(list);
                             }
                         } else {
                             showToast(data.getMessage(), false);
                         }
                     } else {
+                        rcv_news.setNoMore(false);
                         showToast("没有更多数据了", false);
                     }
                 }

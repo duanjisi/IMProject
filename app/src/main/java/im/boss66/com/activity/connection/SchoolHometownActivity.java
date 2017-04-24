@@ -248,6 +248,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         rcv_news.setFooterViewHint("拼命加载中", "我是有底线的", "网络不给力啊，点击再试一次吧");
         //rcv设置adapter以及刷新
         rcv_news.setAdapter(mLRecyclerViewAdapter);
+        rcv_news.refreshComplete(20);
         rcv_news.setLoadMoreEnabled(true);
         rcv_news.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -255,6 +256,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        showToast("刷新完成",false);
                         rcv_news.refreshComplete(20);
                         isOnRefresh = true;
                         isAddNew = false;
@@ -459,15 +461,15 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             allList = new ArrayList<>();
         }
         int size = list.size();
+        if (size == 20) {
+            rcv_news.setNoMore(false);
+            page++;
+        } else {
+            rcv_news.setNoMore(true);
+        }
         if (!isOnRefresh) {
             allList.addAll(list);
             adapter.setDatas(allList);
-            if (size == 20) {
-                rcv_news.setNoMore(false);
-                page++;
-            } else {
-                rcv_news.setNoMore(true);
-            }
         } else if (isOnRefresh || isAddNew) {
             if (allList.size() > 0) {
                 allList.clear();

@@ -254,7 +254,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showShort(FriendCircleActivity.this, "刷新完成");
+                        showToast("刷新完成",false);
                         isOnRefresh = true;
                         isAddNew = false;
                         rv_friend.refreshComplete(20);
@@ -510,6 +510,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             page = 0;
         }
         url = url + "?page=" + page + "&size=" + 20;
+        Log.i("setNoMore", url);
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -556,14 +557,13 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             allList = new ArrayList<>();
         }
         int size = list.size();
+        if (size == 20) {
+            rv_friend.setNoMore(false);
+            page++;
+        } else {
+            rv_friend.setNoMore(true);
+        }
         if (!isOnRefresh) {
-            if (size == 20) {
-                rv_friend.setNoMore(false);
-                page++;
-            } else {
-                Log.i("setNoMore", "setNoMore");
-                rv_friend.setNoMore(true);
-            }
             allList.addAll(list);
             adapter.setDatas(allList);
         } else if (isOnRefresh || isAddNew) {
