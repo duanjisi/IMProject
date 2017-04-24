@@ -30,6 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.github.jdsjlzx.interfaces.OnLoadMoreListener;
 import com.github.jdsjlzx.interfaces.OnRefreshListener;
 import com.github.jdsjlzx.recyclerview.LRecyclerView;
 import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
@@ -45,6 +46,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -126,6 +128,9 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
 
     private ImageView img_hasschool;
     private ImageView img_noschool;
+    private int page = 0;
+    private boolean isOnRefresh = false;
+    private List<FriendCircle> allList;
 
 
     private Handler handler = new Handler() {
@@ -143,7 +148,6 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                         img_noschool.setVisibility(View.VISIBLE);
                         tv_name2.setVisibility(View.VISIBLE);
                         tv_name2.setText(user_name);
-
                     } else {
                         //有学校家乡
                         tv_address.setText(district_str + "  " + school);
@@ -151,12 +155,10 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                         tv_name.setVisibility(View.VISIBLE);
                         tv_name.setText(user_name);
                     }
-
                     if (other) { //别人的页面
                         rl_edit_info.setClickable(false);
                         img_noschool.setVisibility(View.GONE);
                         img_hasschool.setVisibility(View.GONE);
-
                     }
                     break;
 
@@ -196,18 +198,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                     userInfoEntity = JSON.parseObject(result, UserInfoEntity.class);
                     if (userInfoEntity != null) {
                         if (userInfoEntity.getCode() == 1) {
-
                             handler.obtainMessage(1).sendToTarget();
                         } else {
                             showToast(userInfoEntity.getMessage(), false);
                         }
-
                     }
-
-
                 }
-
-
             }
 
             @Override
@@ -365,6 +361,20 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                     public void run() {
                         rcv_news.refreshComplete(20);
                         ToastUtil.showShort(PeopleCenterActivity.this, "刷新完成");
+                        isOnRefresh = true;
+                        getCommunityList();
+                    }
+                }, 1000);
+            }
+        });
+        rcv_news.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //rcv_news.setNoMore(true);
+                        isOnRefresh = false;
                         getCommunityList();
                     }
                 }, 1000);
@@ -498,10 +508,15 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
 
     private void getCommunityList() {
         showLoadingDialog();
+        if (isOnRefresh) {
+            page = 0;
+        }
         String url = HttpUrl.COMMUNITY_GET_USER_DETAIL + "?user_id=" + CuiUid;
+        url = url + "&page=" + page + "&size=" + 20;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);
+        Log.i("getCommunityList",url);
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -547,7 +562,26 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
     }
 
     private void showData(List<FriendCircle> list) {
-        adapter.setDatas(list);
+        if (allList == null) {
+            allList = new ArrayList<>();
+        }
+        int size = list.size();
+        if (size == 20) {
+            rcv_news.setNoMore(false);
+            page++;
+        } else {
+            rcv_news.setNoMore(true);
+        }
+        if (!isOnRefresh) {
+            allList.addAll(list);
+            adapter.setDatas(allList);
+        } else {
+            if (allList.size() > 0) {
+                allList.clear();
+            }
+            allList.addAll(list);
+            adapter.setDatas(list);
+        }
         adapter.notifyDataSetChanged();
     }
 
