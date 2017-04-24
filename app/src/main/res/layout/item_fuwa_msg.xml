@@ -17,7 +17,7 @@
             android:id="@+id/iv_head"
             android:layout_width="70.4dp"
             android:layout_height="70.4dp"
-            android:src="@drawable/person" />
+            android:src="@drawable/zf_default_album_grid_image" />
 
         <View
             android:id="@+id/v_point"
