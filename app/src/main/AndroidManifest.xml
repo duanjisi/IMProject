@@ -542,6 +542,8 @@
 
         <!--视频列表-->
         <activity android:name=".activity.discover.VideoListActivity"></activity>
+        <!--宗亲商会列表-->
+        <activity android:name=".activity.connection.ClanClubListActivity"></activity>
 
         <!--支付宝start-->
         <activity

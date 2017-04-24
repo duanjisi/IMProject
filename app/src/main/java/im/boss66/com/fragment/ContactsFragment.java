@@ -42,6 +42,7 @@ import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.activity.connection.AddPeopleActivity;
 import im.boss66.com.activity.connection.ApplyCreateActivity;
 import im.boss66.com.activity.connection.ClanClubActivity;
+import im.boss66.com.activity.connection.ClanClubListActivity;
 import im.boss66.com.activity.connection.PeopleCenterActivity;
 import im.boss66.com.activity.connection.PersonalDataActivity;
 import im.boss66.com.activity.connection.SchoolHometownActivity;
@@ -168,6 +169,15 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                         intent.putExtra("id", datas.get(position).getCofc_id());
                         startActivity(intent);
                         break;
+                    case 0:
+                        String type = datas.get(position).getType();
+                        if("我的宗亲".equals(type)||"我的商会".equals(type)){
+                            intent = new Intent(getActivity(), ClanClubListActivity.class);
+                            intent.putExtra("type",type);
+                            startActivity(intent);
+                        }
+                        break;
+
                 }
 
             }
@@ -247,7 +257,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                             adapter.notifyDataSetChanged();
                             showToast("删除成功", false);
                         } else {
-                            showToast("删除失败", false);
+                            showToast("不能删除别人创建的宗亲", false);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
