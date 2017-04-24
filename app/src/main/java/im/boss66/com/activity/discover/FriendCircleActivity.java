@@ -502,18 +502,14 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void getFriendCircleList() {
-        String curPage, curSize;
         String url = HttpUrl.FRIEND_CIRCLE_LIST;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);
         if (isOnRefresh) {
             page = 0;
-            url = url + "?page=" + 0 + "&size=" + 20;
-        } else {
-            Log.i("getFriendCircleList3: ", url);
-            url = url + "?page=" + page + "&size=" + 20;
         }
+        url = url + "?page=" + page + "&size=" + 20;
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {

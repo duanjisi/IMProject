@@ -269,7 +269,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        rcv_news.setNoMore(true);
+                        //rcv_news.setNoMore(true);
                         isOnRefresh = false;
                         isAddNew = false;
                         getCommunityList();
@@ -397,23 +397,14 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
 
     private void getCommunityList() {
         showLoadingDialog();
-        String curPage, curSize;
         String url = HttpUrl.GET_COMMUNITY_LIST;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);
         if (isOnRefresh) {
-            if (page > 0) {
-                curPage = String.valueOf((page - 1));
-                curSize = String.valueOf(20 * page);
-            } else {
-                curPage = "0";
-                curSize = "20";
-            }
-            url = url + "?page=" + curPage + "&size=" + curSize;
-        } else {
-            url = url + "?page=" + page + "&size=" + 20;
+            page = 0;
         }
+        url = url + "?page=" + page + "&size=" + 20;
         if (from == 1) {
             url = url + "&id_value=" + 1 + "&id_value_ext=" + school_id;
         } else if (from == 2) {
@@ -442,6 +433,7 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
                             showToast(data.getMessage(), false);
                         }
                     } else {
+                        rcv_news.setNoMore(false);
                         showToast("没有更多数据了", false);
                     }
                 }
@@ -466,11 +458,21 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
         if (allList == null) {
             allList = new ArrayList<>();
         }
+        int size = list.size();
         if (!isOnRefresh) {
-            page++;
             allList.addAll(list);
             adapter.setDatas(allList);
+            if (size == 20) {
+                rcv_news.setNoMore(false);
+                page++;
+            } else {
+                rcv_news.setNoMore(true);
+            }
         } else if (isOnRefresh || isAddNew) {
+            if (allList.size() > 0) {
+                allList.clear();
+            }
+            allList.addAll(list);
             adapter.setDatas(list);
         }
         adapter.notifyDataSetChanged();
