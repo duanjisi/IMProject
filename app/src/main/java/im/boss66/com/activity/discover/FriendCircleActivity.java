@@ -247,16 +247,17 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         rv_friend.setFooterViewHint("拼命加载中", "我是有底线的", "网络不给力啊，点击再试一次吧");
         rv_friend.setAdapter(mLRecyclerViewAdapter);
         rv_friend.setLoadMoreEnabled(true);
+        rv_friend.refreshComplete(20);
         rv_friend.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        rv_friend.refreshComplete(20);
                         ToastUtil.showShort(FriendCircleActivity.this, "刷新完成");
                         isOnRefresh = true;
                         isAddNew = false;
+                        rv_friend.refreshComplete(20);
                         getFriendCircleList();
                     }
                 }, 1000);
@@ -268,7 +269,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        rv_friend.setNoMore(true);
+                        //rv_friend.setNoMore(true);
                         isOnRefresh = false;
                         isAddNew = false;
                         getFriendCircleList();
@@ -507,15 +508,10 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);
         if (isOnRefresh) {
-            if (page > 0) {
-                curPage = String.valueOf((page - 1));
-                curSize = String.valueOf(20 * page);
-            } else {
-                curPage = "0";
-                curSize = "20";
-            }
-            url = url + "?page=" + curPage + "&size=" + curSize;
+            page = 0;
+            url = url + "?page=" + 0 + "&size=" + 20;
         } else {
+            Log.i("getFriendCircleList3: ", url);
             url = url + "?page=" + page + "&size=" + 20;
         }
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
@@ -540,6 +536,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                             showToast(data.getMessage(), false);
                         }
                     } else {
+                        rv_friend.setNoMore(false);
                         showToast("没有更多数据了", false);
                     }
                 }
@@ -562,11 +559,22 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         if (allList == null) {
             allList = new ArrayList<>();
         }
+        int size = list.size();
         if (!isOnRefresh) {
-            page++;
+            if (size == 20) {
+                rv_friend.setNoMore(false);
+                page++;
+            } else {
+                Log.i("setNoMore", "setNoMore");
+                rv_friend.setNoMore(true);
+            }
             allList.addAll(list);
             adapter.setDatas(allList);
         } else if (isOnRefresh || isAddNew) {
+            if (allList.size() > 0) {
+                allList.clear();
+            }
+            allList.addAll(list);
             adapter.setDatas(list);
         }
         adapter.notifyDataSetChanged();
@@ -1064,7 +1072,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 url = url + "?fromid=" + fromid + "&type=" + type + "&url=" + imgUrl + "&thum=" + thumUrl;
                 break;
         }
-        Log.i("url:",url);
+        Log.i("url:", url);
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
