@@ -197,6 +197,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
     private TextView tv_count;
     private int is_follow;
     private String count;
+    private String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,6 +257,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
             isClan = intent.getBooleanExtra("isClan", false);
             name = intent.getStringExtra("name");
             id = intent.getStringExtra("id");
+            user_id = intent.getStringExtra("user_id");
 
         }
     }
@@ -404,12 +406,14 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                     intent.putExtra("id", id);
                     intent.putExtra("isClan", true);
                     intent.putExtra("name", name);
+                    intent.putExtra("user_id",user_id);
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(this, ClanCofcDetailActivity.class);
                     intent.putExtra("id", id);
                     intent.putExtra("isClan", false);
                     intent.putExtra("name", name);
+                    intent.putExtra("user_id",user_id);
                     startActivity(intent);
                 }
                 break;
