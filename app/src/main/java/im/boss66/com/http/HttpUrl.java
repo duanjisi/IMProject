@@ -329,5 +329,9 @@ public class HttpUrl {
     public static final String DELETE_PERSONAL_COLLECT = MAIN_URL + "api/v1/favorites/delete";
     //增加到个人收藏
     public static final String ADD_PERSONAL_COLLECT = MAIN_URL + "api/v1/favorites/add";
+    //更多宗亲
+    public static final String MORE_CLAN = MAIN_URL+"api/v1/search/hot-clan";
+    //更多商会
+    public static final String MORE_COFC = MAIN_URL+"api/v1/search/hot-cofc";
 
 }

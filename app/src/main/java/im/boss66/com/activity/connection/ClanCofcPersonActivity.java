@@ -29,6 +29,7 @@ import java.util.List;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.adapter.ClanCofcPeopleAdapter;
 import im.boss66.com.adapter.FamousPeopleAdapter;
@@ -168,6 +169,14 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
                 person_name = result.get(deletePosition).getName();
                 person_desc = result.get(deletePosition).getDesc();
                 person_photo = result.get(deletePosition).getPhoto();
+
+                int user_id = result.get(deletePosition).getUser_id();
+                String uid = App.getInstance().getUid();
+                if(Integer.parseInt(uid)!=user_id){
+                    //不能编辑别人的名人
+                    ToastUtil.showShort(context,"不能编辑别人创建的名人");
+                    return true;
+                }
 
                 if (dialog == null) {
 

@@ -8,7 +8,9 @@ import android.widget.ImageView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.WebBaseActivity;
 import im.boss66.com.activity.event.EditWeb;
 import im.boss66.com.http.HttpUrl;
@@ -21,6 +23,8 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
 
     private boolean isClan;
     private String id;
+    private String user_id; //创建人的uid
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,7 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
             }else {
                 url = HttpUrl.COFC_DETAIL + "?id=" + id;
             }
+            user_id = intent.getStringExtra("user_id");
         }
         setTitleUrl();
         iv_headright_view  = (ImageView) findViewById(R.id.iv_headright_view);
@@ -47,6 +52,7 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
                 showActionSheet();
             }
         });
+        uid = App.getInstance().getUid();
 
     }
 
@@ -79,6 +85,14 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
     public void onClick(int which) {
         switch (which){
             case 1:
+                if(!uid.equals(user_id)){
+                    if(isClan){
+                        ToastUtil.showShort(context,"不能编辑别人创建的宗亲");
+                    }else {
+                        ToastUtil.showShort(context,"不能编辑别人创建的商会");
+                    }
+                    return;
+                }
                 Intent intent = new Intent(this, EditClanCofcActivity.class);
                 intent.putExtra("isClan",isClan);
                 intent.putExtra("id",id);

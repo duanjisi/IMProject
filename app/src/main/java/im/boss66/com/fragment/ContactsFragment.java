@@ -39,9 +39,11 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.SharedPreferencesMgr;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.connection.AddPeopleActivity;
 import im.boss66.com.activity.connection.ApplyCreateActivity;
 import im.boss66.com.activity.connection.ClanClubActivity;
+import im.boss66.com.activity.connection.ClanClubListActivity;
 import im.boss66.com.activity.connection.PeopleCenterActivity;
 import im.boss66.com.activity.connection.PersonalDataActivity;
 import im.boss66.com.activity.connection.SchoolHometownActivity;
@@ -106,6 +108,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private ImageLoader imageLoader;
     private AccountEntity account;
     private String url;
+    private String uid;
 
     @Nullable
     @Override
@@ -159,6 +162,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                         intent.putExtra("isClan", true);
                         intent.putExtra("name", datas.get(position).getName());
                         intent.putExtra("id", datas.get(position).getClan_id());
+                        intent.putExtra("user_id",datas.get(position).getUser_id());
                         startActivity(intent);
                         break;
                     case 4:
@@ -166,8 +170,18 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                         intent.putExtra("isClan", false);
                         intent.putExtra("name", datas.get(position).getName());
                         intent.putExtra("id", datas.get(position).getCofc_id());
+                        intent.putExtra("user_id",datas.get(position).getUser_id());
                         startActivity(intent);
                         break;
+                    case 0:
+                        String type = datas.get(position).getType();
+                        if("我的宗亲".equals(type)||"我的商会".equals(type)){
+                            intent = new Intent(getActivity(), ClanClubListActivity.class);
+                            intent.putExtra("type",type);
+                            startActivity(intent);
+                        }
+                        break;
+
                 }
 
             }
@@ -175,14 +189,23 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
             @Override
             public boolean onItemLongClick(int position) {
                 int from = datas.get(position).getFrom();
+                String user_id = datas.get(position).getUser_id();
                 switch (from) {
                     case 3:
+                        if(!uid.equals(user_id)){
+                            ToastUtil.showShort(getActivity(),"不能删除别人创建的宗亲");
+                            return true;
+                        }
                         isClan = true;
                         clanListBean = datas.get(position);
                         clan_id = clanListBean.getClan_id();
                         deleteDialog.show();
                         break;
                     case 4:
+                        if(!uid.equals(user_id)){
+                            ToastUtil.showShort(getActivity(),"不能删除别人创建的商会");
+                            return true;
+                        }
                         isClan = false;
                         cofcListBean = datas.get(position);
                         cofc_id = cofcListBean.getCofc_id();
@@ -213,6 +236,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
             }
         });
+        uid = App.getInstance().getUid();
 
     }
 
