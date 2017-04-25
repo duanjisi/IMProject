@@ -271,7 +271,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                             adapter.notifyDataSetChanged();
                             showToast("删除成功", false);
                         } else {
-                            showToast("删除失败", false);
+                            showToast("不能删除别人创建的宗亲", false);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
