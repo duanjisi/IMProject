@@ -256,7 +256,6 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                 }
 
 
-
             }
         });
         uid = App.getInstance().getUid();
@@ -267,10 +266,10 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        if(isClan){
+        if (isClan) {
 
-            url = HttpUrl.DELETE_CLAN+ "?clan_id=" + id;
-        }else{
+            url = HttpUrl.DELETE_CLAN + "?clan_id=" + id;
+        } else {
 
             url = HttpUrl.DELETE_CLUB + "?cofc_id=" + id;
         }
@@ -283,10 +282,10 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         if (jsonObject.getInt("code") == 1) {
-                            if(isClan){
+                            if (isClan) {
 
                                 datas.remove(clanListBean);
-                            }else{
+                            } else {
 
                                 datas.remove(cofcListBean);
                             }
@@ -335,7 +334,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
                 break;
             case R.id.iv_avatar:
-                EventBus.getDefault().post(new ActionEntity(3));
+                EventBus.getDefault().post(new ActionEntity(Constants.Action.MENU_CAHNGE_CURRENT_TAB));
                 break;
         }
     }

@@ -191,10 +191,9 @@ public class VideoPlayerNewActivity extends BaseActivity {
     }
 
     private void sendReconnectMessage() {
-        showToast("正在重连...", true);
         //mLoadingView.setVisibility(View.VISIBLE);
         mHandler.removeCallbacksAndMessages(null);
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(0x01), 500);
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(0x01), 1000);
     }
 
     protected Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -203,6 +202,7 @@ public class VideoPlayerNewActivity extends BaseActivity {
             if (msg.what != 0x01) {
                 return;
             }
+            showToast("正在重连...", false);
             if (NetworkUtil.networkAvailable(VideoPlayerNewActivity.this)) {
                 sendReconnectMessage();
                 return;

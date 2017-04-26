@@ -35,6 +35,16 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/tv_store"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/actionsheet_middle_selector"
+            android:gravity="center_vertical"
+            android:text="@string/store"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/tv_delete"
             android:layout_width="match_parent"
             android:layout_height="50dp"
