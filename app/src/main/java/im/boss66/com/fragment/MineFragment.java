@@ -16,6 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.greenrobot.eventbus.EventBus;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.activity.im.EmojiSelectWellActivity;
@@ -108,7 +109,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 openActivity(PersonalPhotoAlbumActivity.class, bundle);
                 break;
             case R.id.rl_collect://收藏
-                openActivity(PersonalCollectActivity.class,null);
+                openActivity(PersonalCollectActivity.class, null);
                 break;
             case R.id.rl_wallet://钱包
                 Intent intent0 = new Intent(getActivity(), WalletActivity.class);
@@ -121,7 +122,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 openActivity(PersonalSetActivity.class, null);
                 break;
             case R.id.iv_avatar:
-                EventBus.getDefault().post(new ActionEntity(5));
+                EventBus.getDefault().post(new ActionEntity(Constants.Action.MENU_CAHNGE_CURRENT_TAB));
                 break;
         }
     }

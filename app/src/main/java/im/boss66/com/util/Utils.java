@@ -503,4 +503,6 @@ public class Utils {
         String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + userid;
         PreferenceUtils.putString(context, noticeKey, msg);
     }
+
+
 }

@@ -268,7 +268,7 @@ public class ContactBooksFragment extends BaseFragment implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_avatar:
-                EventBus.getDefault().post(new ActionEntity(2));
+                EventBus.getDefault().post(new ActionEntity(Constants.Action.MENU_CAHNGE_CURRENT_TAB));
                 break;
         }
     }

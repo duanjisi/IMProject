@@ -42,12 +42,10 @@
             android:src="@drawable/hp_chat_more" />
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <com.github.jdsjlzx.recyclerview.LRecyclerView
         android:id="@+id/rcv_info"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"></com.github.jdsjlzx.recyclerview.LRecyclerView>
 
 
 </LinearLayout>

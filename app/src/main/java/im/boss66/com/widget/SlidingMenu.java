@@ -118,16 +118,19 @@ public class SlidingMenu extends HorizontalScrollView
 		return super.onTouchEvent(ev);
 	}
 
-	/**
-	 * 打开菜单
-	 */
-	public void openMenu()
-	{
-		if (isOpen)
-			return;
-		this.smoothScrollTo(0, 0);
-		isOpen = true;
-	}
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    /**
+     * 打开菜单
+     */
+    public void openMenu() {
+        if (isOpen)
+            return;
+        this.smoothScrollTo(0, 0);
+        isOpen = true;
+    }
 
 	/**
 	 * 关闭菜单
@@ -141,15 +144,41 @@ public class SlidingMenu extends HorizontalScrollView
 		}
 	}
 
-	/**
-	 * 切换菜单状态
-	 */
-	public void toggle()
-	{
-		if (isOpen){
-			closeMenu();
-		} else{
-			openMenu();
-		}
-	}
+    /**
+     * 切换菜单状态
+     */
+    public void toggle() {
+        if (isOpen) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    }
+
+    private float startPos[] = new float[2];
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+
+        int action = ev.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+//记录touch事件开始的坐标
+                startPos[0] = ev.getX();
+                startPos[1] = ev.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+//捕获移动事件
+                float x = ev.getX();
+                float y = ev.getY();
+//计算和初始坐标的绝对值  如果左右移动距离 大于上下移动距离  拦截这次的touch事件  反之下发给子view处理
+                if (Math.abs(x - startPos[0]) > Math.abs(y - startPos[1])) {
+                    return true;
+                } else {
+                    return false;
+                }
+        }
+        return super.onInterceptTouchEvent(ev);
+    }
+
 }

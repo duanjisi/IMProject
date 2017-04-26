@@ -42,10 +42,12 @@ import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.ByteArrayOutputStream;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.Base64Utils;
 import im.boss66.com.Utils.ImageLoaderUtils;
@@ -61,7 +63,6 @@ import im.boss66.com.activity.treasure.FuwaPackageActivity;
 import im.boss66.com.activity.treasure.FuwaTopList;
 import im.boss66.com.activity.treasure.GameRuleActivity;
 import im.boss66.com.activity.treasure.HideFuwaActivity;
-import im.boss66.com.activity.treasure.MainTreasureActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.widget.CircleImageView;
@@ -78,7 +79,7 @@ public class MainTreasureFragment extends BaseFragment implements View.OnClickLi
     private Dialog dialog;
     private Dialog qr_code_dialog;
     private PopupWindow popupWindow;
-    private TextView tv_word;
+    private TextView tv_name, tv_word;
     private View view;
     private CircleImageView iv_avatar;
     private ImageLoader imageLoader;
@@ -97,6 +98,7 @@ public class MainTreasureFragment extends BaseFragment implements View.OnClickLi
     }
 
     private void initViews(View view) {
+        EventBus.getDefault().register(this);
         account = App.getInstance().getAccount();
         imageLoader = ImageLoaderUtils.createImageLoader(getActivity());
         iv_avatar = (CircleImageView) view.findViewById(R.id.iv_avatar);
@@ -104,6 +106,7 @@ public class MainTreasureFragment extends BaseFragment implements View.OnClickLi
 //        tv_rank = (TextView) view.findViewById(R.id.tv_rank);
         tv_apply = (TextView) view.findViewById(R.id.tv_apply);
 //        tv_game = (TextView) view.findViewById(R.id.tv_game);
+        tv_name = (TextView) view.findViewById(R.id.tv_name);
         iv_game = (ImageView) view.findViewById(R.id.iv_game);
         iv_rank = (ImageView) view.findViewById(R.id.iv_rank);
 
@@ -129,8 +132,9 @@ public class MainTreasureFragment extends BaseFragment implements View.OnClickLi
         btn_store.setOnClickListener(this);
         img_more.setOnClickListener(this);
         iv_avatar.setOnClickListener(this);
-        imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
 
+        tv_name.setText(account.getUser_name());
+        imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
     }
 
     @Override
@@ -178,7 +182,7 @@ public class MainTreasureFragment extends BaseFragment implements View.OnClickLi
                 openActivity(HideFuwaActivity.class);
                 break;
             case R.id.iv_avatar:
-                EventBus.getDefault().post(new ActionEntity(0));
+                EventBus.getDefault().post(new ActionEntity(Constants.Action.MENU_CAHNGE_CURRENT_TAB));
                 break;
 
             case R.id.weixin_share_linear:
@@ -611,6 +615,18 @@ public class MainTreasureFragment extends BaseFragment implements View.OnClickLi
         qZoneSsoHandler.addToSocialSDK();
     }
 
+    @Subscribe
+    public void onMessageEvent(ActionEntity event) {
+        if (event != null) {
+            String action = event.getAction();
+            if (action.equals(Constants.Action.UPDATE_ACCOUNT_INFORM)) {
+                account = App.getInstance().getAccount();
+                tv_name.setText(account.getUser_name());
+                imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
+            }
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -624,6 +640,7 @@ public class MainTreasureFragment extends BaseFragment implements View.OnClickLi
             qrImage.recycle();
             qrImage = null;
         }
+        EventBus.getDefault().unregister(this);
         if (view != null && view.getParent() != null) {
             ((ViewGroup) view.getParent()).removeView(view);
         }

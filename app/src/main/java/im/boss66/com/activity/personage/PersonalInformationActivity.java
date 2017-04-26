@@ -11,13 +11,17 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
+
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.config.LoginStatus;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.ActionEntity;
 
 /**
  * 个人信息
@@ -161,6 +165,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                 isChange = true;
                 imageLoader.displayImage(headUrl, iv_head,
                         ImageLoaderUtils.getDisplayImageOptions());
+                EventBus.getDefault().post(new ActionEntity(Constants.Action.UPDATE_ACCOUNT_INFORM));
             }
         } else if (requestCode == NAME_SEX_SIGNATURE_REQUEST && resultCode == RESULT_OK && data != null) {
             String changeType = data.getStringExtra("changeType");
@@ -189,6 +194,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                         }
                         break;
                 }
+                EventBus.getDefault().post(new ActionEntity(Constants.Action.UPDATE_ACCOUNT_INFORM));
             }
         } else if (requestCode == 108 && resultCode == RESULT_OK) {
             AccountEntity sAccount = mApplication.getAccount();

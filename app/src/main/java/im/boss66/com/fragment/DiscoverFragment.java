@@ -121,7 +121,7 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
                 openActivity(MainTreasureActivity.class, null);
                 break;
             case R.id.iv_avatar:
-                EventBus.getDefault().post(new ActionEntity(4));
+                EventBus.getDefault().post(new ActionEntity(Constants.Action.MENU_CAHNGE_CURRENT_TAB));
                 break;
         }
     }

@@ -21,7 +21,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.zxing.WriterException;
@@ -47,14 +46,9 @@ import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.Base64Utils;
 import im.boss66.com.Utils.MakeQRCodeUtil;
-import im.boss66.com.Utils.MycsLog;
-import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.base.BaseActivity;
-import im.boss66.com.activity.connection.AddPeopleActivity;
-import im.boss66.com.activity.connection.PeopleCenterActivity;
-import im.boss66.com.activity.connection.PersonalDataActivity;
 import im.boss66.com.widget.popupWindows.SharePopup;
 
 /**
