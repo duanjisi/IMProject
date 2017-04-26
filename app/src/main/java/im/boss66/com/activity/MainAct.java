@@ -7,6 +7,8 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -88,6 +90,7 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
     private MineFragment mineFragment;
     private AccountEntity account;
     private RadioGroup mRadioGroup;
+    private View replaced_layout;
     private RadioButton rbTreasure, rbHomePager, rbBooks, rbContacts, rbDiscover, rbMine;
     private int mCheckedId = R.id.rb_treasure_pager;
     private PeopleDataDialog peopleDataDialog;
@@ -125,6 +128,7 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         currentTabIndex = 2;
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         account = App.getInstance().getAccount();
+        replaced_layout = findViewById(R.id.replaced_layout);
         iv_avatar = (CircleImageView) findViewById(R.id.iv_avatar);
         tv_name = (TextView) findViewById(R.id.tv_name);
         slidingMenu = (SlidingMenu) findViewById(R.id.id_menu);
@@ -136,6 +140,14 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         rbMine = (RadioButton) findViewById(R.id.rb_mine);
         rbContacts = (RadioButton) findViewById(R.id.rb_contact);
 
+        replaced_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (slidingMenu.isOpen()) {
+                    slidingMenu.closeMenu();
+                }
+            }
+        });
         rbTreasure.setOnCheckedChangeListener(this);
         rbMine.setOnCheckedChangeListener(this);
         rbHomePager.setOnCheckedChangeListener(this);
@@ -260,7 +272,14 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
     @Subscribe
     public void onMessageEvent(ActionEntity event) {
         if (event != null) {
-            slidingMenu.toggle();
+            String action = event.getAction();
+            if (action.equals(Constants.Action.MENU_CAHNGE_CURRENT_TAB)) {
+                slidingMenu.toggle();
+            } else if (action.equals(Constants.Action.UPDATE_ACCOUNT_INFORM)) {
+                account = App.getInstance().getAccount();
+                tv_name.setText(account.getUser_name());
+                imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
+            }
         }
     }
 
@@ -303,13 +322,11 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
                 hometown_list = myInfo.getResult().getHometown_list();
                 school_list = myInfo.getResult().getSchool_list();
                 handler.obtainMessage(1).sendToTarget();
-
             }
 
             @Override
             public void onFailure(String msg) {
                 showToast(msg, false);
-
             }
         });
     }
@@ -497,6 +514,16 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
             if (Boolean.TRUE.equals(result)) {
                 Log.i(TAG, "alias was set successfully.");
             }
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK && slidingMenu.isOpen())) {
+            slidingMenu.closeMenu();
+            return false;
+        } else {
+            return super.onKeyDown(keyCode, event);
         }
     }
 }

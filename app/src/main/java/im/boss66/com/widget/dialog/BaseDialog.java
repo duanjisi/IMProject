@@ -3,8 +3,10 @@ package im.boss66.com.widget.dialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import im.boss66.com.R;
 import im.boss66.com.widget.DialogFactory;
@@ -90,5 +92,26 @@ public abstract class BaseDialog {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+    }
+
+    /**
+     * @param resId  资源ID
+     * @param length true为长时间，false为短时间
+     * @return: void
+     */
+    protected void showToast(int resId, boolean length) {
+        Toast.makeText(context, resId, length ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @param msg    内容
+     * @param length true为长时间，false为短时间
+     * @return: void
+     */
+    protected void showToast(String msg, boolean length) {
+        if (TextUtils.isEmpty(msg)) {
+            return;
+        }
+        Toast.makeText(context, msg, length ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
     }
 }

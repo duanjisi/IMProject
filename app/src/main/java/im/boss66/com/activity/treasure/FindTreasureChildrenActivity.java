@@ -80,6 +80,7 @@ import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.player.VideoPlayerNewActivity;
 import im.boss66.com.adapter.FuwaAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BaseChildren;
@@ -341,6 +342,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 ViewGroup.LayoutParams.WRAP_CONTENT, false);
         popupWindow.setAnimationStyle(R.style.PopupTitleBarAnim);
 
+        Button btn_player = (Button) view.findViewById(R.id.btn_player);
         ImageView iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
         TextView tvTips = (TextView) view.findViewById(R.id.tv_tips);
         TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
@@ -357,6 +359,40 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         tv_sign.setText(entity.getSignature());
         tv_address.setText(entity.getLocation());
         String imageUrl = entity.getAvatar();
+        final String videoPath = entity.getVideo();
+        String sex = entity.getGender();
+        Drawable drawable = null;
+        if (sex.equals("男")) {
+            drawable = resources.getDrawable(R.drawable.sex_man);
+        } else {
+            drawable = resources.getDrawable(R.drawable.sex_lady);
+        }
+        if (drawable != null) {
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            tv_name.setCompoundDrawables(null, null, drawable, null);
+        }
+        if (!videoPath.equals("")) {
+            UIUtils.showView(btn_player);
+            String videoBg = "";
+            if (videoPath.contains(".mp4")) {
+                videoBg = videoPath.replace(".mp4", ".jpg");
+            } else if (videoPath.contains(".mov")) {
+                videoBg = videoPath.replace(".mov", ".jpg");
+            }
+            final String finalVideoBg = videoBg;
+            btn_player.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!TextUtils.isEmpty(finalVideoBg)) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("videoPath", videoPath);
+                        bundle.putString("imgurl", finalVideoBg);
+                        openActivity(VideoPlayerNewActivity.class, bundle);
+                    }
+                }
+            });
+        }
+
         if (!TextUtils.isEmpty(imageUrl)) {
             imageLoader.displayImage(imageUrl, iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
         }

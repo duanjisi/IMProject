@@ -147,13 +147,13 @@ public class MessageAdapter extends BaseAdapter {
             }
         }
         notifyDataSetChanged();
-
-        MessageItem lastItem = mMsgList.get(mMsgList.size() - 1);
-        if (lastItem != null) {
-            refreshConversation(lastItem);
+        if (mMsgList.size() != 0) {
+            MessageItem lastItem = mMsgList.get(mMsgList.size() - 1);
+            if (lastItem != null) {
+                refreshConversation(lastItem);
+            }
         }
     }
-
 
     private void refreshConversation(MessageItem messageItem) {
         String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + toUid;
@@ -446,6 +446,7 @@ public class MessageAdapter extends BaseAdapter {
                 intent.putExtra("toUid", toUid);
                 intent.putExtra("item", mItem);
                 intent.putExtra("is_txt", false);
+                intent.putExtra("isEmo", true);
                 chatDialog = new ChatDialog(mContext, intent);
                 chatDialog.showDialog();
                 return false;

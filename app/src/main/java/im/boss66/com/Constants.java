@@ -24,6 +24,8 @@ public class Constants {
         public static final String MAP_MARKER_REFRESH = "local.mapview.marker.refresh";
         public static final String NET_CONENECT_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
         public static final String EXIT_CURRENT_ACTIVITY = "im.boss66.com.EXIT_CURRENT_ACTIVITY";
+        public static final String MENU_CAHNGE_CURRENT_TAB = "im.boss66.com.menu.change.current.tab.pager";
+        public static final String UPDATE_ACCOUNT_INFORM = "im.boss66.com.update.account.inform";
         //显示主页
         public static final String SHOW_HOME_ACTION = "im.boss66.com.SHOW_HOME_ACTION";
     }

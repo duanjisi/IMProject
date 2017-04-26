@@ -31,6 +31,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
@@ -127,7 +128,7 @@ public class HomePagerFragment extends BaseFragment implements Observer, View.On
 //                startActivity(intent);
 //                break;
             case R.id.iv_avatar:
-                EventBus.getDefault().post(new ActionEntity(1));
+                EventBus.getDefault().post(new ActionEntity(Constants.Action.MENU_CAHNGE_CURRENT_TAB));
                 break;
         }
     }
