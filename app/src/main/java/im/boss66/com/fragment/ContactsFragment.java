@@ -19,6 +19,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.github.jdsjlzx.interfaces.OnRefreshListener;
+import com.github.jdsjlzx.recyclerview.LRecyclerView;
+import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
+import com.github.jdsjlzx.recyclerview.ProgressStyle;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -39,9 +43,11 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.SharedPreferencesMgr;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.connection.AddPeopleActivity;
 import im.boss66.com.activity.connection.ApplyCreateActivity;
 import im.boss66.com.activity.connection.ClanClubActivity;
+import im.boss66.com.activity.connection.ClanClubListActivity;
 import im.boss66.com.activity.connection.PeopleCenterActivity;
 import im.boss66.com.activity.connection.PersonalDataActivity;
 import im.boss66.com.activity.connection.SchoolHometownActivity;
@@ -71,7 +77,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private MyInfoAdapter adapter;
 
     private List<MyInfo.ResultBean.SchoolListBean> datas = new ArrayList<>();
-    private RecyclerView rcv_info;
+    private LRecyclerView rcv_info;
 
 
     private Handler handler = new Handler() {
@@ -106,6 +112,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private ImageLoader imageLoader;
     private AccountEntity account;
     private String url;
+    private String uid;
 
     @Nullable
     @Override
@@ -129,62 +136,101 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         rl_top_bar = (RelativeLayout) view.findViewById(R.id.rl_top_bar);
         iv_avatar.setOnClickListener(this);
 
-        rcv_info = (RecyclerView) view.findViewById(R.id.rcv_info);
+        rcv_info = (LRecyclerView) view.findViewById(R.id.rcv_info);
         rcv_info.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        rcv_info.setHeaderViewColor(R.color.red_fuwa, R.color.red_fuwa_alpa_stroke, android.R.color.white);
+        rcv_info.setRefreshProgressStyle(ProgressStyle.Pacman); //设置下拉刷新Progress的样式
         adapter = new MyInfoAdapter(getActivity());
-        rcv_info.setAdapter(adapter);
+        LRecyclerViewAdapter adapter1 = new LRecyclerViewAdapter(adapter);
+        rcv_info.setAdapter(adapter1);
+        rcv_info.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        rcv_info.refreshComplete(10);
+                        initData();
+                    }
+                }, 1000);
+
+
+            }
+        });
         adapter.setItemListener(new RecycleViewItemListener() {
             @Override
             public void onItemClick(int position) {
-                int from = datas.get(position).getFrom();
+                int from = datas.get(position-1).getFrom();
                 Intent intent;
                 switch (from) {
                     case 1:
                         intent = new Intent(getActivity(), SchoolHometownActivity.class);
                         intent.putExtra("from", 1);
-                        intent.putExtra("name", datas.get(position).getName());
-                        intent.putExtra("school_id", datas.get(position).getSchool_id());
+                        intent.putExtra("name", datas.get(position-1).getName());
+                        intent.putExtra("school_id", datas.get(position-1).getSchool_id());
                         startActivity(intent);
                         break;
                     case 2:
                         intent = new Intent(getActivity(), SchoolHometownActivity.class);
                         intent.putExtra("from", 2);
-                        intent.putExtra("name", datas.get(position).getName());
-                        intent.putExtra("hometown_id", datas.get(position).getHometown_id());
+                        intent.putExtra("name", datas.get(position-1).getName());
+                        intent.putExtra("hometown_id", datas.get(position-1).getHometown_id());
                         startActivity(intent);
                         break;
 
                     case 3:
                         intent = new Intent(getActivity(), ClanClubActivity.class);
                         intent.putExtra("isClan", true);
-                        intent.putExtra("name", datas.get(position).getName());
-                        intent.putExtra("id", datas.get(position).getClan_id());
+                        intent.putExtra("name", datas.get(position-1).getName());
+                        intent.putExtra("id", datas.get(position-1).getClan_id());
+                        intent.putExtra("user_id",datas.get(position-1).getUser_id());
                         startActivity(intent);
                         break;
                     case 4:
                         intent = new Intent(getActivity(), ClanClubActivity.class);
                         intent.putExtra("isClan", false);
-                        intent.putExtra("name", datas.get(position).getName());
-                        intent.putExtra("id", datas.get(position).getCofc_id());
+                        intent.putExtra("name", datas.get(position-1).getName());
+                        intent.putExtra("id", datas.get(position-1).getCofc_id());
+                        intent.putExtra("user_id",datas.get(position-1).getUser_id());
                         startActivity(intent);
                         break;
+                    case 0:
+                        String type = datas.get(position-1).getType();
+                        if("我的宗亲".equals(type)||"我的商会".equals(type)){
+                            intent = new Intent(getActivity(), ClanClubListActivity.class);
+                            intent.putExtra("type",type);
+                            startActivity(intent);
+                        }
+                        break;
+
                 }
 
             }
 
             @Override
             public boolean onItemLongClick(int position) {
-                int from = datas.get(position).getFrom();
+                int from = datas.get(position-1).getFrom();
+                String user_id = datas.get(position-1).getUser_id();
                 switch (from) {
                     case 3:
+                        if(!uid.equals(user_id)){
+                            ToastUtil.showShort(getActivity(),"不能删除别人创建的宗亲");
+                            return true;
+                        }
                         isClan = true;
-                        clanListBean = datas.get(position);
+                        clanListBean = datas.get(position-1);
                         clan_id = clanListBean.getClan_id();
                         deleteDialog.show();
                         break;
                     case 4:
+                        if(!uid.equals(user_id)){
+                            ToastUtil.showShort(getActivity(),"不能删除别人创建的商会");
+                            return true;
+                        }
                         isClan = false;
-                        cofcListBean = datas.get(position);
+                        cofcListBean = datas.get(position-1);
                         cofc_id = cofcListBean.getCofc_id();
                         deleteDialog.show();
                         break;
@@ -212,6 +258,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
             }
         });
+        uid = App.getInstance().getUid();
 
     }
 
@@ -246,7 +293,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                             adapter.notifyDataSetChanged();
                             showToast("删除成功", false);
                         } else {
-                            showToast("删除失败", false);
+                            showToast("不能删除别人创建的宗亲", false);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

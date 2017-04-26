@@ -44,6 +44,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -66,6 +67,7 @@ import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.activity.discover.FriendSendNewMsgActivity;
 import im.boss66.com.activity.discover.ReplaceAlbumCoverActivity;
 import im.boss66.com.activity.discover.VideoListActivity;
+import im.boss66.com.activity.event.CreateSuccess;
 import im.boss66.com.adapter.CommunityListAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BaseResult;
@@ -176,6 +178,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                     tv_follow.setTextColor(Color.GRAY);
                     count = Integer.parseInt(count) + 1 + "";
                     tv_count.setText(count + "人");
+                    EventBus.getDefault().post(new CreateSuccess("")); //刷新人脉主页
                     break;
 
                 case 3: //取消关注
@@ -185,6 +188,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                     tv_follow.setTextColor(Color.WHITE);
                     count = Integer.parseInt(count) - 1 + "";
                     tv_count.setText(count + "人");
+                    EventBus.getDefault().post(new CreateSuccess(""));
                     break;
             }
         }
@@ -193,6 +197,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
     private TextView tv_count;
     private int is_follow;
     private String count;
+    private String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,6 +257,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
             isClan = intent.getBooleanExtra("isClan", false);
             name = intent.getStringExtra("name");
             id = intent.getStringExtra("id");
+            user_id = intent.getStringExtra("user_id");
 
         }
     }
@@ -400,12 +406,14 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                     intent.putExtra("id", id);
                     intent.putExtra("isClan", true);
                     intent.putExtra("name", name);
+                    intent.putExtra("user_id",user_id);
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(this, ClanCofcDetailActivity.class);
                     intent.putExtra("id", id);
                     intent.putExtra("isClan", false);
                     intent.putExtra("name", name);
+                    intent.putExtra("user_id",user_id);
                     startActivity(intent);
                 }
                 break;

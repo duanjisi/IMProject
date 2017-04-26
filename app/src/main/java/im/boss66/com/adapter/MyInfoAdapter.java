@@ -48,9 +48,22 @@ public class MyInfoAdapter extends BaseRecycleViewAdapter{
        switch (holder.getItemViewType()){
 
            case 1:
-               StringHolder holder1 = (StringHolder) holder;
+               final StringHolder holder1 = (StringHolder) holder;
                MyInfo.ResultBean.SchoolListBean item = (MyInfo.ResultBean.SchoolListBean) datas.get(position);
                holder1.tv_name.setText(item.getType());
+               String type = item.getType();
+               if("我的宗亲".equals(type)||"我的商会".equals(type)){
+                   holder1.tv_more.setVisibility(View.VISIBLE);
+               }else{
+                   holder1.tv_more.setVisibility(View.GONE);
+               }
+               holder1.itemView.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View view) {
+                       int adapterPosition = holder1.getAdapterPosition();
+                       itemListener.onItemClick(adapterPosition);
+                   }
+               });
                break;
            case 2:
                final MySchoolholder holder2 = (MySchoolholder) holder;
@@ -113,9 +126,11 @@ public class MyInfoAdapter extends BaseRecycleViewAdapter{
     public static class StringHolder extends RecyclerView.ViewHolder{
 
         public TextView tv_name;
+        public TextView tv_more;
         public StringHolder(View itemView) {
             super(itemView);
             tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+            tv_more = (TextView) itemView.findViewById(R.id.tv_more);
         }
     }
 }

@@ -130,6 +130,16 @@ public class MyInfo {
              * count : 1
              */
 
+            private String user_id="";
+
+            public String getUser_id() {
+                return user_id;
+            }
+
+            public void setUser_id(String user_id) {
+                this.user_id = user_id;
+            }
+
             private int school_id;
             private int hometown_id;
             private String cofc_id;

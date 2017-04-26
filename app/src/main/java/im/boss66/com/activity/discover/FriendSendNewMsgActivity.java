@@ -262,6 +262,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
 
     private void showImg() {
         if (imgList != null && imgList.size() > 0) {
+            iv_video_add.setVisibility(View.GONE);
             multiImagView.setVisibility(View.VISIBLE);
             int imgSize = imgList.size();
             int imgW = (int) (sceenW / 3 * 0.8);
@@ -287,7 +288,6 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
             multiImagView.setList(lists);
             int sceenH = multiImagView.getHeight();
             int sceenW = multiImagView.getWidth();
-            Log.i("multiImagView:", "sceenH:" + sceenH + "sceenW:" + sceenW);
         } else {
             multiImagView.setVisibility(View.GONE);
             iv_video_add.setVisibility(View.VISIBLE);
@@ -493,7 +493,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
             }
         } else if (requestCode == OPEN_ALBUM && resultCode == RESULT_OK && data != null) { //打开相册
             ArrayList<String> selectPicList = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-            if (selectPicList != null && imgList.size() > 0) {
+            if (selectPicList != null && imgList != null) {
                 imgList.addAll(selectPicList);
                 showImg();
             }
