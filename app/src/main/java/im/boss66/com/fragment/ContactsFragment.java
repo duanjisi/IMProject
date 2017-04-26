@@ -442,7 +442,8 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initData() {
-        datas.clear();
+//        datas.clear();      //导致刷新崩溃
+        datas= new ArrayList<>();
         MyInfoRequest request = new MyInfoRequest(TAG);
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
