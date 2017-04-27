@@ -177,8 +177,10 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
     private TextView tv_num; //当前页
     private TextView tv_count; //总页数
     private EditText et_price;
+    private EditText et_code;
 
     private TextView tv_confirm;
+    private TextView tv_confirm2;
     private ImageView award;   //已兑奖
     private ImageView img_fuwa;  //福娃图片
     private ImageView img_cancle;
@@ -451,7 +453,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                 if (giveDialog == null) {
                     showGiveFuwaDialog(context);
                 } else if (!giveDialog.isShowing()) {
-                    et_price.setText(null);
+                    et_code.setText(null);
                     giveDialog.show();
                 }
             }
@@ -788,8 +790,8 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         giveDialog.setContentView(view);
         giveDialog.setCancelable(true);
         giveDialog.setCanceledOnTouchOutside(false);
-        et_price = (EditText) giveDialog.findViewById(R.id.et_price);
-        tv_confirm = (TextView) giveDialog.findViewById(R.id.tv_confirm);
+        et_code = (EditText) giveDialog.findViewById(R.id.et_price);
+        tv_confirm2 = (TextView) giveDialog.findViewById(R.id.tv_confirm);
         RelativeLayout rl_scan = (RelativeLayout) giveDialog.findViewById(R.id.rl_scan);
         rl_scan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -801,16 +803,16 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         });
 
 
-        tv_confirm.setOnClickListener(new View.OnClickListener() {
+        tv_confirm2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 long time22 = System.currentTimeMillis();
                 if (time22 - time11 > 1000) {
                     time11 = time22;
-                    if (et_price.getText().length() > 0) {
+                    if (et_code.getText().length() > 0) {
 
-                        giveFuwa(et_price.getText().toString());
+                        giveFuwa(et_code.getText().toString());
                     } else {
                         ToastUtil.showShort(context, "请填写接收人口令");
                     }
@@ -948,7 +950,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK) {
             String code = data.getStringExtra("code");
-            et_price.setText(code);
+            et_code.setText(code);
 
         }
 
