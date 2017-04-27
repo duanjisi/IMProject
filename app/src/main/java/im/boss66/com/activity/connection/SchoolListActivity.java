@@ -19,6 +19,8 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +33,8 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.event.CreateSuccess;
+import im.boss66.com.activity.event.EditSchool;
 import im.boss66.com.adapter.SchoolListAdapter;
 import im.boss66.com.entity.SchoolListEntity;
 import im.boss66.com.http.BaseDataRequest;
@@ -76,7 +80,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
                     break;
                 case 2:
                     showToast("删除成功", false);
-                    SharedPreferencesMgr.setBoolean("EditSchool2",true);
+                    EventBus.getDefault().post(new CreateSuccess(""));
                     initData();
                     break;
 
@@ -92,6 +96,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_list);
 
+        EventBus.getDefault().register(this);
         initViews();
 
         initData();
@@ -210,18 +215,7 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (SharedPreferencesMgr.getBoolean("EditSchool", false)) {
-            //显示学校列表
-            img_school.setVisibility(View.GONE);
-            tv_school.setVisibility(View.GONE);
-            initData();
-            SharedPreferencesMgr.setBoolean("EditSchool", false);
-        }
 
-    }
 
     private void initData() {
         SchoolListRequest request = new SchoolListRequest(TAG);
@@ -271,5 +265,19 @@ public class SchoolListActivity extends BaseActivity implements View.OnClickList
             finish();
         }
 
+    }
+
+    @Subscribe
+    public void onMessageEvent(EditSchool event) {
+        //显示学校列表
+        img_school.setVisibility(View.GONE);
+        tv_school.setVisibility(View.GONE);
+        initData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

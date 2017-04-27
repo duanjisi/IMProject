@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -424,24 +425,10 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        //修改完后请求接口
-        if (SharedPreferencesMgr.getBoolean("setSuccess", false)) {
-            SharedPreferencesMgr.setBoolean("setSuccess", false);
-            initData();
-        }
-        if (SharedPreferencesMgr.getBoolean("EditSchool2", false)) {
-            SharedPreferencesMgr.setBoolean("EditSchool2", false);
-            initData();
-        }
-
-
-    }
 
     private void initData() {
-        datas.clear();
+//        datas.clear();      //导致刷新崩溃
+
         MyInfoRequest request = new MyInfoRequest(TAG);
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
@@ -468,6 +455,8 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
                         MyInfo.ResultBean.SchoolListBean schoolListBean = new MyInfo.ResultBean.SchoolListBean();
                         schoolListBean.setType("我的学校");
+                        datas= new ArrayList<>();    //放在这里，防止数据叠加。
+
                         datas.add(schoolListBean);
                         for (MyInfo.ResultBean.SchoolListBean data : school_list) {
                             data.setFrom(1);
@@ -494,6 +483,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                             data.setFrom(4);
                             datas.add(data);
                         }
+                        Log.i("liwya",datas.toString());
                         handler.obtainMessage(1).sendToTarget();
                     }
 
