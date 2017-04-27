@@ -121,6 +121,24 @@ public class MyInfo {
         }
 
         public static class SchoolListBean {
+            @Override
+            public String toString() {
+                return "SchoolListBean{" +
+                        "user_id='" + user_id + '\'' +
+                        ", school_id=" + school_id +
+                        ", hometown_id=" + hometown_id +
+                        ", cofc_id='" + cofc_id + '\'' +
+                        ", clan_id='" + clan_id + '\'' +
+                        ", name='" + name + '\'' +
+                        ", logo='" + logo + '\'' +
+                        ", banner='" + banner + '\'' +
+                        ", brief_desc='" + brief_desc + '\'' +
+                        ", count=" + count +
+                        ", type='" + type + '\'' +
+                        ", from=" + from +
+                        '}';
+            }
+
             /**
              * school_id : 18
              * name : 清华大学
