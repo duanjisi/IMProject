@@ -125,6 +125,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         showToast("支付成功", true);
 
+
                         refreshFuwa();    //刷新福娃
 
                         if(dialog4==null){
@@ -147,6 +148,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
     private void refreshFuwa() {
         dialog.dismiss();   //福娃详情dialog
+
         datas.remove(chooseFuwa);
         adapter.setDatas(datas);
         adapter.setChooses();
@@ -154,7 +156,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
         chooseFuwa =null;
 
-        datasChoose = datas;
+        datasChoose = datas;   //相当于全部选中
 
         tv_price.setTextColor(0xffcccccc);
         img_price.setImageResource(R.drawable.fuwa_price);
