@@ -23,6 +23,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,6 +44,7 @@ import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
+import im.boss66.com.activity.event.CreateSuccess;
 import im.boss66.com.entity.JobEntity;
 import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.entity.UserInfoEntity;
@@ -178,8 +180,8 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     break;
                 case 2: //更新成功
                     showToast("保存成功", false);
-                    SharedPreferencesMgr.setBoolean("setSuccess", true); //用来onresume刷新数据，刷新后为false
-                    SharedPreferencesMgr.setBoolean("setSuccess2", true); //用
+                    EventBus.getDefault().post(new CreateSuccess(""));
+                    SharedPreferencesMgr.setBoolean("setSuccess2", true); //
                     finish();
                     break;
                 case 3: //更新失败

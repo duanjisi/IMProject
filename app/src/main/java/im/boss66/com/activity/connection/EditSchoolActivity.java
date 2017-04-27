@@ -30,6 +30,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +43,8 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.event.CreateSuccess;
+import im.boss66.com.activity.event.EditSchool;
 import im.boss66.com.entity.SaveSchoolEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
@@ -87,16 +90,16 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
             switch (msg.what){
                 case 1:
                     if(saveSchoolEntity.getCode()==1){
-                        SharedPreferencesMgr.setBoolean("EditSchool",true); //用于schoollist刷新数据
-                        SharedPreferencesMgr.setBoolean("EditSchool2",true); //用于人脉主页刷新数据
+                        EventBus.getDefault().post(new EditSchool(""));       //学校列表刷新
+                        EventBus.getDefault().post(new CreateSuccess(""));    //人脉首页刷新
                         finish();
                     }else{
                         showToast("添加失败",false);
                     }
                     break;
                 case 2:
-                    SharedPreferencesMgr.setBoolean("EditSchool",true);
-                    SharedPreferencesMgr.setBoolean("EditSchool2",true);
+                    EventBus.getDefault().post(new EditSchool(""));
+                    EventBus.getDefault().post(new CreateSuccess(""));
                     finish();
                     break;
 

@@ -425,21 +425,6 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        //修改完后请求接口
-        if (SharedPreferencesMgr.getBoolean("setSuccess", false)) {
-            SharedPreferencesMgr.setBoolean("setSuccess", false);
-            initData();
-        }
-        if (SharedPreferencesMgr.getBoolean("EditSchool2", false)) {
-            SharedPreferencesMgr.setBoolean("EditSchool2", false);
-            initData();
-        }
-
-
-    }
 
     private void initData() {
 //        datas.clear();      //导致刷新崩溃
