@@ -39,6 +39,8 @@
             android:layout_toRightOf="@+id/iv_avatar"
             android:drawablePadding="4dp"
             android:drawableRight="@drawable/sex_lady"
+            android:maxEms="4"
+            android:singleLine="true"
             android:text="小华"
             android:textColor="@color/golden_color"
             android:textSize="18sp" />
@@ -101,11 +103,12 @@
                 android:id="@+id/tv_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="5.6dp"
                 android:gravity="center"
                 android:text="活动介绍"
                 android:textColor="@color/golden_color"
-                android:textSize="15.4sp" />
+                android:textSize="13.2sp" />
         </LinearLayout>
         <!--<TextView-->
         <!--android:id="@+id/tv_tag"-->
@@ -133,6 +136,6 @@
             android:maxLines="3"
             android:text="是的封建时代开发建设但是分开水电开发就开始到付款三闾大夫健康是的开发建设快递费可是对方了解适当放宽圣诞节付款快递费精神的快乐放假"
             android:textColor="@color/bg_rectangle"
-            android:textSize="15.4sp" />
+            android:textSize="13.2sp" />
     </RelativeLayout>
 </RelativeLayout>

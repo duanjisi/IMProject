@@ -47,13 +47,13 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="16.5dp"
-        android:background="@drawable/bg_frame_white"
+        android:background="@drawable/bg_frame_red_fuwa"
         android:paddingBottom="6dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:paddingTop="6dp"
         android:text="详情"
-        android:textColor="@color/text_color_gray_6"
+        android:textColor="@color/red_fuwa"
         android:textSize="16sp" />
 
     <LinearLayout
