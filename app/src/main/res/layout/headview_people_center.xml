@@ -68,14 +68,6 @@
         android:textSize="@dimen/text_size_32"
         android:visibility="gone" />
 
-    <im.boss66.com.widget.RoundImageView
-        android:id="@+id/user_head"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/person" />
-
     <RelativeLayout
         android:id="@+id/rl_edit_info"
         android:layout_width="match_parent"
@@ -133,7 +125,14 @@
 
     </RelativeLayout>
 
-
+    <im.boss66.com.widget.RoundImageView
+        android:id="@+id/user_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/person"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

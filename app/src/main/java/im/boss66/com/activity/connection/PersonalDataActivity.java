@@ -216,34 +216,37 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     int user_city = result.getCity();//市
                     int user_district = result.getDistrict();//区
 
-                    String user_ht_province = result.getHt_province()+""; //家乡
-                    String user_ht_city = result.getHt_city()+"";
-                    String user_ht_district = result.getHt_district()+"";
+                    String user_ht_province = result.getHt_province() + ""; //家乡
+                    String user_ht_city = result.getHt_city() + "";
+                    String user_ht_district = result.getHt_district() + "";
 
                     tv_sex2.setText(user_sex);
                     tv_name2.setText(user_name);
 
-                    if (map1.get(user_province + "") == null
-                            && map1.get(user_ht_province) == null) {
+                    if (map1.get(user_ht_province) != null) { //家乡不为空
 
-                    } else {
-                        tv_school3.setVisibility(View.GONE);
                         tv_hometown3.setVisibility(View.GONE);
-                        tv_location2.setText(map1.get(user_province + "") + map2.get(user_city + "") + map3.get(user_district + ""));
                         tv_hometown2.setText(map1.get(user_ht_province) + map2.get(user_ht_city) + map3.get(user_ht_district));
                     }
 
+                    if(map1.get(user_province + "") != null){ //所在地
+                        tv_location2.setText(map1.get(user_province + "") + map2.get(user_city + "") + map3.get(user_district + ""));
+                    }
 
                     String user_industry = result.getIndustry();
                     tv_job2.setText(user_industry);
 
                     String user_school = result.getSchool();
-                    tv_school2.setText(user_school);
+
+                    if (user_school.length() > 0) {   //学校不为空
+                        tv_school3.setVisibility(View.GONE);
+                        tv_school2.setText(user_school);
+                    }
 
                     String user_interest = result.getInterest();
                     tv_like2.setText(user_interest);
 
-                    String birthday = result.getBirthday()+"";
+                    String birthday = result.getBirthday() + "";
                     try {
                         String dateTime = TimeUtil.getDateTime(Long.parseLong(birthday) * 1000);
                         tv_time2.setText(dateTime);
