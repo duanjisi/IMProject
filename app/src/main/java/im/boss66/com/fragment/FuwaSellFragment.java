@@ -125,7 +125,8 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         showToast("支付成功", true);
 
-                        dialog.dismiss();   //福娃详情dialog
+
+                        refreshFuwa();    //刷新福娃
 
                         if(dialog4==null){
                             showSuccessDialog();
@@ -144,6 +145,28 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             }
         }
     };
+
+    private void refreshFuwa() {
+        dialog.dismiss();   //福娃详情dialog
+
+        datas.remove(chooseFuwa);
+        adapter.setDatas(datas);
+        adapter.setChooses();
+        adapter.notifyDataSetChanged();
+
+        chooseFuwa =null;
+
+        datasChoose = datas;   //相当于全部选中
+
+        tv_price.setTextColor(0xffcccccc);
+        img_price.setImageResource(R.drawable.fuwa_price);
+
+        tv_price.setText("价格");
+
+        tv_choose.setTextColor(0xffcccccc);
+        img_choose.setImageResource(R.drawable.fuwa_screen);
+    }
+
     private TextView tv_fuwa_num;
     private TextView tv_number;
     private TextView tv_price1;
@@ -168,22 +191,6 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
                 dialog4.dismiss();
 
-                datas.remove(chooseFuwa);
-                adapter.setDatas(datas);
-                adapter.setChooses();
-                adapter.notifyDataSetChanged();
-
-                chooseFuwa =null;
-
-                datasChoose = datas;
-
-                tv_price.setTextColor(0xffcccccc);
-                img_price.setImageResource(R.drawable.fuwa_price);
-
-                tv_price.setText("价格");
-
-                tv_choose.setTextColor(0xffcccccc);
-                img_choose.setImageResource(R.drawable.fuwa_screen);
 
             }
         });
