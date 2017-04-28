@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.google.zxing.WriterException;
 import com.umeng.socialize.bean.HandlerRequestCode;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
@@ -40,63 +40,53 @@ import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
-import org.greenrobot.eventbus.Subscribe;
-
 import java.io.ByteArrayOutputStream;
 
 import im.boss66.com.App;
-import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.Base64Utils;
-import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.MakeQRCodeUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.CaptureActivity;
-import im.boss66.com.activity.MainAct;
 import im.boss66.com.activity.base.BaseActivity;
-import im.boss66.com.entity.AccountEntity;
-import im.boss66.com.entity.ActionEntity;
-import im.boss66.com.widget.CircleImageView;
 import im.boss66.com.widget.popupWindows.SharePopup;
 
 /**
  * Created by Johnny on 2017/3/13
  * 寻宝首页.
  */
-public class MainTreasureActivity extends BaseActivity implements View.OnClickListener, SharePopup.OnItemSelectedListener {
-    private TextView tv_apply;
-    private ImageView iv_msg, iv_bag, iv_trade, iv_rank, iv_game, img_more;
-    private Button btn_find, btn_find_fate, btn_store;
+public class MainTreasureActivity2 extends BaseActivity implements View.OnClickListener {
+    private TextView  tv_apply, tv_rank, tv_game;
+    private ImageView iv_msg, iv_bag, iv_trade,img_more;
+    private Button btn_find, btn_store;
 
     private Dialog dialog;
     private Dialog qr_code_dialog;
     private PopupWindow popupWindow;
-    private TextView tv_name, tv_word;
-    private CircleImageView iv_avatar;
-    private ImageLoader imageLoader;
-    private AccountEntity account;
+    private TextView tv_word;
+    private SharePopup sharePopup;
     private Bitmap bitmap;
     private Bitmap qrImage;
+
+
+    private String shareContent ="我的二维码";
+    private String targetUrl = "http://www.baidu.com";
+    private String title = "嗨萌寻宝";
+    private String imageUrl;
+    private Dialog shareDialog;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_main_treasure);
+        setContentView(R.layout.activity_main_treasure);
         initViews();
     }
 
     private void initViews() {
-        account = App.getInstance().getAccount();
-        imageLoader = ImageLoaderUtils.createImageLoader(context);
-        iv_avatar = (CircleImageView) findViewById(R.id.iv_avatar);
-
-//        tv_rank = (TextView) view.findViewById(R.id.tv_rank);
+        tv_rank = (TextView) findViewById(R.id.tv_rank);
         tv_apply = (TextView) findViewById(R.id.tv_apply);
-//        tv_game = (TextView) view.findViewById(R.id.tv_game);
-        tv_name = (TextView) findViewById(R.id.tv_name);
-        iv_game = (ImageView) findViewById(R.id.iv_game);
-        iv_rank = (ImageView) findViewById(R.id.iv_rank);
+        tv_game = (TextView) findViewById(R.id.tv_game);
 
         iv_msg = (ImageView) findViewById(R.id.iv_msg);
         iv_bag = (ImageView) findViewById(R.id.iv_bag);
@@ -104,25 +94,18 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         img_more = (ImageView) findViewById(R.id.img_more);
 
         btn_find = (Button) findViewById(R.id.btn_find);
-        btn_find_fate = (Button) findViewById(R.id.btn_find_fate);
         btn_store = (Button) findViewById(R.id.btn_store);
 
-//        tv_rank.setOnClickListener(this);
-//        tv_game.setOnClickListener(this);
-        iv_rank.setOnClickListener(this);
-        iv_game.setOnClickListener(this);
+        tv_rank.setOnClickListener(this);
+        tv_game.setOnClickListener(this);
         tv_apply.setOnClickListener(this);
         iv_msg.setOnClickListener(this);
         iv_bag.setOnClickListener(this);
         iv_trade.setOnClickListener(this);
         btn_find.setOnClickListener(this);
-        btn_find_fate.setOnClickListener(this);
         btn_store.setOnClickListener(this);
         img_more.setOnClickListener(this);
-        iv_avatar.setOnClickListener(this);
 
-        tv_name.setText(account.getUser_name());
-        imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
     }
 
     @Override
@@ -130,6 +113,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         SHARE_MEDIA shareMedia = null;
         UMediaObject uMediaObject = null;
         switch (view.getId()) {
+
             case R.id.img_more:
                 if (popupWindow == null) {
                     showTopPop(img_more);
@@ -137,10 +121,10 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                     popupWindow.showAsDropDown(img_more);
                 }
                 break;
-            case R.id.iv_rank://福娃排行榜
+            case R.id.tv_rank://福娃排行榜
                 openActivity(FuwaTopList.class);
                 break;
-            case R.id.iv_game://福娃游戏规则
+            case R.id.tv_game://福娃游戏规则
                 openActivity(GameRuleActivity.class);
                 break;
             case R.id.tv_apply://申请福娃
@@ -157,21 +141,13 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
                 break;
             case R.id.btn_find://找福娃
-                Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
-                intent.putExtra("isFate", false);
-                startActivity(intent);
-                break;
-            case R.id.btn_find_fate://找福娃
-                Intent it = new Intent(context, FindTreasureChildrenActivity.class);
-                it.putExtra("isFate", true);
-                startActivity(it);
+                openActivity(FindTreasureChildrenActivity.class);
+//                openActivity(CatchFuwaActivity.class);
                 break;
             case R.id.btn_store://藏福娃
                 openActivity(HideFuwaActivity.class);
                 break;
-            case R.id.iv_avatar:
 
-                break;
             case R.id.weixin_share_linear:
                 shareMedia = SHARE_MEDIA.WEIXIN;
                 if (!mController.getConfig().getSsoHandler(HandlerRequestCode.WX_REQUEST_CODE).isClientInstalled()) {
@@ -186,7 +162,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
                 weixinContent.setShareImage(new UMImage(context, qrImage));
                 uMediaObject = weixinContent;
-                postShare(shareMedia, uMediaObject);
+                postShare(shareMedia,uMediaObject);
                 break;
             case R.id.weixin_circle_share_linear:
                 shareMedia = SHARE_MEDIA.WEIXIN_CIRCLE;
@@ -200,7 +176,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                 circleMedia.setTitle(title);
                 circleMedia.setShareImage(new UMImage(context, qrImage));
                 uMediaObject = circleMedia;
-                postShare(shareMedia, uMediaObject);
+                postShare(shareMedia,uMediaObject);
                 break;
             case R.id.qq_share_linear:
                 shareMedia = SHARE_MEDIA.QQ;
@@ -213,7 +189,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
                 qqShareContent.setShareImage(new UMImage(context, qrImage));
                 uMediaObject = qqShareContent;
-                postShare(shareMedia, uMediaObject);
+                postShare(shareMedia,uMediaObject);
                 break;
             case R.id.qq_zone_share_linear:  //纯图片不支持qq空间分享
                 shareMedia = SHARE_MEDIA.QZONE;
@@ -231,7 +207,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
                 qzone.setShareImage(new UMImage(context, byteArray));
                 uMediaObject = qzone;
-                postShare(shareMedia, uMediaObject);
+                postShare(shareMedia,uMediaObject);
                 break;
             case R.id.btn_cancel:
                 shareDialog.dismiss();
@@ -239,112 +215,8 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    //分享回调
-    @Override
-    public void onItemSelected(SHARE_MEDIA shareMedia) {
-        UMediaObject uMediaObject = null;
-        switch (shareMedia) {
-            case WEIXIN:
-                if (!mController.getConfig().getSsoHandler(HandlerRequestCode.WX_REQUEST_CODE).isClientInstalled()) {
-                    showToast(R.string.notice_weixin_not_install, false);
-                    return;
-                }
-                //设置微信好友分享内容
-                WeiXinShareContent weixinContent = new WeiXinShareContent();
-                //设置分享文字
-                weixinContent.setShareContent(shareContent);
-                //设置title
-//                weixinContent.setTitle(TextUtils.isEmpty(title) ? mWebView.getTitle() : title);
-                weixinContent.setTitle(title);
-                //设置分享内容跳转URL
-                weixinContent.setTargetUrl(targetUrl);
-                if (imageUrl != null && !imageUrl.equals("")) {
-                    //设置分享图片
-                    weixinContent.setShareImage(new UMImage(context, imageUrl));
-                } else {
-                    weixinContent.setShareImage(new UMImage(context, R.drawable.logo_tips));
-                }
-                uMediaObject = weixinContent;
-                break;
-            case WEIXIN_CIRCLE:
-                if (!mController.getConfig().getSsoHandler(HandlerRequestCode.WX_REQUEST_CODE).isClientInstalled()) {
-                    showToast(R.string.notice_weixin_not_install, false);
-                    return;
-                }
-                //设置微信朋友圈分享内容
-                CircleShareContent circleMedia = new CircleShareContent();
-                circleMedia.setShareContent(shareContent);
-                //设置朋友圈title
-                circleMedia.setTitle(title);
-                circleMedia.setTargetUrl(targetUrl);
-                if (imageUrl != null) {
-                    //设置分享图片
-                    circleMedia.setShareImage(new UMImage(context, imageUrl));
-                } else {
-                    circleMedia.setShareImage(new UMImage(context, R.drawable.logo_tips));
-                }
-                uMediaObject = circleMedia;
-                break;
-            case QQ:
-                if (!mController.getConfig().getSsoHandler(HandlerRequestCode.QQ_REQUEST_CODE).isClientInstalled()) {
-                    showToast(R.string.notice_qq_not_install, false);
-                    return;
-                }
-                QQShareContent qqShareContent = new QQShareContent();
-                qqShareContent.setShareContent(shareContent);
-                qqShareContent.setTitle(title);
-                if (imageUrl != null && !imageUrl.equals("")) {
-                    //设置分享图片
-                    qqShareContent.setShareImage(new UMImage(context, imageUrl));
-                } else {
-                    qqShareContent.setShareImage(new UMImage(context, R.drawable.logo_tips));
-                }
 
-                qqShareContent.setTargetUrl(targetUrl);
-                uMediaObject = qqShareContent;
-                break;
-            case QZONE:
-                QZoneShareContent qzone = new QZoneShareContent();
-//                // 设置分享文字
-//                qzone.setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能 -- QZone");
-//                // 设置点击消息的跳转URL
-//                qzone.setTargetUrl("http://www.baidu.com");
-//                // 设置分享内容的标题
-//                qzone.setTitle("QZone title");
-                // 设置分享图片
-                qzone.setShareContent(shareContent);
-                qzone.setTitle(title);
-                qzone.setTargetUrl(targetUrl);
-                if (imageUrl != null && !imageUrl.equals("")) {
-                    //设置分享图片
-                    qzone.setShareImage(new UMImage(context, imageUrl));
-                } else {
-                    qzone.setShareImage(new UMImage(context, R.drawable.logo_tips));
-                }
-                uMediaObject = qzone;
-                break;
-        }
-        mController.setShareMedia(uMediaObject);
-        mController.postShare(context, shareMedia, new SocializeListeners.SnsPostListener() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
-                Log.i("info", "================eCode:" + eCode);
-//                showToast("========eCode:" + eCode, true);
-                if (eCode == StatusCode.ST_CODE_SUCCESSED) {
-                    showToast("分享成功!", true);
-                }
-            }
-        });
-
-
-    }
-
-    private void postShare(SHARE_MEDIA shareMedia, UMediaObject uMediaObject) {
+    private void postShare(SHARE_MEDIA shareMedia, UMediaObject uMediaObject){
         mController.setShareMedia(uMediaObject);
         mController.postShare(context, shareMedia, new SocializeListeners.SnsPostListener() {
             @Override
@@ -365,14 +237,13 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
     private void showTopPop(View parent) {
 
-        final View view = LayoutInflater.from(context).inflate(R.layout.fuwa_pop, null);
+        final View view = LayoutInflater.from(this).inflate(R.layout.fuwa_pop, null);
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
-        popupWindow.setAnimationStyle(R.style.PopupTitleBarAnim1);
         view.findViewById(R.id.my_word).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (dialog == null) {
-                    showCodeDialog(context);
+                    showCodeDialog(MainTreasureActivity2.this);
                 } else if (!dialog.isShowing()) {
                     dialog.show();
                 }
@@ -385,7 +256,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
             public void onClick(View v) {
                 //验证福娃
 //                showToast("验证福娃",false);
-                Intent intent = new Intent(context, CaptureActivity.class);
+                Intent intent = new Intent(MainTreasureActivity2.this, CaptureActivity.class);
                 startActivity(intent);
                 popupWindow.dismiss();
             }
@@ -453,10 +324,14 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                 //二维码pop
 //                showToast("二维码",false);
 
-                if (qr_code_dialog == null) {
-                    showCodeDetailDialog(context);
+                if(qr_code_dialog==null){
+                    try {
+                        showCodeDetailDialog(context);
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    }
 
-                } else if (!qr_code_dialog.isShowing()) {
+                }else if(!qr_code_dialog.isShowing()){
                     qr_code_dialog.show();
 
                 }
@@ -467,7 +342,7 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
         //设置dialog大小
         Window dialogWindow = dialog.getWindow();
-        WindowManager manager = getWindowManager();
+        WindowManager manager = ((MainTreasureActivity2) context).getWindowManager();
         WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
         dialogWindow.setGravity(Gravity.CENTER);
         Display d = manager.getDefaultDisplay(); // 获取屏幕宽、高度
@@ -479,7 +354,8 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
 
 
     //二维码细节
-    private void showCodeDetailDialog(final Context context) {
+    private void showCodeDetailDialog(final Context context) throws WriterException {
+
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         // 不同页面加载不同的popup布局
         final View view = inflater.inflate(R.layout.pop_qr_code, null);
@@ -500,11 +376,19 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 //分享
+//                if (!isFinishing()) {
+//                    if (sharePopup.isShowing()) {
+//                        sharePopup.dismiss();
+//                    } else {
+//                        sharePopup.show(qr_code_dialog.getWindow().getDecorView());
+////                        sharePopup.showAtLocation(view.findViewById(R.id.img_cancle),Gravity.BOTTOM,0,-200);
+//                    }
+//                }
 
                 //用我之前那个dialog，然后加上这边的分享逻辑。
-                if (shareDialog == null) {
+                if(shareDialog==null){
                     showDialog();
-                } else if (!shareDialog.isShowing()) {
+                }else if(!shareDialog.isShowing()){
                     shareDialog.show();
                 }
 
@@ -514,24 +398,27 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         ImageView img_qr_code = (ImageView) view.findViewById(R.id.img_qr_code);
 
         int width = UIUtils.getScreenWidth(context);
-        width = width * 3 / 5;
+        width = width*3/5;
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) img_qr_code.getLayoutParams();
         params.weight = width;
-        params.height = width;
+        params.height =width;
         img_qr_code.setLayoutParams(params);
-        String uri = "fuwa:user:" + tv_word.getText().toString();
+        String uri = "fuwa:user:"+tv_word.getText().toString();
 
 //        MakeQRCodeUtil.createQRImage(uri, width, width, img_qr_code);
 
         //生成带logo的二维码
         bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.fuwabig);
-        qrImage = MakeQRCodeUtil.createQRImage(context, uri, bitmap);
+        qrImage = MakeQRCodeUtil.createQRImage(this, uri, bitmap);
         img_qr_code.setImageBitmap(qrImage);
+
+
+
 
 
         //设置dialog大小
         Window dialogWindow = dialog.getWindow();
-        WindowManager manager = ((MainAct) context).getWindowManager();
+        WindowManager manager = ((MainTreasureActivity2) context).getWindowManager();
         WindowManager.LayoutParams params2 = dialogWindow.getAttributes(); // 获取对话框当前的参数值
         dialogWindow.setGravity(Gravity.CENTER);
         Display d = manager.getDefaultDisplay(); // 获取屏幕宽、高度
@@ -541,17 +428,27 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         qr_code_dialog.show();
     }
 
-    private String shareContent = "我的二维码";
-    private String targetUrl = "http://www.baidu.com";
-    private String title = "嗨萌寻宝";
-    private String imageUrl;
-    private Dialog shareDialog;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(bitmap != null && !bitmap.isRecycled()){
+            // 回收并且置为null
+            bitmap.recycle();
+            bitmap = null;
+        }
+        if(qrImage != null && !qrImage.isRecycled()){
+            // 回收并且置为null
+            qrImage.recycle();
+            qrImage = null;
+        }
+    }
+
 
 
     private void showDialog() {
         initSharePlatform(mController);
-        shareDialog = new Dialog(context, R.style.Dialog_full);
-        View view_dialog = View.inflate(context,
+        shareDialog = new Dialog(this, R.style.Dialog_full);
+        View view_dialog = View.inflate(this,
                 R.layout.pop_share, null);
         view_dialog.findViewById(R.id.weixin_share_linear).setOnClickListener(this);
         view_dialog.findViewById(R.id.weixin_circle_share_linear).setOnClickListener(this);
@@ -583,11 +480,11 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         String weixinAppId = this.getString(R.string.weixin_app_id);
         String weixinAppSecret = this.getString(R.string.weixin_app_secret);
         // 添加微信平台
-        UMWXHandler wxHandler = new UMWXHandler(context, weixinAppId, weixinAppSecret);
+        UMWXHandler wxHandler = new UMWXHandler(this, weixinAppId, weixinAppSecret);
         wxHandler.addToSocialSDK();
         wxHandler.showCompressToast(false); //压缩吐司不弹
         // 添加微信朋友圈
-        UMWXHandler wxCircleHandler = new UMWXHandler(context, weixinAppId, weixinAppSecret);
+        UMWXHandler wxCircleHandler = new UMWXHandler(this, weixinAppId, weixinAppSecret);
         wxCircleHandler.setToCircle(true);
         wxCircleHandler.addToSocialSDK();
         wxCircleHandler.showCompressToast(false); //压缩吐司不弹
@@ -595,37 +492,11 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
         String qqAppId = this.getString(R.string.qq_app_id);
         String qqAppSecret = this.getString(R.string.qq_app_key);
         //参数1为当前Activity，参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
-        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, qqAppId, qqAppSecret);
+        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler((android.app.Activity) this, qqAppId, qqAppSecret);
         qqSsoHandler.addToSocialSDK();
 
-        QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(this, qqAppId, qqAppSecret);
+        QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler((android.app.Activity) this, qqAppId, qqAppSecret);
         qZoneSsoHandler.addToSocialSDK();
     }
 
-    @Subscribe
-    public void onMessageEvent(ActionEntity event) {
-        if (event != null) {
-            String action = event.getAction();
-            if (action.equals(Constants.Action.UPDATE_ACCOUNT_INFORM)) {
-                account = App.getInstance().getAccount();
-                tv_name.setText(account.getUser_name());
-                imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
-            }
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (bitmap != null && !bitmap.isRecycled()) {
-            // 回收并且置为null
-            bitmap.recycle();
-            bitmap = null;
-        }
-        if (qrImage != null && !qrImage.isRecycled()) {
-            // 回收并且置为null
-            qrImage.recycle();
-            qrImage = null;
-        }
-    }
 }

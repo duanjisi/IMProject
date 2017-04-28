@@ -29,6 +29,7 @@ import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.discover.FriendCircleActivity;
 import im.boss66.com.activity.discover.PeopleNearbyActivity;
 import im.boss66.com.activity.discover.SharkItOffActivity;
+import im.boss66.com.activity.treasure.MainTreasureActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.entity.BaseResult;
@@ -117,7 +118,7 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
             case R.id.rl_shopping:
                 break;
             case R.id.rl_game:
-//                openActivity(MainTreasureActivity.class, null);
+                openActivity(MainTreasureActivity.class, null);
                 break;
             case R.id.iv_avatar:
                 EventBus.getDefault().post(new ActionEntity(Constants.Action.MENU_CAHNGE_CURRENT_TAB));
