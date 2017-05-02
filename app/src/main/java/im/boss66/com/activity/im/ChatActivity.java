@@ -878,7 +878,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             }
             File file = new File(dir, imageName);
             photoPath = file.getPath();
-            Uri imageUri = Uri.fromFile(file);
+            imageUri = Uri.fromFile(file);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(intent, Code.Request.TAKE_PHOTO);
