@@ -227,43 +227,43 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
         adapter.onDataChange(fuwaList);
     }
 
-    private void showDialog(FuwaEntity.Data item) {
-        if (recommondDialog != null && recommondDialog.isShowing()) {
-            recommondDialog.dismiss();
-        }
-        if (dialog == null) {
-            View view = LayoutInflater.from(context).inflate(
-                    R.layout.dialog_choose_fuwa, null);
-            int sceenW = UIUtils.getScreenWidth(this);
-            int sceenH = UIUtils.getScreenHeight(this);
-            ImageView iv_close = (ImageView) view.findViewById(R.id.iv_close);
-            tv_dia_name = (TextView) view.findViewById(R.id.tv_name);
-            tv_serial_dia_number = (TextView) view.findViewById(R.id.tv_serial_number);
-            Button bt_catch = (Button) view.findViewById(R.id.bt_catch);
-            bt_catch.setOnClickListener(this);
-            iv_close.setOnClickListener(this);
-
-            dialog = new Dialog(context, R.style.ActionSheetDialogStyle);
-            dialog.setContentView(view);
-            Window dialogWindow = dialog.getWindow();
-            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-            lp.width = (int) (sceenW * 0.8);
-            lp.height = (int) (sceenH * 0.6);
-            dialogWindow.setAttributes(lp);
-            dialogWindow.setGravity(Gravity.CENTER);
-            dialog.setCanceledOnTouchOutside(false);
-        }
-        if (item != null) {
-            String num = item.getId();
-            tv_dia_name.setText(num + "号福娃");
-            tv_serial_dia_number.setText("" + num);
-            List<String> idList = item.getIdList();
-            if (idList != null && idList.size() > 0) {
-                selectId = idList.get(0);
-            }
-        }
-        dialog.show();
-    }
+//    private void showDialog(FuwaEntity.Data item) {
+//        if (recommondDialog != null && recommondDialog.isShowing()) {
+//            recommondDialog.dismiss();
+//        }
+//        if (dialog == null) {
+//            View view = LayoutInflater.from(context).inflate(
+//                    R.layout.dialog_choose_fuwa, null);
+//            int sceenW = UIUtils.getScreenWidth(this);
+//            int sceenH = UIUtils.getScreenHeight(this);
+//            ImageView iv_close = (ImageView) view.findViewById(R.id.iv_close);
+//            tv_dia_name = (TextView) view.findViewById(R.id.tv_name);
+//            tv_serial_dia_number = (TextView) view.findViewById(R.id.tv_serial_number);
+//            Button bt_catch = (Button) view.findViewById(R.id.bt_catch);
+//            bt_catch.setOnClickListener(this);
+//            iv_close.setOnClickListener(this);
+//
+//            dialog = new Dialog(context, R.style.ActionSheetDialogStyle);
+//            dialog.setContentView(view);
+//            Window dialogWindow = dialog.getWindow();
+//            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+//            lp.width = (int) (sceenW * 0.8);
+//            lp.height = (int) (sceenH * 0.6);
+//            dialogWindow.setAttributes(lp);
+//            dialogWindow.setGravity(Gravity.CENTER);
+//            dialog.setCanceledOnTouchOutside(false);
+//        }
+//        if (item != null) {
+//            String num = item.getId();
+//            tv_dia_name.setText(num + "号福娃");
+//            tv_serial_dia_number.setText("" + num);
+//            List<String> idList = item.getIdList();
+//            if (idList != null && idList.size() > 0) {
+//                selectId = idList.get(0);
+//            }
+//        }
+//        dialog.show();
+//    }
 
     @Override
     public void onClick(View view) {
@@ -482,6 +482,12 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
             });
         }
         if (lastSelectPos != selectPos) {
+            if (allDetailSize <= 1) {
+                iv_right.setVisibility(View.INVISIBLE);
+            } else {
+                iv_right.setVisibility(View.VISIBLE);
+            }
+            iv_left.setVisibility(View.INVISIBLE);
             hasLoad.clear();
             views.clear();   //清空views
             lastSelectPos = selectPos;
@@ -528,7 +534,14 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
         tv_fuwa_num = (TextView) view.findViewById(R.id.tv_fuwa_num);
         tv_from = (TextView) view.findViewById(R.id.tv_from);
         tv_catch = (TextView) view.findViewById(R.id.tv_catch);
+        TextView tv_use = (TextView) view.findViewById(R.id.tv_use);
         String fuwa_id = fuwaItem.getId();
+        String fuwa_gid = fuwaItem.getGid();
+        if (!TextUtils.isEmpty(fuwa_gid) && fuwa_gid.contains("_c_")) {
+            tv_use.setText("用途：寻宝");
+        } else {
+            tv_use.setText("用途：社交");
+        }
         if (!TextUtils.isEmpty(fuwa_id)) {
             tv_number.setText(fuwa_id);
         }

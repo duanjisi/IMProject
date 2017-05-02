@@ -65,4 +65,15 @@
         android:textColor="@color/bg_rectangle"
         android:textSize="15sp" />
 
+    <TextView
+        android:id="@+id/tv_use"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_catch"
+        android:layout_below="@id/tv_catch"
+        android:layout_marginTop="15dp"
+        android:text=""
+        android:textColor="@color/bg_rectangle"
+        android:textSize="15sp" />
+
 </RelativeLayout>

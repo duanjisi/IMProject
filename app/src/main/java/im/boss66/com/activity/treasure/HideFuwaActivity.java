@@ -630,7 +630,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             bt_catch.setVisibility(View.GONE);
             previewing = true;
             canFocusIn = true;
-            isHideOk = false;
+            isHideOk = true;
         }
     }
 }
