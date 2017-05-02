@@ -23,6 +23,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,6 +44,7 @@ import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
+import im.boss66.com.activity.event.CreateSuccess;
 import im.boss66.com.entity.JobEntity;
 import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.entity.UserInfoEntity;
@@ -178,8 +180,8 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     break;
                 case 2: //更新成功
                     showToast("保存成功", false);
-                    SharedPreferencesMgr.setBoolean("setSuccess", true); //用来onresume刷新数据，刷新后为false
-                    SharedPreferencesMgr.setBoolean("setSuccess2", true); //用
+                    EventBus.getDefault().post(new CreateSuccess(""));
+                    SharedPreferencesMgr.setBoolean("setSuccess2", true); //
                     finish();
                     break;
                 case 3: //更新失败
@@ -214,34 +216,37 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     int user_city = result.getCity();//市
                     int user_district = result.getDistrict();//区
 
-                    String user_ht_province = result.getHt_province()+""; //家乡
-                    String user_ht_city = result.getHt_city()+"";
-                    String user_ht_district = result.getHt_district()+"";
+                    String user_ht_province = result.getHt_province() + ""; //家乡
+                    String user_ht_city = result.getHt_city() + "";
+                    String user_ht_district = result.getHt_district() + "";
 
                     tv_sex2.setText(user_sex);
                     tv_name2.setText(user_name);
 
-                    if (map1.get(user_province + "") == null
-                            && map1.get(user_ht_province) == null) {
+                    if (map1.get(user_ht_province) != null) { //家乡不为空
 
-                    } else {
-                        tv_school3.setVisibility(View.GONE);
                         tv_hometown3.setVisibility(View.GONE);
-                        tv_location2.setText(map1.get(user_province + "") + map2.get(user_city + "") + map3.get(user_district + ""));
                         tv_hometown2.setText(map1.get(user_ht_province) + map2.get(user_ht_city) + map3.get(user_ht_district));
                     }
 
+                    if(map1.get(user_province + "") != null){ //所在地
+                        tv_location2.setText(map1.get(user_province + "") + map2.get(user_city + "") + map3.get(user_district + ""));
+                    }
 
                     String user_industry = result.getIndustry();
                     tv_job2.setText(user_industry);
 
                     String user_school = result.getSchool();
-                    tv_school2.setText(user_school);
+
+                    if (user_school.length() > 0) {   //学校不为空
+                        tv_school3.setVisibility(View.GONE);
+                        tv_school2.setText(user_school);
+                    }
 
                     String user_interest = result.getInterest();
                     tv_like2.setText(user_interest);
 
-                    String birthday = result.getBirthday()+"";
+                    String birthday = result.getBirthday() + "";
                     try {
                         String dateTime = TimeUtil.getDateTime(Long.parseLong(birthday) * 1000);
                         tv_time2.setText(dateTime);

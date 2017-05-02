@@ -214,8 +214,9 @@ public class InputDetector {
         int softInputHeight = getSupportSoftInputHeight();
         Log.i("info", "==============softInputHeight1:" + softInputHeight);
         if (softInputHeight == 0) {
-//            int height = UIUtils.getScreenHeight(mActivity) / 2 - 50;
-            softInputHeight = sp.getInt(SHARE_PREFERENCE_TAG, 400);
+//            400
+            int height = UIUtils.getScreenHeight(mActivity) / 2 - 50;
+            softInputHeight = sp.getInt(SHARE_PREFERENCE_TAG, height);
         }
         Log.i("info", "==============softInputHeight2:" + softInputHeight);
         hideSoftInput();

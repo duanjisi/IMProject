@@ -26,6 +26,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="7.5dp"
             android:layout_toRightOf="@+id/iv_avatar"
+            android:maxEms="8"
+            android:singleLine="true"
             android:text="张三"
             android:textColor="@color/golden_color"
             android:textSize="16.5sp" />
@@ -141,7 +143,7 @@
             android:layout_marginLeft="13dp"
             android:layout_weight="1.0"
             android:background="@drawable/bg_treasure_find_fate_selector"
-            android:text="找缘份"
+            android:text="找萌友"
             android:textColor="@color/golden_color"
             android:textSize="19.8sp"
             android:textStyle="bold" />

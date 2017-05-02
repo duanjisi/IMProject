@@ -471,7 +471,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onBackPressed() {
         if (!mDetector.interceptBackPress()) {
+            Log.i("info", "=================onBackPressed()");
             super.onBackPressed();
+            if (!isFinishing()) {
+                finish();
+            }
         }
     }
 
@@ -536,9 +540,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // TODO Auto-generated method stub
-//                || isFaceShow
+//                mParams.softInputMode == WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE ||
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    if (mParams.softInputMode == WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE || isFaceShow || isOther) {
+                    if (isFaceShow || isOther) {
+                        Log.i("info", "=======================onKey:");
                         viewFace.setVisibility(View.GONE);
                         ll_other.setVisibility(View.GONE);
                         isFaceShow = false;
@@ -547,6 +552,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                         return true;
                     }
                 }
+                Log.i("info", "=======================33333333333");
                 return false;
             }
         });
@@ -594,6 +600,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             }
         });
     }
+
 
     /**
      * 初始化语音布局

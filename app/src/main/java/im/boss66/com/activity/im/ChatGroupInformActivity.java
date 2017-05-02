@@ -368,6 +368,7 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
             showToast("退出" + groupInform.getName() + "群成功!", true);
         }
         mMsgDB.clearMsgDatas(MsgTab);
+        ConversationHelper.getInstance().deleteByConversationId(groupid);
         Intent intent = new Intent(Constants.Action.EXIT_CURRETN_GROUP_REFRESH_DATAS);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         finish();

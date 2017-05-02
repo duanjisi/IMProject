@@ -188,6 +188,13 @@ public class ClanClubListActivity extends ABaseActivity implements View.OnClickL
                         } else {
                             intent.putExtra("isClan", false);
                         }
+                        if(position-1==datas.size()){
+                            return;
+                        }
+                        if(position==0){
+                            return;
+                        }
+
                         String id = allDatas.get(position - 1).getId();
                         String name = allDatas.get(position - 1).getName();
                         intent.putExtra("name", name);

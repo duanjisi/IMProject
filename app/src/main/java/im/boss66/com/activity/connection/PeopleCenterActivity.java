@@ -145,11 +145,22 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
 
                     if (TextUtils.isEmpty(district_str) && TextUtils.isEmpty(school)) {
                         //只显示名字
+                        img_hasschool.setVisibility(View.GONE);
+                        tv_name.setVisibility(View.GONE);
+                        tv_address.setVisibility(View.GONE);
+
                         img_noschool.setVisibility(View.VISIBLE);
                         tv_name2.setVisibility(View.VISIBLE);
                         tv_name2.setText(user_name);
+
+
                     } else {
                         //有学校家乡
+
+                        img_noschool.setVisibility(View.GONE);
+                        tv_name2.setVisibility(View.GONE);
+
+                        tv_address.setVisibility(View.VISIBLE);
                         tv_address.setText(district_str + "  " + school);
                         img_hasschool.setVisibility(View.VISIBLE);
                         tv_name.setVisibility(View.VISIBLE);

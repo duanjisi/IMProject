@@ -147,7 +147,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     public static final String LOCATION_MARKER_FLAG = "mylocation";
     private WrappingSlidingDrawer slidingDrawer;
     private ImageView handler;
-    private TextView tv_location, tv_distanc_start, tv_distanc_target, tv_time, tv_num, tv_detail;
+    private TextView tv_title, tv_location, tv_distanc_start, tv_distanc_target, tv_time, tv_num, tv_detail;
     private Button btn_catch;
     private TextView tvTips;
     private PermissionListener permissionListener;
@@ -178,6 +178,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         slidingDrawer = (WrappingSlidingDrawer) findViewById(R.id.slidingDrawer);
         handler = (ImageView) findViewById(R.id.handle);
 
+        tv_title = (TextView) findViewById(R.id.tv_title);
         tv_location = (TextView) findViewById(R.id.tv_location);
         tv_time = (TextView) findViewById(R.id.tv_minus);
         tv_distanc_start = (TextView) findViewById(R.id.tv_distance_start);
@@ -220,6 +221,9 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 .registerReceiver(mLocalBroadcastReceiver, filter);
 
         view = getLayoutInflater().inflate(R.layout.item_map_position, null);
+        if (isFate) {
+            tv_title.setText("找萌友");
+        }
         CircleImageView header = (CircleImageView) view.findViewById(R.id.header);
         imageLoader.displayImage(account.getAvatar(), header, ImageLoaderUtils.getDisplayImageOptions());
     }
