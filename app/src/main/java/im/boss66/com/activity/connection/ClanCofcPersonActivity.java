@@ -73,6 +73,8 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
     private String person_name;
     private String person_desc;
     private String person_photo;
+    private String user_id;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,7 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
         if (intent != null) {
             id = intent.getStringExtra("id");
             isClan = intent.getBooleanExtra("isClan", false);
+            user_id = intent.getStringExtra("user_id");   //宗亲商会创建人uid
             if (isClan) {
                 url = HttpUrl.CLAN_PERSON_LIST + "?clan_id=" + id;
             } else {
@@ -137,6 +140,7 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
     }
 
     private void initViews() {
+        uid = App.getInstance().getUid();    //用户uid
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
         iv_headright_view = (ImageView) findViewById(R.id.iv_headright_view);
@@ -170,8 +174,8 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
                 person_desc = result.get(deletePosition).getDesc();
                 person_photo = result.get(deletePosition).getPhoto();
 
-                int user_id = result.get(deletePosition).getUser_id();
-                String uid = App.getInstance().getUid();
+                int user_id = result.get(deletePosition).getUser_id(); //名人创建者uid
+
                 if(Integer.parseInt(uid)!=user_id){
                     //不能编辑别人的名人
                     ToastUtil.showShort(context,"不能编辑别人创建的名人");
@@ -323,6 +327,15 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
     public void onClick(int which) {
         switch (which) {
             case 1:
+                if(!uid.equals(user_id)){
+                    //不能编辑别人的名人
+                    if(isClan){
+                        ToastUtil.showShort(context,"不能在别人的宗亲里添加");
+                    }else{
+                        ToastUtil.showShort(context,"不能在别人的商会里添加");
+                    }
+                    return ;
+                }
                 Intent intent = new Intent(this, EditClanCofcPersonActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isClan", isClan);

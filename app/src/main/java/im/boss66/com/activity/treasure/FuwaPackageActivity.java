@@ -617,12 +617,14 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                     TextView tv_fuwa_num = (TextView) convertView.findViewById(R.id.tv_fuwa_num);
                     TextView tv_from = (TextView) convertView.findViewById(R.id.tv_from);
                     TextView tv_catch = (TextView) convertView.findViewById(R.id.tv_catch);
+                    TextView tv_type = (TextView) convertView.findViewById(R.id.tv_type);
                     ImageView img_fuwa = (ImageView) convertView.findViewById(R.id.img_fuwa);
                     ImageView award = (ImageView) convertView.findViewById(R.id.award);
 
                     viewHolder = new ViewHolder();
                     viewHolder.tv_fuwa_num = tv_fuwa_num;
                     viewHolder.tv_from = tv_from;
+                    viewHolder.tv_type = tv_type;
                     viewHolder.tv_catch = tv_catch;
                     viewHolder.img_fuwa = img_fuwa;
                     viewHolder.award = award;
@@ -633,6 +635,13 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                     convertView = mViewCache.removeFirst();
                     viewHolder = (ViewHolder) convertView.getTag();
                 }
+                String gid = datas.get(position).gid;
+                if(gid.contains("fuwa_c")){
+                    viewHolder.tv_type.setText("用途: 寻宝" );
+                }else {
+                    viewHolder.tv_type.setText("用途: 社交" );
+                }
+
 
 
                 if (datas.get(position).awarded) {     //因为复用问题，所以要做处理
@@ -643,8 +652,10 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
                 viewHolder.tv_fuwa_num.setText(datas.get(position).id + "号福娃");
 //                viewHolder.tv_fuwa_num.setText(datas.get(position).gid + "号福娃"); //测试用
 
-                viewHolder.tv_from.setText("来源于:" + datas.get(position).creator);
-                viewHolder.tv_catch.setText("捕获于：" + datas.get(position).pos);
+                viewHolder.tv_from.setText("来源于: " + datas.get(position).creator);
+//                viewHolder.tv_from.setText("来源于来源于来源于来源于来源于来源于来源于来源于:" + datas.get(position).creator);
+                viewHolder.tv_catch.setText("捕获于: " + datas.get(position).pos);
+//                viewHolder.tv_catch.setText("捕获于：捕获于捕获于捕获于捕获于捕获于捕获于捕获于捕获于捕获于捕获于捕获于捕获于" );
                 String uri = " fuwa:fuwa:" + datas.get(position).gid;
 
                 // 给 ImageView 设置一个 tag
@@ -677,6 +688,7 @@ public class FuwaPackageActivity extends BaseActivity implements View.OnClickLis
             public TextView tv_fuwa_num;
             public TextView tv_from;
             public TextView tv_catch;
+            public TextView tv_type;
             private ImageView img_fuwa;
             private ImageView award;
         }
