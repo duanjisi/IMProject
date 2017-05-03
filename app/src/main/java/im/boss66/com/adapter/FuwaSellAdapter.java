@@ -20,6 +20,7 @@ public class FuwaSellAdapter extends BaseRecycleViewAdapter {
     private Context context;
 
     public boolean chooses[];
+    public boolean edit;
 
     public FuwaSellAdapter(Context context) {
         this.context = context;
@@ -32,6 +33,7 @@ public class FuwaSellAdapter extends BaseRecycleViewAdapter {
             chooses[i] = false;
         }
     }
+
 
 
     @Override
@@ -48,13 +50,19 @@ public class FuwaSellAdapter extends BaseRecycleViewAdapter {
             } else {
                 holder1.img_choose.setVisibility(View.INVISIBLE);
             }
-            holder1.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int adapterPosition = holder1.getAdapterPosition();
-                    itemListener.onItemClick(adapterPosition);
-                }
-            });
+
+            if(edit){
+               holder1.img_cancle.setVisibility(View.VISIBLE);
+                holder1.img_cancle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int adapterPosition = holder1.getAdapterPosition();
+                        itemListener.onItemClick(adapterPosition);
+                    }
+                });
+            }else {
+                holder1.img_cancle.setVisibility(View.GONE);
+            }
 
         }
 
@@ -76,12 +84,14 @@ public class FuwaSellAdapter extends BaseRecycleViewAdapter {
         private TextView tv_number;
         private TextView tv_price;
         private ImageView img_choose;
+        private ImageView img_cancle;
 
         public FuwaSellHolder(View itemView) {
             super(itemView);
             tv_number = (TextView) itemView.findViewById(R.id.tv_number);
             tv_price = (TextView) itemView.findViewById(R.id.tv_price);
             img_choose = (ImageView) itemView.findViewById(R.id.img_choose);
+            img_cancle = (ImageView) itemView.findViewById(R.id.img_cancle);
         }
     }
 }

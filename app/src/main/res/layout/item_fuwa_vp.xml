@@ -22,6 +22,28 @@
 
 
 
+        <RelativeLayout
+            android:id="@+id/rl_top"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_top"
+                android:src="@drawable/number_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_number"
+                android:textSize="13.2dp"
+                android:textColor="@color/text_color_yellow2"
+                android:layout_centerInParent="true"
+                android:text="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+
 
     </RelativeLayout>
 

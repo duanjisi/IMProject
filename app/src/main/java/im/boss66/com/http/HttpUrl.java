@@ -333,5 +333,9 @@ public class HttpUrl {
     public static final String MORE_CLAN = MAIN_URL+"api/v1/search/hot-clan";
     //更多商会
     public static final String MORE_COFC = MAIN_URL+"api/v1/search/hot-cofc";
+    //取消出售
+    public static final String CANCEL_FUWA_SELL =BASE_FUWA[FUWA_TAG]+"msg/cancelsell";
+    //查申请的福娃
+    public static final String QUERY_MY_APPLY_FUWA = BASE_FUWA[FUWA_TAG] + "api/querymyapply?user=";
 
 }

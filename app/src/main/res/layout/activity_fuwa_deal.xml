@@ -32,6 +32,18 @@
             android:textColor="@color/text_color_yellow"
             android:textSize="17.5sp" />
 
+        <TextView
+            android:visibility="gone"
+            android:text="编辑"
+            android:id="@+id/tv_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/text_color_yellow"
+            android:textSize="17.5sp" />
+
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/rl_top"

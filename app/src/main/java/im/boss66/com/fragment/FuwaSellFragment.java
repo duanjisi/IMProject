@@ -47,7 +47,6 @@ import im.boss66.com.Utils.OrderInfoUtil2_0;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.treasure.FuwaDealActivity;
-import im.boss66.com.activity.treasure.FuwaPackageActivity;
 import im.boss66.com.adapter.FuwaSellAdapter;
 import im.boss66.com.entity.AlipayOrder;
 import im.boss66.com.entity.FuwaSellEntity;
