@@ -966,7 +966,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                     if (data != null) {
                         int code = data.getCode();
                         if (code == 0) {
-                            EventBus.getDefault().post(curSelectFuwaNum);
+                            //EventBus.getDefault().post(curSelectFuwaNum);
 //                            setResult(RESULT_OK);
 //                            finish();
                             showSuccessHideDialog();
