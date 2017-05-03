@@ -242,7 +242,7 @@ public class HttpUrl {
     public static final String SEARY_MY_SELL_FUWA = BASE_FUWA[FUWA_TAG] + "/msg/querymysell?userid=";
 
     //藏福娃
-    public static final String HIDE_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/hide?owner=";
+    public static final String HIDE_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/hidev2?owner=";
     //捉福娃
     public static final String CATCH_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/capture?user=";
     //福娃消息
