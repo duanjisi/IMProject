@@ -1,10 +1,10 @@
 package im.boss66.com.activity.treasure;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
@@ -12,27 +12,34 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -42,30 +49,39 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
-import com.bumptech.glide.Glide;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.squareup.picasso.Picasso;
-import com.umeng.message.proguard.T;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
-import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.discover.VideoListActivity;
 import im.boss66.com.adapter.FuwaHideAddressAdapter;
+import im.boss66.com.entity.BaseResult;
+import im.boss66.com.entity.FuwaEntity;
+import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
+import im.boss66.com.widget.ActionSheet;
 import im.boss66.com.widget.scan.CameraManager;
 import im.boss66.com.widget.scan.CameraPreview;
 
@@ -73,7 +89,7 @@ import im.boss66.com.widget.scan.CameraPreview;
  * 藏福娃
  */
 public class HideFuwaActivity extends BaseActivity implements View.OnClickListener, SensorEventListener, AMapLocationListener,
-        PoiSearch.OnPoiSearchListener {
+        PoiSearch.OnPoiSearchListener, ActionSheet.OnSheetItemClickListener, TextWatcher {
 
     private TextView tv_back, tv_bottom, tv_change_place;
     private Button bt_catch;
@@ -124,6 +140,27 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private TextView tv_dialog_address, bt_hide_ok;
     private Bitmap bitmapImg;
     private boolean isJump = false, isHideOk = true;
+    private String userId;
+    private int currentFuwaNum = 0, curSelectFuwaNum = 0;
+    private Dialog dialogNum, dialogRecommond;
+    private EditText et_dialog_num;
+    private TextView tv_dialog_num_tip;
+    private Button bt_dialog_catch;
+
+    private TextView tv_time;
+    private ImageView iv_video, iv_video_img;
+    private FrameLayout fl_video_dialog_img;
+    private RelativeLayout rl_time;
+    private EditText et_recommond;
+
+    private PopupWindow popdialogWindow;
+    private String[] popTime;
+    private int validtime = 1;
+    private int cameraType;
+    private final int READ_VIDEO = 4;//本地视频
+    private final int RECORD_VIDEO = 3;//拍视频
+    private File videoFile;
+    private String recommond;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +171,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
+        userId = App.getInstance().getUid();
+        getMyApplyFuwa();
         autoFocusHandler = new Handler();
 
         rl_address = (RelativeLayout) findViewById(R.id.rl_address);
@@ -255,6 +294,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         if (bitmapImg != null && !bitmapImg.isRecycled()) {
             bitmapImg.recycle();
         }
+        if (videoFile != null && videoFile.exists()) {
+            videoFile.delete();
+            videoFile = null;
+        }
     }
 
     @Override
@@ -264,12 +307,13 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.bt_catch:
-                Bundle bundle = new Bundle();
-                bundle.putString("address", address);
-                bundle.putString("geohash", geohash);
-                ChooseFuwaHideActivity.getImgFile(imgFile);
-                openActvityForResult(ChooseFuwaHideActivity.class, 101, bundle);
-                isJump = true;
+//                Bundle bundle = new Bundle();
+//                bundle.putString("address", address);
+//                bundle.putString("geohash", geohash);
+//                ChooseFuwaHideActivity.getImgFile(imgFile);
+//                openActvityForResult(ChooseFuwaHideActivity.class, 101, bundle);
+//                isJump = true;
+                showNumDialog();
                 break;
             case R.id.tv_change_place:
                 tv_change_place.setVisibility(View.INVISIBLE);
@@ -305,6 +349,61 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 }
                 isHideOk = true;
                 finish();
+                break;
+            case R.id.bt_dialog_catch:
+                String num = et_dialog_num.getText().toString().trim();
+                if (!TextUtils.isEmpty(num)) {
+                    curSelectFuwaNum = Integer.parseInt(num);
+                    if (curSelectFuwaNum > currentFuwaNum) {
+                        showToast("输入个数超过您申请的福娃", false);
+                        return;
+                    } else if (curSelectFuwaNum <= 0) {
+                        showToast("输入的个数必须大于0", false);
+                        return;
+                    }
+                } else {
+                    showToast("输入的个数必须大于0", false);
+                    return;
+                }
+                if (dialogNum != null && dialogNum.isShowing()) {
+                    dialogNum.dismiss();
+                }
+                showRecommondDialog();
+                break;
+            case R.id.iv_close:
+                if (dialogNum != null && dialogNum.isShowing()) {
+                    dialogNum.dismiss();
+                }
+                break;
+            case R.id.tv_time_1:
+                validtime = 1;
+                setPopTime(validtime);
+                break;
+            case R.id.tv_time_2:
+                validtime = 2;
+                setPopTime(validtime);
+                break;
+            case R.id.tv_time_3:
+                validtime = 3;
+                setPopTime(validtime);
+                break;
+            case R.id.tv_time_4:
+                validtime = 4;
+                setPopTime(validtime);
+                break;
+            case R.id.rl_time:
+                showTimeChoosePop();
+                break;
+            case R.id.iv_video:
+                showActionSheet();
+                break;
+            case R.id.bt_sure:
+                if (dialogRecommond != null && dialogRecommond.isShowing()) {
+                    dialogRecommond.dismiss();
+                }
+                recommond = et_recommond.getText().toString().trim();
+                et_recommond.setText("");
+                hideFuwaServer();
                 break;
         }
     }
@@ -387,7 +486,15 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void onRequestPermissionSuccess() {
-                initViewParams();
+                if (cameraType == READ_VIDEO) {
+                    openActvityForResult(VideoListActivity.class, READ_VIDEO);
+                } else if (cameraType == RECORD_VIDEO) {
+                    Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                    mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 20 * 1024 * 1024L);
+                    startActivityForResult(mIntent, RECORD_VIDEO);
+                } else {
+                    initViewParams();
+                }
             }
 
             @Override
@@ -395,11 +502,25 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 ToastUtil.showShort(HideFuwaActivity.this, getString(R.string.giving_camera_permissions));
             }
         };
-        PermissionUtil
-                .with(this)
-                .permissions(
-                        PermissionUtil.PERMISSIONS_CAMERA_LOCATION //相机权限
-                ).request(permissionListener);
+        if (cameraType == READ_VIDEO) {
+            PermissionUtil
+                    .with(this)
+                    .permissions(
+                            PermissionUtil.PERMISSIONS_SD_READ_WRITE //相机权限
+                    ).request(permissionListener);
+        } else if (cameraType == RECORD_VIDEO) {
+            PermissionUtil
+                    .with(this)
+                    .permissions(
+                            PermissionUtil.PERMISSIONS_GROUP_CAMERA //相机权限
+                    ).request(permissionListener);
+        } else {
+            PermissionUtil
+                    .with(this)
+                    .permissions(
+                            PermissionUtil.PERMISSIONS_CAMERA_LOCATION //相机权限
+                    ).request(permissionListener);
+        }
     }
 
     @Override
@@ -613,11 +734,37 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101 && resultCode == RESULT_OK) {
 //            EventBus.getDefault().post("1");
-            showSuccessHideDialog();
+            //showSuccessHideDialog();
         } else if (requestCode == 102 && resultCode == RESULT_OK && data != null) {
             address = data.getStringExtra("address");
             geohash = data.getStringExtra("geohash");
             tv_address.setText("" + address);
+        } else if (requestCode == RECORD_VIDEO && resultCode == RESULT_OK) {
+            // 录制视频完成
+            try {
+                AssetFileDescriptor videoAsset = getContentResolver()
+                        .openAssetFileDescriptor(data.getData(), "r");
+                FileInputStream fis = videoAsset.createInputStream();
+                videoFile = new File(
+                        Environment.getExternalStorageDirectory(),
+                        "fuwavideo.mp4");
+                FileOutputStream fos = new FileOutputStream(videoFile);
+
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = fis.read(buf)) > 0) {
+                    fos.write(buf, 0, len);
+                }
+                fis.close();
+                fos.close();
+                showVideo();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (requestCode == READ_VIDEO && resultCode == RESULT_OK && data != null) {
+            String url = data.getStringExtra("filePath");
+            videoFile = new File(url);
+            showVideo();
         }
     }
 
@@ -631,6 +778,235 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             previewing = true;
             canFocusIn = true;
             isHideOk = true;
+        }
+    }
+
+    private void getMyApplyFuwa() {
+        String url = HttpUrl.QUERY_MY_APPLY_FUWA + userId;
+        HttpUtils httpUtils = new HttpUtils(45 * 1000);
+        httpUtils.configCurrentHttpCacheExpiry(1000);
+        httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String res = responseInfo.result;
+                if (!TextUtils.isEmpty(res)) {
+                    FuwaEntity entity = JSON.parseObject(res, FuwaEntity.class);
+                    List<FuwaEntity.Data> data = entity.getData();
+                    if (data != null) {
+                        currentFuwaNum = data.size();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                showToast(e.getMessage(), false);
+            }
+        });
+    }
+
+    private void showNumDialog() {
+        if (dialogNum == null) {
+            View view = LayoutInflater.from(context).inflate(
+                    R.layout.dialog_hide_input_num, null);
+            int sceenW = UIUtils.getScreenWidth(this);
+            LinearLayout ll_p = (LinearLayout) view.findViewById(R.id.ll_p);
+            et_dialog_num = (EditText) view.findViewById(R.id.et_dialog_num);
+            tv_dialog_num_tip = (TextView) view.findViewById(R.id.tv_dialog_num_tip);
+            bt_dialog_catch = (Button) view.findViewById(R.id.bt_dialog_catch);
+            bt_dialog_catch.setOnClickListener(this);
+            et_dialog_num.addTextChangedListener(this);
+            ImageView iv_close = (ImageView) view.findViewById(R.id.iv_close);
+            iv_close.setOnClickListener(this);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll_p.getLayoutParams();
+            params.width = (int) (sceenW * 0.85);
+            ll_p.setLayoutParams(params);
+            dialogNum = new Dialog(context, R.style.ActionSheetDialogStyle);
+            dialogNum.setContentView(view);
+            dialogNum.setCanceledOnTouchOutside(true);
+            tv_dialog_num_tip.setText("可藏福娃（个）：" + currentFuwaNum);
+        }
+        dialogNum.show();
+    }
+
+    private void showRecommondDialog() {
+        if (dialogRecommond == null) {
+            View view = LayoutInflater.from(context).inflate(
+                    R.layout.dialog_hide_fuwa_recommend, null);
+            int sceenH = UIUtils.getScreenHeight(this);
+
+            rl_time = (RelativeLayout) view.findViewById(R.id.rl_time);
+            tv_time = (TextView) view.findViewById(R.id.tv_time);
+            iv_video = (ImageView) view.findViewById(R.id.iv_video);
+            iv_video_img = (ImageView) view.findViewById(R.id.iv_video_img);
+            fl_video_dialog_img = (FrameLayout) view.findViewById(R.id.fl_video_dialog_img);
+            fl_video_dialog_img.setOnClickListener(this);
+            rl_time.setOnClickListener(this);
+            iv_video.setOnClickListener(this);
+
+            et_recommond = (EditText) view.findViewById(R.id.et_recommond);
+            Button bt_sure = (Button) view.findViewById(R.id.bt_sure);
+            TextView tv_jump_over = (TextView) view.findViewById(R.id.tv_jump_over);
+            bt_sure.setOnClickListener(this);
+            tv_jump_over.setOnClickListener(this);
+            LinearLayout.LayoutParams etParam = (LinearLayout.LayoutParams) et_recommond.getLayoutParams();
+            etParam.height = sceenH / 7;
+            et_recommond.setLayoutParams(etParam);
+
+            dialogRecommond = new Dialog(context, R.style.ActionSheetDialogStyle);
+            dialogRecommond.setContentView(view);
+            dialogRecommond.setCanceledOnTouchOutside(true);
+        }
+        dialogRecommond.show();
+    }
+
+    private void showTimeChoosePop() {
+        if (popdialogWindow == null) {
+            popTime = new String[]{"72小时", "一个月", "一年", "三年"};
+            View popupView = getLayoutInflater().inflate(R.layout.popwindow_hide_fuwa_time, null);
+            TextView tv_time_1 = (TextView) popupView.findViewById(R.id.tv_time_1);
+            TextView tv_time_2 = (TextView) popupView.findViewById(R.id.tv_time_2);
+            TextView tv_time_3 = (TextView) popupView.findViewById(R.id.tv_time_3);
+            TextView tv_time_4 = (TextView) popupView.findViewById(R.id.tv_time_4);
+            tv_time_1.setOnClickListener(this);
+            tv_time_2.setOnClickListener(this);
+            tv_time_3.setOnClickListener(this);
+            tv_time_4.setOnClickListener(this);
+            popdialogWindow = new PopupWindow(popupView, rl_time.getWidth(), WindowManager.LayoutParams.WRAP_CONTENT, true);
+            popdialogWindow.setAnimationStyle(R.style.hide_fuwa_pop_anim);
+            popdialogWindow.setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
+            popdialogWindow.setFocusable(true);
+            popdialogWindow.setOutsideTouchable(true);
+        }
+        //int xOff = UIUtils.getScreenWidth(this) / 2 - rl_time.getWidth() / 3;
+        //int xOffDp = UIUtils.px2dip(this, xOff);
+        popdialogWindow.showAsDropDown(rl_time, 0, 10);
+        //popWindow.showAsDropDown(rl_time);
+    }
+
+    private void setPopTime(int tag) {
+        if (popWindow != null && popWindow.isShowing()) {
+            popWindow.dismiss();
+        }
+        if (tv_time != null && popTime != null) {
+            tv_time.setText(popTime[tag - 1]);
+        }
+    }
+
+    private void showActionSheet() {
+        ActionSheet actionSheet = new ActionSheet(this)
+                .builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true);
+        actionSheet.addSheetItem(getString(R.string.small_video), ActionSheet.SheetItemColor.Black, this)
+                .addSheetItem(getString(R.string.local_small_video), ActionSheet.SheetItemColor.Black,
+                        this);
+
+        actionSheet.show();
+    }
+
+    @Override
+    public void onClick(int which) {
+        switch (which) {
+            case 1:
+                cameraType = RECORD_VIDEO;
+                getPermission();
+                break;
+            case 2:
+                cameraType = READ_VIDEO;
+                getPermission();
+                break;
+        }
+    }
+
+    private void showVideo() {
+        if (videoFile != null) {
+            String url = videoFile.getAbsolutePath();
+            MediaMetadataRetriever mediaMetadataRetriever = null;
+            try {
+                mediaMetadataRetriever = new MediaMetadataRetriever();
+                mediaMetadataRetriever.setDataSource(url);
+                Bitmap videoBitmap = mediaMetadataRetriever.getFrameAtTime();
+                if (videoBitmap != null && iv_video_img != null) {
+                    fl_video_dialog_img.setVisibility(View.VISIBLE);
+                    iv_video.setVisibility(View.GONE);
+                    iv_video_img.setImageBitmap(videoBitmap);
+                }
+            } catch (Exception e) {
+                iv_video_img.setImageResource(R.drawable.zf_default_album_grid_image);
+                e.printStackTrace();
+            } finally {
+                if (mediaMetadataRetriever != null) {
+                    mediaMetadataRetriever.release();
+                }
+            }
+        }
+    }
+
+    private void hideFuwaServer() {
+        showLoadingDialog();
+        if (TextUtils.isEmpty(recommond)) {
+            recommond = "暂无活动介绍";
+        }
+        String url = HttpUrl.HIDE_MY_FUWA + userId + "&pos=" + address + "&geohash=" + geohash
+                + "&detail=" + recommond + "&validtime=" + validtime + "&number=" + curSelectFuwaNum;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("file", imgFile);
+        if (videoFile != null) {
+            params.addBodyParameter("video", videoFile);
+        }
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
+                String res = responseInfo.result;
+                if (!TextUtils.isEmpty(res)) {
+                    BaseResult data = BaseResult.parse(res);
+                    if (data != null) {
+                        int code = data.getCode();
+                        if (code == 0) {
+                            EventBus.getDefault().post(curSelectFuwaNum);
+//                            setResult(RESULT_OK);
+//                            finish();
+                            showSuccessHideDialog();
+                        }
+                    }
+                } else {
+                    showToast("藏福娃失败TAT，请重试", false);
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
+                showToast(s, false);
+            }
+        });
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+        String num = et_dialog_num.getText().toString().trim();
+        if (!TextUtils.isEmpty(num) && tv_dialog_num_tip != null) {
+            int num_i = Integer.parseInt(num);
+            if (num_i > currentFuwaNum) {
+                tv_dialog_num_tip.setTextColor(getResources().getColor(R.color.tx_fuwa_tip));
+                tv_dialog_num_tip.setText("输入个数超过您申请的福娃");
+            } else {
+                tv_dialog_num_tip.setTextColor(getResources().getColor(R.color.top_bar_color));
+                tv_dialog_num_tip.setText("可藏福娃（个）：" + currentFuwaNum);
+            }
         }
     }
 }

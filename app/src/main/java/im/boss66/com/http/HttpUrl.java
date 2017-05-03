@@ -242,7 +242,7 @@ public class HttpUrl {
     public static final String SEARY_MY_SELL_FUWA = BASE_FUWA[FUWA_TAG] + "/msg/querymysell?userid=";
 
     //藏福娃
-    public static final String HIDE_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/hide?owner=";
+    public static final String HIDE_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/hidev2?owner=";
     //捉福娃
     public static final String CATCH_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/capture?user=";
     //福娃消息
@@ -333,5 +333,6 @@ public class HttpUrl {
     public static final String MORE_CLAN = MAIN_URL+"api/v1/search/hot-clan";
     //更多商会
     public static final String MORE_COFC = MAIN_URL+"api/v1/search/hot-cofc";
-
+    //new查自己申请的福娃
+    public static final String QUERY_MY_APPLY_FUWA = BASE_FUWA[FUWA_TAG] + "api/querymyapply?user=";
 }
