@@ -422,11 +422,13 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                     Intent intent = new Intent(this, ClanCofcPersonActivity.class);
                     intent.putExtra("id", id);
                     intent.putExtra("isClan", true);
+                    intent.putExtra("user_id",user_id);
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(this, ClanCofcPersonActivity.class);
                     intent.putExtra("id", id);
                     intent.putExtra("isClan", false);
+                    intent.putExtra("user_id",user_id);
                     startActivity(intent);
                 }
 
