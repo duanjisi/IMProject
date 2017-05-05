@@ -27,7 +27,7 @@ import java.util.List;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
-import im.boss66.com.adapter.FuwaSellAdapter;
+import im.boss66.com.adapter.FuwaMySellAdapter;
 import im.boss66.com.entity.FuwaSellEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.RecycleViewItemListener;
@@ -39,7 +39,7 @@ import im.boss66.com.listener.RecycleViewItemListener;
 public class FuwaMySellFragment extends BaseFragment {
 
     private RecyclerView rcv_fuwalist;
-    private FuwaSellAdapter adapter;
+    private FuwaMySellAdapter adapter;
     private List<FuwaSellEntity.DataBean> datas;
     private Handler handler = new Handler() {
         @Override
@@ -113,7 +113,7 @@ public class FuwaMySellFragment extends BaseFragment {
         rcv_fuwalist = (RecyclerView) view.findViewById(R.id.rcv_fuwalist);
         rcv_fuwalist.setLayoutManager(new GridLayoutManager(getActivity(), 3, GridLayoutManager.VERTICAL, false));
 //        rcv_fuwalist.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new FuwaSellAdapter(getActivity());
+        adapter = new FuwaMySellAdapter(getActivity());
         adapter.setItemListener(new RecycleViewItemListener() {
             @Override
             public void onItemClick(int postion) {
@@ -138,7 +138,7 @@ public class FuwaMySellFragment extends BaseFragment {
         rcv_fuwalist.setAdapter(adapter);
     }
 
-    public FuwaSellAdapter getAdapter() {
+    public FuwaMySellAdapter getAdapter() {
         return adapter;
     }
 

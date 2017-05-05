@@ -8,20 +8,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import im.boss66.com.R;
 import im.boss66.com.entity.FuwaSellEntity;
 
 /**
  * Created by liw on 2017/3/15.
  */
-public class FuwaSellAdapter extends BaseRecycleViewAdapter {
+public class FuwaMySellAdapter extends BaseRecycleViewAdapter {
     private Context context;
 
     public boolean chooses[];
+    public boolean edit;
 
-    public FuwaSellAdapter(Context context) {
+    public FuwaMySellAdapter(Context context) {
         this.context = context;
     }
 
@@ -49,13 +48,19 @@ public class FuwaSellAdapter extends BaseRecycleViewAdapter {
             } else {
                 holder1.img_choose.setVisibility(View.INVISIBLE);
             }
-            holder1.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int adapterPosition = holder1.getAdapterPosition();
-                    itemListener.onItemClick(adapterPosition);
-                }
-            });
+
+            if(edit){
+               holder1.img_cancle.setVisibility(View.VISIBLE);
+                holder1.img_cancle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int adapterPosition = holder1.getAdapterPosition();
+                        itemListener.onItemClick(adapterPosition);
+                    }
+                });
+            }else {
+                holder1.img_cancle.setVisibility(View.GONE);
+            }
 
         }
 

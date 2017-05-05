@@ -1,6 +1,5 @@
 package im.boss66.com.activity.treasure;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,7 +8,7 @@ import android.widget.TextView;
 
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
-import im.boss66.com.adapter.FuwaSellAdapter;
+import im.boss66.com.adapter.FuwaMySellAdapter;
 import im.boss66.com.fragment.FuwaMySellFragment;
 import im.boss66.com.fragment.FuwaSellFragment;
 
@@ -29,7 +28,7 @@ public class FuwaDealActivity extends BaseActivity implements View.OnClickListen
     private TextView tv_edit;
     private FragmentManager supportFragmentManager;
     private boolean flag;
-    private FuwaSellAdapter adapter;
+    private FuwaMySellAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
