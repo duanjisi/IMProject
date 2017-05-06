@@ -68,7 +68,7 @@
         android:layout_height="60dp" />
 
     <TextView
-        android:maxLines="2"
+        android:maxLines="1"
         android:ellipsize="end"
         android:id="@+id/tv_from"
         android:layout_width="wrap_content"

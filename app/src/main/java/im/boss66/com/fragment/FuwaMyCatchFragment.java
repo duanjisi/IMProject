@@ -93,6 +93,9 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
 
                     break;
                 case 2:  //刷新当前vp页面数据
+                    if (dialog_show) {
+                        handler.sendEmptyMessageDelayed(5, 3000);
+                    }
                     boolean old_awarded = fuwas.get(vp_position).awarded;
 
 //                    Log.i("liwya","old_awarded"+old_awarded);
@@ -137,9 +140,9 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
                     break;
                 case 5:
                     initFuwaDetail(fuwa_gid);     //刷新当前页面view
-                    if (dialog_show) {
-                        handler.sendEmptyMessageDelayed(5, 3000);
-                    }
+//                    if (dialog_show) {
+//                        handler.sendEmptyMessageDelayed(5, 3000);
+//                    }
 
             }
         }
@@ -577,9 +580,11 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
                         JSONObject jsonObject = new JSONObject(res);
                         if(jsonObject.getInt("code")==0){
                             introduce = jsonObject.getString("data");
-                            if(!"null".equals(introduce)){
+
+                            if(introduce.length()>0){
                                 tv_introduce_info.setText(introduce);
-                            }else {
+
+                            }else{
                                 tv_introduce_info.setText("暂无介绍");
                             }
 
