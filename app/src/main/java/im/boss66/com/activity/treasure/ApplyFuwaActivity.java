@@ -96,6 +96,7 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
+                    tv_submit.setClickable(true);
                     dialog2.dismiss();
                     showToast("提交成功",false);
                     handler.postDelayed(new Runnable() {
@@ -240,6 +241,8 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
                         &&!TextUtils.isEmpty(et_num.getText())
                         &&chooseLocation){
 
+                    Log.i("liwya","-----");
+                    tv_submit.setClickable(false);
                     applyFuwa();
                 }else{
                     showToast("请完善资料",false);
