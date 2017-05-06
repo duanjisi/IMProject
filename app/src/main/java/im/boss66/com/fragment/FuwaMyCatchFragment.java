@@ -413,9 +413,11 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
             @Override
             public void onClick(View v) {
 
+
                 if(introduceDialog==null){
                     showIntroduceDialog();
                 }else if(!introduceDialog.isShowing()){
+                    tv_introduce_info.setText(null);
                     introduceDialog.show();
                     setIntroduce();
                 }
