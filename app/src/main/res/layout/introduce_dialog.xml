@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_people_data"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="270dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/bg_fuwa_pop">
+
+        <ImageView
+            android:id="@+id/img_cancle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/fuwa_close" />
+
+        <TextView
+            android:textSize="14sp"
+            android:textColor="@color/text_color_yellow"
+            android:text="活动介绍"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_introduce_info"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:text=""
+            android:layout_margin="45dp"
+            android:gravity="center"
+            android:background="@drawable/introduce_shape"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

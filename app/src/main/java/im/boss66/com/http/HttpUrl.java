@@ -337,5 +337,7 @@ public class HttpUrl {
     public static final String CANCEL_FUWA_SELL =BASE_FUWA[FUWA_TAG]+"msg/cancelsell";
     //查申请的福娃
     public static final String QUERY_MY_APPLY_FUWA = BASE_FUWA[FUWA_TAG] + "api/querymyapply?user=";
+    //福娃活动详情
+    public static final String FUWA_ACTIVITY_INFO  = BASE_FUWA[FUWA_TAG]+"api/huodong?fuwagid=";
 
 }

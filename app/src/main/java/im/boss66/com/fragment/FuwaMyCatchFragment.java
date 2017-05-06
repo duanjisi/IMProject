@@ -31,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.amap.api.maps2d.model.Text;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -174,7 +175,9 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
     private String old_gid;
     private Bitmap bitmap;
     private Bitmap qrImage;
-
+    private TextView tv_introduce_info;
+    private String introduce;
+    private Dialog introduceDialog;
 
     @Nullable
     @Override
@@ -376,6 +379,7 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
     }
 
 
+
     //弹第一个福娃dialog
     private void showFuwaDialog(final Context context) {
 
@@ -400,7 +404,20 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
         img_right = (ImageView) view.findViewById(R.id.img_right);
 
         vp_fuwa = (ViewPager) view.findViewById(R.id.vp_fuwa);
+        TextView tv_introduce = (TextView) view.findViewById(R.id.tv_introduce);
 
+        tv_introduce.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(introduceDialog==null){
+                    showIntroduceDialog();
+                }else if(!introduceDialog.isShowing()){
+                    introduceDialog.show();
+                    setIntroduce();
+                }
+            }
+        });
 
         setVp();
 
@@ -515,6 +532,77 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
 
         dialog.show();
     }
+
+    private void showIntroduceDialog() {
+        introduceDialog = new Dialog(getActivity(), R.style.dialog_ios_style);
+        introduceDialog.setContentView(R.layout.introduce_dialog);
+        introduceDialog.setCanceledOnTouchOutside(true);
+        introduceDialog.setCancelable(true);
+        ImageView img_cancle = (ImageView) introduceDialog.findViewById(R.id.img_cancle);
+        img_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                introduceDialog.dismiss();
+            }
+        });
+
+        tv_introduce_info = (TextView) introduceDialog.findViewById(R.id.tv_introduce_info);
+
+
+        //设置dialog大小
+        Window dialogWindow = introduceDialog.getWindow();
+        WindowManager manager = getActivity().getWindowManager();
+        WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+        dialogWindow.setGravity(Gravity.CENTER);
+        Display d = manager.getDefaultDisplay(); // 获取屏幕宽、高度
+        params.width = (int) (d.getWidth() * 0.9); // 宽度设置为屏幕的0.9，根据实际情况调整
+        dialogWindow.setAttributes(params);
+
+        introduceDialog.show();
+
+
+        setIntroduce();
+    }
+
+    private void setIntroduce() {
+
+        String url = HttpUrl.FUWA_ACTIVITY_INFO + fuwa_gid + "&time=" + System.currentTimeMillis();
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);
+        httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String res = responseInfo.result;
+                if (!TextUtils.isEmpty(res)) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(res);
+                        if(jsonObject.getInt("code")==0){
+                            introduce = jsonObject.getString("data");
+                            if(!"null".equals(introduce)){
+                                tv_introduce_info.setText(introduce);
+                            }else {
+                                tv_introduce_info.setText("暂无介绍");
+                            }
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    showToast(fuwaDetailEntity.getMessage(), false);
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                showToast(e.getMessage(), false);
+                Log.i("onFailure", s);
+
+            }
+        });
+
+
+    }
+
 
     //设置vp
     private void setVp() {
