@@ -832,7 +832,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private void getMyApplyFuwa() {
         String url = HttpUrl.QUERY_MY_APPLY_FUWA + userId;
         HttpUtils httpUtils = new HttpUtils(45 * 1000);
-        //httpUtils.configCurrentHttpCacheExpiry(1000);
+        //设置当前请求的缓存时间
+        httpUtils.configCurrentHttpCacheExpiry(0*1000);
+        //设置默认请求的缓存时间
+        httpUtils.configDefaultHttpCacheExpiry(0);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
