@@ -58,6 +58,12 @@ public class VideoListActivity extends BaseActivity {
 
     private void initView() {
         tv_back = (TextView) findViewById(R.id.tv_back);
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         tv_title = (TextView) findViewById(R.id.tv_title);
         gv_video = (GridView) findViewById(R.id.gv_video);
         tv_title.setText("选择小视频");
