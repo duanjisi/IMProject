@@ -203,7 +203,7 @@
                     android:textCursorDrawable="@null"
                     android:gravity="center_vertical|right"
                     android:inputType="number"
-                    android:maxLength="5"
+                    android:maxLength="3"
                     android:layout_toLeftOf="@id/tv_ge"
                     android:textColorHint="@color/bg_rectangle"
                     android:hint="请填写要申请的福娃个数"

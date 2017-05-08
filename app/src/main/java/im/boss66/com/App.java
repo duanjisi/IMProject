@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UTrack;
 import com.umeng.message.UmengMessageHandler;
@@ -95,6 +96,7 @@ public class App extends Application {
         initData();
         initUmengPush();
 //        Fresco.initialize(getApplicationContext());//注册，在setContentView之前。
+        CrashReport.initCrashReport(getApplicationContext(),"3a7059fedc",false);
     }
 
     private void initData() {
