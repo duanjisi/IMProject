@@ -25,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,7 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.bumptech.glide.Glide;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -161,6 +163,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private final int RECORD_VIDEO = 3;//拍视频
     private File videoFile;
     private String recommond;
+    private ImageView iv_bg;
+    private Camera.Parameters parameters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +179,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         getMyApplyFuwa();
         autoFocusHandler = new Handler();
 
+        iv_bg = (ImageView) findViewById(R.id.iv_bg);
         rl_address = (RelativeLayout) findViewById(R.id.rl_address);
         tv_address = (TextView) findViewById(R.id.tv_address);
         iv_show_address = (ImageView) findViewById(R.id.iv_show_address);
@@ -192,9 +197,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);// TYPE_GRAVITY
     }
 
-    private void initViewParams() {
-        initMap();
-        mCameraManager = new CameraManager(this);
+    private void initCamera() {
+        if (mCameraManager == null) {
+            mCameraManager = new CameraManager(this);
+        }
         try {
             mCameraManager.openDriver();
         } catch (IOException e) {
@@ -205,18 +211,36 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             finish();
         }
         mCamera = mCameraManager.getCamera();
-        mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
-        Camera.Parameters parameters = mCamera.getParameters();
-        // 设置预览照片的大小
-        List<Camera.Size> supportedPictureSizes =
-                parameters.getSupportedPictureSizes();// 获取支持保存图片的尺寸
-        if (supportedPictureSizes != null && supportedPictureSizes.size() > 0) {
-            Camera.Size pictureSize = UIUtils.getPictureSize(this, supportedPictureSizes);
-            parameters.setRotation(90);
-            parameters.setPictureSize(pictureSize.width, pictureSize.height);
-            mCamera.setParameters(parameters);
+        if (parameters == null) {
+            parameters = mCamera.getParameters();
+            // 设置预览照片的大小
+            List<Camera.Size> supportedPictureSizes =
+                    parameters.getSupportedPictureSizes();// 获取支持保存图片的尺寸
+            if (supportedPictureSizes != null && supportedPictureSizes.size() > 0) {
+                Camera.Size pictureSize = UIUtils.getPictureSize(this, supportedPictureSizes);
+                parameters.setRotation(90);
+                parameters.setPictureSize(pictureSize.width, pictureSize.height);
+            }
         }
+        if (parameters != null) {
+            try {
+                mCamera.setParameters(parameters);
+            } catch (Exception e) {
+
+            }
+        }
+        if (mPreview != null) {
+            mPreview = null;
+        }
+        mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
+        //mPreview.getHolder().removeCallback(mPreviewCallback);
+        rl_preciew.removeAllViews();
         rl_preciew.addView(mPreview);
+    }
+
+    private void initViewParams() {
+        initMap();
+        initCamera();
     }
 
     /**
@@ -237,6 +261,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 }
                 bitmapImg = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 if (bitmapImg != null) {
+                    iv_bg.setVisibility(View.VISIBLE);
+                    Glide.with(context).load(bytes).into(iv_bg);
                     String imageName = System.currentTimeMillis() + ".jpg";
                     // 指定调用相机拍照后照片的储存路径
                     File dir = new File(savePath);
@@ -265,7 +291,11 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private Runnable doAutoFocus = new Runnable() {
         public void run() {
             if (previewing) {
-                mCamera.autoFocus(autoFocusCB);
+                try {
+                    mCamera.autoFocus(autoFocusCB);
+                } catch (Exception e) {
+
+                }
                 isTakePic = true;
                 previewing = false;
             }
@@ -279,6 +309,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
+            mCameraManager.closeDriver();
         }
     }
 
@@ -316,13 +347,25 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 showNumDialog();
                 break;
             case R.id.tv_change_place:
+                if (videoFile != null) {
+                    fl_video_dialog_img.setVisibility(View.GONE);
+                    iv_video.setVisibility(View.VISIBLE);
+                    videoFile = null;
+                }
                 tv_change_place.setVisibility(View.INVISIBLE);
                 bt_catch.setVisibility(View.GONE);
                 tv_bottom.setVisibility(View.VISIBLE);
                 previewing = true;
                 canFocusIn = true;
                 isHideOk = true;
-                mCamera.startPreview();
+                iv_bg.setVisibility(View.GONE);
+                //mCamera.startPreview();
+                if (mCamera == null) {
+                    initCamera();
+                    iv_bg.setVisibility(View.GONE);
+                } else {
+                    mCamera.startPreview();
+                }
                 autoFocusHandler.postDelayed(doAutoFocus, 800);
                 break;
             case R.id.iv_show_address:
@@ -489,9 +532,14 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 if (cameraType == READ_VIDEO) {
                     openActvityForResult(VideoListActivity.class, READ_VIDEO);
                 } else if (cameraType == RECORD_VIDEO) {
-                    Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                    mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 20 * 1024 * 1024L);
-                    startActivityForResult(mIntent, RECORD_VIDEO);
+                    try {
+                        releaseCamera();
+                        Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                        mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 20 * 1024 * 1024L);
+                        startActivityForResult(mIntent, RECORD_VIDEO);
+                    } catch (Exception e) {
+                        Log.i("Exception:", e.getMessage());
+                    }
                 } else {
                     initViewParams();
                 }
@@ -784,7 +832,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private void getMyApplyFuwa() {
         String url = HttpUrl.QUERY_MY_APPLY_FUWA + userId;
         HttpUtils httpUtils = new HttpUtils(45 * 1000);
-        httpUtils.configCurrentHttpCacheExpiry(1000);
+        //httpUtils.configCurrentHttpCacheExpiry(1000);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
