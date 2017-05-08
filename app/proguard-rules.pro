@@ -332,6 +332,12 @@
 -keepclassmembers class * {
     @com.facebook.common.internal.DoNotStrip *;
 }
+
+####################Bugly start##################
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+####################Bugly end##################
+
 #-libraryjars libs/autobahn.jar
 #-libraryjars libs/httpmime-4.1.3.jar
 #-libraryjars libs/android-async-http-1.4.5.jar
