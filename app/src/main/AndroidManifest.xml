@@ -107,6 +107,9 @@
             android:name=".activity.RegisterActivity"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".activity.SoftWareAgreementActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".activity.BindPhoneActivity"
             android:screenOrientation="portrait"></activity>
         <activity

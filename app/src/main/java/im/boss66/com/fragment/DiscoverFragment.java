@@ -29,6 +29,7 @@ import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.discover.FriendCircleActivity;
 import im.boss66.com.activity.discover.PeopleNearbyActivity;
 import im.boss66.com.activity.discover.SharkItOffActivity;
+import im.boss66.com.activity.discover.WebViewActivity;
 import im.boss66.com.activity.treasure.MainTreasureActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.ActionEntity;
@@ -116,6 +117,10 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
                 openActivity(PeopleNearbyActivity.class, null);
                 break;
             case R.id.rl_shopping:
+                Bundle bundle2 = new Bundle();
+                bundle2.putString("url","http://m.66boss.com/");
+                bundle2.putBoolean("isHasTitle",false);
+                openActivity(WebViewActivity.class,bundle2);
                 break;
             case R.id.rl_game:
                 openActivity(MainTreasureActivity.class, null);
