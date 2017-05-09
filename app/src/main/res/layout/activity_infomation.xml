@@ -98,10 +98,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="11dp"
                     android:layout_toLeftOf="@+id/iv_go_1"
+                    android:gravity="right"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:maxEms="12"
-                    android:text="事实上身上事实上事实上事实上身上是谁射射射射射"
+                    android:text=""
                     android:textColor="@color/text_color_gray_b"
                     android:textSize="17.6sp" />
 
