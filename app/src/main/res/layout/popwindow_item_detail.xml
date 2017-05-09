@@ -132,6 +132,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginRight="22dp"
             android:layout_marginTop="11dp"
+            android:autoLink="web"
             android:ellipsize="end"
             android:maxLines="3"
             android:text="是的封建时代开发建设但是分开水电开发就开始到付款三闾大夫健康是的开发建设快递费可是对方了解适当放宽圣诞节付款快递费精神的快乐放假"
