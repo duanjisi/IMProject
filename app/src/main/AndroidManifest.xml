@@ -511,9 +511,11 @@
         <!--家乡和校园动态-->
         <activity android:name=".activity.connection.NewsActivity"></activity>
         <!--福娃背包-->
-        <activity android:name=".activity.treasure.FuwaPackageActivity"></activity>
+        <activity android:name=".activity.treasure.FuwaPackageActivity"
+            android:screenOrientation="portrait"></activity>
         <!--福娃交易-->
-        <activity android:name=".activity.treasure.FuwaDealActivity"></activity>
+        <activity android:name=".activity.treasure.FuwaDealActivity"
+            android:screenOrientation="portrait"></activity>
         <!--福娃排行榜-->
         <activity android:name=".activity.treasure.FuwaTopList"></activity>
         <!--名人详情页-->
@@ -523,7 +525,8 @@
         <!--申请福娃-->
         <activity
             android:name=".activity.treasure.ApplyFuwaActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:screenOrientation="portrait"></activity>
         <!--申请创建-->
         <activity
             android:name=".activity.connection.ApplyCreateActivity"

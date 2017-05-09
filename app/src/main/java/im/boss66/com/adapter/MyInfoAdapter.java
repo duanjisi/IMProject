@@ -70,7 +70,10 @@ public class MyInfoAdapter extends BaseRecycleViewAdapter{
                MyInfo.ResultBean.SchoolListBean item1 = (MyInfo.ResultBean.SchoolListBean) datas.get(position);
 
                holder2.tv_school_name.setText(item1.getName());
-               holder2.tv_school_info.setText(item1.getBrief_desc());
+               String brief_desc = item1.getBrief_desc();
+               brief_desc=  brief_desc.replaceAll("<br>","\n");
+               brief_desc=  brief_desc.replaceAll("&nbsp"," ");
+               holder2.tv_school_info.setText(brief_desc);
                Glide.with(context).load(item1.getLogo()).into(holder2.img_school);
                holder2.itemView.setOnClickListener(new View.OnClickListener() {
                    @Override

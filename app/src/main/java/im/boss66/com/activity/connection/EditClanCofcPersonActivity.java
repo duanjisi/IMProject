@@ -10,8 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONException;
 import com.bumptech.glide.Glide;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -30,8 +28,6 @@ import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.activity.discover.ReplaceAlbumCoverActivity;
-import im.boss66.com.activity.event.EditWeb;
-import im.boss66.com.entity.EditClanCofcEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.widget.ActionSheet;
 

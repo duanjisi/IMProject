@@ -2,19 +2,16 @@ package im.boss66.com.activity.connection;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import org.greenrobot.eventbus.EventBus;
 
 import im.boss66.com.R;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.activity.discover.ReplaceAlbumCoverActivity;
-import im.boss66.com.activity.event.CreateSuccess;
+import im.boss66.com.event.CreateSuccess;
 import im.boss66.com.widget.ActionSheet;
 
 /**

@@ -1,6 +1,5 @@
 package im.boss66.com.activity.connection;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,12 +9,10 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +20,6 @@ import android.widget.Toast;
 
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONPObject;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -40,15 +36,13 @@ import java.util.Date;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
-import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
-import im.boss66.com.activity.event.CreateSuccess;
-import im.boss66.com.activity.event.EditSchool;
+import im.boss66.com.event.CreateSuccess;
+import im.boss66.com.event.EditSchool;
 import im.boss66.com.entity.SaveSchoolEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
-import im.boss66.com.http.request.EditSchoolRequest;
 import im.boss66.com.http.request.SaveSchoolRequest;
 import im.boss66.com.widget.dialog.CancelEditDialog;
 import im.boss66.com.widget.wheel.ArrayWheelAdapter;
