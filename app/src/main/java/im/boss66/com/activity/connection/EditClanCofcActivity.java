@@ -45,6 +45,11 @@ public class EditClanCofcActivity extends ABaseActivity implements View.OnClickL
         tv_headcenter_view.setText("编辑简介");
         img_logo = (ImageView) findViewById(R.id.img_logo);
 
+        if(isClan){
+            findViewById(R.id.rl_location).setVisibility(View.GONE);
+            findViewById(R.id.rl_phone).setVisibility(View.GONE);
+        }
+
         findViewById(R.id.rl_logo).setOnClickListener(this);
         findViewById(R.id.rl_info).setOnClickListener(this);
         findViewById(R.id.rl_location).setOnClickListener(this);

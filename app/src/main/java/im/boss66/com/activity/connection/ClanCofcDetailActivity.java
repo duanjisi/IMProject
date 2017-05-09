@@ -54,6 +54,9 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
         });
         uid = App.getInstance().getUid();
 
+        if(!uid.equals(user_id)){
+            iv_headright_view.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -85,14 +88,14 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
     public void onClick(int which) {
         switch (which){
             case 1:
-                if(!uid.equals(user_id)){
-                    if(isClan){
-                        ToastUtil.showShort(context,"不能编辑别人创建的宗亲");
-                    }else {
-                        ToastUtil.showShort(context,"不能编辑别人创建的商会");
-                    }
-                    return;
-                }
+//                if(!uid.equals(user_id)){
+//                    if(isClan){
+//                        ToastUtil.showShort(context,"不能编辑别人创建的宗亲");
+//                    }else {
+//                        ToastUtil.showShort(context,"不能编辑别人创建的商会");
+//                    }
+//                    return;
+//                }
                 Intent intent = new Intent(this, EditClanCofcActivity.class);
                 intent.putExtra("isClan",isClan);
                 intent.putExtra("id",id);
