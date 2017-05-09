@@ -155,7 +155,8 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
         }
         switch (type) {
             case "rl_info":
-                params.addBodyParameter("desc", content);
+                String s = content.replaceAll("\n", "<br>");
+                params.addBodyParameter("desc", s);
                 break;
             case "rl_location":
                 params.addBodyParameter("address", content);
