@@ -1019,6 +1019,13 @@ public class SchoolHometownActivity extends ABaseActivity implements View.OnClic
             bundle.putString("videoPath", url);
             bundle.putString("classType", "SchoolHometownActivity");
             bundle.putString("feedType", "2");
+            if (from == 1) {
+                bundle.putString("id_value", "1");
+                bundle.putInt("id_value_ext", school_id);
+            } else if (from == 2) {
+                bundle.putString("id_value", "2");
+                bundle.putInt("id_value_ext", hometown_id);
+            }
             openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
         }
     }
