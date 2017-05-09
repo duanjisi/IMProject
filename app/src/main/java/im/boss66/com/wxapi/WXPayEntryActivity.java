@@ -11,8 +11,11 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
+import org.greenrobot.eventbus.EventBus;
+
 import im.boss66.com.R;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.entity.PayState;
 
 public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandler {
     private static final String TAG = WXPayEntryActivity.class.getSimpleName();
@@ -22,7 +25,7 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pay_result);
-        api = WXAPIFactory.createWXAPI(this, getResources().getString(R.string.weixin_app_id2));
+        api = WXAPIFactory.createWXAPI(this, getResources().getString(R.string.weixin_app_id));
         api.handleIntent(getIntent(), this);
     }
 
@@ -41,40 +44,16 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
     @Override
     public void onResp(BaseResp resp) {
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            builder.setTitle(R.string.app_tip);
-//            builder.setMessage(getString(R.string.pay_result_callback_msg, String.valueOf(resp.errCode)));
-//            builder.show();
             Log.i("info", "=============errCode:" + resp.errCode);
             if (resp.errCode == 0) {
-                showToast("支付成功!", true);
-//                requesResult();
+                EventBus.getDefault().post(new PayState("wx", "ok"));
+//                showToast("支付成功!", true);
+                finish();
             } else {
-                showToast("支付失败!", true);
+//                showToast("支付失败!", true);
+                EventBus.getDefault().post(new PayState("wx", "faile"));
                 finish();
             }
         }
     }
-//    private void requesResult() {
-//        showLoadingDialog();
-//        String tradeNo = App.getInstance().getTrade_no();
-//        if (tradeNo != null && !tradeNo.equals("")) {
-//            ChargeStatusRequest request = new ChargeStatusRequest(TAG, tradeNo);
-//            request.send(new BaseDataRequest.RequestCallback() {
-//                @Override
-//                public void onSuccess(Object pojo) {
-//                    cancelLoadingDialog();
-//                    Session.getInstance().refreshCashesPager();
-//                    showToast("支付成功!", true);
-//                    finish();
-//                }
-//
-//                @Override
-//                public void onFailure(String msg) {
-//                    cancelLoadingDialog();
-//                    showToast("支付失败!", true);
-//                }
-//            });
-//        }
-//    }
 }

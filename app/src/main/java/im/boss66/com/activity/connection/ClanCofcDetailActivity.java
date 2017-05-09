@@ -10,9 +10,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
-import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.WebBaseActivity;
-import im.boss66.com.activity.event.EditWeb;
+import im.boss66.com.event.EditWeb;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.widget.ActionSheet;
 
@@ -71,7 +70,13 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
     }
     @Override
     protected void setTitleUrl() {
-        tv_headcenter_view.setText(title);
+        if(isClan){
+
+            tv_headcenter_view.setText("宗亲简介");
+        }else{
+
+            tv_headcenter_view.setText("商会简介");
+        }
         webview.loadUrl(url);
     }
     private void showActionSheet() {

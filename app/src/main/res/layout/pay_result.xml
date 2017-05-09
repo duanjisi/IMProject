@@ -7,7 +7,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
-        android:text="@string/pay_result_tip"
+        android:text="微信支付成功!"
         android:textColor="#ff000000"
         android:textSize="20dp" />
 

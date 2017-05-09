@@ -32,7 +32,7 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.ABaseActivity;
-import im.boss66.com.activity.event.CreateSuccess;
+import im.boss66.com.event.CreateSuccess;
 import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.CreateClanRequest;

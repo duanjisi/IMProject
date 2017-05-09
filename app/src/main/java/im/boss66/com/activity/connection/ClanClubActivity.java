@@ -67,7 +67,7 @@ import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.activity.discover.FriendSendNewMsgActivity;
 import im.boss66.com.activity.discover.ReplaceAlbumCoverActivity;
 import im.boss66.com.activity.discover.VideoListActivity;
-import im.boss66.com.activity.event.CreateSuccess;
+import im.boss66.com.event.CreateSuccess;
 import im.boss66.com.adapter.CommunityListAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BaseResult;

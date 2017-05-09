@@ -1,19 +1,14 @@
 package im.boss66.com.activity.connection;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONException;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -23,17 +18,12 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
-import java.io.File;
-
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
-import im.boss66.com.Utils.FileUtils;
-import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.ABaseActivity;
-import im.boss66.com.activity.event.CreateSuccess;
-import im.boss66.com.activity.event.EditWeb;
-import im.boss66.com.entity.EditClanCofcEntity;
+import im.boss66.com.event.CreateSuccess;
+import im.boss66.com.event.EditWeb;
 import im.boss66.com.http.HttpUrl;
 
 /**
@@ -48,7 +38,8 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
 
     private String main;
     private String access_token;
-    private Handler handler = new Handler(){};
+    private Handler handler = new Handler() {
+    };
 
 
     @Override
@@ -155,7 +146,8 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
         }
         switch (type) {
             case "rl_info":
-                params.addBodyParameter("desc", content);
+                String s = content.replaceAll("\n", "<br>");
+                params.addBodyParameter("desc", s);
                 break;
             case "rl_location":
                 params.addBodyParameter("address", content);
@@ -175,20 +167,20 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
 
                     try {
                         JSONObject jsonObject = new JSONObject(result);
-                        if(jsonObject.getInt("code")==1){
+                        if (jsonObject.getInt("code") == 1) {
                             showToast("更改成功", false);
-                            if("rl_info".equals(type)){      //更改了内容，刷新人脉首页,刷新web页
-                                EventBus.getDefault().post(new CreateSuccess(""));
-                                EventBus.getDefault().post(new EditWeb(""));
-                            }
+//                            if("rl_info".equals(type)){      //更改了内容，刷新人脉首页,刷新web页
+                            EventBus.getDefault().post(new CreateSuccess(""));
+                            EventBus.getDefault().post(new EditWeb(""));
+//                            }
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     finish();
                                 }
-                            },500);
-                        }else{
-                            showToast("更改失败",false);
+                            }, 500);
+                        } else {
+                            showToast("更改失败", false);
                         }
                     } catch (org.json.JSONException e) {
                         e.printStackTrace();
