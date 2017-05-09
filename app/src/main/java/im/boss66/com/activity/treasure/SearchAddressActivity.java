@@ -9,7 +9,10 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -21,7 +24,10 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.github.jdsjlzx.recyclerview.LRecyclerView;
+import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import im.boss66.com.R;
@@ -37,7 +43,7 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
 
     private ClearEditText et_name;
     private TextView tv_close;
-    private RecyclerView rv_content;
+    private LRecyclerView rv_content;
 
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
@@ -52,8 +58,11 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
     private List<PoiItem> poiItems;// poi数据
     private AMapLocation location;
     private String keyWord;
-    private String city;
+    private String city, area, curCity,curGeohash;
     private FuwaHideAddressAdapter addressAdapter;
+    private LRecyclerViewAdapter mLRecyclerViewAdapter = null;
+    private LinearLayout ll_no_address;
+    private boolean isFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,20 +76,49 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initView() {
+        ll_no_address = (LinearLayout) findViewById(R.id.ll_no_address);
+        ll_no_address.setOnClickListener(this);
         et_name = (ClearEditText) findViewById(R.id.et_name);
         tv_close = (TextView) findViewById(R.id.tv_close);
-        rv_content = (RecyclerView) findViewById(R.id.rv_content);
+        rv_content = (LRecyclerView) findViewById(R.id.rv_content);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         //设置为垂直布局，这也是默认的
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         //设置布局管理器
         rv_content.setLayoutManager(layoutManager);
+        View footView = LayoutInflater.from(this).inflate(R.layout.item_fuwa_hide_address,
+                (ViewGroup) findViewById(android.R.id.content), false);
+        TextView tv_foot_title = (TextView) footView.findViewById(R.id.tv_title);
+        TextView tv_foot_content = (TextView) footView.findViewById(R.id.tv_content);
+        tv_foot_title.setTextColor(getResources().getColor(R.color.hint_text_color));
+        tv_foot_content.setTextColor(getResources().getColor(R.color.hint_text_color));
+        tv_foot_title.setText("没有找到你的位置");
+        tv_foot_content.setText("创建新的位置");
+        footView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("city", curCity);
+                bundle.putString("area", area);
+                bundle.putString("curGeohash",curGeohash);
+                openActvityForResult(FuwaAddressSearchActivity.class, 101, bundle);
+            }
+        });
+        poiItems = new ArrayList<>();
+        addressAdapter = new FuwaHideAddressAdapter(this, poiItems);
+        addressAdapter.setIsShowIcon(false);
+        mLRecyclerViewAdapter = new LRecyclerViewAdapter(addressAdapter);
 
+        rv_content.setAdapter(mLRecyclerViewAdapter);
+        mLRecyclerViewAdapter.addFooterView(footView);
+        rv_content.setPullRefreshEnabled(false);
+        rv_content.setNoMore(true);
         rv_content.addOnItemTouchListener(new FuwaHideAddressAdapter.RecyclerItemClickListener(this,
                 new FuwaHideAddressAdapter.RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        if (poiItems != null) {
+                        Log.i("position:", "" + position);
+                        if (poiItems != null && position < poiItems.size()) {
                             PoiItem item = poiItems.get(position);
                             if (item != null) {
                                 String address = item.getTitle();
@@ -126,6 +164,13 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
             case R.id.tv_close:
                 finish();
                 break;
+            case R.id.ll_no_address:
+                Bundle bundle = new Bundle();
+                bundle.putString("city", curCity);
+                bundle.putString("area", area);
+                bundle.putString("curGeohash",curGeohash);
+                openActvityForResult(FuwaAddressSearchActivity.class, 101, bundle);
+                break;
         }
     }
 
@@ -155,6 +200,20 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
     public void onLocationChanged(AMapLocation aMapLocation) {
         Log.i("info", "==================onLocationChanged()");
         this.location = aMapLocation;
+        if (aMapLocation != null) {
+            area = aMapLocation.getDistrict();
+            curCity = aMapLocation.getCity();
+            curGeohash = aMapLocation.getLongitude() + "-" + aMapLocation.getLatitude();
+            if (isFirst){
+                keyWord = aMapLocation.getPoiName();
+                city = curCity;
+                if (lp == null) {
+                    lp = new LatLonPoint(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+                }
+                doSearchQuery();
+                isFirst = false;
+            }
+        }
     }
 
     private void initData(AMapLocation aMapLocation) {
@@ -198,22 +257,27 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onPoiSearched(PoiResult result, int rcode) {
         if (rcode == AMapException.CODE_AMAP_SUCCESS) {
-            if (result != null && result.getQuery() != null) {// 搜索poi的结果
+            if (result != null && result.getQuery() != null) {
+                // 搜索poi的结果
+                rv_content.setVisibility(View.VISIBLE);
+                ll_no_address.setVisibility(View.GONE);
                 if (result.getQuery().equals(query)) {// 是否是同一条
                     poiResult = result;
                     poiItems = poiResult.getPois();// 取得第一页的poiitem数据，页数从数字0开始
-                    if (addressAdapter == null) {
-                        addressAdapter = new FuwaHideAddressAdapter(this, poiItems);
-                        addressAdapter.setIsShowIcon(false);
-                        rv_content.setAdapter(addressAdapter);
-                    } else {
-                        addressAdapter.onDataChange(poiItems);
+                    addressAdapter.onDataChange(poiItems);
+                    if (poiItems != null && poiItems.size() <= 0){
+                        rv_content.setVisibility(View.GONE);
+                        ll_no_address.setVisibility(View.VISIBLE);
                     }
                 }
             } else {
+                rv_content.setVisibility(View.GONE);
+                ll_no_address.setVisibility(View.VISIBLE);
                 showToast("没数据!", true);
             }
         } else {
+            rv_content.setVisibility(View.GONE);
+            ll_no_address.setVisibility(View.VISIBLE);
             showToast(rcode, true);
         }
     }
@@ -228,4 +292,12 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
         mlocationClient = null;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101 && resultCode == RESULT_OK && data != null) {
+            setResult(RESULT_OK, data);
+            finish();
+        }
+    }
 }

@@ -6,15 +6,16 @@
 
     <RelativeLayout
         android:id="@+id/rl_preciew"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"></RelativeLayout>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/iv_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"/>
+        android:scaleType="centerCrop" />
 
     <View
         android:id="@+id/v_bg"
@@ -111,9 +112,9 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_4"
             android:layout_toRightOf="@+id/iv_left"
+            android:ellipsize="end"
             android:maxEms="8"
             android:maxLines="1"
-            android:ellipsize="end"
             android:textColor="@color/white" />
 
         <ImageView
