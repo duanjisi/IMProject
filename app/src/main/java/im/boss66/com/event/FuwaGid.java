@@ -1,4 +1,4 @@
-package im.boss66.com.activity.event;
+package im.boss66.com.event;
 
 /**
  * Created by liw on 2017/4/12.

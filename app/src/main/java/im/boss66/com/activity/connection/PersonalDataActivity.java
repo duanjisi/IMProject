@@ -44,7 +44,7 @@ import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
-import im.boss66.com.activity.event.CreateSuccess;
+import im.boss66.com.event.CreateSuccess;
 import im.boss66.com.entity.JobEntity;
 import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.entity.UserInfoEntity;
