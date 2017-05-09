@@ -144,7 +144,11 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headcenter_view = (TextView) findViewById(R.id.tv_headcenter_view);
         iv_headright_view = (ImageView) findViewById(R.id.iv_headright_view);
-        iv_headright_view.setVisibility(View.VISIBLE);
+        if(!uid.equals(user_id)){
+            iv_headright_view.setVisibility(View.GONE);
+        }else{
+            iv_headright_view.setVisibility(View.VISIBLE);
+        }
         iv_headright_view.setOnClickListener(this);
 
         tv_headcenter_view.setText("名人");
@@ -178,7 +182,7 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
 
                 if(Integer.parseInt(uid)!=user_id){
                     //不能编辑别人的名人
-                    ToastUtil.showShort(context,"不能编辑别人创建的名人");
+//                    ToastUtil.showShort(context,"不能编辑别人创建的名人");
                     return true;
                 }
 
@@ -327,15 +331,15 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
     public void onClick(int which) {
         switch (which) {
             case 1:
-                if(!uid.equals(user_id)){
-                    //不能编辑别人的名人
-                    if(isClan){
-                        ToastUtil.showShort(context,"不能在别人的宗亲里添加");
-                    }else{
-                        ToastUtil.showShort(context,"不能在别人的商会里添加");
-                    }
-                    return ;
-                }
+//                if(!uid.equals(user_id)){
+//                    //不能编辑别人的名人
+//                    if(isClan){
+//                        ToastUtil.showShort(context,"不能在别人的宗亲里添加");
+//                    }else{
+//                        ToastUtil.showShort(context,"不能在别人的商会里添加");
+//                    }
+//                    return ;
+//                }
                 Intent intent = new Intent(this, EditClanCofcPersonActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isClan", isClan);

@@ -217,7 +217,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                 switch (from) {
                     case 3:
                         if(!uid.equals(user_id)){
-                            ToastUtil.showShort(getActivity(),"不能删除别人创建的宗亲");
+//                            ToastUtil.showShort(getActivity(),"不能删除别人创建的宗亲");
                             return true;
                         }
                         isClan = true;
@@ -227,7 +227,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                         break;
                     case 4:
                         if(!uid.equals(user_id)){
-                            ToastUtil.showShort(getActivity(),"不能删除别人创建的商会");
+//                            ToastUtil.showShort(getActivity(),"不能删除别人创建的商会");
                             return true;
                         }
                         isClan = false;

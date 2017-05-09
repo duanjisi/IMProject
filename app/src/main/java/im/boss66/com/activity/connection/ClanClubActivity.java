@@ -198,6 +198,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
     private int is_follow;
     private String count;
     private String user_id;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -371,6 +372,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
             }
         });
         getCommunityList();
+        uid = App.getInstance().getUid();
 
     }
 
@@ -397,6 +399,9 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 showActionSheet(1);
                 break;
             case R.id.iv_bg:
+                if(!uid.equals(user_id)){
+                    return;
+                }
                 actionType = 0;
                 showActionSheet();
                 break;
