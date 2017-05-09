@@ -59,8 +59,6 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.squareup.picasso.Picasso;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -80,11 +78,8 @@ import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.discover.VideoListActivity;
 import im.boss66.com.adapter.FuwaHideAddressAdapter;
 import im.boss66.com.entity.BaseResult;
-import im.boss66.com.entity.FriendState;
 import im.boss66.com.entity.FuwaEntity;
-import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
-import im.boss66.com.http.request.FriendShipRequest;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.ActionSheet;
 import im.boss66.com.widget.scan.CameraManager;
@@ -168,6 +163,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private String recommond;
     private ImageView iv_bg;
     private Camera.Parameters parameters;
+    private String curCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,6 +179,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         autoFocusHandler = new Handler();
 
         iv_bg = (ImageView) findViewById(R.id.iv_bg);
+
         rl_address = (RelativeLayout) findViewById(R.id.rl_address);
         tv_address = (TextView) findViewById(R.id.tv_address);
         iv_show_address = (ImageView) findViewById(R.id.iv_show_address);
@@ -264,6 +261,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 }
                 bitmapImg = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 if (bitmapImg != null) {
+//                    mPreview.setVisibility(View.GONE);
                     iv_bg.setVisibility(View.VISIBLE);
                     Glide.with(context).load(bytes).into(iv_bg);
                     String imageName = System.currentTimeMillis() + ".jpg";
@@ -362,10 +360,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 canFocusIn = true;
                 isHideOk = true;
                 iv_bg.setVisibility(View.GONE);
-                //mCamera.startPreview();
+//                mPreview.setVisibility(View.VISIBLE);
                 if (mCamera == null) {
                     initCamera();
-                    iv_bg.setVisibility(View.GONE);
                 } else {
                     mCamera.startPreview();
                 }
@@ -386,7 +383,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 }
                 break;
             case R.id.rl_search:
-                isJump = true;
+                isJump = false;
                 openActvityForResult(SearchAddressActivity.class, 102);
                 break;
             case R.id.bt_hide_ok:
@@ -497,7 +494,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                                         bt_catch.setVisibility(View.VISIBLE);
                                         tv_bottom.setVisibility(View.GONE);
                                     } catch (Exception e) {
-                                        mCamera.startPreview();
+                                        //mCamera.startPreview();
                                         canFocusIn = true;
                                         showToast("对焦失败，请移动手机重试下", false);
                                     }
@@ -711,8 +708,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             address = aMapLocation.getPoiName();
             geohash = aMapLocation.getLongitude() + "-" + aMapLocation.getLatitude();
             tv_address.setText("" + address);
-            String city = aMapLocation.getCity();
-            doSearchQuery(address, city);
+            curCity = aMapLocation.getCity();
+            doSearchQuery(address, curCity);
         }
     }
 
@@ -836,7 +833,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         String url = HttpUrl.QUERY_MY_APPLY_FUWA + userId;
         HttpUtils httpUtils = new HttpUtils(45 * 1000);
         //设置当前请求的缓存时间
-        httpUtils.configCurrentHttpCacheExpiry(0*1000);
+        httpUtils.configCurrentHttpCacheExpiry(0 * 1000);
         //设置默认请求的缓存时间
         httpUtils.configDefaultHttpCacheExpiry(0);
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
@@ -1023,9 +1020,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                     if (data != null) {
                         int code = data.getCode();
                         if (code == 0) {
-                            //EventBus.getDefault().post(curSelectFuwaNum);
-//                            setResult(RESULT_OK);
-//                            finish();
                             showSuccessHideDialog();
                         }
                     }

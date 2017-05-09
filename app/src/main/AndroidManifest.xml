@@ -470,7 +470,10 @@
         <activity
             android:name=".activity.treasure.FuwaMessageActivity"
             android:screenOrientation="portrait"></activity>
-
+        <!-- 搜索地址 -->
+        <activity
+            android:name=".activity.treasure.FuwaAddressSearchActivity"
+            android:screenOrientation="portrait"></activity>
 
         <!-- 我的关注 -->
         <activity android:name=".activity.connection.MyFollowActivity"></activity>
