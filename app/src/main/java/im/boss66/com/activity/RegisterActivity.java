@@ -26,7 +26,7 @@ import im.boss66.com.http.request.SMSCodeRequest;
 public class RegisterActivity extends BaseActivity implements View.OnClickListener {
     private final static String TAG = RegisterActivity.class.getSimpleName();
     private static final int DELAY_MILlIS = 1000;
-    private TextView tvBack, tvCode;
+    private TextView tvBack, tvCode, tv_bottom;
     private EditText etPhoneNum, etPws, etConfirmPws, etCode;
     private Button btnRegister;
     private int interval = 0;
@@ -60,6 +60,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private void initViews() {
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvCode = (TextView) findViewById(R.id.tv_code);
+        tv_bottom = (TextView) findViewById(R.id.tv_bottom);
         etPhoneNum = (EditText) findViewById(R.id.et_phone_num);
         etCode = (EditText) findViewById(R.id.et_code);
         etPws = (EditText) findViewById(R.id.et_pws);
@@ -68,6 +69,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         tvCode.setOnClickListener(this);
         tvBack.setOnClickListener(this);
+        tv_bottom.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
     }
 
@@ -82,6 +84,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.btn_register:
                 register();
+                break;
+            case R.id.tv_bottom:
+                openActivity(SoftWareAgreementActivity.class);
                 break;
         }
     }

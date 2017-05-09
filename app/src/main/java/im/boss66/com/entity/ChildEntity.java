@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Johnny on 2017/3/15.
  */
-public class ChildEntity implements Serializable{
+public class ChildEntity implements Serializable {
     private String distance = "";
     private String pic = "";
     private String gid = "";
@@ -131,5 +131,24 @@ public class ChildEntity implements Serializable{
 
     public void setHider(String hider) {
         this.hider = hider;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        } else {
+            if (this.getClass() == obj.getClass()) {
+                ChildEntity u = (ChildEntity) obj;
+                if (this.getGid().equals(u.getGid())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
     }
 }

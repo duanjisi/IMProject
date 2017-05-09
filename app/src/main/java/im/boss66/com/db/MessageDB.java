@@ -28,7 +28,7 @@ public class MessageDB {
     public MessageItem saveMsg(String id, MessageItem entity) {
         db.execSQL("CREATE table IF NOT EXISTS _"
                 + id
-                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT,md5 TEXT)");
+                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT)");
         int isCome = 0;
         if (entity.isComMeg()) {// 如果是收到的消息，保存在数据库的值为1
             isCome = 1;
@@ -36,12 +36,12 @@ public class MessageDB {
         db.execSQL(
                 "insert into _"
                         + id
-                        + " (messagetype,name,img,date,isCome,message,isNew,voiceTime,temp,nick,userid,avatar,md5) values(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        + " (messagetype,name,img,date,isCome,message,isNew,voiceTime,temp,nick,userid,avatar) values(?,?,?,?,?,?,?,?,?,?,?,?)",
                 new Object[]{entity.getMsgType(), entity.getName(),
                         entity.getHeadImg(), entity.getDate(), isCome,
                         entity.getMessage(), entity.getIsNew(),
                         entity.getVoiceTime(), entity.getTemp(), entity.getNick(),
-                        entity.getUserid(), entity.getAvatar(), getMd5Str(entity)});
+                        entity.getUserid(), entity.getAvatar()});
 
 //        Cursor cur = db.rawQuery("select last_insert_id() from " + "_" + id, null);
         Cursor cur = db.rawQuery("SELECT * from _" + id
@@ -70,7 +70,7 @@ public class MessageDB {
 //                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT)");
         db.execSQL("CREATE table IF NOT EXISTS _"
                 + id
-                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT,md5 TEXT)");
+                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT)");
         Cursor c = db.rawQuery("SELECT * from _" + id
                 + " ORDER BY _id DESC LIMIT " + num, null);
         while (c.moveToNext()) {
@@ -126,7 +126,7 @@ public class MessageDB {
 //                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER)");
         db.execSQL("CREATE table IF NOT EXISTS _"
                 + id
-                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT,md5 TEXT)");
+                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT)");
         db.execSQL("delete from " + "_" + id);
     }
 
@@ -136,7 +136,7 @@ public class MessageDB {
 //                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT)");
         db.execSQL("CREATE table IF NOT EXISTS _"
                 + id
-                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT,md5 TEXT)");
+                + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,messagetype INTEGER,name TEXT, img TEXT,date TEXT,isCome TEXT,message TEXT,isNew TEXT,voiceTime INTEGER,temp TEXT,nick TEXT,userid TEXT,avatar TEXT)");
 //        String sql = "delete from " + "_" + id + " where " + getWhere(item);
         String sql = "delete from " + "_" + id + " where " + "_id=?";
         Log.i("info", "==========sql:" + sql);
