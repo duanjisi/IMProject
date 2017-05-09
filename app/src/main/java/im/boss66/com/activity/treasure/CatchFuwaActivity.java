@@ -97,7 +97,10 @@ import im.boss66.com.activity.im.VerifyApplyActivity;
 import im.boss66.com.activity.player.VideoPlayerNewActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.ChildEntity;
+import im.boss66.com.entity.FriendState;
+import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
+import im.boss66.com.http.request.FriendShipRequest;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.RoundImageView;
 import im.boss66.com.widget.popupWindows.SharePopup;
@@ -109,6 +112,9 @@ import im.boss66.com.widget.scan.CameraPreview;
  */
 public class CatchFuwaActivity extends BaseActivity implements View.OnClickListener, SensorEventListener,
         SharePopup.OnItemSelectedListener {
+
+    private final static String TAG = HideFuwaActivity.class.getSimpleName();
+
     private SharePopup sharePopup;
     private LinearLayout ll_thread;
     private ImageView iv_click, iv_thread, iv_thread_bg;
@@ -147,6 +153,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private String fuwaUserId;
     private ChildEntity currentChild;
     private String videoUrl, videoBgUrl = "";
+    private boolean isFriend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,6 +220,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 //            fuwaNum = intent.getStringExtra("id");
             if (currentChild != null) {
                 fuwaUserId = currentChild.getHider();
+                requestFriendShip(fuwaUserId);
                 fuwaId = currentChild.getGid();
                 fuwaNum = currentChild.getId();
                 String imgUrl = currentChild.getPic();
@@ -689,7 +697,13 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             iv_close_user.setOnClickListener(this);
             tv_add_friend.setOnClickListener(this);
             iv_video_photo.setOnClickListener(this);
-
+            if (isFriend) {
+                tv_add_friend.setText("已是好友");
+                tv_add_friend.setEnabled(false);
+            } else {
+                tv_add_friend.setText("+ 好友");
+                tv_add_friend.setEnabled(true);
+            }
             if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(fuwaUserId) && userId.equals(fuwaUserId)) {
                 tv_add_friend.setVisibility(View.GONE);
             }
@@ -914,5 +928,27 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             e.printStackTrace();
         }
         return bitmap;
+    }
+
+    private void requestFriendShip(String userId) {
+        if (!userId.equals("")) {
+            FriendShipRequest request = new FriendShipRequest(TAG, userId);
+            request.send(new BaseDataRequest.RequestCallback<FriendState>() {
+                @Override
+                public void onSuccess(FriendState pojo) {
+                    String isf = pojo.getIs_friend();
+                    if ("1".equals(isf)) {
+                        isFriend = true;
+                    } else {
+                        isFriend = false;
+                    }
+                }
+
+                @Override
+                public void onFailure(String msg) {
+                    showToast(msg, true);
+                }
+            });
+        }
     }
 }

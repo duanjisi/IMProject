@@ -80,8 +80,11 @@ import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.discover.VideoListActivity;
 import im.boss66.com.adapter.FuwaHideAddressAdapter;
 import im.boss66.com.entity.BaseResult;
+import im.boss66.com.entity.FriendState;
 import im.boss66.com.entity.FuwaEntity;
+import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
+import im.boss66.com.http.request.FriendShipRequest;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.ActionSheet;
 import im.boss66.com.widget.scan.CameraManager;
@@ -939,6 +942,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         if (popWindow != null && popWindow.isShowing()) {
             popWindow.dismiss();
         }
+        if (popdialogWindow != null && popdialogWindow.isShowing()) {
+            popdialogWindow.dismiss();
+        }
         if (tv_time != null && popTime != null) {
             tv_time.setText(popTime[tag - 1]);
         }
@@ -1060,4 +1066,5 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             }
         }
     }
+
 }
