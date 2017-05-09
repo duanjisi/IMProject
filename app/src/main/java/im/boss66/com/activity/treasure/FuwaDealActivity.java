@@ -121,4 +121,9 @@ public class FuwaDealActivity extends BaseActivity implements View.OnClickListen
 
         }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+    }
 }

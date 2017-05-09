@@ -1,5 +1,6 @@
 package im.boss66.com.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
@@ -34,6 +35,9 @@ import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,6 +55,7 @@ import im.boss66.com.adapter.FuwaSellAdapter;
 import im.boss66.com.entity.AlipayOrder;
 import im.boss66.com.entity.FuwaSellEntity;
 import im.boss66.com.entity.PayResult;
+import im.boss66.com.entity.PayState;
 import im.boss66.com.entity.PayWx;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.BaseModelRequest;
@@ -70,6 +75,7 @@ import im.boss66.com.widget.wheel.WheelView;
 public class FuwaSellFragment extends BaseFragment implements View.OnClickListener {
     private final static String TAG = FuwaSellFragment.class.getSimpleName();
     private static final int SDK_PAY_FLAG = 2;
+    private static final int SDK_PAY_WX = 3;
     private IWXAPI api;
     private Resources resources;
     private TextView tv_choose;
@@ -96,7 +102,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
     private TextView mBtnConfirm2;
     private TextView btn_cancle2;
 
-    private long time1  =0L; //用来防止多次点击
+    private long time1 = 0L; //用来防止多次点击
     private long timeStart = 0L; //第二个
 
     private boolean choose = false;
@@ -109,6 +115,23 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                     adapter.setDatas(datas);
                     adapter.setChooses();
                     adapter.notifyDataSetChanged();
+                    break;
+                case SDK_PAY_WX:
+                    PayState state = (PayState) msg.obj;
+                    if (state.getType().equals("wx")) {
+                        String tag = state.getState();
+                        if (tag.equals("ok")) {
+                            showToast("支付成功", true);
+                            refreshFuwa();    //刷新福娃
+                            if (dialog4 == null) {
+                                showSuccessDialog();
+                            } else if (!dialog4.isShowing()) {
+                                dialog4.show();
+                            }
+                        } else {
+                            showToast("支付失败", true);
+                        }
+                    }
                     break;
                 case SDK_PAY_FLAG: {
                     @SuppressWarnings("unchecked")
@@ -123,17 +146,12 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         showToast("支付成功", true);
-
-
                         refreshFuwa();    //刷新福娃
-
-                        if(dialog4==null){
+                        if (dialog4 == null) {
                             showSuccessDialog();
-                        }else if(!dialog4.isShowing()){
+                        } else if (!dialog4.isShowing()) {
                             dialog4.show();
-
                         }
-
 //                        requesResult();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
@@ -146,14 +164,15 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
     };
 
     private void refreshFuwa() {
-        dialog.dismiss();   //福娃详情dialog
-
+        if (dialog != null) {
+            dialog.dismiss();   //福娃详情dialog
+        }
         datas.remove(chooseFuwa);
         adapter.setDatas(datas);
         adapter.setChooses();
         adapter.notifyDataSetChanged();
 
-        chooseFuwa =null;
+        chooseFuwa = null;
 
         datasChoose = datas;   //相当于全部选中
 
@@ -173,39 +192,36 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
     private void showSuccessDialog() {
 
+//        Context context = App.getInstance();
+        if (activity != null) {
+            LayoutInflater inflater = (LayoutInflater) activity.getSystemService(activity.LAYOUT_INFLATER_SERVICE);
+            // 不同页面加载不同的popup布局
+            View view = inflater.inflate(R.layout.pop_buy_success, null);
 
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        // 不同页面加载不同的popup布局
-        View view = inflater.inflate(R.layout.pop_buy_success, null);
+            dialog4 = new Dialog(activity, R.style.dialog_ios_style);
+            dialog4.setContentView(view);
+            dialog4.setCancelable(true);
+            dialog4.setCanceledOnTouchOutside(false);
 
-        dialog4 = new Dialog(getActivity(), R.style.dialog_ios_style);
-        dialog4.setContentView(view);
-        dialog4.setCancelable(true);
-        dialog4.setCanceledOnTouchOutside(false);
+            TextView tv_word = (TextView) view.findViewById(R.id.tv_word);
+            tv_word.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog4.dismiss();
+                }
+            });
 
-        TextView tv_word = (TextView) view.findViewById(R.id.tv_word);
-        tv_word.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            //设置dialog大小
+            Window dialogWindow = dialog4.getWindow();
+            WindowManager manager = activity.getWindowManager();
+            WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+            dialogWindow.setGravity(Gravity.CENTER);
+            Display d = manager.getDefaultDisplay(); // 获取屏幕宽、高度
+            params.width = (int) (d.getWidth() * 0.8); // 宽度设置为屏幕的0.9，根据实际情况调整
+            dialogWindow.setAttributes(params);
 
-                dialog4.dismiss();
-
-
-            }
-        });
-
-        //设置dialog大小
-        Window dialogWindow = dialog4.getWindow();
-        WindowManager manager = getActivity().getWindowManager();
-        WindowManager.LayoutParams params = dialogWindow.getAttributes(); // 获取对话框当前的参数值
-        dialogWindow.setGravity(Gravity.CENTER);
-        Display d = manager.getDefaultDisplay(); // 获取屏幕宽、高度
-        params.width = (int) (d.getWidth() * 0.8); // 宽度设置为屏幕的0.9，根据实际情况调整
-        dialogWindow.setAttributes(params);
-
-        dialog4.show();
-
-
+            dialog4.show();
+        }
     }
 
     private String[] fuwas;
@@ -217,6 +233,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
     private PopupWindow popupWindow;
     private View dialog_view;
     private Double fuwa_price;
+    private Activity activity;
     private boolean zhifubao = true; //支付宝购买
     private String userid;
 
@@ -224,6 +241,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sellfuwa, container, false);
+        EventBus.getDefault().register(this);
         return view;
     }
 
@@ -237,6 +255,18 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         initData();
 
 
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        activity = null;
     }
 
     private void initData() {
@@ -256,9 +286,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                     } else {
                         showToast(fuwaSellEntity.getMessage(), false);
                     }
-
                 }
-
             }
 
             @Override
@@ -275,7 +303,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         resources = getResources();
         view.findViewById(R.id.ll_left).setOnClickListener(this);
         view.findViewById(R.id.ll_right).setOnClickListener(this);
-        api = WXAPIFactory.createWXAPI(getActivity(), resources.getString(R.string.weixin_app_id2));
+        api = WXAPIFactory.createWXAPI(getActivity(), resources.getString(R.string.weixin_app_id));
         tv_choose = (TextView) view.findViewById(R.id.tv_choose);
         tv_price = (TextView) view.findViewById(R.id.tv_price);
         img_choose = (ImageView) view.findViewById(R.id.img_choose);
@@ -373,7 +401,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                 public void onClick(View view) {
                     chooseFuwa = null;
                     dialog2.dismiss();
-                    datasChoose=new ArrayList<FuwaSellEntity.DataBean>();
+                    datasChoose = new ArrayList<FuwaSellEntity.DataBean>();
                     //筛选福娃
                     if (fuwaNum > 0) {   //选中1-66号福娃
 
@@ -482,23 +510,23 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
                 //如果选中了
                 long time2 = System.currentTimeMillis();
-                if(time2-time1>500L){
+                if (time2 - time1 > 500L) {
                     if (chooseFuwa != null) {
-                        if(dialog==null){
+                        if (dialog == null) {
 
                             showFuwaDialog(getActivity());
-                        }else if(!dialog.isShowing()) {
+                        } else if (!dialog.isShowing()) {
                             setContent();
                             dialog.show();
 
                         }
-                    }else{
-                        showToast("请选择福娃",false);
+                    } else {
+                        showToast("请选择福娃", false);
                     }
 
-                    time1=time2;
-                }else{
-                    ToastUtil.showShort(getContext(),"请不要点击太快");
+                    time1 = time2;
+                } else {
+                    ToastUtil.showShort(getContext(), "请不要点击太快");
                 }
 
 
@@ -506,8 +534,6 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         }
 
     }
-
-
 
 
     //弹第一个福娃dialog
@@ -535,20 +561,20 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onClick(View view) {
                 long timeEnd = System.currentTimeMillis();
-                if(timeEnd-timeStart>500L){
+                if (timeEnd - timeStart > 500L) {
 
-                    if(dialog3==null){
+                    if (dialog3 == null) {
 
                         showDialog();
-                    }else if(!dialog3.isShowing()){
+                    } else if (!dialog3.isShowing()) {
                         setContent2();
                         dialog3.show();
 
                     }
 
-                    timeStart=timeEnd;
-                }else {
-                    ToastUtil.showShort(getActivity(),"请不要点击太快");
+                    timeStart = timeEnd;
+                } else {
+                    ToastUtil.showShort(getActivity(), "请不要点击太快");
                 }
             }
         });
@@ -634,7 +660,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         int screenWidth = UIUtils.getScreenWidth(getActivity());
 
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv_buy.getLayoutParams();
-        layoutParams.width = (int) (screenWidth*0.9);
+        layoutParams.width = (int) (screenWidth * 0.9);
         tv_buy.setLayoutParams(layoutParams);
 
         dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
@@ -659,8 +685,9 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             Log.i("info", "=========0000000000");
             OrderWxRequest request = new OrderWxRequest(TAG,
                     "" + chooseFuwa.getOrderid(),
-                    "0.01",
+                    chooseFuwa.getAmount() + "",
                     chooseFuwa.getFuwagid());
+            showLoadingDialog();
             request.send(new BaseDataRequest.RequestCallback<PayWx>() {
                 @Override
                 public void onSuccess(PayWx pojo) {
@@ -678,9 +705,10 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
     private void bindDataWx(PayWx entity) {
         if (entity != null) {
+            cancelLoadingDialog();
             Log.i("info", "=========1111111111111");
             PayReq req = new PayReq();
-            req.appId = resources.getString(R.string.weixin_app_id2);
+            req.appId = resources.getString(R.string.weixin_app_id);
             req.partnerId = entity.getPartnerid();
             req.prepayId = entity.getPrepayid();
             req.packageValue = entity.getPackageValue();
@@ -689,7 +717,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
             req.sign = entity.getSign();
             // req.extData = "app data"; // optional
             // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
-            api.registerApp(resources.getString(R.string.weixin_app_id2));
+            api.registerApp(resources.getString(R.string.weixin_app_id));
             api.sendReq(req);
         }
     }
@@ -698,8 +726,9 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
         if (chooseFuwa != null) {
             OrderAlipayRequest request = new OrderAlipayRequest(TAG,
                     "" + chooseFuwa.getOrderid(),
-                    chooseFuwa.getAmount()+"",
+                    chooseFuwa.getAmount() + "",
                     chooseFuwa.getFuwagid());
+            showLoadingDialog();
             request.send(new BaseDataRequest.RequestCallback<AlipayOrder>() {
                 @Override
                 public void onSuccess(AlipayOrder pojo) {
@@ -716,6 +745,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
     private void bindDataAlipay(AlipayOrder order) {
         if (order != null) {
+            cancelLoadingDialog();
             /**
              * 这里只是为了方便直接向商户展示支付宝的整个支付流程；所以Demo中加签过程直接放在客户端完成；
              * 真实App里，privateKey等数据严禁放在客户端，加签过程务必要放在服务端完成；
@@ -804,5 +834,22 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 //                }
 //            });
 //        }
+    }
+
+    @Subscribe
+    public void onMessageEvent(PayState state) {
+        if (state != null) {
+            Log.i("info", "==============type:" + state.getType() + " state:" + state.getState());
+            Message msg = new Message();
+            msg.what = SDK_PAY_WX;
+            msg.obj = state;
+            handler.sendMessage(msg);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
