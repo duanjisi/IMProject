@@ -117,7 +117,6 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
                 new FuwaHideAddressAdapter.RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Log.i("position:", "" + position);
                         if (poiItems != null && position < poiItems.size()) {
                             PoiItem item = poiItems.get(position);
                             if (item != null) {
@@ -198,7 +197,6 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
-        Log.i("info", "==================onLocationChanged()");
         this.location = aMapLocation;
         if (aMapLocation != null) {
             area = aMapLocation.getDistrict();
