@@ -57,6 +57,7 @@ import im.boss66.com.entity.FuwaSellEntity;
 import im.boss66.com.entity.PayResult;
 import im.boss66.com.entity.PayState;
 import im.boss66.com.entity.PayWx;
+import im.boss66.com.event.RefreshFuwa;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.BaseModelRequest;
 import im.boss66.com.http.HttpUrl;
@@ -164,6 +165,7 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
     };
 
     private void refreshFuwa() {
+        EventBus.getDefault().post(new RefreshFuwa(""));
         if (dialog != null) {
             dialog.dismiss();   //福娃详情dialog
         }

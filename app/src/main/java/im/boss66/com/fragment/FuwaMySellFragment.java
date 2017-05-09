@@ -20,6 +20,8 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +31,7 @@ import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.adapter.FuwaMySellAdapter;
 import im.boss66.com.entity.FuwaSellEntity;
+import im.boss66.com.event.RefreshFuwa;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.RecycleViewItemListener;
 
@@ -71,12 +74,24 @@ public class FuwaMySellFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        EventBus.getDefault().register(this);
 
 
         initViews(view);
 
         initData();
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEvent(RefreshFuwa event){
+        initData();
     }
 
     private void initData() {

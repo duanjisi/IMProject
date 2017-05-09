@@ -787,6 +787,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             address = data.getStringExtra("address");
             geohash = data.getStringExtra("geohash");
             tv_address.setText("" + address);
+            if (mlocationClient != null) {
+                mlocationClient.stopLocation();
+            }
         } else if (requestCode == RECORD_VIDEO && resultCode == RESULT_OK) {
             // 录制视频完成
             try {
