@@ -16,9 +16,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.Utils.UrlUtils;
+import im.boss66.com.activity.connection.ClanClubActivity;
 import im.boss66.com.activity.connection.PeopleCenterActivity;
 import im.boss66.com.activity.connection.SchoolHometownActivity;
 import im.boss66.com.activity.discover.CirclePresenter;
@@ -119,14 +121,27 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
         holder.headIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
-                    Intent intent = new Intent(context, PeopleCenterActivity.class);
-                    intent.putExtra("other", true);
-                    intent.putExtra("name", entity.getUser_name());
-                    intent.putExtra("address", entity.getFeed_to());
-                    intent.putExtra("uid", entity.getUser_id());
-                    intent.putExtra("avatar", entity.getAvatar());
-                    ((SchoolHometownActivity) context).startActivityForResult(intent, 101);
+                String id = entity.getUser_id();
+                Intent intent = new Intent(context, PeopleCenterActivity.class);
+                intent.putExtra("other", true);
+                intent.putExtra("name", entity.getUser_name());
+                intent.putExtra("address", entity.getFeed_to());
+                intent.putExtra("uid", id);
+                intent.putExtra("avatar", entity.getAvatar());
+                intent.putExtra("nodetail",true);
+                if (!TextUtils.isEmpty(classType)) {
+                    if ("SchoolHometownActivity".equals(classType)) {
+                        ((SchoolHometownActivity) context).startActivityForResult(intent, 101);
+                    } else if ("ClanClubActivity".equals(classType)) {
+                        ((ClanClubActivity) context).startActivityForResult(intent, 101);
+                    }else if("PeopleCenterActivity".equals(classType)){
+                        List<String> uidList = App.getInstance().getUidList();
+                        if (uidList != null && !uidList.contains(id)){
+                            context.startActivity(intent);
+                        }
+                    }
+                }else {
+                    context.startActivity(intent);
                 }
             }
         });
@@ -178,10 +193,29 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
                     @Override
                     public void onClick(int position) {
                         String userId = praise_list.get(position).getUser_id();
-                        Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
-                        intent.putExtra("classType", "QureAccountActivity");
-                        intent.putExtra("userid", userId);
-                        context.startActivity(intent);
+
+//                        Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
+//                        intent.putExtra("classType", "QureAccountActivity");
+//                        intent.putExtra("userid", userId);
+//                        context.startActivity(intent);
+
+                        Intent intent = new Intent(context, PeopleCenterActivity.class);
+                        intent.putExtra("name", praise_list.get(position).getUser_name());
+                        intent.putExtra("other", true);
+                        intent.putExtra("uid", userId);
+                        intent.putExtra("nodetail",true);
+                        if (!TextUtils.isEmpty(classType)) {
+                            if ("SchoolHometownActivity".equals(classType)) {
+                                ((SchoolHometownActivity) context).startActivityForResult(intent, 101);
+                            } else if ("ClanClubActivity".equals(classType)) {
+                                ((ClanClubActivity) context).startActivityForResult(intent, 101);
+                            }else if("PeopleCenterActivity".equals(classType)){
+                                List<String> uidList = App.getInstance().getUidList();
+                                if (uidList != null && !uidList.contains(userId)){
+                                    context.startActivity(intent);
+                                }
+                            }
+                        }
                     }
                 });
                 holder.praiseListView.setDatas(praise_list);
@@ -225,6 +259,9 @@ public class CommunityListAdapter extends BaseRecycleViewAdapter {
                     }
                 });
                 holder.commentList.getCurLoginUserId(curUserid);
+                if (!TextUtils.isEmpty(classType)){
+                    holder.commentList.getClassType(classType);
+                }
                 holder.commentList.setDatas(comment_list);
                 holder.commentList.setVisibility(View.VISIBLE);
 

@@ -17,6 +17,7 @@ public class AccountEntity {
     private String district = "";
     private String district_str = "";
     private String cover_pic;
+    private String school = "";
 
     public String getCover_pic() {
         return cover_pic;
@@ -120,5 +121,13 @@ public class AccountEntity {
 
     public void setDistrict_str(String district_str) {
         this.district_str = district_str;
+    }
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
     }
 }

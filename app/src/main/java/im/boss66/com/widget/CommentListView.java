@@ -19,10 +19,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.CircleMovementMethod;
 import im.boss66.com.Utils.SpannableClickable;
 import im.boss66.com.Utils.UrlUtils;
+import im.boss66.com.activity.connection.ClanClubActivity;
+import im.boss66.com.activity.connection.PeopleCenterActivity;
+import im.boss66.com.activity.connection.SchoolHometownActivity;
 import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.entity.FriendCircleCommentEntity;
 
@@ -36,7 +40,7 @@ public class CommentListView extends LinearLayout {
     private OnItemLongClickListener onItemLongClickListener;
     private List<FriendCircleCommentEntity> mDatas;
     private LayoutInflater layoutInflater;
-    private String curUserId;
+    private String curUserId, classType;
 
     public OnItemClickListener getOnItemClickListener() {
         return onItemClickListener;
@@ -172,10 +176,33 @@ public class CommentListView extends LinearLayout {
         subjectSpanText.setSpan(new SpannableClickable(itemColor) {
                                     @Override
                                     public void onClick(View widget) {
-                                        Intent intent = new Intent(getContext(), PersonalNearbyDetailActivity.class);
-                                        intent.putExtra("classType", "QureAccountActivity");
-                                        intent.putExtra("userid", id);
-                                        getContext().startActivity(intent);
+                                        if (!TextUtils.isEmpty(classType) && "FriendCircleActivity".equals(classType)) {
+                                            Intent intent = new Intent(getContext(), PersonalNearbyDetailActivity.class);
+                                            intent.putExtra("classType", "QureAccountActivity");
+                                            intent.putExtra("userid", id);
+                                            getContext().startActivity(intent);
+                                            return;
+                                        }
+                                        Intent intent = new Intent(getContext(), PeopleCenterActivity.class);
+                                        intent.putExtra("name", textStr);
+                                        intent.putExtra("other", true);
+                                        intent.putExtra("uid", id);
+                                        intent.putExtra("nodetail", true);
+                                        List<String> uidList = App.getInstance().getUidList();
+                                        if (uidList != null && uidList.contains(id)) {
+                                            return;
+                                        }
+                                        if (!TextUtils.isEmpty(classType)) {
+                                            if ("SchoolHometownActivity".equals(classType)) {
+                                                ((SchoolHometownActivity) getContext()).startActivityForResult(intent, 101);
+                                            } else if ("ClanClubActivity".equals(classType)) {
+                                                ((ClanClubActivity) getContext()).startActivityForResult(intent, 101);
+                                            } else {
+                                                getContext().startActivity(intent);
+                                            }
+                                        } else {
+                                            getContext().startActivity(intent);
+                                        }
                                     }
                                 }, 0, subjectSpanText.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -192,6 +219,10 @@ public class CommentListView extends LinearLayout {
 
     public void getCurLoginUserId(String id) {
         this.curUserId = id;
+
     }
 
+    public void getClassType(String classType) {
+        this.classType = classType;
+    }
 }

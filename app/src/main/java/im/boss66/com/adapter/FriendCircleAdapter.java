@@ -215,6 +215,7 @@ public class FriendCircleAdapter extends BaseRecycleViewAdapter {
                     }
                 });
                 holder.commentList.getCurLoginUserId(curUserid);
+                holder.commentList.getClassType("FriendCircleActivity");
                 holder.commentList.setDatas(comment_list);
                 holder.commentList.setVisibility(View.VISIBLE);
 

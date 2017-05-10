@@ -8,8 +8,7 @@
         android:id="@+id/user_bg_icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/person" />
+        android:scaleType="centerCrop" />
 
     <View
         android:layout_width="match_parent"
@@ -76,23 +75,23 @@
         android:layout_marginTop="@dimen/dp_6">
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:visibility="gone" />
 
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/tv_name2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_address"
@@ -104,24 +103,24 @@
             android:textColor="@color/white" />
 
         <ImageView
-            android:visibility="gone"
             android:id="@+id/img_hasschool"
-            android:layout_toRightOf="@id/tv_address"
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/rightw_arrows" />
+            android:layout_toRightOf="@id/tv_address"
+            android:src="@drawable/rightw_arrows"
+            android:visibility="gone" />
 
         <ImageView
-            android:visibility="gone"
             android:id="@+id/img_noschool"
-            android:layout_toRightOf="@id/tv_name2"
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/rightw_arrows" />
+            android:layout_toRightOf="@id/tv_name2"
+            android:src="@drawable/rightw_arrows"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -129,10 +128,9 @@
         android:id="@+id/user_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:src="@drawable/person"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:scaleType="centerCrop" />
 
 
 </RelativeLayout>

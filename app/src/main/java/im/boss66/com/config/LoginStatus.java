@@ -46,6 +46,7 @@ public class LoginStatus {
     private String cover_pic;
     private static LoginStatus sLoginStatus;
     private SharedPreferences mPreferences;
+    private String school;
 
     private LoginStatus() {
         mPreferences = App.getInstance().getApplicationContext().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
@@ -74,6 +75,7 @@ public class LoginStatus {
         editor.putString(DISTRICT, account.getDistrict());
         editor.putString(DISTRICT_STR, account.getDistrict_str());
         editor.putString("cover_pic", account.getCover_pic());
+        editor.putString("school", account.getSchool());
         editor.apply();
     }
 
@@ -333,6 +335,16 @@ public class LoginStatus {
     public void setCover_pic(String cover_pic) {
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString("cover_pic", cover_pic);
+        editor.apply();
+    }
+
+    public String getSchool() {
+        return mPreferences.getString("school", "");
+    }
+
+    public void setSchool(String school) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString("school", school);
         editor.apply();
     }
 }
