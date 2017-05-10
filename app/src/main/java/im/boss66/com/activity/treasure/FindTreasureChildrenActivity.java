@@ -13,7 +13,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -356,6 +360,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         String detail = entity.getDetail();
         if (!TextUtils.isEmpty(detail)) {
             tvTips.setText(detail);
+            setHtmlEvent(tvTips);
         } else {
             tvTips.setText(resources.getString(R.string.no_act));
         }
@@ -408,6 +413,41 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         popupWindow.setBackgroundDrawable(getDrawableFromRes(R.drawable.bg_popwindow));
         if (!isFinishing()) {
             popupWindow.showAsDropDown(parent);
+        }
+    }
+
+
+    private void setHtmlEvent(TextView tv) {
+        CharSequence text = tv.getText();
+        if (text instanceof Spannable) {
+            int end = text.length();
+            Spannable sp = (Spannable) text;
+            URLSpan urls[] = sp.getSpans(0, end, URLSpan.class);
+            SpannableStringBuilder style = new SpannableStringBuilder(text);
+            style.clearSpans();
+            for (URLSpan urlSpan : urls) {
+                MyURLSpan myURLSpan = new MyURLSpan(urlSpan.getURL());
+                style.setSpan(myURLSpan, sp.getSpanStart(urlSpan),
+                        sp.getSpanEnd(urlSpan),
+                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
+            }
+            tv.setText(style);
+        }
+    }
+
+    private class MyURLSpan extends ClickableSpan {
+        private String url;
+
+        public MyURLSpan(String url) {
+            this.url = url;
+        }
+
+        @Override
+        public void onClick(View arg0) {
+            Intent intent = new Intent(context, WebDetailActivity.class);
+            intent.putExtra("url", url);
+            startActivity(intent);
         }
     }
 

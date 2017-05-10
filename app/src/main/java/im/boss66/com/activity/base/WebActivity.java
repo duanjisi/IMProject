@@ -2,6 +2,8 @@ package im.boss66.com.activity.base;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -16,7 +18,7 @@ import im.boss66.com.R;
  * Created by liw on 2017/3/7.
  */
 
-public abstract class WebBaseActivity extends ABaseActivity implements View.OnClickListener {
+public abstract class WebActivity extends ABaseActivity implements View.OnClickListener {
     protected WebView webview;
     protected String url;
     protected String title;
@@ -37,7 +39,7 @@ public abstract class WebBaseActivity extends ABaseActivity implements View.OnCl
 
         webview = (WebView) findViewById(R.id.wv_content);
         //设置WebView属性，能够执行Javascript脚本
-        webview.setWebViewClient(new WebBaseActivity.MyWebViewClient());
+        webview.setWebViewClient(new WebActivity.MyWebViewClient());
         //加载需要显示的网页
 
         webview.setWebChromeClient(new WebChromeClient() {
@@ -53,6 +55,15 @@ public abstract class WebBaseActivity extends ABaseActivity implements View.OnCl
                     progressBar.setProgress(newProgress);//设置加载进度
                 }
             }
+
+            @Override
+            public void onReceivedTitle(WebView view, String string) {
+                super.onReceivedTitle(view, string);
+                if (!TextUtils.isEmpty(string)) {
+                    tv_headcenter_view.setText(string);
+                    Log.i("info", "==============onReceivedTitle:" + string);
+                }
+            }
         });
         //设置Web视图
         webview.getSettings().setJavaScriptEnabled(true);
@@ -62,6 +73,7 @@ public abstract class WebBaseActivity extends ABaseActivity implements View.OnCl
 
     protected abstract void setTitleUrl();
 
+    protected abstract void onBack();
 
     //Web视图
     private class MyWebViewClient extends WebViewClient {
@@ -86,8 +98,7 @@ public abstract class WebBaseActivity extends ABaseActivity implements View.OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_headlift_view:
-
-                finish();
+                onBack();
                 break;
         }
     }

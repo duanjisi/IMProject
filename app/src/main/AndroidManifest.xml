@@ -171,6 +171,9 @@
         <activity
             android:name=".activity.treasure.FindTreasureChildrenActivity"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.treasure.WebDetailActivity"
+            android:screenOrientation="portrait"></activity>
         <!--福娃首页-->
         <activity
             android:name=".activity.treasure.MainTreasureActivity"
@@ -514,10 +517,12 @@
         <!--家乡和校园动态-->
         <activity android:name=".activity.connection.NewsActivity"></activity>
         <!--福娃背包-->
-        <activity android:name=".activity.treasure.FuwaPackageActivity"
+        <activity
+            android:name=".activity.treasure.FuwaPackageActivity"
             android:screenOrientation="portrait"></activity>
         <!--福娃交易-->
-        <activity android:name=".activity.treasure.FuwaDealActivity"
+        <activity
+            android:name=".activity.treasure.FuwaDealActivity"
             android:screenOrientation="portrait"></activity>
         <!--福娃排行榜-->
         <activity android:name=".activity.treasure.FuwaTopList"></activity>
@@ -528,8 +533,8 @@
         <!--申请福娃-->
         <activity
             android:name=".activity.treasure.ApplyFuwaActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
         <!--申请创建-->
         <activity
             android:name=".activity.connection.ApplyCreateActivity"
