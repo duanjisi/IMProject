@@ -24,6 +24,9 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
     private String id;
     private String user_id; //创建人的uid
     private String uid;
+    private String desc;
+    private String contact;
+    private String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,9 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
             id = intent.getStringExtra("id");
             title= intent.getStringExtra("name");
             isClan = intent.getBooleanExtra("isClan", false);
+            desc = intent.getStringExtra("desc");
+            contact = intent.getStringExtra("contact");
+            address = intent.getStringExtra("address");
             if(isClan){
                 url = HttpUrl.CLAN_DETAIL + "?id=" + id;
             }else {
@@ -104,6 +110,9 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
                 Intent intent = new Intent(this, EditClanCofcActivity.class);
                 intent.putExtra("isClan",isClan);
                 intent.putExtra("id",id);
+                intent.putExtra("desc",desc);
+                intent.putExtra("contact",contact);
+                intent.putExtra("address",address);
                 startActivity(intent);
                 break;
         }

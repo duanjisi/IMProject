@@ -40,6 +40,7 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
     private String access_token;
     private Handler handler = new Handler() {
     };
+    private String content;
 
 
     @Override
@@ -52,7 +53,7 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
             type = intent.getStringExtra("type");
             isClan = intent.getBooleanExtra("isClan", false);
             id = intent.getStringExtra("id");
-
+            content = intent.getStringExtra("content");
         }
 
         initViews();
@@ -66,7 +67,13 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
         findViewById(R.id.tv_ok).setOnClickListener(this);
         tv_num = (TextView) findViewById(R.id.tv_num);
 
+
         et_content = (EditText) findViewById(R.id.et_content);
+        if (content != null && content.length() > 0) {
+            et_content.setText(content);
+            et_content.setSelection(et_content.length());
+            tv_num.setText("还可输入" + (50 - et_content.length()) + "字");
+        }
         switch (type) {
             case "rl_info":
                 et_content.setMaxEms(100000);
@@ -146,8 +153,8 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
         }
         switch (type) {
             case "rl_info":
-                String s = content.replaceAll("\n", "<br>");
-                params.addBodyParameter("desc", s);
+//                String s = content.replaceAll("\n", "<br>");
+                params.addBodyParameter("desc", content);
                 break;
             case "rl_location":
                 params.addBodyParameter("address", content);
