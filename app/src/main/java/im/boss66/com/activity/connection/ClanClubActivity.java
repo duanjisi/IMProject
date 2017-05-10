@@ -331,6 +331,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
         rcv_news.setLayoutManager(layoutManager);
 
         adapter = new CommunityListAdapter(this);
+        adapter.getClassType("ClanClubActivity");
         // 回调接口和adapter设置
         presenter = new CirclePresenter(this);
         AccountEntity sAccount = App.getInstance().getAccount();

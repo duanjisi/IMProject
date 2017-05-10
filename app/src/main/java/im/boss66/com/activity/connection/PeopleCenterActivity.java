@@ -74,12 +74,14 @@ import im.boss66.com.entity.FriendCircleEntity;
 import im.boss66.com.entity.FriendCircleItem;
 import im.boss66.com.entity.FriendCirclePraiseEntity;
 import im.boss66.com.entity.FriendState;
+import im.boss66.com.entity.PersonEntity;
 import im.boss66.com.entity.UserInfoEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.AddFriendRequest;
 import im.boss66.com.http.request.CommunityCreateCommentRequest;
 import im.boss66.com.http.request.FriendShipRequest;
+import im.boss66.com.http.request.PersonInformRequest;
 import im.boss66.com.listener.CircleContractListener;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.ActionSheet;
@@ -131,7 +133,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
     private int page = 0;
     private boolean isOnRefresh = false;
     private List<FriendCircle> allList;
-
+    private boolean nodetail;
 
     private Handler handler = new Handler() {
         @Override
@@ -183,13 +185,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people_center);
         initViews();
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        initData();
+        //initData();
     }
 
     private void initData() {
@@ -303,9 +304,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 address = intent.getStringExtra("address");
                 avatar = intent.getStringExtra("avatar");
                 other = intent.getBooleanExtra("other", false);
-
+                nodetail = intent.getBooleanExtra("nodetail", false);
                 bt_add.setVisibility(View.VISIBLE);
                 rl_msg.setVisibility(View.GONE);
+                if (nodetail) {
+                    getUserInfo();
+                }
                 requestFriendShip();
                 getNoreadMsg();
             } else {
@@ -327,35 +331,19 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
             CuiUid = sAccount.getUser_id();
             avatar = sAccount.getAvatar();
             name = sAccount.getUser_name();
+            address = sAccount.getDistrict_str() + sAccount.getSchool();
         }
-
+        App.getInstance().addUidToList(CuiUid,true);
+        tv_name.setVisibility(View.VISIBLE);
+        tv_name.setText(name);
         if (!TextUtils.isEmpty(address)) {
             tv_address.setText(address);
         }
-        imageLoader.displayImage(avatar, user_head, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {
-
-            }
-
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-
-            }
-
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                user_bg_icon.setImageBitmap(bitmap);
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-
-            }
-        });
+        showHead();
         // 回调接口和adapter设置
         presenter = new CirclePresenter(this);
         adapter = new CommunityListAdapter(this);
+        adapter.getClassType("PeopleCenterActivity");
         adapter.getCurUserId(curLoginUid);
         adapter.setCirclePresenter(presenter);
         mLRecyclerViewAdapter = new LRecyclerViewAdapter(adapter);
@@ -441,6 +429,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 if (isChange) {
                     setResult(RESULT_OK);
                 }
+                App.getInstance().addUidToList(CuiUid,false);
                 finish();
                 break;
             case R.id.bt_close://删除朋友圈item
@@ -527,7 +516,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);
-        Log.i("getCommunityList",url);
+        Log.i("getCommunityList", url);
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -964,6 +953,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                 return true;
             }
             setResult(RESULT_OK);
+            App.getInstance().addUidToList(CuiUid,false);
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -1060,6 +1050,53 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
                     cancelLoadingDialog();
                     showToast(s, false);
                 }
+            }
+        });
+    }
+
+    private void getUserInfo() {
+        if (!CuiUid.equals("")) {
+            PersonInformRequest request = new PersonInformRequest(TAG, CuiUid);
+            request.send(new BaseDataRequest.RequestCallback<PersonEntity>() {
+                @Override
+                public void onSuccess(PersonEntity pojo) {
+                    if (pojo != null) {
+                        avatar = pojo.getAvatar();
+                        String a_s = pojo.getDistrict_str();
+                        String s_c = pojo.getSchool();
+                        tv_address.setText(a_s + s_c);
+                        showHead();
+                    }
+                }
+
+                @Override
+                public void onFailure(String msg) {
+                    showToast(msg, true);
+                }
+            });
+        }
+    }
+
+    private void showHead() {
+        imageLoader.displayImage(avatar, user_head, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                user_bg_icon.setImageBitmap(bitmap);
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+
             }
         });
     }

@@ -17,6 +17,7 @@ public class PersonEntity {
     private String district = "";
     private String district_str = "";
 
+    private String school = "";
     private List<String> photos;
 
     public String getUser_id() {
@@ -97,5 +98,12 @@ public class PersonEntity {
 
     public void setPhotos(List<String> photos) {
         this.photos = photos;
+    }
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
     }
 }

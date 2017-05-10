@@ -69,6 +69,8 @@ public class App extends Application {
     private static int sMaxVolume;
     private static double dVolume;
 
+    private List<String> uidList;
+
     private LocalAddressEntity.SecondChild loacalAddress;
 
     public synchronized static App getInstance() {
@@ -357,6 +359,7 @@ public class App extends Application {
         sAccount.setDistrict(loginStatus.getDistrict());
         sAccount.setDistrict_str(loginStatus.getDistrict_str());
         sAccount.setCover_pic(loginStatus.getCoverPic());
+        sAccount.setSchool(loginStatus.getSchool());
         return sAccount;
     }
 
@@ -555,5 +558,20 @@ public class App extends Application {
 
     public void setThirdLogin(Context context, boolean thirdLogin) {
         PreferenceUtils.putBoolean(context, "isThirdLogin", thirdLogin);
+    }
+
+    public void addUidToList(String uid,boolean isAdd){
+        if (uidList == null){
+            uidList = new ArrayList<>();
+        }
+        if (isAdd){
+            uidList.add(uid);
+        }else if(uidList.contains(uid)){
+            uidList.remove(uid);
+        }
+    }
+
+    public List<String> getUidList() {
+        return uidList;
     }
 }
