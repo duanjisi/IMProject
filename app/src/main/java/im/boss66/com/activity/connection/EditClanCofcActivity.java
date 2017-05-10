@@ -23,6 +23,10 @@ public class EditClanCofcActivity extends ABaseActivity implements View.OnClickL
     private String id;
     private ImageView img_logo;
 
+    private String desc;
+    private String contact;
+    private String address;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,10 @@ public class EditClanCofcActivity extends ABaseActivity implements View.OnClickL
         if (intent != null) {
             isClan = intent.getBooleanExtra("isClan", false);
             id = intent.getStringExtra("id");
+
+            desc = intent.getStringExtra("desc");
+            contact = intent.getStringExtra("contact");
+            address = intent.getStringExtra("address");
         }
         initViews();
 
@@ -69,6 +77,7 @@ public class EditClanCofcActivity extends ABaseActivity implements View.OnClickL
                 intent.putExtra("type","rl_info");
                 intent.putExtra("isClan",isClan);
                 intent.putExtra("id",id);
+                intent.putExtra("content",desc);
                 startActivity(intent);
                 break;
             case R.id.rl_location:
@@ -76,6 +85,7 @@ public class EditClanCofcActivity extends ABaseActivity implements View.OnClickL
                 intent.putExtra("type","rl_location");
                 intent.putExtra("isClan",isClan);
                 intent.putExtra("id",id);
+                intent.putExtra("content",address);
                 startActivity(intent);
                 break;
             case R.id.rl_phone:
@@ -83,6 +93,7 @@ public class EditClanCofcActivity extends ABaseActivity implements View.OnClickL
                 intent.putExtra("type","rl_phone");
                 intent.putExtra("isClan",isClan);
                 intent.putExtra("id",id);
+                intent.putExtra("content",contact);
                 startActivity(intent);
                 break;
 

@@ -1,6 +1,7 @@
 package im.boss66.com.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
+import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.entity.MyFollow;
 import im.boss66.com.entity.SchoolmateListEntity;
@@ -165,6 +167,15 @@ public class RecommendAdapter extends BaseRecycleViewAdapter {
                 holder1.tv_add_follow.setTextColor(Color.GRAY);
 
             }
+            holder1.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, PersonalNearbyDetailActivity.class);
+                    intent.putExtra("classType", "PhoneContactsActivity");
+                    intent.putExtra("userid", item.getUser_id());
+                    context.startActivity(intent);
+                }
+            });
 
         }
 
