@@ -63,8 +63,9 @@ public class FuwaAddressSearchActivity extends BaseActivity implements View.OnCl
                     showToast("街道门牌信息", false);
                     return;
                 }
+                String address = name + "("+detail+")";
                 Intent intent = new Intent();
-                intent.putExtra("address", name);
+                intent.putExtra("address", address);
                 intent.putExtra("geohash", curGeohash);
                 setResult(RESULT_OK, intent);
                 finish();
