@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.event.CreateSuccess;
 import im.boss66.com.event.EditWeb;
@@ -130,7 +131,11 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
             case R.id.tv_ok:
 
                 String content = et_content.getText().toString();
-                updateData(content);
+                if(content.length()>0){
+                    updateData(content);
+                }else{
+                    ToastUtil.showShort(context,"请填写内容");
+                }
                 break;
         }
     }

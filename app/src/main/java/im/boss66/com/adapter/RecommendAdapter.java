@@ -137,8 +137,6 @@ public class RecommendAdapter extends BaseRecycleViewAdapter {
                 holder1.tv_add_follow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (isFirst) {
-                            isFirst = false;
                             AddFriendRequest request = new AddFriendRequest(TAG, item.getUser_id(), "");
                             request.send(new BaseDataRequest.RequestCallback<String>() {
                                 @Override
@@ -154,10 +152,6 @@ public class RecommendAdapter extends BaseRecycleViewAdapter {
                                     Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
                                 }
                             });
-                        } else {
-                            ToastUtil.showShort(context, "请不要重复添加");
-                        }
-
                     }
                 });
             }else{
