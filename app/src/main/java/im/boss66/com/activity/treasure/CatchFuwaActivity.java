@@ -153,7 +153,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private String fuwaUserId;
     private ChildEntity currentChild;
     private String videoUrl, videoBgUrl = "";
-    private boolean isFriend;
+    private boolean isFriend, isDialogShow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -561,6 +561,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         super.onDestroy();
         iv_success = null;
         releaseCamera();
+        if (dialog != null) {
+            dialog.dismiss();
+        }
     }
 
     private void getPermission() {
@@ -773,8 +776,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialogInterface) {
-                    Log.i("onDismiss:", "onDismiss");
-                    finish();
+                    if (!isDialogShow){
+                        finish();
+                    }
                 }
             });
             AccountEntity sAccount = App.getInstance().getAccount();
@@ -848,7 +852,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         iv_success.setVisibility(View.VISIBLE);
         Glide.with(this)
                 .load(R.drawable.fuwa_catch_succ)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .listener(new RequestListener<Integer, GlideDrawable>() {
 
                     @Override
@@ -895,6 +899,10 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        if (isDialogShow && dialog != null) {
+            isDialogShow = false;
+            dialog.show();
+        }
     }
 
     @Override
@@ -951,4 +959,15 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             });
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+            isDialogShow = true;
+        }
+    }
+
+
 }

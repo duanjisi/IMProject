@@ -91,6 +91,9 @@ public class VideoListActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 mImageResizer.setPauseWork(true);
+                if (position >= mList.size()) {
+                    return;
+                }
                 VideoEntity vEntty = mList.get(position);
                 Log.i("pos:", "" + position);
                 if (vEntty != null) {
@@ -209,12 +212,12 @@ public class VideoListActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return mList.size() + 1;
+            return mList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return (position == 0) ? null : mList.get(position - 1);
+            return (position == 0) ? null : mList.get(position);
         }
 
         @Override
