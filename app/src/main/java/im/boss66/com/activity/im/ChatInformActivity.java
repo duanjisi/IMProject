@@ -21,6 +21,7 @@ import im.boss66.com.Utils.PrefKey;
 import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.book.SelectContactsActivity;
+import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.db.MessageDB;
 import im.boss66.com.db.dao.ConversationHelper;
 import im.boss66.com.widget.EaseSwitchButton;
@@ -63,6 +64,7 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
         rl_complain = (RelativeLayout) findViewById(R.id.rl_bottom);
 
         tvBack.setOnClickListener(this);
+        ivIcon.setOnClickListener(this);
         rl_chat_file.setOnClickListener(this);
         rl_chat_bg.setOnClickListener(this);
         rl_chat_records.setOnClickListener(this);
@@ -125,7 +127,12 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
             case R.id.rl_chat_clear://清空聊天记录
                 showClearRecordsDialog();
                 break;
-
+            case R.id.iv_icon://投诉
+                Intent it = new Intent(context, PersonalNearbyDetailActivity.class);
+//                intent.putExtra("classType", "ContactBooksFragment");
+                it.putExtra("userid", uid);
+                startActivity(it);
+                break;
             case R.id.rl_bottom://投诉
 
                 break;
