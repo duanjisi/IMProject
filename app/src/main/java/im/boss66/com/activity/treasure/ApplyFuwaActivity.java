@@ -2,6 +2,7 @@ package im.boss66.com.activity.treasure;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -96,7 +97,6 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-                    tv_submit.setClickable(true);
                     dialog2.dismiss();
                     showToast("提交成功",false);
                     handler.postDelayed(new Runnable() {
@@ -242,7 +242,6 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
                         &&chooseLocation){
 
                     Log.i("liwya","-----");
-                    tv_submit.setClickable(false);
                     applyFuwa();
                 }else{
                     showToast("请完善资料",false);
@@ -276,7 +275,7 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void applyFuwa() {
-
+        showLoadingDialog();
         String url = HttpUrl.APPLY_FUWA +"?userid="+ App.getInstance().getUid()
                 +"&name="+et_name.getText().toString()+"&phone="+et_phone.getText().toString()
                 +"&shop="+applyType+"&purpose="+et_use.getText().toString()+"&region="+mCurrentProviceName+""+mCurrentCityName
@@ -286,6 +285,7 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
                 String res = responseInfo.result;
                 try {
                     JSONObject jsonObject = new JSONObject(res);
@@ -301,6 +301,7 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
                 Log.i("onFailure", s);
                 showToast(e.getMessage(),false);
             }
