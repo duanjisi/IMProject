@@ -295,6 +295,7 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
                         showToast("申请失败",false);
                     }
                 } catch (JSONException e) {
+                    showToast("申请失败",false);
                     e.printStackTrace();
                 }
             }
