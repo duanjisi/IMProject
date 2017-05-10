@@ -132,8 +132,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center_horizontal"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/person" />
+                    android:scaleType="centerCrop" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -150,7 +149,6 @@
                         android:ellipsize="end"
                         android:maxEms="8"
                         android:maxLines="1"
-                        android:text="ddddddd收拾收拾是是是"
                         android:textColor="@color/red_fuwa"
                         android:textSize="14sp" />
 
@@ -162,7 +160,6 @@
                         android:ellipsize="end"
                         android:maxEms="8"
                         android:maxLines="1"
-                        android:text="ddddddd收拾收拾是是是"
                         android:textColor="@color/text_color_gray_9"
                         android:textSize="14sp" />
 

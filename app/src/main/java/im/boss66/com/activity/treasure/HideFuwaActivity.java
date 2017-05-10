@@ -164,6 +164,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private ImageView iv_bg;
     private Camera.Parameters parameters;
     private String curCity;
+    private boolean isDialogShow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -317,6 +318,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (dialogRecommond != null) {
+            dialogRecommond.dismiss();
+        }
+
         releaseCamera();
         if (mlocationClient != null) {
             mlocationClient.stopLocation();
@@ -822,6 +827,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
+        if (isDialogShow && dialogRecommond != null) {
+            dialogRecommond.show();
+            isDialogShow = false;
+        }
         if (isJump) {
             tv_change_place.setVisibility(View.INVISIBLE);
             tv_bottom.setVisibility(View.VISIBLE);
@@ -1064,4 +1073,12 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (dialogRecommond != null && dialogRecommond.isShowing()) {
+            dialogRecommond.dismiss();
+            isDialogShow = true;
+        }
+    }
 }
