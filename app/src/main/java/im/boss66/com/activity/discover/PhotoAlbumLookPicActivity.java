@@ -217,7 +217,7 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
                 bundle1.putString("feedId", feedId);
                 bundle1.putString("classType", "PhotoAlbumLookPicActivity");
                 bundle1.putSerializable("data", friendCircle);
-                openActvityForResult(PhotoAlbumDetailActivity.class, 102, bundle1);
+                openActvityForResult(PhotoAlbumDetailActivity.class, 401, bundle1);
                 break;
         }
     }
@@ -666,6 +666,9 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101 && resultCode == RESULT_OK) {
             getServerCommentList();
+        } else if (requestCode == 401 && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
         }
     }
 

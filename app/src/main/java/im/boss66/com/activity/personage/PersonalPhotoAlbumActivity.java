@@ -100,7 +100,7 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
     private final int RECORD_VIDEO = 3;//视频
     private PermissionListener permissionListener;
     private int cameraType;//1:相机 2：相册 3：视频
-    private int SEND_TYPE_PHOTO_TX = 101;
+    private int SEND_TYPE_PHOTO_TX = 102;
     private boolean isAddNew = false;
     private String requestUserId;
     private boolean isSelt = false;
@@ -199,13 +199,13 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                                         }
                                         if (isJumpLookPic) {
                                             bundle.putInt("feedId", item.getFeed_id());
-                                            openActvityForResult(PhotoAlbumLookPicActivity.class, 101, bundle);
+                                            openActvityForResult(PhotoAlbumLookPicActivity.class, SEND_TYPE_PHOTO_TX, bundle);
                                         } else {
                                             String username = sAccount.getUser_name();
                                             if (!TextUtils.isEmpty(username)) {
                                                 bundle.putString("username", username);
                                                 bundle.putInt("feedId", item.getFeed_id());
-                                                openActvityForResult(PhotoAlbumDetailActivity.class, 101, bundle);
+                                                openActvityForResult(PhotoAlbumDetailActivity.class, SEND_TYPE_PHOTO_TX, bundle);
                                             }
                                         }
                                     }
@@ -220,6 +220,7 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                     }
                 }));
         rv_friend.setAdapter(mLRecyclerViewAdapter);
+        rv_friend.refreshComplete(20);
         iv_bg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -411,11 +412,9 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", access_token);
         if (isAddNew) {
-            int allsize = (page + 1) * 20;
-            url = url + "?page=" + 0 + "&size=" + allsize;
-        } else {
-            url = url + "?page=" + page + "&size=" + 20;
+            page = 0;
         }
+        url = url + "?page=" + page + "&size=" + 20;
         if (!TextUtils.isEmpty(requestUserId)) {
             url = url + "&user_id=" + requestUserId;
         }
@@ -438,10 +437,12 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                                     showData(list);
                                 }
                             } else {
+                                rv_friend.setNoMore(true);
                                 showToast(data.getMessage(), false);
                             }
                         }
                     } else {
+                        rv_friend.setNoMore(true);
                         showToast("没有更多数据了", false);
                     }
                 }
@@ -454,6 +455,7 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                     goLogin();
                 } else {
                     cancelLoadingDialog();
+                    rv_friend.setNoMore(true);
                     showToast("获取数据失败", false);
                 }
             }
@@ -467,10 +469,16 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
     }
 
     private void showData(List<FriendCircle> list) {
-        isAddNew = false;
+        if (isAddNew) {
+            isAddNew = false;
+            if (allList != null && allList.size() > 0) {
+                allList.clear();
+            }
+        }
         int size = list.size();
         if (size == 20) {
             page++;
+            rv_friend.setNoMore(false);
         } else if (size < 20) {
             rv_friend.setNoMore(true);
         }
