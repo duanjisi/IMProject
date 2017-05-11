@@ -120,7 +120,6 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
             access_token = sAccount.getAccess_token();
         }
         imageLoader = ImageLoaderUtils.createImageLoader(this);
-        tv_signature = (TextView) findViewById(R.id.tv_signature);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_back = (TextView) findViewById(R.id.tv_back);
         iv_set = (ImageView) findViewById(R.id.iv_set);
@@ -243,6 +242,8 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
             isSelt = bundle.getBoolean("isSelt");
             if (isSelt) {
                 ll_personal.setVisibility(View.VISIBLE);
+                tv_name.setText(""+sAccount.getUser_name());
+                tv_signature.setText(""+sAccount.getSignature());
             } else {
                 requestUserId = bundle.getString("user_id");
                 String per_name = bundle.getString("person_name");
