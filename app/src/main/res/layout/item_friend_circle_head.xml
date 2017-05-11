@@ -32,8 +32,12 @@
                 android:layout_marginTop="18dp"
                 android:ellipsize="end"
                 android:gravity="right"
+                android:shadowColor="#FF000000"
+                android:shadowDx="5"
+                android:shadowDy="5"
+                android:shadowRadius="3"
+                android:textColor="#FFF"
                 android:maxLines="1"
-                android:textColor="@color/white"
                 android:textSize="16.5sp" />
 
             <ImageView
@@ -45,6 +49,19 @@
         </LinearLayout>
 
     </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_signature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:paddingBottom="@dimen/dp_18"
+        android:paddingLeft="@dimen/dp_18"
+        android:paddingRight="9dp"
+        android:paddingTop="8dp"
+        android:textColor="@color/grey"
+        android:textSize="18sp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/ll_new"
@@ -86,19 +103,6 @@
         android:layout_height="1dp"
         android:layout_marginTop="14dp"
         android:background="@color/alertdialog_line"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/tv_signature"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="@dimen/dp_18"
-        android:paddingLeft="@dimen/dp_18"
-        android:paddingRight="9dp"
-        android:paddingTop="8dp"
-        android:textColor="@color/grey"
-        android:textSize="18sp"
         android:visibility="gone" />
 
     <LinearLayout
