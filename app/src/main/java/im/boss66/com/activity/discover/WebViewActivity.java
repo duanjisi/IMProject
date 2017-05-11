@@ -58,7 +58,7 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_back.setOnClickListener(this);
         webview = (WebView) findViewById(R.id.wv_content);
-        tv_title.setText("老板六六无线端官网");
+        //tv_title.setText("老板六六无线端官网");
         //设置WebView属性，能够执行Javascript脚本
         webview.setWebViewClient(new MyWebViewClient());
         //加载需要显示的网页
@@ -83,6 +83,8 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webview.canGoBack()) {
             webview.goBack(); //goBack()表示返回WebView的上一页面
             return true;
+        } else {
+            finish();
         }
         return false;
 
@@ -105,11 +107,17 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             String title = view.getTitle();
-            if (!TextUtils.isEmpty(title)&&"老板六六无线端官网".equals(title)){
+            if (!TextUtils.isEmpty(title)) {
                 rl_top_bar.setVisibility(View.VISIBLE);
-            }else {
+                tv_title.setText(title);
+            } else {
                 rl_top_bar.setVisibility(View.GONE);
             }
+//            if (!TextUtils.isEmpty(title)&&"老板六六无线端官网".equals(title)){
+//                rl_top_bar.setVisibility(View.VISIBLE);
+//            }else {
+//                rl_top_bar.setVisibility(View.GONE);
+//            }
             Log.i("title", title);
         }
     }
