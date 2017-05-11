@@ -346,20 +346,22 @@ public class App extends Application {
         }
         LoginStatus loginStatus = LoginStatus.getInstance();
         sAccount = new AccountEntity();
-        sAccount.setUser_name(loginStatus.getUser_name());
-        sAccount.setUser_id(loginStatus.getUser_id());
-        sAccount.setAccess_token(loginStatus.getToken());
-        sAccount.setLastlogin_time(loginStatus.getLastTime());
-        sAccount.setMobile_phone(loginStatus.getMobilePhone());
-        sAccount.setAvatar(loginStatus.getAvatar());
-        sAccount.setSex(loginStatus.getSex());
-        sAccount.setSignature(loginStatus.getSignature());
-        sAccount.setProvince(loginStatus.getProvince());
-        sAccount.setCity(loginStatus.getCity());
-        sAccount.setDistrict(loginStatus.getDistrict());
-        sAccount.setDistrict_str(loginStatus.getDistrict_str());
-        sAccount.setCover_pic(loginStatus.getCoverPic());
-        sAccount.setSchool(loginStatus.getSchool());
+        if (sAccount != null){
+            sAccount.setUser_name(loginStatus.getUser_name());
+            sAccount.setUser_id(loginStatus.getUser_id());
+            sAccount.setAccess_token(loginStatus.getToken());
+            sAccount.setLastlogin_time(loginStatus.getLastTime());
+            sAccount.setMobile_phone(loginStatus.getMobilePhone());
+            sAccount.setAvatar(loginStatus.getAvatar());
+            sAccount.setSex(loginStatus.getSex());
+            sAccount.setSignature(loginStatus.getSignature());
+            sAccount.setProvince(loginStatus.getProvince());
+            sAccount.setCity(loginStatus.getCity());
+            sAccount.setDistrict(loginStatus.getDistrict());
+            sAccount.setDistrict_str(loginStatus.getDistrict_str());
+            sAccount.setCover_pic(loginStatus.getCoverPic());
+            sAccount.setSchool(loginStatus.getSchool());
+        }
         return sAccount;
     }
 
