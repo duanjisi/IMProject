@@ -112,9 +112,7 @@ import im.boss66.com.widget.scan.CameraPreview;
  */
 public class CatchFuwaActivity extends BaseActivity implements View.OnClickListener, SensorEventListener,
         SharePopup.OnItemSelectedListener {
-
     private final static String TAG = HideFuwaActivity.class.getSimpleName();
-
     private SharePopup sharePopup;
     private LinearLayout ll_thread;
     private ImageView iv_click, iv_thread, iv_thread_bg;

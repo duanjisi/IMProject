@@ -129,7 +129,7 @@ public class ChatInformActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.iv_icon://投诉
                 Intent it = new Intent(context, PersonalNearbyDetailActivity.class);
-//                intent.putExtra("classType", "ContactBooksFragment");
+                it.putExtra("classType", "ChatInformActivity");
                 it.putExtra("userid", uid);
                 startActivity(it);
                 break;

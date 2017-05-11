@@ -231,6 +231,8 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                 tv_source.setText("附近的人");
             } else if ("PhoneContactsActivity".equals(classType)) {
                 tv_source.setText("手机联系人");
+            } else if ("ChatInformActivity".equals(classType)) {
+                tv_source.setText("聊天信息");
             } else {
                 tv_source.setText("来源于~");
             }
