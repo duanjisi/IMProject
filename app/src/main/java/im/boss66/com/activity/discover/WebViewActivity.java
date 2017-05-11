@@ -111,7 +111,8 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
                 rl_top_bar.setVisibility(View.VISIBLE);
                 tv_title.setText(title);
             } else {
-                rl_top_bar.setVisibility(View.GONE);
+                tv_title.setText("");
+                //rl_top_bar.setVisibility(View.GONE);
             }
 //            if (!TextUtils.isEmpty(title)&&"老板六六无线端官网".equals(title)){
 //                rl_top_bar.setVisibility(View.VISIBLE);
