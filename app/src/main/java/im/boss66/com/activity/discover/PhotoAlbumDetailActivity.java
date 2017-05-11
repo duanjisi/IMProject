@@ -238,7 +238,7 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
     private void showSigleTxData(FriendCircle item) {
         String curDetailUid = item.getFeed_uid();
         if (!TextUtils.isEmpty(curDetailUid) && !TextUtils.isEmpty(userId)) {
-            if (userId.equals(curDetailUid)) {
+            if (curDetailUid.contains(userId)) {
                 tv_delete.setVisibility(View.VISIBLE);
             } else {
                 tv_delete.setVisibility(View.GONE);
@@ -542,6 +542,8 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                             } else {
                                 if (code == 1) {
                                     showToast("删除成功", false);
+                                    setResult(RESULT_OK);
+                                    finish();
                                 } else {
                                     showToast(msg, false);
                                 }
@@ -881,6 +883,8 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                             } else {
                                 if (code == 1) {
                                     showToast("删除成功", false);
+                                    setResult(RESULT_OK);
+                                    finish();
                                 } else {
                                     showToast(msg, false);
                                 }

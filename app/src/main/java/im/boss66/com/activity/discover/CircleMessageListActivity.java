@@ -94,7 +94,7 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
                         Bundle bundle = new Bundle();
                         bundle.putInt("feedId", item.getFeed_id());
                         bundle.putString("classType", classType);
-                        openActivity(PhotoAlbumDetailActivity.class, bundle);
+                        openActvityForResult(PhotoAlbumDetailActivity.class, 401, bundle);
                     }
 
                     @Override
@@ -171,6 +171,9 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
     }
 
     private void showData(List<CircleMsgListEntity.CircleMsgItem> list) {
+        if (page == 0 && allList != null && allList.size() > 0) {
+            allList.clear();
+        }
         if (allList == null) {
             allList = new ArrayList<>();
         }
@@ -348,5 +351,18 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
         Intent intent = new Intent();
         intent.setAction(Constants.ACTION_LOGOUT_RESETING);
         App.getInstance().sendBroadcast(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 401 && resultCode == RESULT_OK) {
+            page = 0;
+            if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
+                getcommunityServerData();
+            } else {
+                getServerData();
+            }
+        }
     }
 }

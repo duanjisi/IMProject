@@ -64,11 +64,11 @@ public class SearchLookMoreActivity extends BaseActivity implements View.OnClick
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (type == 1) {
                     SearchCofriendEntity item = (SearchCofriendEntity) adapterView.getItemAtPosition(i);
-                    Intent intent = new Intent(context, PhotoAlbumDetailActivity.class);
                     try {
                         int feed = Integer.parseInt(item.getFeed_id());
-                        intent.putExtra("feedId", feed);
-                        startActivity(intent);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("feedId", feed);
+                        openActvityForResult(PhotoAlbumDetailActivity.class, 401, bundle);
                     } catch (Exception e) {
 
                     }
@@ -204,6 +204,14 @@ public class SearchLookMoreActivity extends BaseActivity implements View.OnClick
             case R.id.tv_back:
                 finish();
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 401 && resultCode == RESULT_OK) {
+            getSeverData();
         }
     }
 }

@@ -127,11 +127,11 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 SearchCofriendEntity item = (SearchCofriendEntity) adapterView.getItemAtPosition(i);
-                Intent intent = new Intent(SearchByAllNetActivity.this, PhotoAlbumDetailActivity.class);
                 try {
                     int feed = Integer.parseInt(item.getFeed_id());
-                    intent.putExtra("feedId", feed);
-                    startActivity(intent);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("feedId", feed);
+                    openActvityForResult(PhotoAlbumDetailActivity.class, 401, bundle);
                 } catch (Exception e) {
 
                 }
@@ -347,6 +347,14 @@ public class SearchByAllNetActivity extends BaseActivity implements View.OnClick
             tv_close.setText("搜索");
         } else {
             tv_close.setText("取消");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 401 && resultCode == RESULT_OK) {
+            searchBySever();
         }
     }
 }
