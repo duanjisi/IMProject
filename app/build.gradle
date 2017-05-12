@@ -26,13 +26,10 @@ android {
         }
     }
 
-
-
-
     dexOptions {
         javaMaxHeapSize "4g"
     }
-
+    
     defaultConfig {
         applicationId "im.boss66.com"
         minSdkVersion 16
