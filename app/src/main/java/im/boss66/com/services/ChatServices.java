@@ -179,7 +179,8 @@ public class ChatServices extends Service implements Observer {
                     sation.setConversation_id(datas[1]);
                     fromid = datas[1];
                 }
-                if (PreferenceUtils.getBoolean(this, "system_alerts", true) && !PreferenceUtils.getBoolean(this, PrefKey.AVOID_DISTURB + fromid, true)) {
+                boolean isopen = PreferenceUtils.getBoolean(this, PrefKey.AVOID_DISTURB + fromid, false);
+                if (PreferenceUtils.getBoolean(this, "system_alerts", true) && !isopen) {
                     long time2 = System.currentTimeMillis();
                     if (time2 - time1 > 2000) {
                         time1 = time2;
