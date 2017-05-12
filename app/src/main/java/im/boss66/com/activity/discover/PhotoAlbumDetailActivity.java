@@ -542,7 +542,9 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                             } else {
                                 if (code == 1) {
                                     showToast("删除成功", false);
-                                    setResult(RESULT_OK);
+                                    Intent intent = new Intent();
+                                    intent.putExtra("isdelete", true);
+                                    setResult(RESULT_OK,intent);
                                     finish();
                                 } else {
                                     showToast(msg, false);

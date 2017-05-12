@@ -242,8 +242,8 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
             isSelt = bundle.getBoolean("isSelt");
             if (isSelt) {
                 ll_personal.setVisibility(View.VISIBLE);
-                tv_name.setText(""+sAccount.getUser_name());
-                tv_signature.setText(""+sAccount.getSignature());
+                tv_name.setText("" + sAccount.getUser_name());
+                tv_signature.setText("" + sAccount.getSignature());
             } else {
                 requestUserId = bundle.getString("user_id");
                 String per_name = bundle.getString("person_name");
@@ -401,6 +401,14 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                 e.printStackTrace();
             }
         } else if (requestCode == SEND_TYPE_PHOTO_TX && resultCode == RESULT_OK) {
+            if (data != null) {
+                boolean isdelete = data.getBooleanExtra("isdelete", false);
+                if (isdelete && allList != null && allList.size() == 1) {
+                    allList.clear();
+                    adapter.setDatas(allList);
+                    adapter.notifyDataSetChanged();
+                }
+            }
             isAddNew = true;
             getServerGallery();
         }
