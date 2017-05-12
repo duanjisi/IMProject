@@ -54,6 +54,7 @@ import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.BaseResult;
 import im.boss66.com.entity.CircleCommentListEntity;
 import im.boss66.com.entity.FriendCircle;
 import im.boss66.com.entity.FriendCircleCommentEntity;
@@ -191,6 +192,7 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
                 feedId = String.valueOf(bundle.getInt("feedId"));
+                Log.i("-----getAlbumDetail", "1");
                 getAlbumDetail();
             }
         }
@@ -246,6 +248,7 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
 
     //获取某个相册详情
     private void getAlbumDetail() {
+        Log.i("-----getAlbumDetail", "2");
         showLoadingDialog();
         String main = HttpUrl.GET_FRIEND_CIRCLE_DETAIL + "?feed_id=" + feedId;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
@@ -257,22 +260,26 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
                 cancelLoadingDialog();
                 String result = responseInfo.result;
                 if (!TextUtils.isEmpty(result)) {
-                    PhotoAlbumDetailEntity data = JSON.parseObject(result, PhotoAlbumDetailEntity.class);
-                    if (data != null) {
-                        if (data.getStatus() == 401) {
+                    BaseResult baseResult = JSON.parseObject(result, BaseResult.class);
+                    if (baseResult != null) {
+                        String msg = baseResult.getMessage();
+                        if (baseResult.getStatus() == 401){
                             Intent intent = new Intent();
                             intent.setAction(Constants.ACTION_LOGOUT_RESETING);
                             App.getInstance().sendBroadcast(intent);
-                        } else {
-                            String msg = data.getMessage();
-                            int code = data.getCode();
-                            if (code == 1) {
-                                friendCircle = data.getResult();
-                                if (friendCircle != null) {
-                                    int feedType = friendCircle.getFeed_type();
-                                    showSigleTxData(friendCircle, feedType);
+                        }else {
+                            if (baseResult.getCode() == 1){
+                                PhotoAlbumDetailEntity data = JSON.parseObject(result, PhotoAlbumDetailEntity.class);
+                                if (data != null) {
+                                    friendCircle = data.getResult();
+                                    if (friendCircle != null) {
+                                        int feedType = friendCircle.getFeed_type();
+                                        showSigleTxData(friendCircle, feedType);
+                                    }
+                                }else {
+                                    showToast(msg, false);
                                 }
-                            } else {
+                            }else {
                                 showToast(msg, false);
                             }
                         }
@@ -664,10 +671,11 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.i("-----getAlbumDetail", "3");
         if (requestCode == 101 && resultCode == RESULT_OK) {
             getServerCommentList();
         } else if (requestCode == 401 && resultCode == RESULT_OK) {
-            setResult(RESULT_OK);
+            setResult(RESULT_OK,data);
             finish();
         }
     }
