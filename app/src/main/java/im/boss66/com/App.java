@@ -203,8 +203,13 @@ public class App extends Application {
     }
 
     public WebSocket getWebSocket() {
-        if (webSocket == null)
-            webSocket = new WebSocketConnection();
+        if (webSocket != null) {
+//            if (webSocket.isConnected()){
+//                webSocket.disconnect();
+//            }
+            webSocket = null;
+        }
+        webSocket = new WebSocketConnection();
         return webSocket;
     }
 
