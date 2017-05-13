@@ -164,7 +164,6 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         mPushAgent = PushAgent.getInstance(this);
         mPushAgent.enable(mRegisterCallback);
         mPushAgent.setPushIntentServiceClass(MyPushIntentService.class);
-
         ChatServices.startChatService(context);
         getPermission(PermissionUtil.PERMISSIONS_SD_READ_WRITE);
         requestLoveStore();
@@ -222,7 +221,7 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         for(Fragment f:mFragments){
             transaction.hide(f);
         }
-            transaction.show(fragment).commit();
+        transaction.show(fragment).commit();
 //        }
 //        currentTabIndex = index;
     }
@@ -291,8 +290,41 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
                 account = App.getInstance().getAccount();
                 tv_name.setText(account.getUser_name());
                 imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
+            } else if (action.equals("com.duanjisi.test.service")) {
+                Log.i("info", "======================应用收到消息");
             }
         }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(false);
+        Log.i("info", "==============onBackPressed()");
+//        Intent intent = new Intent(Intent.ACTION_MAIN);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.addCategory(Intent.CATEGORY_HOME);
+//        startActivity(intent);
+//        showNotifyDialog();
+    }
+
+    private void showNotifyDialog() {
+        CommonDialogUtils.showDialog(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommonDialogUtils.dismiss();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                finish();
+                CommonDialogUtils.dismiss();
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+            }
+        }, context, "确定退出应用吗？");
     }
 
     @Override
@@ -531,6 +563,7 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.i("info", "==============onKeyDown()");
         if ((keyCode == KeyEvent.KEYCODE_BACK && slidingMenu.isOpen())) {
             slidingMenu.closeMenu();
             return false;
