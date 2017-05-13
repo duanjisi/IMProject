@@ -28,5 +28,6 @@ public class Constants {
         public static final String UPDATE_ACCOUNT_INFORM = "im.boss66.com.update.account.inform";
         //显示主页
         public static final String SHOW_HOME_ACTION = "im.boss66.com.SHOW_HOME_ACTION";
+        public static final String ACTION_START = "im.boss66.com.ACTION_START";
     }
 }

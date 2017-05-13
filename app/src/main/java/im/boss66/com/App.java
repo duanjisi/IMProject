@@ -6,9 +6,11 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -38,6 +40,7 @@ import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.fragment.ContactBooksFragment;
+import im.boss66.com.services.ChatServices;
 
 public class App extends Application {
     public final static String API_KEY = "fiWrR2Ki8NkR6r5GHdM2lY7j";
@@ -69,6 +72,7 @@ public class App extends Application {
     private static int sMaxVolume;
     private static double dVolume;
 
+    private int count = 0;
     private List<String> uidList;
 
     private LocalAddressEntity.SecondChild loacalAddress;
@@ -92,12 +96,13 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         MultiDex.install(this);
+        switchBackground();
         mApplication = this;
         initFaceMap();
         initData();
         initUmengPush();
 //        Fresco.initialize(getApplicationContext());//注册，在setContentView之前。
-        CrashReport.initCrashReport(getApplicationContext(),"3a7059fedc",false);
+        CrashReport.initCrashReport(getApplicationContext(), "3a7059fedc", false);
     }
 
     private void initData() {
@@ -346,7 +351,7 @@ public class App extends Application {
         }
         LoginStatus loginStatus = LoginStatus.getInstance();
         sAccount = new AccountEntity();
-        if (sAccount != null){
+        if (sAccount != null) {
             sAccount.setUser_name(loginStatus.getUser_name());
             sAccount.setUser_id(loginStatus.getUser_id());
             sAccount.setAccess_token(loginStatus.getToken());
@@ -562,18 +567,67 @@ public class App extends Application {
         PreferenceUtils.putBoolean(context, "isThirdLogin", thirdLogin);
     }
 
-    public void addUidToList(String uid,boolean isAdd){
-        if (uidList == null){
+    public void addUidToList(String uid, boolean isAdd) {
+        if (uidList == null) {
             uidList = new ArrayList<>();
         }
-        if (isAdd){
+        if (isAdd) {
             uidList.add(uid);
-        }else if(uidList.contains(uid)){
+        } else if (uidList.contains(uid)) {
             uidList.remove(uid);
         }
     }
 
     public List<String> getUidList() {
         return uidList;
+    }
+
+
+    private void switchBackground() {
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityStopped(Activity activity) {
+                Log.v("viclee", activity + "onActivityStopped");
+                count--;
+                if (count == 0) {
+                    Log.v("viclee", ">>>>>>>>>>>>>>>>>>>切到后台  lifecycle");
+                }
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+                Log.v("viclee", activity + "onActivityStarted");
+                if (count == 0) {
+                    Log.v("viclee", ">>>>>>>>>>>>>>>>>>>切到前台  lifecycle");
+                    ChatServices.startChatService(App.this);
+                }
+                count++;
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+                Log.v("viclee", activity + "onActivitySaveInstanceState");
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                Log.v("viclee", activity + "onActivityResumed");
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                Log.v("viclee", activity + "onActivityPaused");
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+                Log.v("viclee", activity + "onActivityDestroyed");
+            }
+
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                Log.v("viclee", activity + "onActivityCreated");
+            }
+        });
     }
 }

@@ -1,5 +1,6 @@
 package im.boss66.com.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +38,7 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
+import im.boss66.com.Utils.CommonDialogUtils;
 import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
@@ -128,6 +130,7 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         currentTabIndex = 2;
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         account = App.getInstance().getAccount();
+        Log.i("info", "=====================userid:" + account.getUser_id());
         replaced_layout = findViewById(R.id.replaced_layout);
         iv_avatar = (CircleImageView) findViewById(R.id.iv_avatar);
         tv_name = (TextView) findViewById(R.id.tv_name);
@@ -160,12 +163,11 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
             initFragment();
         }
         checkFragment();
-
         mPushAgent = PushAgent.getInstance(this);
         mPushAgent.enable(mRegisterCallback);
         mPushAgent.setPushIntentServiceClass(MyPushIntentService.class);
-
         ChatServices.startChatService(context);
+//        CoreService.actionStart(context);
         getPermission(PermissionUtil.PERMISSIONS_SD_READ_WRITE);
         requestLoveStore();
         checkUpdate();
@@ -279,8 +281,41 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
                 account = App.getInstance().getAccount();
                 tv_name.setText(account.getUser_name());
                 imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
+            } else if (action.equals("com.duanjisi.test.service")) {
+                Log.i("info", "======================应用收到消息");
             }
         }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(false);
+        Log.i("info", "==============onBackPressed()");
+//        Intent intent = new Intent(Intent.ACTION_MAIN);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.addCategory(Intent.CATEGORY_HOME);
+//        startActivity(intent);
+//        showNotifyDialog();
+    }
+
+    private void showNotifyDialog() {
+        CommonDialogUtils.showDialog(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommonDialogUtils.dismiss();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                finish();
+                CommonDialogUtils.dismiss();
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+            }
+        }, context, "确定退出应用吗？");
     }
 
     @Override
@@ -519,6 +554,7 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.i("info", "==============onKeyDown()");
         if ((keyCode == KeyEvent.KEYCODE_BACK && slidingMenu.isOpen())) {
             slidingMenu.closeMenu();
             return false;

@@ -6,8 +6,9 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -45,7 +46,28 @@ public class ChatServices extends Service implements Observer {
     private WebSocket mConnection;
     private long time1 = 0L;
 
-    @Nullable
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    handler.removeMessages(0);
+                    Log.i("info", "======================6666666666666666666666");
+                    if (mConnection != null) {
+                        if (!mConnection.isConnected()) {
+                            startConnection();
+                        }
+                    }
+                    handler.sendEmptyMessageDelayed(0, 1500);
+                    break;
+                case 1:
+                    handler.removeMessages(0);
+                    break;
+            }
+        }
+    };
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -57,6 +79,7 @@ public class ChatServices extends Service implements Observer {
         super.onCreate();
         Session.getInstance().addObserver(this);
         mMsgDB = App.getInstance().getMessageDB();// 发送数据库
+        handler.sendEmptyMessage(0);
     }
 
     @Override
@@ -64,7 +87,7 @@ public class ChatServices extends Service implements Observer {
         super.onStart(intent, startId);
         userid = App.getInstance().getAccount().getUser_id();
         mConnection = App.getInstance().getWebSocket();
-        startConnection();
+//        startConnection();
     }
 
     @Override
@@ -93,12 +116,15 @@ public class ChatServices extends Service implements Observer {
     }
 
     public static void startChatService(Context context) {
-        Intent iService = new Intent(context, ChatServices.class);
-        context.startService(iService);
+        if (App.getInstance().isLogin()) {
+            Intent iService = new Intent(context, ChatServices.class);
+            context.startService(iService);
+        }
     }
 
     private void startConnection() {
         try {
+            Log.i("info", "=============startConnection()");
             mConnection.connect(HttpUrl.WS_URL, new WebSocketConnectionHandler() {
                 @Override
                 public void onOpen() {
@@ -124,6 +150,9 @@ public class ChatServices extends Service implements Observer {
             });
         } catch (Exception e) {
             Log.d("info", "=====Exception:" + e.toString());
+            if (App.getInstance().isLogin()) {
+                LocalBroadcastManager.getInstance(ChatServices.this).sendBroadcast(new Intent(Constants.Action.CHAT_SERVICE_CLOSE));
+            }
         }
     }
 
@@ -308,7 +337,6 @@ public class ChatServices extends Service implements Observer {
                 sendMessage(msg);
             }
         } else if (sin.getAction() == Session.ACTION_STOP_CHAT_SERVICE) {
-//            stopSelf();
             stopChatService(this);
         } else if (sin.getAction() == Session.ACTION_RE_CONNECT_WEBSOCKET) {
             if (mConnection != null) {
@@ -322,6 +350,7 @@ public class ChatServices extends Service implements Observer {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        handler.sendEmptyMessage(1);
         if (mConnection.isConnected()) {
             logout();
             mConnection.disconnect();
@@ -339,5 +368,6 @@ public class ChatServices extends Service implements Observer {
         Ringtone r = RingtoneManager.getRingtone(context, notification);
         r.play();
     }
+
 
 }
