@@ -116,7 +116,7 @@ public class MyPushIntentService extends UmengBaseIntentService implements Obser
             String msgType = msg.custom;
             String notice = msg.text;
             Map<String, String> maps = msg.extra;
-            android.util.Log.i("info", "==========extra:" + printMap(maps));
+//            android.util.Log.i("info", "==========extra:" + printMap(maps));
             Intent intent = null;
             if (msgType.equals("chat")) {
                 if (notice.contains("和你已经成为好友!")) {
