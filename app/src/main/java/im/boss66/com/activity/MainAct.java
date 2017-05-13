@@ -1,6 +1,5 @@
 package im.boss66.com.activity;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,7 +37,6 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Session;
 import im.boss66.com.SessionInfo;
-import im.boss66.com.Utils.CommonDialogUtils;
 import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
@@ -130,7 +128,6 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         currentTabIndex = 2;
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         account = App.getInstance().getAccount();
-        Log.i("info", "=====================userid:" + account.getUser_id());
         replaced_layout = findViewById(R.id.replaced_layout);
         iv_avatar = (CircleImageView) findViewById(R.id.iv_avatar);
         tv_name = (TextView) findViewById(R.id.tv_name);
@@ -162,12 +159,12 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         if (fragment == null) {
             initFragment();
         }
-        checkFragment();
+        checkFragment(mainTreasureFragment);
+
         mPushAgent = PushAgent.getInstance(this);
         mPushAgent.enable(mRegisterCallback);
         mPushAgent.setPushIntentServiceClass(MyPushIntentService.class);
         ChatServices.startChatService(context);
-//        CoreService.actionStart(context);
         getPermission(PermissionUtil.PERMISSIONS_SD_READ_WRITE);
         requestLoveStore();
         checkUpdate();
@@ -197,24 +194,36 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         mFragments.add(contactsFragment);
         mFragments.add(discoverFragment);
         mFragments.add(mineFragment);
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.replaced_layout, mainTreasureFragment);
+        fragmentTransaction.add(R.id.replaced_layout, homePagerFragment);
+        fragmentTransaction.add(R.id.replaced_layout, contactBooksFragment);
+        fragmentTransaction.add(R.id.replaced_layout, contactsFragment);
+        fragmentTransaction.add(R.id.replaced_layout, discoverFragment);
+        fragmentTransaction.add(R.id.replaced_layout, mineFragment);
+        fragmentTransaction.commit();
     }
 
     private int index;
     private int currentTabIndex;
 
-    private void checkFragment() {
+    private void checkFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (mFragments.size() == 0) {
-            initFragment();
+//        if (mFragments.size() == 0) {
+//            initFragment();
+//        }
+//        if (currentTabIndex != index) {
+//            transaction.hide(mFragments.get(currentTabIndex));
+//            if (!mFragments.get(index).isAdded()) {
+//                transaction.add(R.id.replaced_layout, mFragments.get(index));
+//            }
+        for(Fragment f:mFragments){
+            transaction.hide(f);
         }
-        if (currentTabIndex != index) {
-            transaction.hide(mFragments.get(currentTabIndex));
-            if (!mFragments.get(index).isAdded()) {
-                transaction.add(R.id.replaced_layout, mFragments.get(index));
-            }
-            transaction.show(mFragments.get(index)).commit();
-        }
-        currentTabIndex = index;
+        transaction.show(fragment).commit();
+//        }
+//        currentTabIndex = index;
     }
 
     @Override
@@ -227,22 +236,22 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
             case R.id.rb_treasure_pager:
                 mCheckedId = id;
                 index = 0;
-                checkFragment();
+                checkFragment(mainTreasureFragment);
                 break;
             case R.id.rb_home_pager:
                 mCheckedId = id;
                 index = 1;
-                checkFragment();
+                checkFragment(homePagerFragment);
                 break;
             case R.id.rb_contact_book:
                 mCheckedId = id;
                 index = 2;
-                checkFragment();
+                checkFragment(contactBooksFragment);
                 break;
             case R.id.rb_contact:
                 mCheckedId = id;
                 index = 3;
-                checkFragment();
+                checkFragment(contactsFragment);
 //                设置成功不弹窗
                 if (SharedPreferencesMgr.getBoolean("setSuccess2", false)) {
                     slidingMenu.toggle();
@@ -260,12 +269,12 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
             case R.id.rb_discover:
                 mCheckedId = id;
                 index = 4;
-                checkFragment();
+                checkFragment(discoverFragment);
                 break;
             case R.id.rb_mine:
                 mCheckedId = id;
                 index = 5;
-                checkFragment();
+                checkFragment(mineFragment);
                 break;
         }
         slidingMenu.toggle();
