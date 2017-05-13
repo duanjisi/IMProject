@@ -73,11 +73,12 @@ public class PhoneContactsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_contacts);
-        initViews();
+        getPermission();
+
     }
 
     private void initViews() {
-        getPermission();
+
         account = App.getInstance().getAccount();
         contactList = new ArrayList<EaseUser>();
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -263,6 +264,7 @@ public class PhoneContactsActivity extends BaseActivity {
 
             @Override
             public void onRequestPermissionSuccess() {
+                initViews();
             }
 
             @Override
