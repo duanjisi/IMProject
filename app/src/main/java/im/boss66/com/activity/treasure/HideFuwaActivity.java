@@ -205,14 +205,18 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         try {
             mCameraManager.openDriver();
         } catch (IOException e) {
-            MycsLog.e("IOException:" + e.getMessage());
+            showToast("获取摄像头出错", false);
+            finish();
+            return;
         } catch (RuntimeException runtimeException) {
-//            MycsLog.e("open camera error:" + runtimeException.getMessage());
             showToast(R.string.error_open_camera_error, false);
             finish();
+            return;
         }
-        mCamera = mCameraManager.getCamera();
-        if (parameters == null) {
+        if (mCamera == null){
+            mCamera = mCameraManager.getCamera();
+        }
+        if (parameters == null && mCamera != null) {
             parameters = mCamera.getParameters();
             // 设置预览照片的大小
             List<Camera.Size> supportedPictureSizes =
@@ -223,7 +227,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 parameters.setPictureSize(pictureSize.width, pictureSize.height);
             }
         }
-        if (parameters != null) {
+        if (parameters != null && mCamera != null) {
             try {
                 mCamera.setParameters(parameters);
             } catch (Exception e) {
@@ -234,7 +238,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             mPreview = null;
         }
         mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
-        //mPreview.getHolder().removeCallback(mPreviewCallback);
         rl_preciew.removeAllViews();
         rl_preciew.addView(mPreview);
     }
