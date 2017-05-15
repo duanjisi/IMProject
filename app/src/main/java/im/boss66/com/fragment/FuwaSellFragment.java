@@ -451,15 +451,17 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
 
     }
 
+    private boolean flag = true;
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_left:    //筛选
+                flag =true;
                 tv_price.setTextColor(0xffcccccc);
+                tv_price.setText("价格");
                 img_price.setImageResource(R.drawable.fuwa_price);
 
-                tv_price.setText("价格");
                 tv_choose.setTextColor(0xffe7d09a);
                 img_choose.setImageResource(R.drawable.screen_click);
 
@@ -471,9 +473,14 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                 chooseFuwa = null;
                 tv_choose.setTextColor(0xffcccccc);
                 img_choose.setImageResource(R.drawable.fuwa_screen);
-
                 tv_price.setTextColor(0xffe7d09a);
-                tv_price.setText("价格从低到高");
+                if(flag){
+                    tv_price.setText("价格从低到高");
+                    flag =false;
+                }else{
+                    tv_price.setText("价格从高到低");
+                    flag = true;
+                }
                 img_price.setImageResource(R.drawable.price_click);
                 if (fuwaNum > 0) {   //用dataschoose排序    先根据价格，再根据order id排序
 
@@ -482,7 +489,13 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                             @Override
                             public int compare(FuwaSellEntity.DataBean data1, FuwaSellEntity.DataBean data2) {
                                 // 排序
-                                return data1.getAmount().compareTo(data2.getAmount());
+                                if(!flag){
+
+                                    return data1.getAmount().compareTo(data2.getAmount());
+                                }else{
+                                    return data2.getAmount().compareTo(data1.getAmount());
+
+                                }
                             }
                         });
                         adapter.setDatas(datasChoose);
@@ -497,7 +510,13 @@ public class FuwaSellFragment extends BaseFragment implements View.OnClickListen
                             @Override
                             public int compare(FuwaSellEntity.DataBean data1, FuwaSellEntity.DataBean data2) {
                                 // 排序
-                                return data1.getAmount().compareTo(data2.getAmount());
+                                if(!flag){
+
+                                    return data1.getAmount().compareTo(data2.getAmount());
+                                }else {
+                                    return data2.getAmount().compareTo(data1.getAmount());
+
+                                }
                             }
                         });
                         adapter.setDatas(datas);
