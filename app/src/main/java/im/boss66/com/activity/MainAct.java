@@ -159,7 +159,7 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         if (fragment == null) {
             initFragment();
         }
-        checkFragment(mainTreasureFragment);
+        checkFragment();
 
         mPushAgent = PushAgent.getInstance(this);
         mPushAgent.enable(mRegisterCallback);
@@ -195,35 +195,24 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         mFragments.add(discoverFragment);
         mFragments.add(mineFragment);
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.replaced_layout, mainTreasureFragment);
-        fragmentTransaction.add(R.id.replaced_layout, homePagerFragment);
-        fragmentTransaction.add(R.id.replaced_layout, contactBooksFragment);
-        fragmentTransaction.add(R.id.replaced_layout, contactsFragment);
-        fragmentTransaction.add(R.id.replaced_layout, discoverFragment);
-        fragmentTransaction.add(R.id.replaced_layout, mineFragment);
-        fragmentTransaction.commit();
     }
 
     private int index;
     private int currentTabIndex;
 
-    private void checkFragment(Fragment fragment) {
+    private void checkFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        if (mFragments.size() == 0) {
-//            initFragment();
-//        }
-//        if (currentTabIndex != index) {
-//            transaction.hide(mFragments.get(currentTabIndex));
-//            if (!mFragments.get(index).isAdded()) {
-//                transaction.add(R.id.replaced_layout, mFragments.get(index));
-//            }
-        for(Fragment f:mFragments){
-            transaction.hide(f);
+        if (mFragments.size() == 0) {
+            initFragment();
         }
-        transaction.show(fragment).commit();
-//        }
-//        currentTabIndex = index;
+        if (currentTabIndex != index) {
+            transaction.hide(mFragments.get(currentTabIndex));
+            if (!mFragments.get(index).isAdded()) {
+                transaction.add(R.id.replaced_layout, mFragments.get(index));
+            }
+            transaction.show(mFragments.get(index)).commit();
+        }
+        currentTabIndex = index;
     }
 
     @Override
@@ -236,22 +225,22 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
             case R.id.rb_treasure_pager:
                 mCheckedId = id;
                 index = 0;
-                checkFragment(mainTreasureFragment);
+                checkFragment();
                 break;
             case R.id.rb_home_pager:
                 mCheckedId = id;
                 index = 1;
-                checkFragment(homePagerFragment);
+                checkFragment();
                 break;
             case R.id.rb_contact_book:
                 mCheckedId = id;
                 index = 2;
-                checkFragment(contactBooksFragment);
+                checkFragment();
                 break;
             case R.id.rb_contact:
                 mCheckedId = id;
                 index = 3;
-                checkFragment(contactsFragment);
+                checkFragment();
 //                设置成功不弹窗
                 if (SharedPreferencesMgr.getBoolean("setSuccess2", false)) {
                     slidingMenu.toggle();
@@ -269,12 +258,12 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
             case R.id.rb_discover:
                 mCheckedId = id;
                 index = 4;
-                checkFragment(discoverFragment);
+                checkFragment();
                 break;
             case R.id.rb_mine:
                 mCheckedId = id;
                 index = 5;
-                checkFragment(mineFragment);
+                checkFragment();
                 break;
         }
         slidingMenu.toggle();
