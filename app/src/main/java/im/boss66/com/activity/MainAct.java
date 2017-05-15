@@ -308,24 +308,24 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
 //        showNotifyDialog();
     }
 
-    private void showNotifyDialog() {
-        CommonDialogUtils.showDialog(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CommonDialogUtils.dismiss();
-            }
-        }, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                finish();
-                CommonDialogUtils.dismiss();
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                startActivity(intent);
-            }
-        }, context, "确定退出应用吗？");
-    }
+//    private void showNotifyDialog() {
+//        CommonDialogUtils.showDialog(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                CommonDialogUtils.dismiss();
+//            }
+//        }, new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                finish();
+//                CommonDialogUtils.dismiss();
+//                Intent intent = new Intent(Intent.ACTION_MAIN);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.addCategory(Intent.CATEGORY_HOME);
+//                startActivity(intent);
+//            }
+//        }, context, "确定退出应用吗？");
+//    }
 
     @Override
     protected void onDestroy() {
