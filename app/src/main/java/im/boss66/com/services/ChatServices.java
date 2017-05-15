@@ -86,7 +86,7 @@ public class ChatServices extends Service implements Observer {
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         userid = App.getInstance().getAccount().getUser_id();
-        mConnection = App.getInstance().getWebSocket();
+//        mConnection = App.getInstance().getWebSocket();
         startConnection();
     }
 
@@ -128,6 +128,7 @@ public class ChatServices extends Service implements Observer {
 //            if (mConnection.isConnected()) {
 //                mConnection.disconnect();
 //            }
+            mConnection = App.getInstance().getWebSocket();
             mConnection.connect(HttpUrl.WS_URL, new WebSocketConnectionHandler() {
                 @Override
                 public void onOpen() {
@@ -144,13 +145,13 @@ public class ChatServices extends Service implements Observer {
                 @Override
                 public void onClose(int code, String reason) {
                     MycsLog.i("info", "======reason:" + reason);
-                    logout();
-//                    startConnection();
+//                    logout();
+                    startConnection();
 //                    for (int i = 0; i < callbacks.size(); i++)
 //                        ((receiveMessageCallback) callbacks.get(i)).onNotify("", reason);
-                    if (App.getInstance().isLogin()) {
-                        LocalBroadcastManager.getInstance(ChatServices.this).sendBroadcast(new Intent(Constants.Action.CHAT_SERVICE_CLOSE));
-                    }
+//                    if (App.getInstance().isLogin()) {
+//                        LocalBroadcastManager.getInstance(ChatServices.this).sendBroadcast(new Intent(Constants.Action.CHAT_SERVICE_CLOSE));
+//                    }
 
                     //startConnection();
                 }
@@ -190,6 +191,12 @@ public class ChatServices extends Service implements Observer {
     private void messageHandle(String str) {
         Log.i("info", "===================IM接消息");
         MycsLog.i("info", "====str:" + str);
+        if (str.equals("ok")) {
+            sendMessage("jokliu~~%$*()%&(*&");
+            return;
+        } else if (str.equals("jokliu~~%$*()%&(*&")) {
+            return;
+        }
         String[] datas = str.split("_");
         if (datas != null && datas.length > 6) {
             String json = Base64Utils.getFromBase64(datas[6]);
