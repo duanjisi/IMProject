@@ -232,29 +232,40 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initViewParams() {
-        mCameraManager = new CameraManager(this);
+        if (mCameraManager == null) {
+            mCameraManager = new CameraManager(this);
+        }
         try {
             mCameraManager.openDriver();
         } catch (IOException e) {
-            MycsLog.e("IOException:" + e.getMessage());
+            showToast("获取摄像头出错", false);
+            finish();
+            return;
         } catch (RuntimeException runtimeException) {
-            MycsLog.e("open camera error:" + runtimeException.getMessage());
             showToast(R.string.error_open_camera_error, false);
             finish();
+            return;
         }
-        mCamera = mCameraManager.getCamera();
-        mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
-        Camera.Parameters parameters = mCamera.getParameters();
-        // 设置预览照片的大小
-        List<Camera.Size> supportedPictureSizes =
-                parameters.getSupportedPictureSizes();// 获取支持保存图片的尺寸
-        if (supportedPictureSizes != null && supportedPictureSizes.size() > 0) {
-            Camera.Size pictureSize = UIUtils.getPictureSize(this, supportedPictureSizes);
-            parameters.setRotation(90);
-            parameters.setPictureSize(pictureSize.width, pictureSize.height);
-            mCamera.setParameters(parameters);
+        if (mCamera == null) {
+            mCamera = mCameraManager.getCamera();
+            Camera.Parameters parameters = mCamera.getParameters();
+            // 设置预览照片的大小
+            List<Camera.Size> supportedPictureSizes =
+                    parameters.getSupportedPictureSizes();// 获取支持保存图片的尺寸
+            if (supportedPictureSizes != null && supportedPictureSizes.size() > 0) {
+                Camera.Size pictureSize = UIUtils.getPictureSize(this, supportedPictureSizes);
+                parameters.setRotation(90);
+                parameters.setPictureSize(pictureSize.width, pictureSize.height);
+                mCamera.setParameters(parameters);
+            }
+            if (mPreview == null) {
+                mPreview = new CameraPreview(this, mCamera, mPreviewCallback, autoFocusCB);
+            }
+            if (rl_preciew.getChildCount() > 0) {
+                rl_preciew.removeAllViews();
+            }
+            rl_preciew.addView(mPreview);
         }
-        rl_preciew.addView(mPreview);
     }
 
     @Override
@@ -774,7 +785,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialogInterface) {
-                    if (!isDialogShow){
+                    if (!isDialogShow) {
                         finish();
                     }
                 }
@@ -821,7 +832,11 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             playSucessGif();
                         } else {
                             previewing = true;
-                            mCamera.startPreview();
+                            if (mCamera != null) {
+                                mCamera.startPreview();
+                            } else {
+                                initViewParams();
+                            }
                             autoFocusHandler.postDelayed(doAutoFocus, 1000);
                             showToast("图片匹配失败TAT，再试下吧", false);
                         }
@@ -830,7 +845,11 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     }
                 } else {
                     previewing = true;
-                    mCamera.startPreview();
+                    if (mCamera != null) {
+                        mCamera.startPreview();
+                    } else {
+                        initViewParams();
+                    }
                     autoFocusHandler.postDelayed(doAutoFocus, 1000);
                     showToast("图片匹配失败TAT，再试下吧", false);
                 }
@@ -839,7 +858,11 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onFailure(HttpException e, String s) {
                 previewing = true;
-                mCamera.startPreview();
+                if (mCamera != null) {
+                    mCamera.startPreview();
+                } else {
+                    initViewParams();
+                }
                 autoFocusHandler.postDelayed(doAutoFocus, 1000);
                 showToast("图片匹配失败TAT，再试下吧", false);
             }
