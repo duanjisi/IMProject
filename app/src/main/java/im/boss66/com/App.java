@@ -73,6 +73,7 @@ public class App extends Application {
     private static double dVolume;
 
     private int count = 0;
+    public boolean isForground = true;
     private List<String> uidList;
 
     private LocalAddressEntity.SecondChild loacalAddress;
@@ -375,6 +376,10 @@ public class App extends Application {
         return sAccount;
     }
 
+    public boolean isForground() {
+        return isForground;
+    }
+
     public boolean isLogin() {
         return LoginStatus.getInstance().hadLogged();
     }
@@ -546,6 +551,7 @@ public class App extends Application {
         return tempActivityList;
     }
 
+
     //遍历所有Activity并finish
     public void exit() {
         if (tempActivityList != null) {
@@ -595,6 +601,7 @@ public class App extends Application {
                 Log.v("viclee", activity + "onActivityStopped");
                 count--;
                 if (count == 0) {
+                    isForground = false;
                     Log.v("viclee", ">>>>>>>>>>>>>>>>>>>切到后台  lifecycle");
                 }
             }
@@ -604,6 +611,7 @@ public class App extends Application {
                 Log.v("viclee", activity + "onActivityStarted");
                 if (count == 0) {
                     Log.v("viclee", ">>>>>>>>>>>>>>>>>>>切到前台  lifecycle");
+                    isForground = true;
                     ChatServices.startChatService(App.this);
                 }
                 count++;

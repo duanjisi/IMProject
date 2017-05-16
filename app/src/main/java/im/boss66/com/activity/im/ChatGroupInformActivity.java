@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -150,7 +151,10 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
             }
             tvMyNick.setText(account.getUser_name());
             tvGroupName.setText(inform.getName());
-            tvGroupNotice.setText(inform.getNotice());
+            String info = inform.getNotice();
+            if (!TextUtils.isEmpty(info) && !info.contains("null")) {
+                tvGroupNotice.setText(info);
+            }
             ArrayList<MemberEntity> list = inform.getMembers();
             if (list.size() != 0) {
                 tvTitle.setText("聊天信息(" + list.size() + ")");

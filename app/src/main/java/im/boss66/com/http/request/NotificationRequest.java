@@ -1,5 +1,7 @@
 package im.boss66.com.http.request;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ public class NotificationRequest extends BaseDataModel<String> {
         map.put("users", users);
         map.put("msgtype", msgType);
         map.put("message", message);
+        Log.i("info", "================ext:" + ext);
         map.put("ext", ext);
         return map;
     }

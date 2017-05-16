@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -89,7 +88,7 @@ public class ContactBooksFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Session.getInstance().addObserver(this);
-        Log.i("liywa","创建了");
+        Log.i("liywa", "创建了");
         return inflater.inflate(R.layout.fragment_contact_books, container, false);
     }
 
@@ -101,7 +100,7 @@ public class ContactBooksFragment extends BaseFragment implements
     }
 
     private void initViews(View view) {
-        Log.i("liywa","创建了2");
+        Log.i("liywa", "创建了2");
         account = App.getInstance().getAccount();
         imageLoader = ImageLoaderUtils.createImageLoader(getActivity());
         iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
@@ -123,8 +122,8 @@ public class ContactBooksFragment extends BaseFragment implements
         filter.addAction(Constants.Action.CHAT_AGREE_FRIENDSHIP);
 //        LocalBroadcastManager.getInstance(getActivity())
 //                .registerReceiver(mLocalBroadcastReceiver, filter);
-        getActivity().registerReceiver(mLocalBroadcastReceiver,filter);
-        Log.i("liywa","创建了3");
+        getActivity().registerReceiver(mLocalBroadcastReceiver, filter);
+        Log.i("liywa", "创建了3");
         iv_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

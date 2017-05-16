@@ -2,7 +2,6 @@ package im.boss66.com.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -85,7 +84,8 @@ public class NewFriendsAdapter extends ABaseAdapter<NewFriend> {
                 friend.setFeedback_mark("2");
                 notifyDataSetChanged();
                 Intent intent = new Intent(Constants.Action.CHAT_AGREE_FRIENDSHIP);
-                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+//                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+                mContext.sendBroadcast(intent);
                 showToast("接受好友成功!", true);
             }
 

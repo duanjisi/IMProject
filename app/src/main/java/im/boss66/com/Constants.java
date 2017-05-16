@@ -26,8 +26,10 @@ public class Constants {
         public static final String EXIT_CURRENT_ACTIVITY = "im.boss66.com.EXIT_CURRENT_ACTIVITY";
         public static final String MENU_CAHNGE_CURRENT_TAB = "im.boss66.com.menu.change.current.tab.pager";
         public static final String UPDATE_ACCOUNT_INFORM = "im.boss66.com.update.account.inform";
+        public static final String SWITCH_CHAT_MESSAGE = "im.boss66.com.switch.chat.message";
         //显示主页
         public static final String SHOW_HOME_ACTION = "im.boss66.com.SHOW_HOME_ACTION";
         public static final String ACTION_START = "im.boss66.com.ACTION_START";
+        public static final String ACTIVITY_CLOSE = "im.boss66.com.ACTIVITY_CLOSE";
     }
 }
