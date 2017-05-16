@@ -22,6 +22,12 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <uses-permission android:name="android.permission.GET_TOP_ACTIVITY_INFO" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+
     <!-- 录音 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!--<uses-permission android:name="android.permission.WRITE_CONTACTS" />-->
@@ -662,7 +668,11 @@
                 <action android:name="im.boss66.com.logout.reseting"></action>
             </intent-filter>
         </receiver>
-
+        <receiver android:name=".receiver.ChatReceiver">
+            <intent-filter>
+                <action android:name="im.boss66.com.ACTIVITY_CLOSE"></action>
+            </intent-filter>
+        </receiver>
         <receiver android:name=".receiver.BootReceiver">
             <intent-filter>
                 <action android:name="local.chat.service.close"></action>

@@ -3,8 +3,13 @@ package im.boss66.com.util;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +23,7 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -39,6 +45,7 @@ import java.util.List;
 import java.util.Locale;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.Session;
 import im.boss66.com.Utils.Base64Utils;
 import im.boss66.com.Utils.PrefKey;
@@ -546,5 +553,30 @@ public class Utils {
             }
         }
         return false;
+    }
+
+
+    public static void sendNotification(Context appContext, String notice) {
+        NotificationManager notificationManager = (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        PackageManager packageManager = appContext.getPackageManager();
+        String appname = (String) packageManager.getApplicationLabel(appContext.getApplicationInfo());
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(appContext)
+                .setSmallIcon(appContext.getApplicationInfo().icon)
+                .setWhen(System.currentTimeMillis())
+                .setAutoCancel(true);
+        Intent intent = new Intent(Constants.Action.ACTIVITY_CLOSE);
+
+        int notificationId = PreferenceUtils.getInt(appContext, PrefKey.NOTIFY_NEWS_TAG, 1008);
+        PreferenceUtils.putInt(appContext, PrefKey.NOTIFY_NEWS_TAG, notificationId + 1);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(appContext, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        mBuilder.setContentTitle("你有新消息");
+        mBuilder.setTicker(notice);
+        mBuilder.setContentText(notice);
+
+        mBuilder.setContentIntent(pendingIntent);
+        Notification notification = mBuilder.build();
+        notification.defaults = Notification.DEFAULT_SOUND;
+        notificationManager.notify(notificationId, notification);
     }
 }

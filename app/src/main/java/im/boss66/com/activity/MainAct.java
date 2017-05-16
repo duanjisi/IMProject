@@ -1,5 +1,10 @@
 package im.boss66.com.activity;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -78,6 +83,7 @@ import im.boss66.com.widget.dialog.PeopleDataDialog;
 public class MainAct extends BaseActivity implements CompoundButton.OnCheckedChangeListener, Observer {
     private final static String TAG = MainAct.class.getSimpleName();
     private ArrayList<Fragment> mFragments = new ArrayList<Fragment>();
+    private LocalBroadcastReceiver mLocalBroadcastReceiver;
     private SlidingMenu slidingMenu;
     private CircleImageView iv_avatar;
     private TextView tv_name;
@@ -148,6 +154,12 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
                 }
             }
         });
+
+        mLocalBroadcastReceiver = new LocalBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+//        filter.addAction(Constants.Action.ACTIVITY_CLOSE);
+        registerReceiver(mLocalBroadcastReceiver, filter);
+
         rbTreasure.setOnCheckedChangeListener(this);
         rbMine.setOnCheckedChangeListener(this);
         rbHomePager.setOnCheckedChangeListener(this);
@@ -210,7 +222,7 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
             if (!mFragments.get(index).isAdded()) {
                 transaction.add(R.id.replaced_layout, mFragments.get(index));
             }
-            transaction.show(mFragments.get(index)).commit();
+            transaction.show(mFragments.get(index)).commitAllowingStateLoss();
         }
         currentTabIndex = index;
     }
@@ -279,6 +291,15 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
                 account = App.getInstance().getAccount();
                 tv_name.setText(account.getUser_name());
                 imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
+            } else if (action.equals(Constants.Action.SWITCH_CHAT_MESSAGE)) {
+                List<Activity> tempActivityList = App.getInstance().getTempActivityList();
+                for (Activity activity : tempActivityList) {
+                    if (activity != MainAct.this) {
+                        activity.finish();
+                    }
+                }
+                mRadioGroup.check(R.id.rb_home_pager);
+                slidingMenu.closeMenu();
             } else if (action.equals("com.duanjisi.test.service")) {
                 Log.i("info", "======================应用收到消息");
             }
@@ -338,6 +359,7 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(mLocalBroadcastReceiver);
         EventBus.getDefault().unregister(this);
         if (mFragments != null) {
             mFragments.clear();
@@ -578,5 +600,28 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         } else {
             return super.onKeyDown(keyCode, event);
         }
+    }
+
+    private class LocalBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Log.i("info", "==================action:" + action);
+            if (action.equals(Constants.Action.ACTIVITY_CLOSE)) {
+                List<Activity> tempActivityList = App.getInstance().getTempActivityList();
+                for (Activity activity : tempActivityList) {
+                    if (activity != MainAct.this) {
+                        activity.finish();
+                    }
+                }
+            }
+            mRadioGroup.check(R.id.rb_home_pager);
+            slidingMenu.closeMenu();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

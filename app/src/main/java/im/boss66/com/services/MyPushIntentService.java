@@ -24,6 +24,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import im.boss66.com.Constants;
+import im.boss66.com.Utils.PrefKey;
+import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.activity.book.NewFriendsActivity;
 import im.boss66.com.entity.MessageEvent;
 
@@ -41,6 +43,7 @@ public class MyPushIntentService extends UmengBaseIntentService implements Obser
     private static final int notifyID = 1002;
     private static final int notifyID_FRIEND_ADD = 1003;
     private static final int notifyID_FRIEND_REPLY = 1004;
+    private static int notifyID_CHAT_NEWS = 1008;
     private static final int notifyID_ADERTISING = 1005;
     private static final int notifyID_REDPACKET = 1006;
     private static MyPushIntentService pushIntentService;
@@ -117,35 +120,28 @@ public class MyPushIntentService extends UmengBaseIntentService implements Obser
             String notice = msg.text;
             Map<String, String> maps = msg.extra;
 //            android.util.Log.i("info", "==========extra:" + printMap(maps));
+            android.util.Log.i("info", "==========extra:" + maps);
             Intent intent = null;
             if (msgType.equals("chat")) {
                 if (notice.contains("和你已经成为好友!")) {
+                    notificationId = notifyID_FRIEND_REPLY;
                     intent = new Intent();
                     android.util.Log.i("info", "=============receiver()");
-//                    if (pushCallback != null) {
-//                        pushCallback.onMessageReceiver(Constants.Action.CHAT_AGREE_FRIENDSHIP);
-//                    }
-//                    Session.getInstance().refreshContacts(null, Constants.Action.CHAT_AGREE_FRIENDSHIP);
-//                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(Constants.Action.CHAT_AGREE_FRIENDSHIP));
-//                    senBroadCast(appContext, Constants.Action.CHAT_AGREE_FRIENDSHIP);
                     EventBus.getDefault().post(new MessageEvent(Constants.Action.CHAT_AGREE_FRIENDSHIP));
-                    notificationId = notifyID_FRIEND_REPLY;
-                } else {
+                    senBroadCast(appContext, Constants.Action.CHAT_AGREE_FRIENDSHIP);
+                } else if (notice.contains("邀请你加为好友!")) {
                     notificationId = notifyID_FRIEND_ADD;
 //                    it = new Intent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
                     android.util.Log.i("info", "=====8888888========add()");
                     intent = new Intent(appContext, NewFriendsActivity.class);
                     EventBus.getDefault().post(new MessageEvent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE));
-//                    ContactBooksFragment.onMessage(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
-//                    App.getInstance().getFragment().onChatMessageReceiver(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
-
-//                    if (pushCallback != null) {
-//                        android.util.Log.i("info", "=====6666666========add()");
-//                        pushCallback.onMessageReceiver(Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
-//                    }
-//                    Session.getInstance().refreshContacts(null, Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
                     senBroadCast(appContext, Constants.Action.CHAT_NEW_MESSAGE_NOTICE);
-//                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(Constants.Action.CHAT_NEW_MESSAGE_NOTICE));
+                } else if (notice.contains(":")) {
+                    notificationId = PreferenceUtils.getInt(appContext, PrefKey.NOTIFY_NEWS_TAG, 1008);
+                    PreferenceUtils.putInt(appContext, PrefKey.NOTIFY_NEWS_TAG, notificationId + 1);
+//                    notificationId = notifyID_CHAT_NEWS++;
+                    android.util.Log.i("info", "=====9999999========chatMessage()");
+                    intent = new Intent(Constants.Action.ACTIVITY_CLOSE);
                 }
                 mBuilder.setContentTitle(msg.title);
                 mBuilder.setTicker(notice);
@@ -173,7 +169,15 @@ public class MyPushIntentService extends UmengBaseIntentService implements Obser
                 intent = new Intent();
                 notificationId = notifyID;
             }
-            PendingIntent pendingIntent = PendingIntent.getActivity(appContext, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = null;
+            if (notificationId >= 1008) {
+                android.util.Log.i("info", "====================发广播   notificationId:" + notificationId);
+                pendingIntent = PendingIntent.getBroadcast(appContext, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            } else {
+                android.util.Log.i("info", "====================切换activity   notificationId:" + notificationId);
+                pendingIntent = PendingIntent.getActivity(appContext, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            }
+//            PendingIntent pendingIntent = PendingIntent.getActivity(appContext, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setContentIntent(pendingIntent);
             Notification notification = mBuilder.build();
             notification.defaults = Notification.DEFAULT_SOUND;

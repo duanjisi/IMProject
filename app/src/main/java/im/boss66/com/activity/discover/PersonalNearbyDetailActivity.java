@@ -2,7 +2,6 @@ package im.boss66.com.activity.discover;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -343,8 +342,8 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                     if (person != null) {
                         Intent intent = new Intent(Constants.Action.CONTACTS_REMOVE_CURRETN_ITEM);
                         intent.putExtra("userid", person.getUser_id());
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-
+//                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        sendBroadcast(intent);
                         ConversationHelper.getInstance().deleteByConversationId(person.getUser_id());
                         Session.getInstance().refreshConversationPager();
                     }

@@ -34,6 +34,7 @@ import im.boss66.com.db.dao.ConversationHelper;
 import im.boss66.com.entity.BaseConversation;
 import im.boss66.com.entity.MessageItem;
 import im.boss66.com.http.HttpUrl;
+import im.boss66.com.util.Utils;
 
 /**
  * Created by Johnny on 2017/1/16.
@@ -85,7 +86,6 @@ public class ChatServices extends Service implements Observer {
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-        userid = App.getInstance().getAccount().getUser_id();
 //        mConnection = App.getInstance().getWebSocket();
         startConnection();
     }
@@ -128,6 +128,7 @@ public class ChatServices extends Service implements Observer {
 //            if (mConnection.isConnected()) {
 //                mConnection.disconnect();
 //            }
+            userid = App.getInstance().getAccount().getUser_id();
             mConnection = App.getInstance().getWebSocket();
             mConnection.connect(HttpUrl.WS_URL, new WebSocketConnectionHandler() {
                 @Override
@@ -169,12 +170,13 @@ public class ChatServices extends Service implements Observer {
         if (mConnection != null) {
             if (mConnection.isConnected()) {
                 if (msg != null && !msg.equals("")) {
-                    Log.i("info", "===================IM发消息:" + msg);
                     mConnection.sendTextMessage(msg);
                 }
             } else {
                 startConnection();
             }
+        } else {
+            startConnection();
         }
 //        if (mConnection != null && msg != null && !msg.equals("")) {
 //            Log.i("info", "===================IM发消息:" + msg);
@@ -222,44 +224,74 @@ public class ChatServices extends Service implements Observer {
                     sation.setConversation_id(datas[1]);
                     fromid = datas[1];
                 }
-                boolean isopen = PreferenceUtils.getBoolean(this, PrefKey.AVOID_DISTURB + fromid, false);
-                if (PreferenceUtils.getBoolean(this, "system_alerts", true) && !isopen) {
-                    long time2 = System.currentTimeMillis();
-                    if (time2 - time1 > 2000) {
-                        time1 = time2;
-                        startAlarm(this);
-                    }
-                }
+//                boolean isForground = App.getInstance().isForground();
+//                if (!isForground) {
+//                    Utils.sendNotification(this, "");
+//                } else {
+//                    boolean isopen = PreferenceUtils.getBoolean(this, PrefKey.AVOID_DISTURB + fromid, false);
+//                    if (PreferenceUtils.getBoolean(this, "system_alerts", true) && !isopen) {
+//                        long time2 = System.currentTimeMillis();
+//                        if (time2 - time1 > 2000) {
+//                            time1 = time2;
+//                            startAlarm(this);
+//                        }
+//                    }
+//                }
                 sation.setNewest_msg_type(datas[3]);
                 sation.setNewest_msg_time(datas[5] + "000");
                 ConversationHelper.getInstance().save(sation);
                 String noticeKey = PrefKey.NEWS_NOTICE_KEY + "/" + fromid;
                 String msg = "";
+                String notice = "";
                 if (!datas[3].equals("group")) {
                     if (datas[0].equals("emotion")) {
                         msg = "[动画表情]";
+                        notice = conversation + ":" + "[动画表情]";
                     } else if (datas[0].equals("picture")) {
                         msg = "[图片]";
+                        notice = conversation + ":" + "[图片]";
                     } else if (datas[0].equals("video")) {
                         msg = "[视频]";
+                        notice = conversation + ":" + "[视频]";
                     } else if (datas[0].equals("audio")) {
                         msg = "[声音]";
+                        notice = conversation + ":" + "[声音]";
                     } else {
                         msg = sender + ":" + datas[2];
+                        notice = conversation + ":" + datas[2];
                     }
                 } else {
                     if (datas[0].equals("emotion")) {
                         msg = sender + "发了一条 [动画表情]";
+                        notice = conversation + ":" + "发了一条 [动画表情]";
                     } else if (datas[0].equals("picture")) {
                         msg = sender + "发了一条 [图片]";
+                        notice = conversation + ":" + "发了一条 [图片]";
                     } else if (datas[0].equals("video")) {
                         msg = sender + "发了一条 [视频]";
+                        notice = conversation + ":" + "发了一条 [视频]";
                     } else if (datas[0].equals("audio")) {
                         msg = sender + "发了一条 [声音]";
+                        notice = conversation + ":" + "发了一条 [声音]";
                     } else {
                         msg = sender + ":" + datas[2];
+                        notice = conversation + ":" + datas[2];
                     }
                 }
+                boolean isForground = App.getInstance().isForground();
+                if (!isForground) {
+                    Utils.sendNotification(this, notice);
+                } else {
+                    boolean isopen = PreferenceUtils.getBoolean(this, PrefKey.AVOID_DISTURB + fromid, false);
+                    if (PreferenceUtils.getBoolean(this, "system_alerts", true) && !isopen) {
+                        long time2 = System.currentTimeMillis();
+                        if (time2 - time1 > 2000) {
+                            time1 = time2;
+                            startAlarm(this);
+                        }
+                    }
+                }
+
                 PreferenceUtils.putString(this, noticeKey, msg);
                 String key = PrefKey.UN_READ_NEWS_KEY + "/" + fromid;
                 int num = PreferenceUtils.getInt(this, key, 0);
@@ -334,11 +366,19 @@ public class ChatServices extends Service implements Observer {
     }
 
     private void login() {
-        mConnection.sendTextMessage("login_" + userid);
+        if (mConnection != null) {
+            mConnection.sendTextMessage("login_" + userid);
+        } else {
+            startConnection();
+        }
     }
 
     private void logout() {
-        mConnection.sendTextMessage("logout_" + userid);
+        if (mConnection != null) {
+            mConnection.sendTextMessage("logout_" + userid);
+        } else {
+            startConnection();
+        }
     }
 
     @Override
@@ -357,6 +397,8 @@ public class ChatServices extends Service implements Observer {
                 if (!mConnection.isConnected()) {
                     startConnection();
                 }
+            } else {
+                startConnection();
             }
         }
     }
