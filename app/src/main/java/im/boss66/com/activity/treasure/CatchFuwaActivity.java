@@ -248,6 +248,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         }
         if (mCamera == null) {
             mCamera = mCameraManager.getCamera();
+        }
+        if (mCamera != null) {
             Camera.Parameters parameters = mCamera.getParameters();
             // 设置预览照片的大小
             List<Camera.Size> supportedPictureSizes =
@@ -476,7 +478,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             //移动后静止一段时间，可以发生对焦行为
                             if (!isFocusing) {
                                 canFocusIn = false;
-                                if (!previewing && isTakePic) {
+                                if (!previewing && isTakePic && mCamera != null) {
                                     mCamera.takePicture(null, null, mPictureCallback);
                                     isTakePic = false;
                                 }
@@ -548,7 +550,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private Runnable doAutoFocus = new Runnable() {
         public void run() {
             if (previewing) {
-                mCamera.autoFocus(autoFocusCB);
+                if (mCamera != null) {
+                    mCamera.autoFocus(autoFocusCB);
+                }
                 isTakePic = true;
                 previewing = false;
             }
