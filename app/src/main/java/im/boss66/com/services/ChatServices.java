@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -128,7 +129,7 @@ public class ChatServices extends Service implements Observer {
 //            if (mConnection.isConnected()) {
 //                mConnection.disconnect();
 //            }
-            userid = App.getInstance().getAccount().getUser_id();
+            userid = App.getInstance().getUid();
             mConnection = App.getInstance().getWebSocket();
             mConnection.connect(HttpUrl.WS_URL, new WebSocketConnectionHandler() {
                 @Override
@@ -366,7 +367,7 @@ public class ChatServices extends Service implements Observer {
     }
 
     private void login() {
-        if (mConnection != null) {
+        if (mConnection != null && !TextUtils.isEmpty(userid)) {
             mConnection.sendTextMessage("login_" + userid);
         } else {
             startConnection();
@@ -374,7 +375,7 @@ public class ChatServices extends Service implements Observer {
     }
 
     private void logout() {
-        if (mConnection != null) {
+        if (mConnection != null && !TextUtils.isEmpty(userid)) {
             mConnection.sendTextMessage("logout_" + userid);
         } else {
             startConnection();
