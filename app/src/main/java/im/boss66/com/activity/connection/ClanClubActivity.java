@@ -292,8 +292,11 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 if (isClan == 1) {
                     bundle.putString("id_value", "4");
                     bundle.putInt("id_value_ext", Integer.parseInt(id));
-                } else {
+                } else if (isClan == 2) {
                     bundle.putString("id_value", "3");
+                    bundle.putInt("id_value_ext", Integer.parseInt(id));
+                } else if (isClan == 3) {
+                    bundle.putString("id_value", "5");
                     bundle.putInt("id_value_ext", Integer.parseInt(id));
                 }
                 bundle.putString("classType", "SchoolHometownActivity");
@@ -502,12 +505,13 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        String url = null;
         if (isClan == 1) {
-            String url = HttpUrl.CANCEL_FOLLOW_CLAN + "?clan_id=" + id;
+            url = HttpUrl.CANCEL_FOLLOW_CLAN + "?clan_id=" + id;
         } else if (isClan == 2) {
-            String url = HttpUrl.CANCEL_FOLLOW_COFC + "?cofc_id=" + id;
+            url = HttpUrl.CANCEL_FOLLOW_COFC + "?cofc_id=" + id;
         } else if (isClan == 3) {
-            String url = HttpUrl.CANCELFOLLOW_TRIBE + "?stribe_id=" + id;
+            url = HttpUrl.CANCELFOLLOW_TRIBE + "?stribe_id=" + id;
         }
 
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
@@ -549,12 +553,13 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        String url = null;
         if (isClan == 1) {
-            String url = HttpUrl.FOLLOW_CLAN + "?clan_id=" + id;
+            url = HttpUrl.FOLLOW_CLAN + "?clan_id=" + id;
         } else if (isClan == 2) {
-            String url = HttpUrl.FOLLOW_COFC + "?cofc_id=" + id;
+            url = HttpUrl.FOLLOW_COFC + "?cofc_id=" + id;
         } else if (isClan == 3) {
-            String url = HttpUrl.FOLLOW_TRIBE + "?stribe_id=" + id;
+            url = HttpUrl.FOLLOW_TRIBE + "?stribe_id=" + id;
         }
 
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
@@ -729,13 +734,13 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 bundle.putInt("type", OPEN_CAMERA);
                 bundle.putString("img", path);
                 bundle.putString("classType", "SchoolHometownActivity");
-
+                bundle.putInt("id_value_ext", Integer.parseInt(id));
                 if (isClan == 1) {
                     bundle.putString("id_value", "4");
-                    bundle.putInt("id_value_ext", Integer.parseInt(id));
-                } else {
+                } else if (isClan == 2) {
                     bundle.putString("id_value", "3");
-                    bundle.putInt("id_value_ext", Integer.parseInt(id));
+                } else if (isClan == 3) {
+                    bundle.putString("id_value", "5");
                 }
                 openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
             }
@@ -747,12 +752,13 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
             bundle.putStringArrayList("imglist", selectPicList);
             bundle.putString("classType", "SchoolHometownActivity");
             bundle.putString("feedType", "1");
+            bundle.putInt("id_value_ext", Integer.parseInt(id));
             if (isClan == 1) {
                 bundle.putString("id_value", "4");
-                bundle.putInt("id_value_ext", Integer.parseInt(id));
-            } else {
+            } else if (isClan == 2) {
                 bundle.putString("id_value", "3");
-                bundle.putInt("id_value_ext", Integer.parseInt(id));
+            } else if (isClan == 3) {
+                bundle.putString("id_value", "5");
             }
             openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
         } else if (requestCode == RECORD_VIDEO && resultCode == RESULT_OK) {
@@ -784,12 +790,13 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 bundle.putString("videoPath", videoPath);
                 bundle.putString("classType", "SchoolHometownActivity");
                 bundle.putString("feedType", "2");
+                bundle.putInt("id_value_ext", Integer.parseInt(id));
                 if (isClan == 1) {
                     bundle.putString("id_value", "4");
-                    bundle.putInt("id_value_ext", Integer.parseInt(id));
-                } else {
+                } else if (isClan == 2) {
                     bundle.putString("id_value", "3");
-                    bundle.putInt("id_value_ext", Integer.parseInt(id));
+                } else if (isClan == 3) {
+                    bundle.putString("id_value", "5");
                 }
                 openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
 
@@ -804,12 +811,13 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
             bundle.putString("videoPath", url);
             bundle.putString("classType", "SchoolHometownActivity");
             bundle.putString("feedType", "2");
+            bundle.putInt("id_value_ext", Integer.parseInt(id));
             if (isClan == 1) {
                 bundle.putString("id_value", "4");
-                bundle.putInt("id_value_ext", Integer.parseInt(id));
-            } else {
+            } else if (isClan == 2) {
                 bundle.putString("id_value", "3");
-                bundle.putInt("id_value_ext", Integer.parseInt(id));
+            } else if (isClan == 3) {
+                bundle.putString("id_value", "5");
             }
             openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
         } else if (requestCode == SEND_TYPE_PHOTO_TX && resultCode == RESULT_OK) {
@@ -841,8 +849,10 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
 
         if (isClan == 1) {
             url = url + "&id_value=" + 4 + "&id_value_ext=" + id;
-        } else {
+        } else if (isClan == 2) {
             url = url + "&id_value=" + 3 + "&id_value_ext=" + id;
+        } else if (isClan == 3) {
+            url = url + "&id_value=" + 5 + "&id_value_ext=" + id;
         }
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
