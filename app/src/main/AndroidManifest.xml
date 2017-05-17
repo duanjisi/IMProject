@@ -685,7 +685,10 @@
             android:name=".services.ChatServices"
             android:enabled="true"
             android:exported="false"></service>
-
+        <service
+            android:name=".services.VideoCacheService"
+            android:enabled="true"
+            android:exported="false"></service>
         <service
             android:name=".services.CoreService"
             android:enabled="true"

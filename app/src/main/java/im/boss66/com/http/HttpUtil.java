@@ -41,7 +41,7 @@ public class HttpUtil {
          令牌规则，微秒时间戳+用户id，两次32位md5加密
          */
         if (App.getInstance().isLogin()) {
-            params.put(K.Request.TOKEN, App.getInstance().getAccount().getAccess_token());
+            params.put(K.Request.TOKEN, App.getInstance().getAccountEntity().getAccess_token());
 //            params.put("login_user_id", App.getInstance().getAccount().getUser_id());
         }
 
