@@ -165,6 +165,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private Camera.Parameters parameters;
     private String curCity;
     private boolean isDialogShow = false;
+    private int fuwaSocialNum, fuwaTreasureNum, fuwaSelectType;
+    private TextView tv_fuwa_type;
+    private boolean isSelectVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,7 +216,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             finish();
             return;
         }
-        if (mCamera == null){
+        if (mCamera == null) {
             mCamera = mCameraManager.getCamera();
         }
         if (parameters == null && mCamera != null) {
@@ -446,6 +449,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 showTimeChoosePop();
                 break;
             case R.id.iv_video:
+                isSelectVideo = true;
                 showActionSheet();
                 break;
             case R.id.bt_sure:
@@ -455,6 +459,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 recommond = et_recommond.getText().toString().trim();
                 et_recommond.setText("");
                 hideFuwaServer();
+                break;
+            case R.id.rl_fuwa_type:
+                isSelectVideo = false;
+                showActionSheet();
                 break;
         }
     }
@@ -858,8 +866,11 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 if (!TextUtils.isEmpty(res)) {
                     FuwaEntity entity = JSON.parseObject(res, FuwaEntity.class);
                     List<FuwaEntity.Data> data = entity.getData();
-                    if (data != null) {
-                        currentFuwaNum = data.size();
+                    if (data != null && data.size() > 0) {
+                        getNumFuwaType(data);
+                    } else {
+                        fuwaSocialNum = 0;
+                        fuwaTreasureNum = 0;
                     }
                 }
             }
@@ -871,22 +882,42 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         });
     }
 
+    private void getNumFuwaType(List<FuwaEntity.Data> data) {
+        for (FuwaEntity.Data item : data) {
+            String gid = item.getGid();
+            if (!TextUtils.isEmpty(gid)) {
+                if (gid.contains("c")) {
+                    fuwaTreasureNum++;
+                } else {
+                    fuwaSocialNum++;
+                }
+            }
+        }
+    }
+
     private void showNumDialog() {
         if (dialogNum == null) {
             View view = LayoutInflater.from(context).inflate(
                     R.layout.dialog_hide_input_num, null);
             int sceenW = UIUtils.getScreenWidth(this);
             LinearLayout ll_p = (LinearLayout) view.findViewById(R.id.ll_p);
+            LinearLayout ll_fuwa_type = (LinearLayout) view.findViewById(R.id.ll_fuwa_type);
+            RelativeLayout rl_fuwa_type = (RelativeLayout) view.findViewById(R.id.rl_fuwa_type);
+            tv_fuwa_type = (TextView) view.findViewById(R.id.tv_fuwa_type);
             et_dialog_num = (EditText) view.findViewById(R.id.et_dialog_num);
             tv_dialog_num_tip = (TextView) view.findViewById(R.id.tv_dialog_num_tip);
             bt_dialog_catch = (Button) view.findViewById(R.id.bt_dialog_catch);
             bt_dialog_catch.setOnClickListener(this);
             et_dialog_num.addTextChangedListener(this);
+            rl_fuwa_type.setOnClickListener(this);
             ImageView iv_close = (ImageView) view.findViewById(R.id.iv_close);
             iv_close.setOnClickListener(this);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll_p.getLayoutParams();
             params.width = (int) (sceenW * 0.85);
             ll_p.setLayoutParams(params);
+
+            ll_fuwa_type.getLayoutParams().height = sceenW / 7;
+
             dialogNum = new Dialog(context, R.style.ActionSheetDialogStyle);
             dialogNum.setContentView(view);
             dialogNum.setCanceledOnTouchOutside(true);
@@ -967,10 +998,15 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 .builder()
                 .setCancelable(false)
                 .setCanceledOnTouchOutside(true);
-        actionSheet.addSheetItem(getString(R.string.small_video), ActionSheet.SheetItemColor.Black, this)
-                .addSheetItem(getString(R.string.local_small_video), ActionSheet.SheetItemColor.Black,
-                        this);
-
+        if (isSelectVideo) {
+            actionSheet.addSheetItem(getString(R.string.small_video), ActionSheet.SheetItemColor.Black, this)
+                    .addSheetItem(getString(R.string.local_small_video), ActionSheet.SheetItemColor.Black,
+                            this);
+        } else {
+            actionSheet.addSheetItem("社交", ActionSheet.SheetItemColor.Black, this)
+                    .addSheetItem("寻宝", ActionSheet.SheetItemColor.Black,
+                            this);
+        }
         actionSheet.show();
     }
 
@@ -978,12 +1014,30 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     public void onClick(int which) {
         switch (which) {
             case 1:
-                cameraType = RECORD_VIDEO;
-                getPermission();
+                if (isSelectVideo) {
+                    cameraType = RECORD_VIDEO;
+                    getPermission();
+                } else {
+                    fuwaSelectType = 0;
+                    if (tv_fuwa_type != null)
+                        tv_fuwa_type.setText("社交");
+                    currentFuwaNum = fuwaSocialNum;
+                    tv_dialog_num_tip.setTextColor(getResources().getColor(R.color.top_bar_color));
+                    tv_dialog_num_tip.setText("可藏福娃（个）：" + currentFuwaNum);
+                }
                 break;
             case 2:
-                cameraType = READ_VIDEO;
-                getPermission();
+                if (isSelectVideo) {
+                    cameraType = READ_VIDEO;
+                    getPermission();
+                } else {
+                    fuwaSelectType = 1;
+                    if (tv_fuwa_type != null)
+                        tv_fuwa_type.setText("寻宝");
+                    currentFuwaNum = fuwaTreasureNum;
+                    tv_dialog_num_tip.setTextColor(getResources().getColor(R.color.top_bar_color));
+                    tv_dialog_num_tip.setText("可藏福娃（个）：" + currentFuwaNum);
+                }
                 break;
         }
     }
@@ -1018,7 +1072,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             recommond = "暂无活动介绍";
         }
         String url = HttpUrl.HIDE_MY_FUWA + userId + "&pos=" + address + "&geohash=" + geohash
-                + "&detail=" + recommond + "&validtime=" + validtime + "&number=" + curSelectFuwaNum;
+                + "&detail=" + recommond + "&validtime=" + validtime + "&number=" + curSelectFuwaNum + "&type=" + fuwaSelectType;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         RequestParams params = new RequestParams();
         params.addBodyParameter("file", imgFile);
@@ -1063,6 +1117,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void afterTextChanged(Editable editable) {
+        if (tv_fuwa_type != null && tv_fuwa_type.equals("请选择")) {
+            showToast("请先选择福娃用途", false);
+            return;
+        }
         String num = et_dialog_num.getText().toString().trim();
         if (!TextUtils.isEmpty(num) && tv_dialog_num_tip != null) {
             int num_i = Integer.parseInt(num);

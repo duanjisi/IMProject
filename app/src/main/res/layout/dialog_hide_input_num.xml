@@ -21,6 +21,57 @@
             android:src="@drawable/fuwa_close" />
 
         <LinearLayout
+            android:id="@+id/ll_fuwa_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="福娃用途"
+                android:textColor="@color/white" />
+
+            <RelativeLayout
+                android:id="@+id/rl_fuwa_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="3"
+                android:background="@drawable/bg_fuwa_gary_round"
+                android:padding="@dimen/dp_14">
+
+                <TextView
+                    android:id="@+id/tv_fuwa_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="请选择"
+                    android:textColor="@color/white" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/iv_fuwa_type"
+                    android:background="@color/bg_rectangle" />
+
+                <ImageView
+                    android:id="@+id/iv_fuwa_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/dp_14"
+                    android:src="@drawable/fuwa_choicebox_no" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_22"
