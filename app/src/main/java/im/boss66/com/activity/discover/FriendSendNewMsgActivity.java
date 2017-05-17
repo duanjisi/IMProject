@@ -342,11 +342,18 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
     }
 
     private void sendPhotoText() {
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         String content = et_tx.getText().toString().trim();
+        if (!TextUtils.isEmpty(content)) {
+            params.addBodyParameter("content", content);
+        } else if (SEND_TYPE_TEXT.equals(sendType)) {
+            showToast("内容不能为空", false);
+            return;
+        }
         showLoadingDialog();
         String url;
         HttpUtils httpUtils = new HttpUtils(70 * 1000);//实例化RequestParams对象
-        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+
         params.addBodyParameter("access_token", access_token);
         if (!TextUtils.isEmpty(classType) && "SchoolHometownActivity".equals(classType)) {
             url = HttpUrl.COMMUNITY_CREATE;
@@ -401,9 +408,6 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
             }
             File file = new File(videoPath);
             params.addBodyParameter("files", file);
-        }
-        if (!TextUtils.isEmpty(content)) {
-            params.addBodyParameter("content", content);
         }
 
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
