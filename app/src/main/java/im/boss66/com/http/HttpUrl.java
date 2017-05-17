@@ -339,5 +339,19 @@ public class HttpUrl {
     public static final String QUERY_MY_APPLY_FUWA = BASE_FUWA[FUWA_TAG] + "api/querymyapply?user=";
     //福娃活动详情
     public static final String FUWA_ACTIVITY_INFO  = BASE_FUWA[FUWA_TAG]+"api/huodong?fuwagid=";
+    //创建部落
+    public  static final String CREATE_TRIBE = MAIN_URL+"api/v1/storetribe/create";
+    //获取部落详情
+    public static final String TRIBE_DETAILS = MAIN_URL+"api/v1/storetribe";
+    //关注部落
+    public static final String FOLLOW_TRIBE = MAIN_URL+"api/v1/storetribe/follow";
+    //取消关注部落
+    public static final String CANCELFOLLOW_TRIBE = MAIN_URL+"api/v1/storetribe/unfollow";
+    //部落web页
+    public static final String TRIBE_WEB = MAIN_URL+"web/storetribe";
+    //修改部落
+    public static final String EDIT_TRIBE = MAIN_URL+"api/v1/storetribe/update";
+    //删除部落
+    public static final String DELETE_TRIBE = MAIN_URL+"api/v1/storetribe/delete";
 
 }

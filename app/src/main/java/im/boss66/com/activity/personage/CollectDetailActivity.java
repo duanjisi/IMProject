@@ -73,7 +73,7 @@ public class CollectDetailActivity extends BaseActivity {
                     } else {
                         tv_name.setText(name + "-" + groupName);
                     }
-                    Glide.with(context).load(entity.getThum()).
+                    Glide.with(context).load(entity.getFrom_avatar()).
                             error(R.drawable.zf_default_album_grid_image).into(riv_head);
                     String time = entity.getAdd_time();
                     tv_time.setText("收藏于" + time);

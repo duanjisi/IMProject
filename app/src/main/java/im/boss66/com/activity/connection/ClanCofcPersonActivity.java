@@ -48,7 +48,7 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
     private String url;
     private RecyclerView rcv_famous_people;
     private ClanCofcPeopleAdapter adapter;
-    private boolean isClan;
+    private int isClan;
     private Dialog dialog;
     private DeleteDialog deleteDialog;
     private String person_id = "";
@@ -84,9 +84,9 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
         Intent intent = getIntent();
         if (intent != null) {
             id = intent.getStringExtra("id");
-            isClan = intent.getBooleanExtra("isClan", false);
+            isClan = intent.getIntExtra("isClan", -1);
             user_id = intent.getStringExtra("user_id");   //宗亲商会创建人uid
-            if (isClan) {
+            if (isClan==1) {
                 url = HttpUrl.CLAN_PERSON_LIST + "?clan_id=" + id;
             } else {
                 url = HttpUrl.COFC_PERSON_LIST + "?cofc_id=" + id;
@@ -216,7 +216,7 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        if (isClan) {
+        if (isClan==1) {
             deleteUrl = HttpUrl.DELETE_CLAN_PERSON;
         } else {
             deleteUrl = HttpUrl.DELETE_COFC_PERSON;
@@ -272,7 +272,7 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
             public void onClick(View v) {
                 Intent intent = new Intent(ClanCofcPersonActivity.this, EditClanCofcPersonActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putBoolean("isClan", isClan);
+                bundle.putInt("isClan", isClan);
                 bundle.putString("id", id);
                 //名人信息
                 bundle.putString("person_id",person_id);
@@ -342,7 +342,7 @@ public class ClanCofcPersonActivity extends ABaseActivity implements View.OnClic
 //                }
                 Intent intent = new Intent(this, EditClanCofcPersonActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putBoolean("isClan", isClan);
+                bundle.putInt("isClan", isClan);
                 bundle.putString("id", id);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, 1);

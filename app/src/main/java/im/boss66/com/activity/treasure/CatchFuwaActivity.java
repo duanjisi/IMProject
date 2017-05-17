@@ -306,7 +306,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 title = "嗨萌寻宝";
                 shareContent = getResources().getString(R.string.share_content);
                 targetUrl = "https://api.66boss.com/web/download?uid=" + userId;
-//                imageUrl = "http://bbs.umeng.com/uc_server/data/avatar/000/00/00/90_avatar_middle.jpg";
                 if (!isFinishing()) {
                     if (sharePopup.isShowing()) {
                         sharePopup.dismiss();
@@ -833,7 +832,12 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             Intent intent = new Intent(Constants.Action.MAP_MARKER_REFRESH);
                             intent.putExtra("gid", fuwaId);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                            playSucessGif();
+                            try {
+                                playSucessGif();
+                            } catch (Exception e) {
+                                handler.sendEmptyMessageDelayed(111,
+                                        1000);
+                            }
                         } else {
                             previewing = true;
                             if (mCamera != null) {

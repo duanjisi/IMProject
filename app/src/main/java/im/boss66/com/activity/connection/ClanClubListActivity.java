@@ -184,9 +184,9 @@ public class ClanClubListActivity extends ABaseActivity implements View.OnClickL
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(ClanClubListActivity.this, ClanClubActivity.class);
                         if ("我的宗亲".equals(type)) {
-                            intent.putExtra("isClan", true);
+                            intent.putExtra("isClan", 1);
                         } else {
-                            intent.putExtra("isClan", false);
+                            intent.putExtra("isClan", 2);
                         }
                         if(position-1==datas.size()){
                             return;

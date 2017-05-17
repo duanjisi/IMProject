@@ -87,6 +87,15 @@ public class MyInfo {
         private List<SchoolListBean> hometown_list;
         private List<SchoolListBean> cofc_list;
         private List<SchoolListBean> clan_list;
+        private List<SchoolListBean> stribe_list;
+
+        public List<SchoolListBean> getStribe_list() {
+            return stribe_list;
+        }
+
+        public void setStribe_list(List<SchoolListBean> stribe_list) {
+            this.stribe_list = stribe_list;
+        }
 
         public List<SchoolListBean> getSchool_list() {
             return school_list;
@@ -168,6 +177,15 @@ public class MyInfo {
             private String brief_desc;
             private int count;
             private String type;      //我的学校 我的家乡...
+            private String stribe_id;
+
+            public String getStribe_id() {
+                return stribe_id;
+            }
+
+            public void setStribe_id(String stribe_id) {
+                this.stribe_id = stribe_id;
+            }
 
             private int from;
 

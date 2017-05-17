@@ -20,7 +20,7 @@ import im.boss66.com.widget.ActionSheet;
  */
 public class ClanCofcDetailActivity extends WebBaseActivity implements ActionSheet.OnSheetItemClickListener {
 
-    private boolean isClan;
+    private int isClan;
     private String id;
     private String user_id; //创建人的uid
     private String uid;
@@ -36,14 +36,17 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
         if (intent != null) {
             id = intent.getStringExtra("id");
             title= intent.getStringExtra("name");
-            isClan = intent.getBooleanExtra("isClan", false);
+            isClan = intent.getIntExtra("isClan", -1);
             desc = intent.getStringExtra("desc");
             contact = intent.getStringExtra("contact");
             address = intent.getStringExtra("address");
-            if(isClan){
+            if(isClan==1){
                 url = HttpUrl.CLAN_DETAIL + "?id=" + id;
-            }else {
+            }else if(isClan==2) {
                 url = HttpUrl.COFC_DETAIL + "?id=" + id;
+            }else {
+                url = HttpUrl.TRIBE_WEB + "?id=" + id;
+
             }
             user_id = intent.getStringExtra("user_id");
         }
@@ -76,12 +79,12 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
     }
     @Override
     protected void setTitleUrl() {
-        if(isClan){
-
+        if(isClan==1){
             tv_headcenter_view.setText("宗亲简介");
-        }else{
-
+        }else if(isClan==2){
             tv_headcenter_view.setText("商会简介");
+        }else {
+            tv_headcenter_view.setText("部落简介");
         }
         webview.loadUrl(url);
     }
@@ -99,14 +102,7 @@ public class ClanCofcDetailActivity extends WebBaseActivity implements ActionShe
     public void onClick(int which) {
         switch (which){
             case 1:
-//                if(!uid.equals(user_id)){
-//                    if(isClan){
-//                        ToastUtil.showShort(context,"不能编辑别人创建的宗亲");
-//                    }else {
-//                        ToastUtil.showShort(context,"不能编辑别人创建的商会");
-//                    }
-//                    return;
-//                }
+
                 Intent intent = new Intent(this, EditClanCofcActivity.class);
                 intent.putExtra("isClan",isClan);
                 intent.putExtra("id",id);

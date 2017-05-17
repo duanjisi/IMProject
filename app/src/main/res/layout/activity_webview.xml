@@ -54,7 +54,7 @@
             android:gravity="center"
             android:paddingLeft="@dimen/dp_6"
             android:paddingRight="11dp"
-            android:text="保存"
+            android:text="分享"
             android:textColor="@color/white"
             android:textSize="16.5sp"
             android:visibility="gone" />

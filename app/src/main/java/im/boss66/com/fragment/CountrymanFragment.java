@@ -100,7 +100,7 @@ public class CountrymanFragment extends BaseFragment {
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
         String url = HttpUrl.COUNTRYMAN_LIST;
-        url = url + "?page=" + 0+  "&size=" +"3";
+        url = url + "?page=" + 0+  "&size=" +"20";
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
             @Override
