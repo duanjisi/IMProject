@@ -50,6 +50,7 @@ import im.boss66.com.activity.connection.ClanClubListActivity;
 import im.boss66.com.activity.connection.PeopleCenterActivity;
 import im.boss66.com.activity.connection.PersonalDataActivity;
 import im.boss66.com.activity.connection.SchoolHometownActivity;
+import im.boss66.com.activity.connection.TribeActivity;
 import im.boss66.com.event.CreateSuccess;
 import im.boss66.com.adapter.MyInfoAdapter;
 import im.boss66.com.entity.AccountEntity;
@@ -104,14 +105,17 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private DeleteDialog deleteDialog;
     private String clan_id;
 
-    private boolean isClan;
+    private int isClan;
     private MyInfo.ResultBean.SchoolListBean cofcListBean;
+    private MyInfo.ResultBean.SchoolListBean tribeListBean;
     private String cofc_id;
     private ImageView iv_avatar;
     private ImageLoader imageLoader;
     private AccountEntity account;
     private String url;
     private String uid;
+    private List<MyInfo.ResultBean.SchoolListBean> stribe_list;
+    private String stribe_id;
 
     @Nullable
     @Override
@@ -161,47 +165,55 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         adapter.setItemListener(new RecycleViewItemListener() {
             @Override
             public void onItemClick(int position) {
-                int from = datas.get(position-1).getFrom();
+                int from = datas.get(position - 1).getFrom();
                 Intent intent;
                 switch (from) {
                     case 1:
                         intent = new Intent(getActivity(), SchoolHometownActivity.class);
                         intent.putExtra("from", 1);
-                        intent.putExtra("name", datas.get(position-1).getName());
-                        intent.putExtra("school_id", datas.get(position-1).getSchool_id());
+                        intent.putExtra("name", datas.get(position - 1).getName());
+                        intent.putExtra("school_id", datas.get(position - 1).getSchool_id());
                         startActivity(intent);
                         break;
                     case 2:
                         intent = new Intent(getActivity(), SchoolHometownActivity.class);
                         intent.putExtra("from", 2);
-                        intent.putExtra("name", datas.get(position-1).getName());
-                        intent.putExtra("hometown_id", datas.get(position-1).getHometown_id());
+                        intent.putExtra("name", datas.get(position - 1).getName());
+                        intent.putExtra("hometown_id", datas.get(position - 1).getHometown_id());
                         startActivity(intent);
                         break;
 
                     case 3:
                         intent = new Intent(getActivity(), ClanClubActivity.class);
-                        intent.putExtra("isClan", true);
-                        intent.putExtra("name", datas.get(position-1).getName());
-                        intent.putExtra("id", datas.get(position-1).getClan_id());
-                        intent.putExtra("user_id",datas.get(position-1).getUser_id());
+                        intent.putExtra("isClan", 1);
+                        intent.putExtra("name", datas.get(position - 1).getName());
+                        intent.putExtra("id", datas.get(position - 1).getClan_id());
+                        intent.putExtra("user_id", datas.get(position - 1).getUser_id());
                         startActivity(intent);
                         break;
                     case 4:
                         intent = new Intent(getActivity(), ClanClubActivity.class);
-                        intent.putExtra("isClan", false);
-                        intent.putExtra("name", datas.get(position-1).getName());
-                        intent.putExtra("id", datas.get(position-1).getCofc_id());
-                        intent.putExtra("user_id",datas.get(position-1).getUser_id());
+                        intent.putExtra("isClan", 2);
+                        intent.putExtra("name", datas.get(position - 1).getName());
+                        intent.putExtra("id", datas.get(position - 1).getCofc_id());
+                        intent.putExtra("user_id", datas.get(position - 1).getUser_id());
                         startActivity(intent);
                         break;
                     case 0:
-                        String type = datas.get(position-1).getType();
-                        if("我的宗亲".equals(type)||"我的商会".equals(type)){
+                        String type = datas.get(position - 1).getType();
+                        if ("我的宗亲".equals(type) || "我的商会".equals(type)) {
                             intent = new Intent(getActivity(), ClanClubListActivity.class);
-                            intent.putExtra("type",type);
+                            intent.putExtra("type", type);
                             startActivity(intent);
                         }
+                        break;
+                    case 5:
+                        intent = new Intent(getActivity(), ClanClubActivity.class);
+                        intent.putExtra("isClan", 3);
+                        intent.putExtra("name", datas.get(position - 1).getName());
+                        intent.putExtra("id", datas.get(position - 1).getStribe_id());
+                        intent.putExtra("user_id", datas.get(position - 1).getUser_id());
+                        startActivity(intent);
                         break;
 
                 }
@@ -210,29 +222,39 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
             @Override
             public boolean onItemLongClick(int position) {
-                int from = datas.get(position-1).getFrom();
-                String user_id = datas.get(position-1).getUser_id();
+                int from = datas.get(position - 1).getFrom();
+                String user_id = datas.get(position - 1).getUser_id();
                 switch (from) {
                     case 3:
-                        if(!uid.equals(user_id)){
+                        if (!uid.equals(user_id)) {
 //                            ToastUtil.showShort(getActivity(),"不能删除别人创建的宗亲");
                             return true;
                         }
-                        isClan = true;
-                        clanListBean = datas.get(position-1);
+                        isClan = 1;
+                        clanListBean = datas.get(position - 1);
                         clan_id = clanListBean.getClan_id();
                         deleteDialog.show();
                         break;
                     case 4:
-                        if(!uid.equals(user_id)){
+                        if (!uid.equals(user_id)) {
 //                            ToastUtil.showShort(getActivity(),"不能删除别人创建的商会");
                             return true;
                         }
-                        isClan = false;
-                        cofcListBean = datas.get(position-1);
+                        isClan = 2;
+                        cofcListBean = datas.get(position - 1);
                         cofc_id = cofcListBean.getCofc_id();
                         deleteDialog.show();
                         break;
+                    case 5:
+                        if (!uid.equals(user_id)) {
+                            return true;
+                        }
+                        isClan = 3;
+                        tribeListBean = datas.get(position - 1);
+                        stribe_id = tribeListBean.getStribe_id();
+                        deleteDialog.show();
+                        break;
+
                 }
                 return true;
             }
@@ -248,10 +270,12 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         deleteDialog.setListener(new DeleteDialog.CallBack() {
             @Override
             public void delete() {
-                if (isClan) {
+                if (isClan==1) {
                     deleteClanCofc(clan_id);
-                } else {
+                } else if(isClan==2){
                     deleteClanCofc(cofc_id);
+                }else{
+                    deleteClanCofc(stribe_id);
                 }
 
 
@@ -265,12 +289,14 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        if (isClan) {
+        if (isClan==1) {
 
             url = HttpUrl.DELETE_CLAN + "?clan_id=" + id;
-        } else {
+        } else if(isClan==2){
 
             url = HttpUrl.DELETE_CLUB + "?cofc_id=" + id;
+        }else{
+            url = HttpUrl.DELETE_TRIBE + "?stribe_id=" + id;
         }
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
@@ -281,12 +307,14 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         if (jsonObject.getInt("code") == 1) {
-                            if (isClan) {
+                            if (isClan==1) {
 
                                 datas.remove(clanListBean);
-                            } else {
+                            } else if(isClan==2){
 
                                 datas.remove(cofcListBean);
+                            }else{
+                                datas.remove(tribeListBean);
                             }
                             adapter.setDatas(datas);
                             adapter.notifyDataSetChanged();
@@ -443,6 +471,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                         hometown_list = result.getHometown_list();
                         clan_list = result.getClan_list();
                         cofc_list = result.getCofc_list();
+                        stribe_list = result.getStribe_list();
 
                         //根据是否有数据，进行setSuccess2赋值，来对点击是否弹窗进行判断
                         if (school_list != null && school_list.size() > 0 && hometown_list != null && hometown_list.size() > 0) {
@@ -453,7 +482,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
                         MyInfo.ResultBean.SchoolListBean schoolListBean = new MyInfo.ResultBean.SchoolListBean();
                         schoolListBean.setType("我的学校");
-                        datas= new ArrayList<>();    //放在这里，防止数据叠加。
+                        datas = new ArrayList<>();    //放在这里，防止数据叠加。
 
                         datas.add(schoolListBean);
                         for (MyInfo.ResultBean.SchoolListBean data : school_list) {
@@ -481,7 +510,14 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                             data.setFrom(4);
                             datas.add(data);
                         }
-                        Log.i("liwya",datas.toString());
+                        MyInfo.ResultBean.SchoolListBean schoolListBean5 = new MyInfo.ResultBean.SchoolListBean();
+                        schoolListBean5.setType("我的部落");
+                        datas.add(schoolListBean5);
+                        for (MyInfo.ResultBean.SchoolListBean data : stribe_list) {
+                            data.setFrom(5);
+                            datas.add(data);
+                        }
+                        Log.i("liwya", datas.toString());
                         handler.obtainMessage(1).sendToTarget();
                     }
 

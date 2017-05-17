@@ -96,7 +96,7 @@ import im.boss66.com.widget.ActionSheet;
 public class ClanClubActivity extends ABaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener
         , CircleContractListener.View {
     private final static String TAG = ClanClubActivity.class.getSimpleName();
-    private boolean isClan;  //是否是宗亲
+    private int isClan;  //是否是宗亲
     private String name;    //标题
     private String id;     //宗亲或者商会id
 
@@ -217,18 +217,22 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
     }
 
     private void initData() {
-        if (isClan) {
+        if (isClan == 1) {
             url = HttpUrl.CLAN_INFO;
-        } else {
+        } else if (isClan == 2) {
             url = HttpUrl.COFC_INFO;
+        } else {
+            url = HttpUrl.TRIBE_DETAILS;
         }
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        if (isClan) {
+        if (isClan == 1) {
             url = url + "?clan_id=" + id;
-        } else {
+        } else if (isClan == 2) {
             url = url + "?cofc_id=" + id;
+        } else {
+            url = url + "?stribe_id=" + id;
         }
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
@@ -261,7 +265,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
         sceenW = UIUtils.getScreenWidth(context);
         Intent intent = getIntent();
         if (intent != null) {
-            isClan = intent.getBooleanExtra("isClan", false);
+            isClan = intent.getIntExtra("isClan", -1);
             name = intent.getStringExtra("name");
             id = intent.getStringExtra("id");
             user_id = intent.getStringExtra("user_id");
@@ -285,7 +289,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 Bundle bundle = new Bundle();
                 bundle.putString("sendType", "text");
                 bundle.putString("feedType", "1");
-                if (isClan) {
+                if (isClan == 1) {
                     bundle.putString("id_value", "4");
                     bundle.putInt("id_value_ext", Integer.parseInt(id));
                 } else {
@@ -316,14 +320,18 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
         tv_follow = (TextView) header.findViewById(R.id.tv_follow);
         tv_follow.setOnClickListener(this);
         tv_count = (TextView) header.findViewById(R.id.tv_count);
-        tv_club.setText("动态");
         tv_club.setVisibility(View.GONE);
-        header.findViewById(R.id.view_line).setVisibility(View.GONE);
-        if (isClan) {
-            tv_news.setText("创建宗亲");
+        if (isClan == 3) {
+            tv_famous_person.setVisibility(View.GONE);
         } else {
-            tv_news.setText("创建商会");
+            header.findViewById(R.id.view_line).setVisibility(View.GONE);
+            if (isClan == 1) {
+                tv_news.setText("创建宗亲");
+            } else {
+                tv_news.setText("创建商会");
+            }
         }
+
         iv_bg.setOnClickListener(this);
         tv_introduce.setOnClickListener(this);
         tv_famous_person.setOnClickListener(this);
@@ -388,7 +396,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 .builder()
                 .setCancelable(false)
                 .setCanceledOnTouchOutside(true);
-        actionSheet.addSheetItem("更换相册封面", ActionSheet.SheetItemColor.Black, this);
+        actionSheet.addSheetItem("更换封面", ActionSheet.SheetItemColor.Black, this);
 
         actionSheet.show();
     }
@@ -406,75 +414,47 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 showActionSheet(1);
                 break;
             case R.id.iv_bg:
-                if(!uid.equals(user_id)){
+                if (!uid.equals(user_id)) {
                     return;
                 }
                 actionType = 0;
                 showActionSheet();
                 break;
             case R.id.tv_introduce:  //简介
-                if (isClan) {
-                    Intent intent = new Intent(this, ClanCofcDetailActivity.class);
-                    intent.putExtra("id", id);
-                    intent.putExtra("isClan", true);
-                    intent.putExtra("name", name);
-                    intent.putExtra("user_id",user_id);
-                    intent.putExtra("desc",desc);
-                    intent.putExtra("contact",contact);
-                    intent.putExtra("address",address);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(this, ClanCofcDetailActivity.class);
-                    intent.putExtra("id", id);
-                    intent.putExtra("isClan", false);
-                    intent.putExtra("name", name);
-                    intent.putExtra("user_id",user_id);
-                    intent.putExtra("desc",desc);
-                    intent.putExtra("contact",contact);
-                    intent.putExtra("address",address);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(this, ClanCofcDetailActivity.class);
+                intent.putExtra("id", id);
+                intent.putExtra("isClan", isClan);
+                intent.putExtra("name", name);
+                intent.putExtra("user_id", user_id);
+                intent.putExtra("desc", desc);
+                intent.putExtra("contact", contact);
+                intent.putExtra("address", address);
+                startActivity(intent);
+
                 break;
             case R.id.tv_famous_person: //名人
-                if (isClan) {
-                    Intent intent = new Intent(this, ClanCofcPersonActivity.class);
-                    intent.putExtra("id", id);
-                    intent.putExtra("isClan", true);
-                    intent.putExtra("user_id",user_id);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(this, ClanCofcPersonActivity.class);
-                    intent.putExtra("id", id);
-                    intent.putExtra("isClan", false);
-                    intent.putExtra("user_id",user_id);
-                    startActivity(intent);
-                }
+                Intent intent1 = new Intent(this, ClanCofcPersonActivity.class);
+                intent1.putExtra("id", id);
+                intent1.putExtra("isClan", isClan);
+                intent1.putExtra("user_id", user_id);
+                startActivity(intent1);
 
                 break;
             case R.id.tv_club:  //动态
                 break;
             case R.id.tv_news:  //创建宗亲
-                Intent intent = new Intent(this, ApplyCreateActivity.class);
-                if (isClan) {
-                    intent.putExtra("from", 1);
-                } else {
-                    intent.putExtra("from", 2);
+                if (isClan == 3) {
+                    return;
                 }
-                startActivity(intent);
+                Intent intent2 = new Intent(this, ApplyCreateActivity.class);
+                intent2.putExtra("from", isClan);
+                startActivity(intent2);
                 break;
             case R.id.tv_follow:
                 if (is_follow == 0) { //未关注，点击关注
-                    if (isClan) {  //宗亲
-                        followClan();
-                    } else {
-                        followCofc();
-                    }
+                    follow();
                 } else { //已经关注，点击取消关注
-                    if (isClan) {
-                        cancelFollowClan();
-                    } else {
-                        cancelFollowCofc();
-                    }
+                    cancelFollow();
                 }
                 break;
             case R.id.tv_add_people://我要留言
@@ -517,53 +497,18 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
         }
     }
 
-    private void cancelFollowCofc() {
+
+    private void cancelFollow() {
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        String url = HttpUrl.CANCEL_FOLLOW_COFC + "?cofc_id=" + id;
-
-        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
-
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                String result = responseInfo.result;
-                if (!TextUtils.isEmpty(result)) {
-
-                    try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        if (jsonObject.getInt("code") == 1) {
-                            handler.obtainMessage(3).sendToTarget();
-
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(HttpException e, String s) {
-                int code = e.getExceptionCode();
-                if (code == 401) {
-                    Intent intent = new Intent();
-                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                    App.getInstance().sendBroadcast(intent);
-                } else {
-                    showToast(e.getMessage(), false);
-                }
-            }
-        });
-
-    }
-
-    private void cancelFollowClan() {
-        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
-        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        String url = HttpUrl.CANCEL_FOLLOW_CLAN + "?clan_id=" + id;
+        if (isClan == 1) {
+            String url = HttpUrl.CANCEL_FOLLOW_CLAN + "?clan_id=" + id;
+        } else if (isClan == 2) {
+            String url = HttpUrl.CANCEL_FOLLOW_COFC + "?cofc_id=" + id;
+        } else if (isClan == 3) {
+            String url = HttpUrl.CANCELFOLLOW_TRIBE + "?stribe_id=" + id;
+        }
 
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
@@ -599,52 +544,18 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
         });
     }
 
-    private void followCofc() {
+
+    private void follow() {
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        String url = HttpUrl.FOLLOW_COFC + "?cofc_id=" + id;
-
-        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
-
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                String result = responseInfo.result;
-                if (!TextUtils.isEmpty(result)) {
-
-                    try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        if (jsonObject.getInt("code") == 1) {
-                            showToast("关注成功", false);
-                            handler.obtainMessage(2).sendToTarget();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(HttpException e, String s) {
-                int code = e.getExceptionCode();
-                if (code == 401) {
-                    Intent intent = new Intent();
-                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
-                    App.getInstance().sendBroadcast(intent);
-                } else {
-                    showToast(e.getMessage(), false);
-                }
-            }
-        });
-    }
-
-    private void followClan() {
-        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
-        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
-        String url = HttpUrl.FOLLOW_CLAN + "?clan_id=" + id;
+        if (isClan == 1) {
+            String url = HttpUrl.FOLLOW_CLAN + "?clan_id=" + id;
+        } else if (isClan == 2) {
+            String url = HttpUrl.FOLLOW_COFC + "?cofc_id=" + id;
+        } else if (isClan == 3) {
+            String url = HttpUrl.FOLLOW_TRIBE + "?stribe_id=" + id;
+        }
 
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
@@ -689,7 +600,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 if (actionType == 0) {
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("fromClanClub", true);
-                    bundle.putBoolean("isClan", isClan);
+                    bundle.putInt("isClan", isClan);
                     bundle.putString("id", id);
                     openActvityForResult(ReplaceAlbumCoverActivity.class, 11, bundle);
                 } else if (actionType == 1) {
@@ -819,7 +730,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 bundle.putString("img", path);
                 bundle.putString("classType", "SchoolHometownActivity");
 
-                if (isClan) {
+                if (isClan == 1) {
                     bundle.putString("id_value", "4");
                     bundle.putInt("id_value_ext", Integer.parseInt(id));
                 } else {
@@ -836,7 +747,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
             bundle.putStringArrayList("imglist", selectPicList);
             bundle.putString("classType", "SchoolHometownActivity");
             bundle.putString("feedType", "1");
-            if (isClan) {
+            if (isClan == 1) {
                 bundle.putString("id_value", "4");
                 bundle.putInt("id_value_ext", Integer.parseInt(id));
             } else {
@@ -873,7 +784,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                 bundle.putString("videoPath", videoPath);
                 bundle.putString("classType", "SchoolHometownActivity");
                 bundle.putString("feedType", "2");
-                if (isClan) {
+                if (isClan == 1) {
                     bundle.putString("id_value", "4");
                     bundle.putInt("id_value_ext", Integer.parseInt(id));
                 } else {
@@ -893,7 +804,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
             bundle.putString("videoPath", url);
             bundle.putString("classType", "SchoolHometownActivity");
             bundle.putString("feedType", "2");
-            if (isClan) {
+            if (isClan == 1) {
                 bundle.putString("id_value", "4");
                 bundle.putInt("id_value_ext", Integer.parseInt(id));
             } else {
@@ -928,7 +839,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
             url = url + "?page=" + page + "&size=" + 20;
         }
 
-        if (isClan) {
+        if (isClan == 1) {
             url = url + "&id_value=" + 4 + "&id_value_ext=" + id;
         } else {
             url = url + "&id_value=" + 3 + "&id_value_ext=" + id;

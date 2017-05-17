@@ -36,7 +36,7 @@ import im.boss66.com.widget.ActionSheet;
  */
 public class EditClanCofcPersonActivity extends ABaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener {
 
-    private boolean isClan;
+    private int isClan;
     private String id;
     private ImageView img_headimg;
     private String main;
@@ -58,7 +58,7 @@ public class EditClanCofcPersonActivity extends ABaseActivity implements View.On
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                isClan = bundle.getBoolean("isClan", false);
+                isClan = bundle.getInt("isClan", -1);
                 id = bundle.getString("id");
                 if(bundle.containsKey("person_id")){
                     person_id = bundle.getString("person_id");
@@ -140,13 +140,13 @@ public class EditClanCofcPersonActivity extends ABaseActivity implements View.On
 
         showLoadingDialog();
         if(person_id==null){ //添加名人
-            if (isClan) {
+            if (isClan==1) {
                 main = HttpUrl.ADD_CLAN_PERSON;
             } else {
                 main = HttpUrl.ADD_COFC_PERSON;
             }
         }else{    //编辑名人
-            if (isClan) {
+            if (isClan==1) {
                 main = HttpUrl.UPDATA_CLAN_PERSON;
             } else {
                 main = HttpUrl.UPDATA_COFC_PERSON;
@@ -180,7 +180,7 @@ public class EditClanCofcPersonActivity extends ABaseActivity implements View.On
 
         params.addBodyParameter("access_token", access_token);
         if(person_id==null){ //添加名人
-            if (isClan) {
+            if (isClan==1) {
                 params.addBodyParameter("clan_id", id);
             } else {
                 params.addBodyParameter("cofc_id", id);
@@ -249,7 +249,7 @@ public class EditClanCofcPersonActivity extends ABaseActivity implements View.On
             case 1:
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("fromEditPerson", true);
-                bundle.putBoolean("isClan", isClan);
+                bundle.putInt("isClan", isClan);
                 bundle.putString("id", id);
                 openActvityForResult(ReplaceAlbumCoverActivity.class, 1, bundle);
 

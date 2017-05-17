@@ -17,8 +17,8 @@ public class ClanCofcPersonWebActivity extends WebBaseActivity {
         Intent intent = getIntent();
         if(intent!=null){
             int id = intent.getIntExtra("id", -1);
-            boolean isClan= intent.getBooleanExtra("isClan",false);
-            if(isClan){
+            int isClan= intent.getIntExtra("isClan",-1);
+            if(isClan==1){
                 url = HttpUrl.CLAN_PERSON_WEB+"?id="+id;
             }else{
                 url = HttpUrl.COFC_PERSON_WEB+"?id="+id;

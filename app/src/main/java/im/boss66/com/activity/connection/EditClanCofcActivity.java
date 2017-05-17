@@ -12,6 +12,7 @@ import im.boss66.com.R;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.activity.discover.ReplaceAlbumCoverActivity;
 import im.boss66.com.event.CreateSuccess;
+import im.boss66.com.event.EditWeb;
 import im.boss66.com.widget.ActionSheet;
 
 /**
@@ -19,7 +20,7 @@ import im.boss66.com.widget.ActionSheet;
  */
 public class EditClanCofcActivity extends ABaseActivity implements View.OnClickListener, ActionSheet.OnSheetItemClickListener {
 
-    private boolean isClan;
+    private int isClan;
     private String id;
     private ImageView img_logo;
 
@@ -33,7 +34,7 @@ public class EditClanCofcActivity extends ABaseActivity implements View.OnClickL
         setContentView(R.layout.activity_edit_clan_cofc);
         Intent intent = getIntent();
         if (intent != null) {
-            isClan = intent.getBooleanExtra("isClan", false);
+            isClan = intent.getIntExtra("isClan", -1);
             id = intent.getStringExtra("id");
 
             desc = intent.getStringExtra("desc");
@@ -50,7 +51,7 @@ public class EditClanCofcActivity extends ABaseActivity implements View.OnClickL
         tv_headcenter_view.setText("编辑简介");
         img_logo = (ImageView) findViewById(R.id.img_logo);
 
-        if(isClan){
+        if (isClan == 1 || isClan == 3) {
             findViewById(R.id.rl_location).setVisibility(View.GONE);
             findViewById(R.id.rl_phone).setVisibility(View.GONE);
         }
@@ -74,26 +75,26 @@ public class EditClanCofcActivity extends ABaseActivity implements View.OnClickL
                 break;
             case R.id.rl_info:
                 intent = new Intent(this, EditTextActivity.class);
-                intent.putExtra("type","rl_info");
-                intent.putExtra("isClan",isClan);
-                intent.putExtra("id",id);
-                intent.putExtra("content",desc);
+                intent.putExtra("type", "rl_info");
+                intent.putExtra("isClan", isClan);
+                intent.putExtra("id", id);
+                intent.putExtra("content", desc);
                 startActivity(intent);
                 break;
             case R.id.rl_location:
                 intent = new Intent(this, EditTextActivity.class);
-                intent.putExtra("type","rl_location");
-                intent.putExtra("isClan",isClan);
-                intent.putExtra("id",id);
-                intent.putExtra("content",address);
+                intent.putExtra("type", "rl_location");
+                intent.putExtra("isClan", isClan);
+                intent.putExtra("id", id);
+                intent.putExtra("content", address);
                 startActivity(intent);
                 break;
             case R.id.rl_phone:
                 intent = new Intent(this, EditTextActivity.class);
-                intent.putExtra("type","rl_phone");
-                intent.putExtra("isClan",isClan);
-                intent.putExtra("id",id);
-                intent.putExtra("content",contact);
+                intent.putExtra("type", "rl_phone");
+                intent.putExtra("isClan", isClan);
+                intent.putExtra("id", id);
+                intent.putExtra("content", contact);
                 startActivity(intent);
                 break;
 
@@ -116,7 +117,7 @@ public class EditClanCofcActivity extends ABaseActivity implements View.OnClickL
         if (which == 1) {
             Bundle bundle = new Bundle();
             bundle.putBoolean("fromEditClanClub", true);
-            bundle.putBoolean("isClan", isClan);
+            bundle.putInt("isClan", isClan);
             bundle.putString("id", id);
             openActvityForResult(ReplaceAlbumCoverActivity.class, 1, bundle);
 
@@ -132,6 +133,7 @@ public class EditClanCofcActivity extends ABaseActivity implements View.OnClickL
                 String imgurl = data.getStringExtra("imgurl");
 //                Glide.with(this).load(imgurl).into(img_logo);
                 EventBus.getDefault().post(new CreateSuccess(""));
+                EventBus.getDefault().post(new EditWeb(""));
             }
         }
     }

@@ -64,7 +64,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
     private PermissionListener permissionListener;
     private int cameraType;//1:相机 2：相册
     private boolean fromClanClub;     //是否从人脉页跳转过来
-    private boolean isClan;
+    private int isClan;
     private String id;
     private boolean fromEditClanClub;
     private String main;
@@ -79,25 +79,18 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                //从宗亲 商会首页跳过来
+                //从宗亲 商会 部落首页跳过来
                 fromClanClub = bundle.getBoolean("fromClanClub", false);
-                if (fromClanClub) {
-                    isClan = bundle.getBoolean("isClan", false);
-                    id = bundle.getString("id");
-                }
 
                 //从宗亲，商会编辑页跳过来
                 fromEditClanClub = bundle.getBoolean("fromEditClanClub", false);
-                if (fromEditClanClub) {
-                    isClan = bundle.getBoolean("isClan", false);
-                    id = bundle.getString("id");
-                }
+
                 //从名人编辑页跳过来
                 fromEditPerson = bundle.getBoolean("fromEditPerson", false);
-                if (fromEditPerson) {
-                    isClan = bundle.getBoolean("isClan", false);
-                    id = bundle.getString("id");
-                }
+
+
+                isClan = bundle.getInt("isClan", -1);
+                id = bundle.getString("id");
 
 
             }
@@ -139,7 +132,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
     private void uploadImageFile(String path) {
 
         //更换背景图片
-        if (fromClanClub) {
+        if (fromClanClub ) {
             upLoadClanCofcImage(path);
             return;
         }
@@ -221,10 +214,12 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
     private void upLoadClanCofcImage(String path) {
 
         showLoadingDialog();
-        if (isClan) {
+        if (isClan == 1) {
             main = HttpUrl.EDIT_CLAN;
-        } else {
+        } else if (isClan == 2) {
             main = HttpUrl.EDIT_COFC;
+        } else {
+            main = HttpUrl.EDIT_TRIBE;
         }
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
@@ -242,11 +237,12 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
             }
         }
         params.addBodyParameter("access_token", access_token);
-        if (isClan) {
+        if (isClan == 1) {
             params.addBodyParameter("clan_id", id);
-        } else {
+        } else if (isClan == 2) {
             params.addBodyParameter("cofc_id", id);
-
+        } else {
+            params.addBodyParameter("stribe_id", id);
         }
 
         httpUtils.send(HttpRequest.HttpMethod.POST, main, params, new RequestCallBack<String>() {
@@ -254,9 +250,9 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 try {
                     cancelLoadingDialog();
-                    BaseResult result1 = JSON.parseObject(responseInfo.result,BaseResult.class);
-                    if(result1.getCode()!=1){
-                        showToast("更改失败",false);
+                    BaseResult result1 = JSON.parseObject(responseInfo.result, BaseResult.class);
+                    if (result1.getCode() != 1) {
+                        showToast("更改失败", false);
                         return;
                     }
                     EditClanCofcEntity entity = JSON.parseObject(responseInfo.result, EditClanCofcEntity.class);
@@ -267,7 +263,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                             ToastUtil.showShort(context, "更改成功");
                             if (fromClanClub) {
                                 imgurl = result.getBanner();
-                            } else {
+                            } else if (fromEditClanClub) {
                                 imgurl = result.getLogo();
                             }
                             Intent intent = new Intent();
@@ -315,10 +311,10 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                 } else {
                     path = imageUri.toString();
                 }
-                if(Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
-                        path.contains("/IMProject/")){
+                if (Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
+                        path.contains("/IMProject/")) {
                     String[] arr = path.split("/IMProject/");
-                    if (arr != null && arr.length >1){
+                    if (arr != null && arr.length > 1) {
                         path = savePath + arr[1];
                     }
                 }

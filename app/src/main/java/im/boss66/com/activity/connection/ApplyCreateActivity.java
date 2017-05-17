@@ -37,6 +37,7 @@ import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.request.CreateClanRequest;
 import im.boss66.com.http.request.CreateClubRequest;
+import im.boss66.com.http.request.CreateTribeRequest;
 import im.boss66.com.widget.ActionSheet;
 import im.boss66.com.widget.wheel.ArrayWheelAdapter;
 import im.boss66.com.widget.wheel.OnWheelChangedListener;
@@ -196,9 +197,12 @@ public class ApplyCreateActivity extends ABaseActivity implements View.OnClickLi
                         //创建宗亲
                         createClan();
 
-                    }else{
+                    }else if("商会".equals(type)){
                         //创建商会
                         createClub();
+                    }else{
+                        //创建部落
+                        createTribe();
                     }
                 }else{
                     ToastUtil.showShort(context,"请完善资料");
@@ -208,14 +212,47 @@ public class ApplyCreateActivity extends ABaseActivity implements View.OnClickLi
 
         }
     }
+
+    private void createTribe() {
+        CreateTribeRequest request = new CreateTribeRequest(TAG,name,province_id,city_id,county_id);
+        request.send(new BaseDataRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String pojo) {
+                if(TextUtils.isEmpty(pojo)){
+                    return;
+                }
+                try {
+                    JSONObject jsonObject = new JSONObject(pojo);
+                    if(jsonObject.getInt("code")==1){
+                        showToast("创建成功",false);
+                        EventBus.getDefault().post(new CreateSuccess(""));
+                        finish();
+                    }else{
+                        showToast("创建失败",false);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast("创建失败",false);
+
+            }
+        });
+
+    }
+
     private void showActionSheet() {
         ActionSheet actionSheet = new ActionSheet(this)
                 .builder()
                 .setCancelable(false)
                 .setCanceledOnTouchOutside(true);
             actionSheet.addSheetItem("宗亲", ActionSheet.SheetItemColor.Black,this)
-                    .addSheetItem("商会", ActionSheet.SheetItemColor.Black,
-                            this);
+                    .addSheetItem("商会", ActionSheet.SheetItemColor.Black,this)
+                    .addSheetItem("部落", ActionSheet.SheetItemColor.Black,this);;
+
         actionSheet.show();
     }
 
@@ -451,6 +488,9 @@ public class ApplyCreateActivity extends ABaseActivity implements View.OnClickLi
                 break;
             case 2:
                 tv_type.setText("商会");
+                break;
+            case 3:
+                tv_type.setText("部落");
                 break;
         }
 

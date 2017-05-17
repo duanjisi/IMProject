@@ -34,7 +34,7 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
     private EditText et_content;
     private TextView tv_num;
     private String type;
-    private boolean isClan;
+    private int isClan;
     private String id;
 
     private String main;
@@ -52,11 +52,10 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
         Intent intent = getIntent();
         if (intent != null) {
             type = intent.getStringExtra("type");
-            isClan = intent.getBooleanExtra("isClan", false);
+            isClan = intent.getIntExtra("isClan", -1);
             id = intent.getStringExtra("id");
             content = intent.getStringExtra("content");
         }
-
         initViews();
     }
 
@@ -142,19 +141,24 @@ public class EditTextActivity extends ABaseActivity implements View.OnClickListe
 
     private void updateData(String content) {
         showLoadingDialog();
-        if (isClan) {
+        if (isClan==1) {
             main = HttpUrl.EDIT_CLAN;
-        } else {
+        } else if(isClan==2) {
             main = HttpUrl.EDIT_COFC;
+        }else{
+            main = HttpUrl.EDIT_TRIBE;
+
         }
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
 
         params.addBodyParameter("access_token", access_token);
-        if (isClan) {
+        if (isClan==1) {
             params.addBodyParameter("clan_id", id);
-        } else {
+        } else if(isClan==2){
             params.addBodyParameter("cofc_id", id);
+        }else{
+            params.addBodyParameter("stribe_id", id);
         }
         switch (type) {
             case "rl_info":
