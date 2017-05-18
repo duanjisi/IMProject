@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 
 import im.boss66.com.R;
 import im.boss66.com.widget.AutoVerticalScrollTextView;
@@ -25,7 +24,7 @@ public class TextActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_textview);
 
-        initView();
+//        initView();
     }
 
     private void initView() {
@@ -33,18 +32,18 @@ public class TextActivity extends Activity {
 //        horizontalScrollTV = (AutoHorizontalScrollTextView) findViewById(R.id.textview);
 //        horizontalScrollTV.setText(string);
 
-        verticalScrollTV = (AutoVerticalScrollTextView) findViewById(R.id.textview_auto_roll);
-        verticalScrollTV.setText(strings[0]);
-
-        new Thread() {
-            @Override
-            public void run() {
-                while (isRunning) {
-                    SystemClock.sleep(3000);
-                    handler.sendEmptyMessage(199);
-                }
-            }
-        }.start();
+//        verticalScrollTV = (AutoVerticalScrollTextView) findViewById(R.id.textview_auto_roll);
+//        verticalScrollTV.setText(strings[0]);
+//
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                while (isRunning) {
+//                    SystemClock.sleep(3000);
+//                    handler.sendEmptyMessage(199);
+//                }
+//            }
+//        }.start();
     }
 
     private Handler handler = new Handler() {

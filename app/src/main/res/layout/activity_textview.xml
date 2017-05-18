@@ -18,13 +18,35 @@
     <!--android:padding="5dp"/>-->
 
     <!--上下滚动的TextView-->
-    <im.boss66.com.widget.AutoVerticalScrollTextView
-        android:id="@+id/textview_auto_roll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:background="#000000"
-        android:padding="5dp" />
 
+    <!--<im.boss66.com.widget.AutoVerticalScrollTextView-->
+    <!--android:id="@+id/textview_auto_roll"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="20dp"-->
+    <!--android:layout_marginTop="20dp"-->
+    <!--android:background="#000000"-->
+    <!--android:padding="5dp" />-->
+
+    <!--<ScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:text="卓越的德国品质，舒适的驾乘感受使国家元首、各级代表对德国宝沃汽车印象深刻。作为德国宝沃汽车的匠心之作，宝沃BX7定位为“德国宽体智联”SUV 。其采用了源自宝沃经典车型Isabella的Wingline鹰翼式设计，流畅地勾勒出BX7车肩线条和四轮外扩的宽体造型。4715×1911×1690mm的车身尺寸堪称同级最宽，独树一帜的宽体造型在实现风阻最小化的同时也增强了行驶稳定性；其前端采用了宝沃创新的家族式设计，极具豪华感和识别度的同时尽显王者风范。此外，其内部格菱纹装饰的高包覆立体车厢座椅，在行车时赋予驾驶者舒适有度的紧密包覆感，Wingline鹰翼式环体座舱布局也营造出了宝沃崇尚的德式豪华氛围。卓越的德国品质，舒适的驾乘感受使国家元首、各级代表对德国宝沃汽车印象深刻。作为德国宝沃汽车的匠心之作，宝沃BX7定位为“德国宽体智联”SUV 。其采用了源自宝沃经典车型Isabella的Wingline鹰翼式设计，流畅地勾勒出BX7车肩线条和四轮外扩的宽体造型。4715×1911×1690mm的车身尺寸堪称同级最宽，独树一帜的宽体造型在实现风阻最小化的同时也增强了行驶稳定性；其前端采用了宝沃创新的家族式设计，极具豪华感和识别度的同时尽显王者风范。此外，其内部格菱纹装饰的高包覆立体车厢座椅，在行车时赋予驾驶者舒适有度的紧密包覆感，Wingline鹰翼式环体座舱布局也营造出了宝沃崇尚的德式豪华氛围。" />-->
+    <!--</LinearLayout>-->
+    <!--</ScrollView>-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:text="卓越的德国品质，舒适的驾乘感受使国家元首、各级代表对德国宝沃汽车印象深刻。作为德国宝沃汽车的匠心之作，宝沃BX7定位为“德国宽体智联”SUV 。其采用了源自宝沃经典车型Isabella的Wingline鹰翼式设计，流畅地勾勒出BX7车肩线条和四轮外扩的宽体造型。4715×1911×1690mm的车身尺寸堪称同级最宽，独树一帜的宽体造型在实现风阻最小化的同时也增强了行驶稳定性；其前端采用了宝沃创新的家族式设计，极具豪华感和识别度的同时尽显王者风范。此外，其内部格菱纹装饰的高包覆立体车厢座椅，在行车时赋予驾驶者舒适有度的紧密包覆感，Wingline鹰翼式环体座舱布局也营造出了宝沃崇尚的德式豪华氛围。卓越的德国品质，舒适的驾乘感受使国家元首、各级代表对德国宝沃汽车印象深刻。作为德国宝沃汽车的匠心之作，宝沃BX7定位为“德国宽体智联”SUV 。其采用了源自宝沃经典车型Isabella的Wingline鹰翼式设计，流畅地勾勒出BX7车肩线条和四轮外扩的宽体造型。4715×1911×1690mm的车身尺寸堪称同级最宽，独树一帜的宽体造型在实现风阻最小化的同时也增强了行驶稳定性；其前端采用了宝沃创新的家族式设计，极具豪华感和识别度的同时尽显王者风范。此外，其内部格菱纹装饰的高包覆立体车厢座椅，在行车时赋予驾驶者舒适有度的紧密包覆感，Wingline鹰翼式环体座舱布局也营造出了宝沃崇尚的德式豪华氛围。" />
 </LinearLayout>
