@@ -41,6 +41,7 @@ import java.util.List;
 
 import im.boss66.com.BuildConfig;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.domain.VideoEntity;
 import im.boss66.com.util.ImageCache;
 import im.boss66.com.util.ImageResizer;
@@ -306,7 +307,6 @@ public class ImageGridFragment extends Fragment implements OnItemClickListener {
                 // ID:MediaStore.Audio.Media._ID
                 int id = cursor.getInt(cursor
                         .getColumnIndexOrThrow(MediaStore.Video.Media._ID));
-
                 // title：MediaStore.Audio.Media.TITLE
                 String title = cursor.getString(cursor
                         .getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
@@ -320,22 +320,33 @@ public class ImageGridFragment extends Fragment implements OnItemClickListener {
                 // 大小：MediaStore.Audio.Media.SIZE
                 int size = (int) cursor.getLong(cursor
                         .getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
-
-                VideoEntity entty = new VideoEntity();
-                entty.ID = id;
-                entty.title = title;
-                entty.filePath = url;
-                entty.duration = duration;
-                entty.size = size;
-                mList.add(entty);
+                Log.i("info", "===========videoPath:" + url);
+                if (isVideoPath(url)) {
+                    VideoEntity entty = new VideoEntity();
+                    entty.ID = id;
+                    entty.title = title;
+                    entty.filePath = url;
+                    entty.duration = duration;
+                    entty.size = size;
+                    mList.add(entty);
+                }
             } while (cursor.moveToNext());
-
         }
         if (cursor != null) {
             cursor.close();
             cursor = null;
         }
     }
+
+    private boolean isVideoPath(String path) {
+        String fileName = FileUtils.getFileNameFromPath(path);
+        if (fileName.contains(".mov") || fileName.contains(".mp4")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 //    @Override
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {

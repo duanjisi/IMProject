@@ -901,7 +901,8 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         markerOption.draggable(true);
         markerOption.snippet(JSON.toJSONString(child));
         markerOption.title(child.getGid());
-        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
+//        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
+        markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
         Marker marker = aMap.addMarker(markerOption);
         marker.setObject(child.getGid());
 

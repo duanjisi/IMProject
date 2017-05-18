@@ -55,13 +55,13 @@ import im.boss66.com.Utils.MakeQRCodeUtil;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.MainAct;
+import im.boss66.com.activity.TextActivity;
 import im.boss66.com.activity.treasure.ApplyFuwaActivity;
 import im.boss66.com.activity.treasure.FindTreasureChildrenActivity;
 import im.boss66.com.activity.treasure.FuwaDealActivity;
 import im.boss66.com.activity.treasure.FuwaMessageActivity;
 import im.boss66.com.activity.treasure.FuwaPackageActivity;
 import im.boss66.com.activity.treasure.FuwaTopList;
-import im.boss66.com.activity.treasure.GameRuleActivity;
 import im.boss66.com.activity.treasure.HideFuwaActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.ActionEntity;
@@ -153,7 +153,8 @@ public class MainTreasureFragment extends BaseFragment implements View.OnClickLi
                 openActivity(FuwaTopList.class);
                 break;
             case R.id.iv_game://福娃游戏规则
-                openActivity(GameRuleActivity.class);
+//                openActivity(GameRuleActivity.class);
+                openActivity(TextActivity.class);
                 break;
             case R.id.tv_apply://申请福娃
                 openActivity(ApplyFuwaActivity.class);
