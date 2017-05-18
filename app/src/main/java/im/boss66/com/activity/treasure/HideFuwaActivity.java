@@ -463,6 +463,14 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 isSelectVideo = false;
                 showActionSheet();
                 break;
+            case R.id.tv_jump_over:
+                if (dialogRecommond != null && dialogRecommond.isShowing()) {
+                    dialogRecommond.dismiss();
+                }
+                recommond = et_recommond.getText().toString().trim();
+                et_recommond.setText("");
+                hideFuwaServer();
+                break;
         }
     }
 
@@ -902,6 +910,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             LinearLayout ll_p = (LinearLayout) view.findViewById(R.id.ll_p);
             LinearLayout ll_fuwa_type = (LinearLayout) view.findViewById(R.id.ll_fuwa_type);
             RelativeLayout rl_fuwa_type = (RelativeLayout) view.findViewById(R.id.rl_fuwa_type);
+            LinearLayout ll_fuwa_num = (LinearLayout) view.findViewById(R.id.ll_fuwa_num);
             tv_fuwa_type = (TextView) view.findViewById(R.id.tv_fuwa_type);
             et_dialog_num = (EditText) view.findViewById(R.id.et_dialog_num);
             tv_dialog_num_tip = (TextView) view.findViewById(R.id.tv_dialog_num_tip);
@@ -915,6 +924,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             params.width = (int) (sceenW * 0.85);
             ll_p.setLayoutParams(params);
 
+            ll_fuwa_num.getLayoutParams().height = sceenW / 7;
             ll_fuwa_type.getLayoutParams().height = sceenW / 7;
 
             dialogNum = new Dialog(context, R.style.ActionSheetDialogStyle);
