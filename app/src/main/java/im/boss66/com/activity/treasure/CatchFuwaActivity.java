@@ -573,7 +573,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         super.onDestroy();
         iv_success = null;
         releaseCamera();
-        if (dialog != null) {
+        if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
     }

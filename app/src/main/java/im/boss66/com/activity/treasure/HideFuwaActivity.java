@@ -337,8 +337,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         if (bitmapImg != null && !bitmapImg.isRecycled()) {
             bitmapImg.recycle();
         }
-        if (videoFile != null && videoFile.exists()) {
-            videoFile.delete();
+        if (videoFile != null) {
             videoFile = null;
         }
     }
@@ -1082,6 +1081,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+
                 cancelLoadingDialog();
                 String res = responseInfo.result;
                 if (!TextUtils.isEmpty(res)) {

@@ -127,13 +127,15 @@ public class BaseActivity extends FragmentActivity {
      * @return: void
      */
     protected void showLoadingDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = createProgressDialog();
-            mProgressDialog.setCanceledOnTouchOutside(false);
-            mProgressDialog.show();
-        } else {
-            if (!mProgressDialog.isShowing()) {
+        if (!this.isFinishing()) {
+            if (mProgressDialog == null) {
+                mProgressDialog = createProgressDialog();
+                mProgressDialog.setCanceledOnTouchOutside(false);
                 mProgressDialog.show();
+            } else {
+                if (!mProgressDialog.isShowing()) {
+                    mProgressDialog.show();
+                }
             }
         }
     }
