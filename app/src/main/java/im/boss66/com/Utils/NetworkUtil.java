@@ -180,7 +180,6 @@ public class NetworkUtil {
      * @return
      */
     public static boolean isWifiConnecting(Context context) {
-
         ConnectivityManager manager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netWorkInfo = manager.getActiveNetworkInfo();

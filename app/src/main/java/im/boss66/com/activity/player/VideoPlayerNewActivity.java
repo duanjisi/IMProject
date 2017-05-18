@@ -1,5 +1,6 @@
 package im.boss66.com.activity.player;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,9 +15,14 @@ import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 
+import java.io.File;
+
+import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.services.VideoCacheService;
 
 /**
  * Created by GMARUnity on 2017/3/27.
@@ -44,7 +50,9 @@ public class VideoPlayerNewActivity extends BaseActivity {
         mVideoView.setBufferingIndicator(loadingView);
         mVideoView.setScreenOnWhilePlaying(true);
         int codec = getIntent().getIntExtra("mediaCodec", AVOptions.MEDIA_CODEC_SW_DECODE);
-        mVideoPath = getIntent().getStringExtra("videoPath");
+
+        String path = getIntent().getStringExtra("videoPath");
+        mVideoPath = getVideoPath(path);
         Log.i("info", "=============mVideoPath:" + mVideoPath);
         mMediaController = new MediaController(this, false, mIsLiveStreaming == 1);
         mMediaController.setMediaPlayer(mVideoView);
@@ -83,6 +91,20 @@ public class VideoPlayerNewActivity extends BaseActivity {
         });
     }
 
+
+    private String getVideoPath(String path) {
+        String localPath = Constants.VIDEO_CACHE_PATH + FileUtils.getFileNameFromPath(path);
+        File file = new File(localPath);
+        if (file.exists()) {
+            return localPath;
+        } else {
+            Intent intent = new Intent(context, VideoCacheService.class);
+            intent.putExtra("video_path", path);
+            startService(intent);
+            return path;
+        }
+    }
+
     private PLMediaPlayer.OnCompletionListener mOnCompletionListener = new PLMediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(PLMediaPlayer plMediaPlayer) {
@@ -98,7 +120,6 @@ public class VideoPlayerNewActivity extends BaseActivity {
                 case 10001:
                     //保存视频角度
                     mVideoRotation = extra;
-
                     break;
             }
             return false;

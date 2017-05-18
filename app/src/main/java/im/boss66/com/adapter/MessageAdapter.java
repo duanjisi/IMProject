@@ -31,9 +31,11 @@ import java.util.regex.Pattern;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.CommonDialogUtils;
 import im.boss66.com.Utils.FileUtil;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.Utils.PrefKey;
 import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.Utils.SoundUtil;
@@ -737,10 +739,11 @@ public class MessageAdapter extends BaseAdapter {
             holder.iv_player.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mContext, VideoPlayerNewActivity.class);
-                    intent.putExtra("videoPath", videoPath);
-                    intent.putExtra("imgurl", cover);
-                    mContext.startActivity(intent);
+//                    Intent intent = new Intent(mContext, VideoPlayerNewActivity.class);
+//                    intent.putExtra("videoPath", videoPath);
+//                    intent.putExtra("imgurl", cover);
+//                    mContext.startActivity(intent);
+                    playVideo(videoPath, cover);
                 }
             });
 
@@ -763,6 +766,54 @@ public class MessageAdapter extends BaseAdapter {
             });
         }
     }
+
+    private void playVideo(final String videoPath, final String cover) {
+        String localPath = Constants.VIDEO_CACHE_PATH + FileUtils.getFileNameFromPath(videoPath);
+        File file = new File(localPath);
+        if (file.exists()) {
+            Intent intent = new Intent(mContext, VideoPlayerNewActivity.class);
+            intent.putExtra("videoPath", videoPath);
+            intent.putExtra("imgurl", cover);
+            mContext.startActivity(intent);
+        } else {
+            boolean netAvailable = NetworkUtil.networkAvailable(mContext);
+            boolean wifi = NetworkUtil.isWifiConnecting(mContext);
+            String msg = "";
+            if (!netAvailable) {
+                msg = "当前网络连接异常,确定继续吗?";
+                showNotifyDialog(videoPath, cover, msg);
+            } else {
+                if (!wifi) {
+                    msg = "非wifi网络状态，小心你的流量噢，确定继续吗?";
+                    showNotifyDialog(videoPath, cover, msg);
+                } else {
+                    Intent intent = new Intent(mContext, VideoPlayerNewActivity.class);
+                    intent.putExtra("videoPath", videoPath);
+                    intent.putExtra("imgurl", cover);
+                    mContext.startActivity(intent);
+                }
+            }
+        }
+    }
+
+    private void showNotifyDialog(final String videoPath, final String cover, String msg) {
+        CommonDialogUtils.showDialog(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommonDialogUtils.dismiss();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommonDialogUtils.dismiss();
+                Intent intent = new Intent(mContext, VideoPlayerNewActivity.class);
+                intent.putExtra("videoPath", videoPath);
+                intent.putExtra("imgurl", cover);
+                mContext.startActivity(intent);
+            }
+        }, mContext, msg);
+    }
+
 
     private void startAnimation(ImageView imageView, int resId) {
         imageView.setImageResource(resId);
