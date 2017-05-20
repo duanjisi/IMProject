@@ -20,6 +20,7 @@ public class ChildEntity implements Serializable {
     private String location = "";
     private String video = "";
     private String hider;
+    private String number = "";//远处的福娃（数量）,少了gid
 
     public String getDistance() {
         return distance;
@@ -133,6 +134,13 @@ public class ChildEntity implements Serializable {
         this.hider = hider;
     }
 
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
 
     @Override
     public boolean equals(Object obj) {

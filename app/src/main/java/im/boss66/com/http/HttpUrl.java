@@ -213,10 +213,12 @@ public class HttpUrl {
     public static final String SEARCH_SCHOOL = MAIN_URL + "api/v1/search/local-school";
     //获取用户信息
     public static final String SEARCH_USER_INFO = MAIN_URL + "ucenter/userinfo/index";
+
     //查询周围的福娃
-    public static final String FIND_AROUND_CHILDREN = BASE_FUWA[FUWA_TAG] + "api/query?";
+    public static final String FIND_AROUND_CHILDREN = BASE_FUWA[FUWA_TAG] + "api/queryv2";
     //查询周围缘分
-    public static final String FIND_AROUND_FATE = BASE_FUWA[FUWA_TAG] + "api/querystranger?";
+    public static final String FIND_AROUND_FATE = BASE_FUWA[FUWA_TAG] + "api/querystrangerv2";
+
     //同学推荐
     public static final String SCHOOLMATE_LIST = MAIN_URL + "api/v1/search/same-school";
     //同乡推荐
@@ -252,12 +254,12 @@ public class HttpUrl {
     //支付宝购买福娃
     public static final String FUWA_PAY_ALIPAY = MAIN_URL + "api/pay/alipay";
     //支付系统通知购买成功
-    public static final String SYSTEM_PAY_NOTICE =BASE_FUWA[FUWA_TAG]+"msg/notice?" ;
+    public static final String SYSTEM_PAY_NOTICE = BASE_FUWA[FUWA_TAG] + "msg/notice?";
 
     //名人详情页
     public static final String FAMOUSPERSON_DETAIL = MAIN_URL + "web/hometown/celebrity";
     //学校名人页
-    public static final String SCHOOL_PERSON_DETAIL =MAIN_URL+"web/school/celebrity";
+    public static final String SCHOOL_PERSON_DETAIL = MAIN_URL + "web/school/celebrity";
     //学校社团详情页
     public static final String SCHOOL_CLUB_DETATIL = MAIN_URL + "web/school/league";
     //家乡动态详情页
@@ -265,7 +267,7 @@ public class HttpUrl {
     //学校动态详情页
     public static final String SCHOOL_NEWS_DETATIL = MAIN_URL + "/web/school/message";
     //申请福娃
-    public static final String APPLY_FUWA =BASE_FUWA[FUWA_TAG]+"msg/apply";
+    public static final String APPLY_FUWA = BASE_FUWA[FUWA_TAG] + "msg/apply";
     //修改密码
     public static final String CHANGE_USER_PW = MAIN_URL + "/ucenter/psw/index";
     //创建宗亲
@@ -330,28 +332,28 @@ public class HttpUrl {
     //增加到个人收藏
     public static final String ADD_PERSONAL_COLLECT = MAIN_URL + "api/v1/favorites/add";
     //更多宗亲
-    public static final String MORE_CLAN = MAIN_URL+"api/v1/search/hot-clan";
+    public static final String MORE_CLAN = MAIN_URL + "api/v1/search/hot-clan";
     //更多商会
-    public static final String MORE_COFC = MAIN_URL+"api/v1/search/hot-cofc";
+    public static final String MORE_COFC = MAIN_URL + "api/v1/search/hot-cofc";
     //取消出售
-    public static final String CANCEL_FUWA_SELL =BASE_FUWA[FUWA_TAG]+"msg/cancelsell";
+    public static final String CANCEL_FUWA_SELL = BASE_FUWA[FUWA_TAG] + "msg/cancelsell";
     //查申请的福娃
     public static final String QUERY_MY_APPLY_FUWA = BASE_FUWA[FUWA_TAG] + "api/querymyapply?user=";
     //福娃活动详情
-    public static final String FUWA_ACTIVITY_INFO  = BASE_FUWA[FUWA_TAG]+"api/huodong?fuwagid=";
+    public static final String FUWA_ACTIVITY_INFO = BASE_FUWA[FUWA_TAG] + "api/huodong?fuwagid=";
     //创建部落
-    public  static final String CREATE_TRIBE = MAIN_URL+"api/v1/storetribe/create";
+    public static final String CREATE_TRIBE = MAIN_URL + "api/v1/storetribe/create";
     //获取部落详情
-    public static final String TRIBE_DETAILS = MAIN_URL+"api/v1/storetribe";
+    public static final String TRIBE_DETAILS = MAIN_URL + "api/v1/storetribe";
     //关注部落
-    public static final String FOLLOW_TRIBE = MAIN_URL+"api/v1/storetribe/follow";
+    public static final String FOLLOW_TRIBE = MAIN_URL + "api/v1/storetribe/follow";
     //取消关注部落
-    public static final String CANCELFOLLOW_TRIBE = MAIN_URL+"api/v1/storetribe/unfollow";
+    public static final String CANCELFOLLOW_TRIBE = MAIN_URL + "api/v1/storetribe/unfollow";
     //部落web页
-    public static final String TRIBE_WEB = MAIN_URL+"web/storetribe";
+    public static final String TRIBE_WEB = MAIN_URL + "web/storetribe";
     //修改部落
-    public static final String EDIT_TRIBE = MAIN_URL+"api/v1/storetribe/update";
+    public static final String EDIT_TRIBE = MAIN_URL + "api/v1/storetribe/update";
     //删除部落
-    public static final String DELETE_TRIBE = MAIN_URL+"api/v1/storetribe/delete";
+    public static final String DELETE_TRIBE = MAIN_URL + "api/v1/storetribe/delete";
 
 }

@@ -19,14 +19,18 @@ import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
@@ -87,11 +91,11 @@ import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.player.VideoPlayerNewActivity;
 import im.boss66.com.adapter.FuwaAdapter;
 import im.boss66.com.entity.AccountEntity;
-import im.boss66.com.entity.BaseChildren;
+import im.boss66.com.entity.BaseBaby;
 import im.boss66.com.entity.ChildEntity;
-import im.boss66.com.http.BaseDataModel;
-import im.boss66.com.http.request.AroundChildrenRequest;
-import im.boss66.com.http.request.AroundFateRequest;
+import im.boss66.com.http.BaseRequest;
+import im.boss66.com.http.request.AroundBabyRequest;
+import im.boss66.com.http.request.AroundFriendRequest;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.util.AMapUtil;
 import im.boss66.com.util.SensorEventHelper;
@@ -128,6 +132,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private ChildEntity currentChild;
     private View topBar;
     private HashMap<String, Marker> markerMap = new HashMap<>();
+    private boolean isMapFirst = true;
     private HashMap<String, LatLng> latMap = new HashMap<>();
     private View view;
     private UiSettings mUiSettings;
@@ -192,7 +197,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         btn_catch = (Button) findViewById(R.id.btn_catch);
         tvTips = (TextView) findViewById(R.id.tv_bottom_tips);
         titleBar = (RelativeLayout) findViewById(R.id.rl_top_bar);
-
+        initRootView();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             isFate = bundle.getBoolean("isFate", false);
@@ -630,11 +635,21 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 //        if (slidingDrawer.getVisibility() != View.VISIBLE) {
 //            UIUtils.showView(slidingDrawer);
 //        }
+//        float distance = Float.parseFloat(child.getDistance());
         float distance = 0;
         this.currentChild = child;
         if (markerMap != null && markerMap.size() != 0) {
-            Marker target = markerMap.get(child.getGid());
-            distance = AMapUtils.calculateLineDistance(mLocMarker.getPosition(), target.getPosition());
+            Marker target = null;
+            String key = "";
+            if (markerMap.containsKey(child.getGeo())) {
+                key = child.getGeo();
+            } else if (markerMap.containsKey(child.getGid())) {
+                key = child.getGid();
+            }
+            target = markerMap.get(key);
+            if (target != null) {
+                distance = AMapUtils.calculateLineDistance(mLocMarker.getPosition(), target.getPosition());
+            }
         }
         double latitude = mLocMarker.getPosition().latitude;
         double longitude = mLocMarker.getPosition().longitude;
@@ -660,25 +675,17 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             }
             searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WALK_DEFAULT);
         } else {//扑捉范围内
-            if (popup == null) {
-                showChildrenPop(titleBar);
-            } else {
-                if (!popup.isShowing()) {
-                    showChildrenPop(titleBar);
-                }
-            }
-//            btn_catch.setVisibility(View.VISIBLE);
-//            tvTips.setVisibility(View.GONE);
+            requestArround(titleBar);
+//            if (popup == null) {
+////                showChildrenPop(titleBar);
+//                requestArround(titleBar);
+//            } else {
+//                if (!popup.isShowing()) {
+////                    showChildrenPop(titleBar);
+//                    requestArround(titleBar);
+//                }
+//            }
         }
-//        if (!slidingDrawer.isOpened()) {
-//            slidingDrawer.animateOpen();
-//        }
-//        String[] strs = child.getGeo().split("-");
-//        mEndPoint = new LatLonPoint(Double.parseDouble(strs[1]), Double.parseDouble(strs[0]));
-//        if (location != null) {
-//            mStartPoint = new LatLonPoint(location.getLatitude(), location.getLongitude());
-//        }
-//        searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WALK_DEFAULT);
     }
 
     private ArrayList<ChildEntity> getRoundChildren() {
@@ -814,7 +821,11 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         if (slidingDrawer.isOpened()) {
             tv_location.setText(aMapLocation.getPoiName());
             if (currentChild != null) {
-                tv_num.setText(currentChild.getId() + "号");
+                String num = currentChild.getNumber();
+                if (!TextUtils.isEmpty(num)) {
+                    tv_num.setText(num + "个");
+                }
+//                tv_num.setText(currentChild.getId() + "号");
                 if (markerMap != null && markerMap.size() != 0) {
                     Marker target = markerMap.get(currentChild.getGid());
                     int distance = (int) AMapUtils.calculateLineDistance(mLocMarker.getPosition(), target.getPosition());
@@ -896,24 +907,54 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     }
 
     private void addMarkerToMap(LatLng latLng, ChildEntity child) {
-        MarkerOptions markerOption = new MarkerOptions();
-        markerOption.position(latLng);
-        markerOption.draggable(true);
-        markerOption.snippet(JSON.toJSONString(child));
-        markerOption.title(child.getGid());
-//        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
-        markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
-        Marker marker = aMap.addMarker(markerOption);
-        marker.setObject(child.getGid());
-
         String key = child.getGid();
         if (!markerMap.containsKey(key)) {
-            markerMap.put(key, marker);
+            if (getDistance(latLng) < 30) {
+                MarkerOptions markerOption = new MarkerOptions();
+                markerOption.position(latLng);
+                markerOption.draggable(true);
+                markerOption.snippet(JSON.toJSONString(child));
+                markerOption.title(child.getGid());
+//              markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
+                markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
+                Marker marker = aMap.addMarker(markerOption);
+                marker.setObject(child.getGid());
+                markerMap.put(key, marker);
+            }
         }
 
         if (!latMap.containsKey(key)) {
-            latMap.put(child.getGid(), latLng);
+            latMap.put(key, latLng);
         }
+    }
+
+    private void addFarMarkerToMap(LatLng latLng, ChildEntity child) {
+        String key = child.getGeo();
+        if (!markerMap.containsKey(key)) {
+            if (getDistance(latLng) > 30) {
+                MarkerOptions markerOption = new MarkerOptions();
+                markerOption.position(latLng);
+                markerOption.draggable(true);
+                markerOption.snippet(JSON.toJSONString(child));
+                markerOption.title(key);
+                markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
+                Marker marker = aMap.addMarker(markerOption);
+                marker.setObject(key);
+                markerMap.put(key, marker);
+            }
+        }
+        if (!latMap.containsKey(key)) {
+            latMap.put(key, latLng);
+        }
+    }
+
+
+    private float getDistance(LatLng latLng) {
+        float distance = 0;
+        if (latLng != null) {
+            distance = AMapUtils.calculateLineDistance(mLocMarker.getPosition(), latLng);
+        }
+        return distance;
     }
 
     private void addCircle(LatLng latlng, double radius) {
@@ -960,24 +1001,31 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         popupWindow = null;
     }
 
+    private int raduis = 0;
+    private String parms = "";
+
     private void childrenRequest(CameraPosition cameraPosition) {
         if (aMap != null) {
             float scale = aMap.getScalePerPixel();
-            int raduis = (int) (scale * UIUtils.getScreenPx(context) / 2);//半径
+            raduis = (int) (scale * UIUtils.getScreenPx(context) / 2);//半径
             Log.i("info", "==============raduis:" + raduis);
-            String parms = cameraPosition.target.longitude + "-" + cameraPosition.target.latitude;
+            parms = cameraPosition.target.longitude + "-" + cameraPosition.target.latitude;
             Log.i("info", "==============parms:" + parms);
-            BaseDataModel request = null;
+            BaseRequest request = null;
             if (!isFate) {
-                request = new AroundChildrenRequest(TAG, parms, "" + raduis);
+                request = new AroundBabyRequest(TAG, parms, "" + raduis, "0");
             } else {
-                request = new AroundFateRequest(TAG, parms, "" + raduis);
+                request = new AroundFriendRequest(TAG, parms, "" + raduis, "0");
             }
-//            AroundChildrenRequest request = new AroundChildrenRequest(TAG, parms, "" + raduis);
-            request.send(new BaseDataModel.RequestCallback<BaseChildren>() {
+            request.send(new BaseRequest.RequestCallback<BaseBaby>() {
                 @Override
-                public void onSuccess(BaseChildren pojo) {
-                    bindDatas(pojo);
+                public void onSuccess(final BaseBaby pojo) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            bindDatas(pojo);
+                        }
+                    });
                 }
 
                 @Override
@@ -985,14 +1033,42 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                     showToast(msg, true);
                 }
             });
+//            BaseDataModel request = null;
+//            if (!isFate) {
+//                request = new AroundChildrenRequest(TAG, parms, "" + raduis);
+//            } else {
+//                request = new AroundFateRequest(TAG, parms, "" + raduis);
+//            }
+//            request.send(new BaseDataModel.RequestCallback<BaseChildren>() {
+//                @Override
+//                public void onSuccess(BaseChildren pojo) {
+//                    bindDatas(pojo);
+//                }
+//
+//                @Override
+//                public void onFailure(String msg) {
+//                    showToast(msg, true);
+//                }
+//            });
         }
     }
 
-    private void bindDatas(BaseChildren children) {
-        ArrayList<ChildEntity> list = children.getData();
+    private void bindDatas(BaseBaby baseBaby) {
+        ArrayList<ChildEntity> list = baseBaby.getFar();
         if (list != null && list.size() != 0) {
+            Log.i("info", "=============fars.size():" + list.size());
             for (ChildEntity child : list) {
-                Log.i("info", "========details:" + child.getDetail());
+                if (!hasChild2(child)) {
+                    String[] strs = child.getGeo().split("-");
+                    addFarMarkerToMap(new LatLng(Double.parseDouble(strs[1]), Double.parseDouble(strs[0])), child);
+                }
+            }
+        }
+
+        ArrayList<ChildEntity> nears = baseBaby.getNear();
+        if (nears != null && nears.size() != 0) {
+            Log.i("info", "=============nears.size():" + nears.size());
+            for (ChildEntity child : nears) {
                 if (!hasChild(child)) {
                     String[] strs = child.getGeo().split("-");
                     addMarkerToMap(new LatLng(Double.parseDouble(strs[1]), Double.parseDouble(strs[0])), child);
@@ -1001,15 +1077,44 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         }
     }
 
+//    private void bindDatas(BaseChildren children) {
+//        ArrayList<ChildEntity> list = children.getData();
+//        if (list != null && list.size() != 0) {
+//            for (ChildEntity child : list) {
+//                Log.i("info", "========details:" + child.getDetail());
+//                if (!hasChild(child)) {
+//                    String[] strs = child.getGeo().split("-");
+//                    addMarkerToMap(new LatLng(Double.parseDouble(strs[1]), Double.parseDouble(strs[0])), child);
+//                }
+//            }
+//        }
+//    }
+
+
     private boolean hasChild(ChildEntity child) {
         boolean flag = false;
         List<Marker> markers = aMap.getMapScreenMarkers();
         if (markers != null && markers.size() != 0) {
             for (Marker marker : markers) {
                 String title = marker.getTitle();
-                Log.i("info", "=================title:" + title);
                 if (title != null && !title.equals("")) {
                     if (title.equals(child.getGid())) {
+                        flag = true;
+                    }
+                }
+            }
+        }
+        return flag;
+    }
+
+    private boolean hasChild2(ChildEntity child) {
+        boolean flag = false;
+        List<Marker> markers = aMap.getMapScreenMarkers();
+        if (markers != null && markers.size() != 0) {
+            for (Marker marker : markers) {
+                String title = marker.getTitle();
+                if (title != null && !title.equals("")) {
+                    if (title.equals(child.getGeo())) {
                         flag = true;
                     }
                 }
@@ -1066,7 +1171,51 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
     private FuwaAdapter mAdapter;
 
-    private void showChildrenPop(View parent) {
+//    private void showChildrenPop(View parent) {
+//        if (slidingDrawer.getVisibility() != View.GONE) {
+//            UIUtils.hindView(slidingDrawer);
+//            if (walkRouteOverlay != null) {
+//                walkRouteOverlay.removeFromMap();
+//                walkRouteOverlay = null;
+//            }
+//        }
+//        View view = View.inflate(this, R.layout.dialog_good_list, null);
+//        popup = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT, true);
+//        popup.setAnimationStyle(R.style.hide_fuwa_pop_anim);
+//        popup.setOutsideTouchable(true);
+//        popup.setFocusable(true);
+//        popup.setBackgroundDrawable(getDrawableFromRes(R.drawable.bg_popwindow));
+////        initRootView();
+//        final ListView listView = (ListView) view.findViewById(R.id.listView);
+//        mAdapter = new FuwaAdapter(this);
+//        listView.setAdapter(mAdapter);
+//        listView.addHeaderView(rootView);
+//        listView.setOnItemClickListener(new ItemClickListener());
+//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                // 当不滚动时
+//                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+//                    // 判断是否滚动到底部
+//                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
+//                        //加载更多功能的代码
+//                        requestMore(listView);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+//
+//            }
+//        });
+//        popup.showAsDropDown(parent, 0, 0);
+//        initList(listView);
+//    }
+
+    private void showChildrenPop(View parent, BaseBaby baseBaby) {
+        ArrayList<ChildEntity> nears = baseBaby.getNear();
         if (slidingDrawer.getVisibility() != View.GONE) {
             UIUtils.hindView(slidingDrawer);
             if (walkRouteOverlay != null) {
@@ -1079,29 +1228,144 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popup.setAnimationStyle(R.style.hide_fuwa_pop_anim);
         popup.setOutsideTouchable(true);
-//        popupWindow.setTouchable(true);
         popup.setFocusable(true);
         popup.setBackgroundDrawable(getDrawableFromRes(R.drawable.bg_popwindow));
-        ListView listView = (ListView) view.findViewById(R.id.listView);
+        final ListView listView = (ListView) view.findViewById(R.id.listView);
+        listView.addFooterView(rootView);
         mAdapter = new FuwaAdapter(this);
-        listView.setOnItemClickListener(new ItemClickListener());
         listView.setAdapter(mAdapter);
-        ArrayList<ChildEntity> goods = getRoundChildren();
-        if (goods != null && goods.size() != 0) {
-            if (goods.size() > 4) {
+        listView.setOnItemClickListener(new ItemClickListener());
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                // 当不滚动时
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    // 判断是否滚动到底部
+                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
+                        //加载更多功能的代码
+                        requestMore(listView);
+                    }
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
+            }
+        });
+        if (nears != null && nears.size() != 0) {
+            int size = nears.size();
+            if (size > 4) {
+                if (size < 100) {
+                    listView.removeFooterView(rootView);
+                }
+                ViewGroup.LayoutParams layoutParams = listView.getLayoutParams();
+                layoutParams.height = UIUtils.getScreenHeight(this) / 2 - 50;    //获取屏幕高度
+                listView.setLayoutParams(layoutParams);
+            } else {
+                listView.removeFooterView(rootView);
+            }
+            biggest = getBiggest(nears.get(nears.size() - 1));
+            if (mAdapter != null) {
+                mAdapter.initData(nears);
+            }
+        }
+        popup.showAsDropDown(parent, 0, 0);
+    }
+
+    private void requestArround(View parent) {
+        Log.i("info", "===============initList:");
+        BaseRequest request = null;
+        if (!isFate) {
+            request = new AroundBabyRequest(TAG, parms, "" + raduis, "0");
+        } else {
+            request = new AroundFriendRequest(TAG, parms, "" + raduis, "0");
+        }
+        request.send(new BaseRequest.RequestCallback<BaseBaby>() {
+            @Override
+            public void onSuccess(BaseBaby pojo) {
+                if (popup == null) {
+                    showChildrenPop(view, pojo);
+                } else {
+                    if (!popup.isShowing()) {
+                        showChildrenPop(view, pojo);
+                    }
+                }
+//                initData(listView, pojo);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void initData(ListView listView, BaseBaby baseBaby) {
+        ArrayList<ChildEntity> nears = baseBaby.getNear();
+        if (nears != null && nears.size() != 0) {
+            int size = nears.size();
+            if (size > 4) {
+                if (size < 100) {
+                    listView.removeFooterView(rootView);
+                }
                 ViewGroup.LayoutParams layoutParams = listView.getLayoutParams();
                 layoutParams.height = UIUtils.getScreenHeight(this) / 2 - 50;    //获取屏幕高度
                 listView.setLayoutParams(layoutParams);
             }
-            mAdapter.initData(goods);
+            biggest = getBiggest(nears.get(nears.size() - 1));
+            if (mAdapter != null) {
+                mAdapter.initData(nears);
+            }
         }
-//        int xOff = UIUtils.getScreenWidth(this) / 2 - parent.getWidth() / 3;
-//        int xOffDp = UIUtils.px2dip(this, xOff);
-//        popupWindow.showAtLocation(parent, 0, 0, Gravity.END);
-//        popupWindow.showAsDropDown(parent, -xOffDp, 0);
-        popup.showAsDropDown(parent, 0, 0);
     }
 
+    private String biggest = "";
+
+    private void requestMore(final ListView listView) {
+        BaseRequest request = null;
+        if (!isFate) {
+            request = new AroundBabyRequest(TAG, parms, "" + raduis, biggest);
+        } else {
+            request = new AroundFriendRequest(TAG, parms, "" + raduis, biggest);
+        }
+        request.send(new BaseRequest.RequestCallback<BaseBaby>() {
+            @Override
+            public void onSuccess(BaseBaby pojo) {
+                addData(listView, pojo);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                showToast(msg, true);
+            }
+        });
+    }
+
+    private void addData(ListView listView, BaseBaby baseBaby) {
+        ArrayList<ChildEntity> nears = baseBaby.getNear();
+        if (nears != null && nears.size() != 0) {
+            if (nears.size() < 100) {
+                listView.removeFooterView(rootView);
+            }
+            biggest = getBiggest(nears.get(nears.size() - 1));
+            if (mAdapter != null) {
+                mAdapter.addData(nears);
+            }
+        }
+    }
+
+    private String getBiggest(ChildEntity entity) {
+        String str = entity.getGid();
+        Log.i("info", "================str:" + str);
+        if (!TextUtils.isEmpty(str)) {
+            String[] strs = str.split("_");
+            Log.i("info", "================strs[2]:" + strs[2]);
+            return strs[2];
+        } else {
+            return "";
+        }
+    }
 
     private class ItemClickListener implements AdapterView.OnItemClickListener {
         @Override
@@ -1157,4 +1421,38 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             }
         }
     }
+
+
+    private LinearLayout.LayoutParams WClayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+    /**
+     * 设置布局显示目标最大化
+     */
+    private LinearLayout.LayoutParams FFlayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
+    private ProgressBar progressBar;
+    private View rootView;
+
+    private void initRootView() {
+        LinearLayout layout = new LinearLayout(this);
+        //设置布局 水平方向
+        layout.setOrientation(LinearLayout.HORIZONTAL);
+        //进度条
+        progressBar = new ProgressBar(this);
+        //进度条显示位置
+        progressBar.setPadding(0, 0, 15, 0);
+
+        layout.addView(progressBar, WClayoutParams);
+
+        TextView textView = new TextView(this);
+        textView.setText("加载中...");
+        textView.setGravity(Gravity.CENTER_VERTICAL);
+
+        layout.addView(textView, FFlayoutParams);
+        layout.setGravity(Gravity.CENTER);
+
+        LinearLayout loadingLayout = new LinearLayout(this);
+        loadingLayout.addView(layout, WClayoutParams);
+        loadingLayout.setGravity(Gravity.CENTER);
+        rootView = loadingLayout;
+    }
+
 }
