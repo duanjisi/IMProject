@@ -48,15 +48,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.MD5Util;
 import im.boss66.com.Utils.MakeQRCodeUtil;
+import im.boss66.com.Utils.OnMultiClickListener;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.CaptureActivity;
+import im.boss66.com.activity.connection.ClanClubActivity;
 import im.boss66.com.activity.treasure.FuwaPackageActivity;
 import im.boss66.com.adapter.FuwaListAdaper;
 import im.boss66.com.entity.FuwaDetailEntity;
 import im.boss66.com.entity.FuwaEntity;
+import im.boss66.com.entity.TribeEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.RecycleViewItemListener;
 
@@ -64,7 +68,7 @@ import im.boss66.com.listener.RecycleViewItemListener;
  * Created by liw on 2017/5/3.
  */
 
-public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickListener{
+public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickListener {
 
     private RecyclerView rcv_fuwalist;
     private FuwaListAdaper adaper;
@@ -239,7 +243,7 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
                     String id = bill.getGid();
                     if (!TextUtils.isEmpty(id) && !list.contains(id)) {
                         list.add(id);
-                        fuwas.add(new FuwaEntity.FuwaDetail(bill.getGid(), bill.getId(), bill.isAwarded(), bill.getPos(), bill.getCreator()));
+                        fuwas.add(new FuwaEntity.FuwaDetail(bill.getGid(), bill.getId(), bill.isAwarded(), bill.getPos(), bill.getCreator(), bill.getCreatorid()));
                         bills.setIdList(list);
                         bills.setFuwas(fuwas);
                     }
@@ -255,7 +259,7 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
                 List<FuwaEntity.FuwaDetail> fuwas = bill.getFuwas();
                 if (!TextUtils.isEmpty(id) && !list.contains(id)) {
                     list.add(id);
-                    fuwas.add(new FuwaEntity.FuwaDetail(bill.getGid(), bill.getId(), bill.isAwarded(), bill.getPos(), bill.getCreator()));
+                    fuwas.add(new FuwaEntity.FuwaDetail(bill.getGid(), bill.getId(), bill.isAwarded(), bill.getPos(), bill.getCreator(), bill.getCreatorid()));
                     bill.setIdList(list);
                     bill.setFuwas(fuwas);
                 }
@@ -382,7 +386,6 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
     }
 
 
-
     //弹第一个福娃dialog
     private void showFuwaDialog(final Context context) {
 
@@ -414,9 +417,9 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
             public void onClick(View v) {
 
 
-                if(introduceDialog==null){
+                if (introduceDialog == null) {
                     showIntroduceDialog();
-                }else if(!introduceDialog.isShowing()){
+                } else if (!introduceDialog.isShowing()) {
                     tv_introduce_info.setText(null);
                     introduceDialog.show();
                     setIntroduce();
@@ -580,13 +583,13 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
                 if (!TextUtils.isEmpty(res)) {
                     try {
                         JSONObject jsonObject = new JSONObject(res);
-                        if(jsonObject.getInt("code")==0){
+                        if (jsonObject.getInt("code") == 0) {
                             introduce = jsonObject.getString("data");
 
-                            if(introduce.length()>0){
+                            if (introduce.length() > 0) {
                                 tv_introduce_info.setText(introduce);
 
-                            }else{
+                            } else {
                                 tv_introduce_info.setText("暂无介绍");
                             }
 
@@ -641,7 +644,7 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
 
         //vp打开后，循环请求接口.
         dialog_show = true; //显示
-        handler.sendEmptyMessageDelayed(5,3000);
+        handler.sendEmptyMessageDelayed(5, 3000);
     }
 
     class ViewAdapter extends PagerAdapter {
@@ -723,12 +726,11 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
                     viewHolder = (ViewAdapter.ViewHolder) convertView.getTag();
                 }
                 String gid = datas.get(position).gid;
-                if(gid.contains("fuwa_c")){
-                    viewHolder.tv_type.setText("用    途: 寻宝" );
-                }else {
-                    viewHolder.tv_type.setText("用    途: 社交" );
+                if (gid.contains("fuwa_c")) {
+                    viewHolder.tv_type.setText("用    途: 寻宝");
+                } else {
+                    viewHolder.tv_type.setText("用    途: 社交");
                 }
-
 
 
                 if (datas.get(position).awarded) {     //因为复用问题，所以要做处理
@@ -737,12 +739,18 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
                     viewHolder.award.setVisibility(View.INVISIBLE);
                 }
                 viewHolder.tv_fuwa_num.setText(datas.get(position).id + "号福娃");
-//                viewHolder.tv_fuwa_num.setText(datas.get(position).gid + "号福娃"); //测试用
 
                 viewHolder.tv_from.setText("来源于: " + datas.get(position).creator);
-//                viewHolder.tv_from.setText("来源于来源于来源于来源于来源于来源于来源于来源于:" + datas.get(position).creator);
+                final String creatorid = datas.get(position).creatorid;
+
+                viewHolder.tv_from.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+
+                        initTribe(creatorid);
+                    }
+                });
                 viewHolder.tv_catch.setText("捕获于: " + datas.get(position).pos);
-//                viewHolder.tv_catch.setText("捕获于：捕获于捕获于捕获于捕获于捕获于捕获于捕获于捕获于捕获于捕获于捕获于捕获于" );
                 String uri = " fuwa:fuwa:" + datas.get(position).gid;
 
                 // 给 ImageView 设置一个 tag
@@ -779,6 +787,60 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
             private ImageView img_fuwa;
             private ImageView award;
         }
+    }
+
+    private void initTribe(String creatorid) {
+
+        String url = HttpUrl.SEARCH_TRIBE_LIST;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        url = url + "?user_id=" + creatorid;
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (result != null) {
+                    TribeEntity tribeEntity = JSON.parseObject(result, TribeEntity.class);
+                    int code = tribeEntity.getCode();
+                    if (code == 1) {
+                        List<TribeEntity.ResultBean> beans = tribeEntity.getResult();
+                        TribeEntity.ResultBean bean = beans.get(0);
+                        String name = bean.getName();
+                        int stribe_id = bean.getStribe_id();
+                        int user_id = bean.getUser_id();
+
+                        Intent intent = new Intent(getActivity(), ClanClubActivity.class);
+                        intent.putExtra("isClan", 3);
+                        intent.putExtra("name", name);
+                        intent.putExtra("id", stribe_id);
+                        intent.putExtra("user_id", user_id);
+                        startActivity(intent);
+
+                    } else {
+                        //code==0 没数据，没部落 不作处理
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
+            }
+        });
+
+
     }
 
 

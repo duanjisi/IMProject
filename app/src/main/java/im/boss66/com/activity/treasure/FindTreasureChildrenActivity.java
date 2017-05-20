@@ -132,7 +132,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private ChildEntity currentChild;
     private View topBar;
     private HashMap<String, Marker> markerMap = new HashMap<>();
-    private boolean isMapFirst = true;
     private HashMap<String, LatLng> latMap = new HashMap<>();
     private View view;
     private UiSettings mUiSettings;
@@ -635,7 +634,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 //        if (slidingDrawer.getVisibility() != View.VISIBLE) {
 //            UIUtils.showView(slidingDrawer);
 //        }
-//        float distance = Float.parseFloat(child.getDistance());
         float distance = 0;
         this.currentChild = child;
         if (markerMap != null && markerMap.size() != 0) {
@@ -1033,23 +1031,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                     showToast(msg, true);
                 }
             });
-//            BaseDataModel request = null;
-//            if (!isFate) {
-//                request = new AroundChildrenRequest(TAG, parms, "" + raduis);
-//            } else {
-//                request = new AroundFateRequest(TAG, parms, "" + raduis);
-//            }
-//            request.send(new BaseDataModel.RequestCallback<BaseChildren>() {
-//                @Override
-//                public void onSuccess(BaseChildren pojo) {
-//                    bindDatas(pojo);
-//                }
-//
-//                @Override
-//                public void onFailure(String msg) {
-//                    showToast(msg, true);
-//                }
-//            });
         }
     }
 
@@ -1097,6 +1078,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         if (markers != null && markers.size() != 0) {
             for (Marker marker : markers) {
                 String title = marker.getTitle();
+                Log.i("info", "=================title:" + title);
                 if (title != null && !title.equals("")) {
                     if (title.equals(child.getGid())) {
                         flag = true;
@@ -1270,6 +1252,10 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 mAdapter.initData(nears);
             }
         }
+//        int xOff = UIUtils.getScreenWidth(this) / 2 - parent.getWidth() / 3;
+//        int xOffDp = UIUtils.px2dip(this, xOff);
+//        popupWindow.showAtLocation(parent, 0, 0, Gravity.END);
+//        popupWindow.showAsDropDown(parent, -xOffDp, 0);
         popup.showAsDropDown(parent, 0, 0);
     }
 

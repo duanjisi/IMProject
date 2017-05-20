@@ -133,7 +133,7 @@ public class FuwaMyApplyFragment extends BaseFragment implements View.OnClickLis
                     String id = bill.getGid();
                     if (!TextUtils.isEmpty(id) && !list.contains(id)) {
                         list.add(id);
-                        fuwas.add(new FuwaEntity.FuwaDetail(bill.getGid(), bill.getId(), bill.isAwarded(), bill.getPos(), bill.getCreator()));
+                        fuwas.add(new FuwaEntity.FuwaDetail(bill.getGid(), bill.getId(), bill.isAwarded(), bill.getPos(), bill.getCreator(),bill.getCreatorid()));
                         bills.setIdList(list);
                         bills.setFuwas(fuwas);
                     }
@@ -149,7 +149,7 @@ public class FuwaMyApplyFragment extends BaseFragment implements View.OnClickLis
                 List<FuwaEntity.FuwaDetail> fuwas = bill.getFuwas();
                 if (!TextUtils.isEmpty(id) && !list.contains(id)) {
                     list.add(id);
-                    fuwas.add(new FuwaEntity.FuwaDetail(bill.getGid(), bill.getId(), bill.isAwarded(), bill.getPos(), bill.getCreator()));
+                    fuwas.add(new FuwaEntity.FuwaDetail(bill.getGid(), bill.getId(), bill.isAwarded(), bill.getPos(), bill.getCreator(),bill.getCreatorid()));
                     bill.setIdList(list);
                     bill.setFuwas(fuwas);
                 }
