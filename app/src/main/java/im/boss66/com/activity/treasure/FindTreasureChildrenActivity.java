@@ -992,7 +992,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         ArrayList<ChildEntity> list = children.getData();
         if (list != null && list.size() != 0) {
             for (ChildEntity child : list) {
-                Log.i("info", "========details:" + child.getDetail());
+//                Log.i("info", "========details:" + child.getDetail());
                 if (!hasChild(child)) {
                     String[] strs = child.getGeo().split("-");
                     addMarkerToMap(new LatLng(Double.parseDouble(strs[1]), Double.parseDouble(strs[0])), child);
@@ -1007,7 +1007,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         if (markers != null && markers.size() != 0) {
             for (Marker marker : markers) {
                 String title = marker.getTitle();
-                Log.i("info", "=================title:" + title);
+//                Log.i("info", "=================title:" + title);
                 if (title != null && !title.equals("")) {
                     if (title.equals(child.getGid())) {
                         flag = true;

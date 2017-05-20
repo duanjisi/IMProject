@@ -353,5 +353,7 @@ public class HttpUrl {
     public static final String EDIT_TRIBE = MAIN_URL+"api/v1/storetribe/update";
     //删除部落
     public static final String DELETE_TRIBE = MAIN_URL+"api/v1/storetribe/delete";
+    //通过uid查询部落列表
+    public static final String SEARCH_TRIBE_LIST= MAIN_URL+"api/v1/storetribe/createby";
 
 }
