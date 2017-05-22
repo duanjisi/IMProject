@@ -214,9 +214,10 @@ public class HttpUrl {
     //获取用户信息
     public static final String SEARCH_USER_INFO = MAIN_URL + "ucenter/userinfo/index";
     //查询周围的福娃
-    public static final String FIND_AROUND_CHILDREN = BASE_FUWA[FUWA_TAG] + "api/query?";
+    public static final String FIND_AROUND_CHILDREN = BASE_FUWA[FUWA_TAG] + "api/queryv2";
     //查询周围缘分
-    public static final String FIND_AROUND_FATE = BASE_FUWA[FUWA_TAG] + "api/querystranger?";
+    public static final String FIND_AROUND_FATE = BASE_FUWA[FUWA_TAG] + "api/querystrangerv2";
+
     //同学推荐
     public static final String SCHOOLMATE_LIST = MAIN_URL + "api/v1/search/same-school";
     //同乡推荐
@@ -353,5 +354,7 @@ public class HttpUrl {
     public static final String EDIT_TRIBE = MAIN_URL+"api/v1/storetribe/update";
     //删除部落
     public static final String DELETE_TRIBE = MAIN_URL+"api/v1/storetribe/delete";
+    //通过uid查询部落列表
+    public static final String SEARCH_TRIBE_LIST= MAIN_URL+"api/v1/storetribe/createby";
 
 }

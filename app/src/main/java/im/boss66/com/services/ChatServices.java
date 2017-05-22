@@ -146,16 +146,7 @@ public class ChatServices extends Service implements Observer {
 
                 @Override
                 public void onClose(int code, String reason) {
-                    MycsLog.i("info", "======reason:" + reason);
-//                    logout();
                     startConnection();
-//                    for (int i = 0; i < callbacks.size(); i++)
-//                        ((receiveMessageCallback) callbacks.get(i)).onNotify("", reason);
-//                    if (App.getInstance().isLogin()) {
-//                        LocalBroadcastManager.getInstance(ChatServices.this).sendBroadcast(new Intent(Constants.Action.CHAT_SERVICE_CLOSE));
-//                    }
-
-                    //startConnection();
                 }
             });
         } catch (Exception e) {
@@ -376,6 +367,7 @@ public class ChatServices extends Service implements Observer {
 
     private void logout() {
         if (mConnection != null && !TextUtils.isEmpty(userid)) {
+            Log.i("info", "==================mConnection:" + mConnection + "\n" + "userid:" + userid);
             mConnection.sendTextMessage("logout_" + userid);
         } else {
             startConnection();
@@ -385,21 +377,23 @@ public class ChatServices extends Service implements Observer {
     @Override
     public void update(Observable observable, Object data) {
         SessionInfo sin = (SessionInfo) data;
-        if (sin.getAction() == Session.ACTION_SEND_IM_MESSAGE) {
-            String msg = (String) sin.getData();
-            if (msg != null && !msg.equals("")) {
-                Log.i("info", "===================url:" + msg);
-                sendMessage(msg);
-            }
-        } else if (sin.getAction() == Session.ACTION_STOP_CHAT_SERVICE) {
-            stopChatService(this);
-        } else if (sin.getAction() == Session.ACTION_RE_CONNECT_WEBSOCKET) {
-            if (mConnection != null) {
-                if (!mConnection.isConnected()) {
+        if (sin != null) {
+            if (sin.getAction() == Session.ACTION_SEND_IM_MESSAGE) {
+                String msg = (String) sin.getData();
+                if (msg != null && !msg.equals("")) {
+                    Log.i("info", "===================url:" + msg);
+                    sendMessage(msg);
+                }
+            } else if (sin.getAction() == Session.ACTION_STOP_CHAT_SERVICE) {
+                stopChatService(this);
+            } else if (sin.getAction() == Session.ACTION_RE_CONNECT_WEBSOCKET) {
+                if (mConnection != null) {
+                    if (!mConnection.isConnected()) {
+                        startConnection();
+                    }
+                } else {
                     startConnection();
                 }
-            } else {
-                startConnection();
             }
         }
     }

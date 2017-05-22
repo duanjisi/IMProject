@@ -119,9 +119,6 @@ public class App extends Application {
 //        mMediaPlayer = MediaPlayer.create(this, R.raw.office);
 //        mNotificationManager = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
         SharedPreferencesMgr.init(this, "liw");
-        //异常捕捉
-//        CrashHandler crashHandler = CrashHandler.getInstance();
-//        crashHandler.init(getApplicationContext());
     }
 
     @Override

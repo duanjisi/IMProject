@@ -42,6 +42,15 @@ public class FuwaEntity {
         private boolean awarded;
         private String pos;
         private String creator;
+        private String creatorid;
+
+        public String getCreatorid() {
+            return creatorid;
+        }
+
+        public void setCreatorid(String creatorid) {
+            this.creatorid = creatorid;
+        }
 
         public boolean isAwarded() {
             return awarded;
@@ -108,12 +117,13 @@ public class FuwaEntity {
         private boolean isSel = false;
     }
     public static  class FuwaDetail{
-        public FuwaDetail(String gid, String id, boolean awarded, String pos, String creator) {
+        public FuwaDetail(String gid, String id, boolean awarded, String pos, String creator,String creatorid) {
             this.gid = gid;
             this.id = id;
             this.awarded = awarded;
             this.pos = pos;
             this.creator = creator;
+            this.creatorid = creatorid;
         }
 
         public String gid;
@@ -121,6 +131,7 @@ public class FuwaEntity {
         public boolean awarded;
         public String pos;
         public String creator;
+        public String creatorid;
 
     }
 
