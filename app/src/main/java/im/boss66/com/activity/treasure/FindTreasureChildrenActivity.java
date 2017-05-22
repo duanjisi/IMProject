@@ -246,13 +246,12 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             aMap.setOnMarkerClickListener(this);//marker点击事件监听接口。
             aMap.setOnCameraChangeListener(this);
             aMap.setOnMapLoadedListener(this);//设置地图加载监听
-
             mSensorHelper = new SensorEventHelper(this);
             if (mSensorHelper != null) {
                 mSensorHelper.registerSensorListener();
             }
 
-            Log.i("info", "==================scaleSize:" + aMap.getScalePerPixel());
+            //Log.i("info", "==================scaleSize:" + aMap.getScalePerPixel());
             // 设置定位监听
             aMap.setLocationSource(this);
 //            mUiSettings.setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
@@ -512,7 +511,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
     @Override
     public void onMapLoaded() {
-        Log.i("info", "==============onMapLoaded()");
+        //Log.i("info", "==============onMapLoaded()");
     }
 
     @Override
@@ -539,7 +538,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     }
 
     private void deleteMarker(String gid) {
-        Log.i("info", "==============gid:" + gid);
+        //Log.i("info", "==============gid:" + gid);
         List<Marker> markers = aMap.getMapScreenMarkers();
         for (Marker marker : markers) {
             Object object = marker.getObject();
@@ -614,7 +613,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     @Override
     public boolean onMarkerClick(Marker marker) {
         String snippet = marker.getSnippet();
-        Log.i("info", "========snippet:" + snippet);
+        //Log.i("info", "========snippet:" + snippet);
         if (snippet != null && !snippet.equals("")) {
             ChildEntity childEntity = JSON.parseObject(snippet, ChildEntity.class);
 //            showToast("编号:" + childEntity.getId() + "\n" + "地址：" + childEntity.getPos(), true);
@@ -640,7 +639,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         double longitude = mLocMarker.getPosition().longitude;
         mLatLng = new LatLng(latitude, longitude);
 //        mLatLng = mLocMarker.getPosition();
-        Log.i("info", "===============distance:" + distance);
+        //Log.i("info", "===============distance:" + distance);
         if (distance > 30 || distance == 0) {
             if (slidingDrawer.getVisibility() != View.VISIBLE) {
                 UIUtils.showView(slidingDrawer);
@@ -722,7 +721,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {//移动地图后，停止。开始获取福娃
-        Log.i("info", "============onCameraChangeFinish()");
+        //Log.i("info", "============onCameraChangeFinish()");
         childrenRequest(cameraPosition);
     }
 
@@ -901,7 +900,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         markerOption.draggable(true);
         markerOption.snippet(JSON.toJSONString(child));
         markerOption.title(child.getGid());
-//        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
+        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
         markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
         Marker marker = aMap.addMarker(markerOption);
         marker.setObject(child.getGid());
@@ -964,9 +963,9 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         if (aMap != null) {
             float scale = aMap.getScalePerPixel();
             int raduis = (int) (scale * UIUtils.getScreenPx(context) / 2);//半径
-            Log.i("info", "==============raduis:" + raduis);
+            //Log.i("info", "==============raduis:" + raduis);
             String parms = cameraPosition.target.longitude + "-" + cameraPosition.target.latitude;
-            Log.i("info", "==============parms:" + parms);
+            //Log.i("info", "==============parms:" + parms);
             BaseDataModel request = null;
             if (!isFate) {
                 request = new AroundChildrenRequest(TAG, parms, "" + raduis);
@@ -991,8 +990,8 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private void bindDatas(BaseChildren children) {
         ArrayList<ChildEntity> list = children.getData();
         if (list != null && list.size() != 0) {
+            Log.i("info", "========details:" + list.size());
             for (ChildEntity child : list) {
-                Log.i("info", "========details:" + child.getDetail());
                 if (!hasChild(child)) {
                     String[] strs = child.getGeo().split("-");
                     addMarkerToMap(new LatLng(Double.parseDouble(strs[1]), Double.parseDouble(strs[0])), child);
@@ -1007,7 +1006,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         if (markers != null && markers.size() != 0) {
             for (Marker marker : markers) {
                 String title = marker.getTitle();
-                Log.i("info", "=================title:" + title);
+                //Log.i("info", "=================title:" + title);
                 if (title != null && !title.equals("")) {
                     if (title.equals(child.getGid())) {
                         flag = true;
