@@ -349,6 +349,9 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         } else if (SEND_TYPE_TEXT.equals(sendType)) {
             showToast("内容不能为空", false);
             return;
+        }else if(SEND_TYPE_PHOTO.equals(sendType) && imgList != null && imgList.size() == 0){
+            showToast("内容不能为空", false);
+            return;
         }
         showLoadingDialog();
         String url;
