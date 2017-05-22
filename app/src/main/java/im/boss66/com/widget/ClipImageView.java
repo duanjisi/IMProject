@@ -120,6 +120,7 @@ public class ClipImageView extends ImageView implements
         ta.recycle();
 
         mPaint.setDither(true);
+
     }
 
     /**
@@ -317,6 +318,9 @@ public class ClipImageView extends ImageView implements
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         updateBorder();
+        mScaleMatrix.postTranslate(0, 0);
+        checkBorder();
+        setImageMatrix(mScaleMatrix);
     }
 
     private void updateBorder() {
