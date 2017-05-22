@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import im.boss66.com.App;
 import im.boss66.com.Constants;
@@ -25,6 +26,7 @@ import im.boss66.com.activity.personage.PersonalInformationActivity;
 import im.boss66.com.activity.personage.PersonalPhotoAlbumActivity;
 import im.boss66.com.activity.personage.PersonalSetActivity;
 import im.boss66.com.activity.personage.WalletActivity;
+import im.boss66.com.config.LoginStatus;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.ActionEntity;
 
@@ -51,6 +53,19 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
         initData();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onMessageEvent(ActionEntity event) {
+        LoginStatus sLoginStatus = LoginStatus.getInstance();
+        tv_name.setText(sLoginStatus.getUser_name());
     }
 
     private void initData() {

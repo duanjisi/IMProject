@@ -20,6 +20,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +29,9 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.config.LoginStatus;
+import im.boss66.com.entity.ActionEntity;
+import im.boss66.com.event.RefreshName;
 import im.boss66.com.http.HttpUrl;
 
 /**
@@ -49,6 +53,12 @@ public class EditNameActivity extends BaseActivity implements View.OnClickListen
                     intent.putExtra("name", et_name.getText().toString());
                     setResult(1, intent);
                     finish();
+                    //通知下，人脉中心，首页，个人中心。
+
+                    LoginStatus sLoginStatus = LoginStatus.getInstance();
+                    sLoginStatus.setUser_name(et_name.getText().toString()); //修改本地数据
+
+                    EventBus.getDefault().post(new ActionEntity(Constants.Action.UPDATE_ACCOUNT_INFORM));  //首页和人脉中心
                     break;
 
             }
@@ -72,7 +82,7 @@ public class EditNameActivity extends BaseActivity implements View.OnClickListen
     private void initViews() {
         et_name = (EditText) findViewById(R.id.et_name);
         et_name.setText(name);
-        et_name.setSelection(name.length());
+//        et_name.setSelection(name.length());   //有可能名字过长，我这里又做了限制，导致越界
         tv_headright_view = (TextView) findViewById(R.id.tv_headright_view);
         tv_headlift_view = (TextView) findViewById(R.id.tv_headlift_view);
         tv_headlift_view.setOnClickListener(this);

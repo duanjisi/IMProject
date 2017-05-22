@@ -43,6 +43,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,6 +63,7 @@ import im.boss66.com.activity.discover.CircleMessageListActivity;
 import im.boss66.com.activity.discover.CirclePresenter;
 import im.boss66.com.adapter.CommunityListAdapter;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.entity.BaseResult;
 import im.boss66.com.entity.CircleCommentListEntity;
 import im.boss66.com.entity.CircleItem;
@@ -76,6 +79,7 @@ import im.boss66.com.entity.FriendCirclePraiseEntity;
 import im.boss66.com.entity.FriendState;
 import im.boss66.com.entity.PersonEntity;
 import im.boss66.com.entity.UserInfoEntity;
+import im.boss66.com.event.RefreshName;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.AddFriendRequest;
@@ -185,12 +189,27 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people_center);
         initViews();
+        initData();
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //initData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void  onMessage(ActionEntity event){
+//
+        initData();
+        getCommunityList();     //刷新有时会失败
+
     }
 
     private void initData() {
@@ -334,11 +353,11 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
             address = sAccount.getDistrict_str() + sAccount.getSchool();
         }
         App.getInstance().addUidToList(CuiUid,true);
-        tv_name.setVisibility(View.VISIBLE);
-        tv_name.setText(name);
-        if (!TextUtils.isEmpty(address)) {
-            tv_address.setText(address);
-        }
+//        tv_name.setVisibility(View.VISIBLE);
+//        tv_name.setText(name);
+//        if (!TextUtils.isEmpty(address)) {
+//            tv_address.setText(address);
+//        }
         showHead();
         // 回调接口和adapter设置
         presenter = new CirclePresenter(this);
