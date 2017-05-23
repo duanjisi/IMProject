@@ -109,9 +109,7 @@ public class PersonalAccountSafeActivity extends BaseActivity implements View.On
             }
         } else if (requestCode == 102 && resultCode == RESULT_OK) {
             email = PreferenceUtils.getString(context, "user_email", "");
-            if (!TextUtils.isEmpty(email)) {
-                tv_email.setText(email);
-            }
+            tv_email.setText(email);
         }
     }
 }

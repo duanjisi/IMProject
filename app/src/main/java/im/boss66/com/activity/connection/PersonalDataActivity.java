@@ -44,10 +44,12 @@ import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.TimeUtil;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
+import im.boss66.com.config.LoginStatus;
 import im.boss66.com.event.CreateSuccess;
 import im.boss66.com.entity.JobEntity;
 import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.entity.UserInfoEntity;
+import im.boss66.com.event.RefreshName;
 import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.ChooseJobRequest;
@@ -182,6 +184,9 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     showToast("保存成功", false);
                     EventBus.getDefault().post(new CreateSuccess(""));
                     SharedPreferencesMgr.setBoolean("setSuccess2", true); //
+
+                    LoginStatus sLoginStatus = LoginStatus.getInstance();
+                    sLoginStatus.setSex_str(tv_sex2.getText().toString());
                     finish();
                     break;
                 case 3: //更新失败

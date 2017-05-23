@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
@@ -90,12 +93,19 @@ public class ChangeUserPwActivity extends BaseActivity implements View.OnClickLi
                     if ("email".equals(type)) {
                         String email = et_email.getText().toString().trim();
                         PreferenceUtils.putString(context, "user_email", email);
-                        String title = tv_title.getText().toString().trim();
-                        if (!TextUtils.isEmpty(title)) {
-                            if ("绑定邮箱地址".equals(title)) {
-                                showToast("绑定邮箱成功", false);
+                        if (!TextUtils.isEmpty(email)) {
+                            if (checkEmail(email)) {
+                                String title = tv_title.getText().toString().trim();
+                                if (!TextUtils.isEmpty(title)) {
+                                    if ("绑定邮箱地址".equals(title)) {
+                                        showToast("绑定邮箱成功", false);
+                                    } else {
+                                        showToast("修改邮箱成功", false);
+                                    }
+                                }
                             } else {
-                                showToast("修改邮箱成功", false);
+                                showToast("邮箱地址格式不正确", false);
+                                return;
                             }
                         }
                         setResult(RESULT_OK);
@@ -170,5 +180,24 @@ public class ChangeUserPwActivity extends BaseActivity implements View.OnClickLi
             }
         }
     };
+
+    /**
+     * 验证邮箱
+     *
+     * @param email
+     * @return
+     */
+    public static boolean checkEmail(String email) {
+        boolean flag = false;
+        try {
+            String check = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+            Pattern regex = Pattern.compile(check);
+            Matcher matcher = regex.matcher(email);
+            flag = matcher.matches();
+        } catch (Exception e) {
+            flag = false;
+        }
+        return flag;
+    }
 
 }
