@@ -240,8 +240,12 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String result = responseInfo.result;
                 if (!TextUtils.isEmpty(result)) {
-                    clanCofcEntity = JSON.parseObject(result, ClanCofcEntity.class);
-                    handler.obtainMessage(1).sendToTarget();
+                    BaseResult result1 = JSON.parseObject(result, BaseResult.class);
+                    if(result1.getCode()==1){
+                        clanCofcEntity = JSON.parseObject(result, ClanCofcEntity.class);
+                        handler.obtainMessage(1).sendToTarget();
+                    }
+
                 }
 
 
