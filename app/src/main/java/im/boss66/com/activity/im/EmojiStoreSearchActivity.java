@@ -281,12 +281,15 @@ public class EmojiStoreSearchActivity extends BaseActivity {
     private void initEmoStores(BaseEmoStore baseEmoStore) {
         if (baseEmoStore != null) {
             ArrayList<EmoStore> stores = baseEmoStore.getResult();
-            if (stores.size() != 0) {
+            int size = stores.size();
+            if (size != 0) {
+                if (!(size < pagerNum)) {
+                    lvEmo.addFooterView(rootView);
+                }
                 UIUtils.hindView(lvHot);
                 UIUtils.showView(lvEmo);
                 pager++;
                 storeAdapter.initData(stores);
-                lvEmo.addFooterView(rootView);
             }
         }
     }
