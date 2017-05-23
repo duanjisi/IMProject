@@ -814,8 +814,8 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
                         Intent intent = new Intent(getActivity(), ClanClubActivity.class);
                         intent.putExtra("isClan", 3);
                         intent.putExtra("name", name);
-                        intent.putExtra("id", stribe_id);
-                        intent.putExtra("user_id", user_id);
+                        intent.putExtra("id", stribe_id+"");
+                        intent.putExtra("user_id", user_id+"");
                         startActivity(intent);
 
                     } else {
