@@ -648,7 +648,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         return true;
     }
 
-
     private void catchChild(ChildEntity child) {
 //        if (slidingDrawer.getVisibility() != View.VISIBLE) {
 //            UIUtils.showView(slidingDrawer);
