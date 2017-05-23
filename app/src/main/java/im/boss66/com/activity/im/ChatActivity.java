@@ -61,6 +61,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -100,12 +101,14 @@ import im.boss66.com.db.dao.EmoCateHelper;
 import im.boss66.com.db.dao.EmoGroupHelper;
 import im.boss66.com.db.dao.EmoHelper;
 import im.boss66.com.entity.AccountEntity;
+import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.entity.BaseConversation;
 import im.boss66.com.entity.CellEntity;
 import im.boss66.com.entity.EmoCate;
 import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmoGroup;
 import im.boss66.com.entity.MessageItem;
+import im.boss66.com.entity.Motion;
 import im.boss66.com.entity.RecentItem;
 import im.boss66.com.fragment.FaceFragment;
 import im.boss66.com.fragment.FaceLoveFragment;
@@ -954,14 +957,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         MessageItem data = mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
         adapter.upDateMsg(data);
         mMsgListView.setSelection(adapter.getCount() - 1);
-//        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
-//        mEtMsg.setText("");
-//        if ("".equals(mSpUtil.getUserId())) {
-//            showToast("发送者未登录!", true);
-//            return;
-//        }
-//        ChatServices.sendMessage(getString(MESSAGE_TYPE_EMOTION, faceCode));
-        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_EMOTION, faceCode));
+//        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_EMOTION, faceCode));
+        sendImMessage(getString(MESSAGE_TYPE_EMOTION, faceCode));
         saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_EMOTION, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
@@ -969,6 +966,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 defaultCount, defaulgUserName, faceCode, 0,
                 System.currentTimeMillis(), 0, "" + System.currentTimeMillis());
         mRecentDB.saveRecent(recentItem);
+    }
+
+
+    private void sendImMessage(String msg) {
+        Motion motion = Motion.getInstance();
+        motion.setAction(Session.ACTION_SEND_IM_MESSAGE);
+        motion.setData(msg);
+        EventBus.getDefault().post(motion);
     }
 
     private String getString(int msgType, String code) {
@@ -1031,7 +1036,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mMsgListView.setSelection(adapter.getCount() - 1);
 //        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
 //        ChatServices.sendMessage(getString(MESSAGE_TYPE_IMG, photoPath));
-        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_IMG, photoPath));
+//        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_IMG, photoPath));
+        sendImMessage(getString(MESSAGE_TYPE_IMG, photoPath));
         saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_IMG, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
@@ -1050,14 +1056,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         MessageItem data = mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
         adapter.upDateMsg(data);
         mMsgListView.setSelection(adapter.getCount() - 1);
-//        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
-//        mEtMsg.setText("");
-//        if ("".equals(mSpUtil.getUserId())) {
-//            showToast("发送者未登录!", true);
-//            return;
-//        }
-//        ChatServices.sendMessage(getString(MESSAGE_TYPE_TXT, msg));
-        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_TXT, msg));
+//        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_TXT, msg));
+        sendImMessage(getString(MESSAGE_TYPE_TXT, msg));
         saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_TXT, msg);
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
@@ -1076,15 +1076,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         MessageItem data = mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
         adapter.upDateMsg(data);
         mMsgListView.setSelection(adapter.getCount() - 1);
-//        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
-
-//        mEtMsg.setText("");
-//        if ("".equals(mSpUtil.getUserId())) {
-//            showToast("发送者未登录!", true);
-//            return;
-//        }
-//        ChatServices.sendMessage(getString(MESSAGE_TYPE_AUDIO, photoPath));
-        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_AUDIO, photoPath));
+//        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_AUDIO, photoPath));
+        sendImMessage(getString(MESSAGE_TYPE_AUDIO, photoPath));
         saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_AUDIO, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(
@@ -1159,14 +1152,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         MessageItem data = mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
         adapter.upDateMsg(data);
         mMsgListView.setSelection(adapter.getCount() - 1);
-//        mMsgDB.saveMsg(mMsgId, item);// 消息保存数据库
-//        mEtMsg.setText("");
-//        if ("".equals(mSpUtil.getUserId())) {
-//            showToast("发送者未登录!", true);
-//            return;
-//        }
-//        ChatServices.sendMessage(getString(MESSAGE_TYPE_VIDEO, faceCode));
-        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_VIDEO, faceCode));
+//        Session.getInstance().sendImMessage(getString(MESSAGE_TYPE_VIDEO, faceCode));
+        sendImMessage(getString(MESSAGE_TYPE_VIDEO, faceCode));
         saveConversation(title, toAvatar, toUid, MESSAGE_TYPE_VIDEO, "");
         // ===保存近期的消息
         RecentItem recentItem = new RecentItem(

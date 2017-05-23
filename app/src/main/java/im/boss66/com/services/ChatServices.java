@@ -13,19 +13,18 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
 import de.tavendo.autobahn.WebSocket;
 import de.tavendo.autobahn.WebSocketConnectionHandler;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.Session;
-import im.boss66.com.SessionInfo;
 import im.boss66.com.Utils.Base64Utils;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PrefKey;
@@ -34,13 +33,14 @@ import im.boss66.com.db.MessageDB;
 import im.boss66.com.db.dao.ConversationHelper;
 import im.boss66.com.entity.BaseConversation;
 import im.boss66.com.entity.MessageItem;
+import im.boss66.com.entity.Motion;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.util.Utils;
 
 /**
  * Created by Johnny on 2017/1/16.
  */
-public class ChatServices extends Service implements Observer {
+public class ChatServices extends Service {
     //    private static WebSocket mConnection = new WebSocketConnection();
     public static ArrayList<receiveMessageCallback> callbacks = new ArrayList<>();
     private String userid;
@@ -79,7 +79,8 @@ public class ChatServices extends Service implements Observer {
     public void onCreate() {
         Log.i("info", "========ChatServices中onCreate()");
         super.onCreate();
-        Session.getInstance().addObserver(this);
+        EventBus.getDefault().register(this);
+//        Session.getInstance().addObserver(this);
         mMsgDB = App.getInstance().getMessageDB();// 发送数据库
 //        handler.sendEmptyMessage(0);
     }
@@ -374,19 +375,20 @@ public class ChatServices extends Service implements Observer {
         }
     }
 
-    @Override
-    public void update(Observable observable, Object data) {
-        SessionInfo sin = (SessionInfo) data;
-        if (sin != null) {
-            if (sin.getAction() == Session.ACTION_SEND_IM_MESSAGE) {
-                String msg = (String) sin.getData();
+    @Subscribe
+    public void onMessageEvent(Motion event) {
+        int action = event.getAction();
+        switch (action) {
+            case Session.ACTION_SEND_IM_MESSAGE:
+                String msg = (String) event.getData();
                 if (msg != null && !msg.equals("")) {
-                    Log.i("info", "===================url:" + msg);
                     sendMessage(msg);
                 }
-            } else if (sin.getAction() == Session.ACTION_STOP_CHAT_SERVICE) {
+                break;
+            case Session.ACTION_STOP_CHAT_SERVICE:
                 stopChatService(this);
-            } else if (sin.getAction() == Session.ACTION_RE_CONNECT_WEBSOCKET) {
+                break;
+            case Session.ACTION_RE_CONNECT_WEBSOCKET:
                 if (mConnection != null) {
                     if (!mConnection.isConnected()) {
                         startConnection();
@@ -394,14 +396,39 @@ public class ChatServices extends Service implements Observer {
                 } else {
                     startConnection();
                 }
-            }
+                break;
         }
     }
+
+//    @Override
+//    public void update(Observable observable, Object data) {
+//        SessionInfo sin = (SessionInfo) data;
+//        if (sin != null) {
+//            if (sin.getAction() == Session.ACTION_SEND_IM_MESSAGE) {
+//                String msg = (String) sin.getData();
+//                if (msg != null && !msg.equals("")) {
+//                    Log.i("info", "===================url:" + msg);
+//                    sendMessage(msg);
+//                }
+//            } else if (sin.getAction() == Session.ACTION_STOP_CHAT_SERVICE) {
+//                stopChatService(this);
+//            } else if (sin.getAction() == Session.ACTION_RE_CONNECT_WEBSOCKET) {
+//                if (mConnection != null) {
+//                    if (!mConnection.isConnected()) {
+//                        startConnection();
+//                    }
+//                } else {
+//                    startConnection();
+//                }
+//            }
+//        }
+//    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 //        handler.sendEmptyMessage(1);
+        EventBus.getDefault().unregister(this);
         if (mConnection.isConnected()) {
             logout();
             mConnection.disconnect();

@@ -177,6 +177,18 @@ public final class UIUtils {
         return ScreenWidth;
     }
 
+    //    public static float getScreenPx(Context context) {
+//        if (context == null) {
+//            return 0;
+//        }
+//        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+//        DisplayMetrics dm = new DisplayMetrics();
+//        wm.getDefaultDisplay().getMetrics(dm);
+//        ScreenWidth = dm.widthPixels;
+//        float density = dm.density;
+//        return ScreenWidth * density;
+//    }
+
     public static float getScreenPx(Context context) {
         if (context == null) {
             return 0;
@@ -184,9 +196,9 @@ public final class UIUtils {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(dm);
-        ScreenWidth = dm.widthPixels;
+        ScreenHeight = dm.heightPixels;
         float density = dm.density;
-        return ScreenWidth * density;
+        return ScreenHeight * density;
     }
 
     public static int getStatusBarHeight() {

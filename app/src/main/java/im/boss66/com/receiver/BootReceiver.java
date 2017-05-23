@@ -10,6 +10,7 @@ import android.util.Log;
 import im.boss66.com.Constants;
 import im.boss66.com.Session;
 import im.boss66.com.services.ChatServices;
+import im.boss66.com.util.Utils;
 
 /**
  * Created by Johnny on 2017/3/24.
@@ -29,8 +30,8 @@ public class BootReceiver extends BroadcastReceiver {
             //判断是否连接
             if (networkInfo != null && networkInfo.isAvailable()) {
                 Log.i("info", "===========网络可用!");
-//                ChatServices.startChatService(context);
-                Session.getInstance().reConnectNet();
+//                Session.getInstance().reConnectNet();
+                Utils.sendImMessage(Session.ACTION_RE_CONNECT_WEBSOCKET, null);
             }
         }
     }

@@ -41,18 +41,20 @@
             android:drawableRight="@drawable/sex_lady"
             android:maxEms="4"
             android:singleLine="true"
-            android:text="小华"
+            android:text="小华当时发生的发生水电费"
             android:textColor="@color/golden_color"
             android:textSize="18sp" />
-
+        <!--android:layout_toRightOf="@+id/tv_name"-->
+        <!--android:layout_marginLeft="38dp"-->
         <Button
             android:id="@+id/btn_player"
             android:layout_width="69dp"
             android:layout_height="30dp"
+            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/tv_name"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="38dp"
-            android:layout_toRightOf="@+id/tv_name"
+            android:layout_marginLeft="11dp"
+            android:layout_marginRight="11dp"
             android:background="@drawable/bg_treasure_store_selector"
             android:text="观看视频"
             android:textColor="@color/golden_color"

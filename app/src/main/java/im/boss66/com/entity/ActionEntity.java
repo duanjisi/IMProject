@@ -15,7 +15,4 @@ public class ActionEntity {
         return action;
     }
 
-    public void setAction(String action) {
-        this.action = action;
-    }
 }

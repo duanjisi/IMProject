@@ -29,6 +29,7 @@ import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,6 +58,7 @@ import im.boss66.com.domain.EaseUser;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.BaseConversation;
 import im.boss66.com.entity.MessageItem;
+import im.boss66.com.entity.Motion;
 
 public class Utils {
 
@@ -578,5 +580,12 @@ public class Utils {
         Notification notification = mBuilder.build();
         notification.defaults = Notification.DEFAULT_SOUND;
         notificationManager.notify(notificationId, notification);
+    }
+
+    public static void sendImMessage(int action, String msg) {
+        Motion motion = Motion.getInstance();
+        motion.setAction(action);
+        motion.setData(msg);
+        EventBus.getDefault().post(motion);
     }
 }

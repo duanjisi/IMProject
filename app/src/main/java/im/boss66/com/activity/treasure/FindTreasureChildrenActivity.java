@@ -542,8 +542,27 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         deleteMarker(gid);
     }
 
+
+    private void deleteMarkers() {
+        if (markerMap != null) {
+            markerMap.clear();
+        }
+        List<Marker> markers = aMap.getMapScreenMarkers();
+        for (Marker marker : markers) {
+            Object object = marker.getObject();
+            if (object != null) {
+                if (!TextUtils.isEmpty(object.toString())) {
+                    marker.remove();
+                    if (slidingDrawer.getVisibility() != View.GONE) {
+                        UIUtils.hindView(slidingDrawer);
+                    }
+                }
+            }
+        }
+        aMap.invalidate();
+    }
+
     private void deleteMarker(String gid) {
-        Log.i("info", "==============gid:" + gid);
         List<Marker> markers = aMap.getMapScreenMarkers();
         for (Marker marker : markers) {
             Object object = marker.getObject();
@@ -725,10 +744,16 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
     }
 
+
+    private long lastTime = 0;
+
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {//移动地图后，停止。开始获取福娃
         Log.i("info", "============onCameraChangeFinish()");
-        childrenRequest(cameraPosition);
+        if (System.currentTimeMillis() - lastTime > 1500) {
+            lastTime = System.currentTimeMillis();
+            childrenRequest(cameraPosition);
+        }
     }
 
     @Override
@@ -907,18 +932,18 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private void addMarkerToMap(LatLng latLng, ChildEntity child) {
         String key = child.getGid();
         if (!markerMap.containsKey(key)) {
-            if (getDistance(latLng) < 30) {
-                MarkerOptions markerOption = new MarkerOptions();
-                markerOption.position(latLng);
-                markerOption.draggable(true);
-                markerOption.snippet(JSON.toJSONString(child));
-                markerOption.title(child.getGid());
+//            if (getDistance(latLng) < 30) {
+            MarkerOptions markerOption = new MarkerOptions();
+            markerOption.position(latLng);
+            markerOption.draggable(true);
+            markerOption.snippet(JSON.toJSONString(child));
+            markerOption.title(child.getGid());
 //              markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
-                markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
-                Marker marker = aMap.addMarker(markerOption);
-                marker.setObject(child.getGid());
-                markerMap.put(key, marker);
-            }
+            markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
+            Marker marker = aMap.addMarker(markerOption);
+            marker.setObject(child.getGid());
+            markerMap.put(key, marker);
+//            }
         }
 
         if (!latMap.containsKey(key)) {
@@ -929,23 +954,22 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private void addFarMarkerToMap(LatLng latLng, ChildEntity child) {
         String key = child.getGeo();
         if (!markerMap.containsKey(key)) {
-            if (getDistance(latLng) > 30) {
-                MarkerOptions markerOption = new MarkerOptions();
-                markerOption.position(latLng);
-                markerOption.draggable(true);
-                markerOption.snippet(JSON.toJSONString(child));
-                markerOption.title(key);
-                markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
-                Marker marker = aMap.addMarker(markerOption);
-                marker.setObject(key);
-                markerMap.put(key, marker);
-            }
+//            if (getDistance(latLng) > 30) {
+            MarkerOptions markerOption = new MarkerOptions();
+            markerOption.position(latLng);
+            markerOption.draggable(true);
+            markerOption.snippet(JSON.toJSONString(child));
+            markerOption.title(key);
+            markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
+            Marker marker = aMap.addMarker(markerOption);
+            marker.setObject(key);
+            markerMap.put(key, marker);
+//            }
         }
         if (!latMap.containsKey(key)) {
             latMap.put(key, latLng);
         }
     }
-
 
     private float getDistance(LatLng latLng) {
         float distance = 0;
@@ -1018,12 +1042,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             request.send(new BaseRequest.RequestCallback<BaseBaby>() {
                 @Override
                 public void onSuccess(final BaseBaby pojo) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            bindDatas(pojo);
-                        }
-                    });
+                    bindDatas(pojo);
                 }
 
                 @Override
@@ -1035,14 +1054,15 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     }
 
     private void bindDatas(BaseBaby baseBaby) {
+        deleteMarkers();
         ArrayList<ChildEntity> list = baseBaby.getFar();
         if (list != null && list.size() != 0) {
             Log.i("info", "=============fars.size():" + list.size());
             for (ChildEntity child : list) {
-                if (!hasChild2(child)) {
-                    String[] strs = child.getGeo().split("-");
-                    addFarMarkerToMap(new LatLng(Double.parseDouble(strs[1]), Double.parseDouble(strs[0])), child);
-                }
+//                if (!hasChild2(child)) {
+                String[] strs = child.getGeo().split("-");
+                addFarMarkerToMap(new LatLng(Double.parseDouble(strs[1]), Double.parseDouble(strs[0])), child);
+//                }
             }
         }
 
@@ -1050,10 +1070,10 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         if (nears != null && nears.size() != 0) {
             Log.i("info", "=============nears.size():" + nears.size());
             for (ChildEntity child : nears) {
-                if (!hasChild(child)) {
-                    String[] strs = child.getGeo().split("-");
-                    addMarkerToMap(new LatLng(Double.parseDouble(strs[1]), Double.parseDouble(strs[0])), child);
-                }
+//                if (!hasChild(child)) {
+                String[] strs = child.getGeo().split("-");
+                addMarkerToMap(new LatLng(Double.parseDouble(strs[1]), Double.parseDouble(strs[0])), child);
+//                }
             }
         }
     }
@@ -1235,6 +1255,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
             }
         });
+        Log.i("info", "==================nears.size():" + nears.size());
         if (nears != null && nears.size() != 0) {
             int size = nears.size();
             if (size > 4) {
@@ -1251,6 +1272,8 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             if (mAdapter != null) {
                 mAdapter.initData(nears);
             }
+        } else {
+            listView.removeFooterView(rootView);
         }
 //        int xOff = UIUtils.getScreenWidth(this) / 2 - parent.getWidth() / 3;
 //        int xOffDp = UIUtils.px2dip(this, xOff);
@@ -1259,8 +1282,10 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         popup.showAsDropDown(parent, 0, 0);
     }
 
-    private void requestArround(View parent) {
+    private void requestArround(final View parent) {
         Log.i("info", "===============initList:");
+        LatLng latLng = mLocMarker.getPosition();
+        String parms = latLng.longitude + "-" + latLng.latitude;
         BaseRequest request = null;
         if (!isFate) {
             request = new AroundBabyRequest(TAG, parms, "" + raduis, "0");
@@ -1271,13 +1296,12 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             @Override
             public void onSuccess(BaseBaby pojo) {
                 if (popup == null) {
-                    showChildrenPop(view, pojo);
+                    showChildrenPop(parent, pojo);
                 } else {
                     if (!popup.isShowing()) {
-                        showChildrenPop(view, pojo);
+                        showChildrenPop(parent, pojo);
                     }
                 }
-//                initData(listView, pojo);
             }
 
             @Override
@@ -1338,6 +1362,8 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             if (mAdapter != null) {
                 mAdapter.addData(nears);
             }
+        } else {
+            listView.removeFooterView(rootView);
         }
     }
 

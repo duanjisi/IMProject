@@ -12,6 +12,7 @@ import im.boss66.com.Session;
 import im.boss66.com.activity.SplashActivity;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.services.MyPushIntentService;
+import im.boss66.com.util.Utils;
 import im.boss66.com.widget.ActionSheet;
 
 /**
@@ -95,7 +96,8 @@ public class PersonalSetActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(int which) {//退出登录
         App.getInstance().logout();
-        Session.getInstance().stopChatService();
+//        Session.getInstance().stopChatService();
+        Utils.sendImMessage(Session.ACTION_STOP_CHAT_SERVICE, null);
         MyPushIntentService.stopPushService(context);
 //        ChatServices.stopChatService(context);
 //        Session.getInstance().exitActivitys();
