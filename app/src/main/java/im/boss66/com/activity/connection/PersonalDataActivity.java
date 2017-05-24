@@ -605,11 +605,13 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
             id_sex.setViewAdapter(new ArrayWheelAdapter<>(this, jobStr));
             jobName = jobStr[pCurrent];
 //            tv_job2.setText(jobName);
+            id_sex.setCurrentItem(pCurrent);
         } else {
             sexStr = new String[]{"男", "女"};
             id_sex.setViewAdapter(new ArrayWheelAdapter<>(this,
                     sexStr));
             sexName = sexStr[pCurrent];
+            id_sex.setCurrentItem(pCurrent);
 //            tv_sex2.setText(sexName);
         }
     }
