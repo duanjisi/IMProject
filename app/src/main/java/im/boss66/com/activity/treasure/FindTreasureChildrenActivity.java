@@ -924,7 +924,8 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         MarkerOptions markerOption = new MarkerOptions();
         markerOption.position(latLng);
         markerOption.draggable(true);
-        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
+        markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.treasure_fuwa_loca));
+        //markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
         aMap.addMarker(markerOption);
     }
 
@@ -937,8 +938,9 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             markerOption.draggable(true);
             markerOption.snippet(JSON.toJSONString(child));
             markerOption.title(child.getGid());
-//              markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
-            markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
+            markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.treasure_fuwa_loca));
+            //markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
+            //markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
             Marker marker = aMap.addMarker(markerOption);
             marker.setObject(child.getGid());
             markerMap.put(key, marker);
@@ -952,20 +954,24 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
     private void addFarMarkerToMap(LatLng latLng, ChildEntity child) {
         String key = child.getGeo();
-        if (!markerMap.containsKey(key)) {
+        if (markerMap != null && !markerMap.containsKey(key)) {
 //            if (getDistance(latLng) > 30) {
+            Log.i("info", "======================Marker");
             MarkerOptions markerOption = new MarkerOptions();
             markerOption.position(latLng);
             markerOption.draggable(true);
             markerOption.snippet(JSON.toJSONString(child));
             markerOption.title(key);
-            markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
+
+            //markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.treasure_fuwa_loca)));
+            markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.treasure_fuwa_loca));
+            //markerOption.icon(BitmapDescriptorFactory.fromBitmap(im.boss66.com.util.BitmapCache.getInstance().getBitmap(R.drawable.treasure_fuwa_loca, this)));
             Marker marker = aMap.addMarker(markerOption);
             marker.setObject(key);
             markerMap.put(key, marker);
 //            }
         }
-        if (!latMap.containsKey(key)) {
+        if (latMap != null && !latMap.containsKey(key)) {
             latMap.put(key, latLng);
         }
     }
@@ -1038,6 +1044,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             } else {
                 request = new AroundFriendRequest(TAG, parms, "" + raduis, "0");
             }
+//            deleteMarkers();
             request.send(new BaseRequest.RequestCallback<BaseBaby>() {
                 @Override
                 public void onSuccess(final BaseBaby pojo) {
@@ -1053,7 +1060,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     }
 
     private void bindDatas(BaseBaby baseBaby) {
-        deleteMarkers();
         ArrayList<ChildEntity> list = baseBaby.getFar();
         if (list != null && list.size() != 0) {
             Log.i("info", "=============fars.size():" + list.size());
