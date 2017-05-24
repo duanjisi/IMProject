@@ -12,6 +12,8 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -745,14 +747,25 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
 
     private long lastTime = 0;
+    private Handler mhandler  = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
 
+        }
+    };
+
+    private long nowtime = 0;
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {//移动地图后，停止。开始获取福娃
         Log.i("info", "============onCameraChangeFinish()");
-        if (System.currentTimeMillis() - lastTime > 1500) {
-            lastTime = System.currentTimeMillis();
-            childrenRequest(cameraPosition);
-        }
+//        if (System.currentTimeMillis() - lastTime > 1500) {
+//            lastTime = System.currentTimeMillis();
+//            childrenRequest(cameraPosition);
+//        }
+        nowtime = System.currentTimeMillis();
+        mhandler.sendEmptyMessageDelayed(0,500);
+
     }
 
     @Override
