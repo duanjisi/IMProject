@@ -19,6 +19,8 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.base.WebActivity;
+import im.boss66.com.activity.discover.WebViewActivity;
 import im.boss66.com.config.LoginStatus;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.ActionEntity;
@@ -29,7 +31,8 @@ import im.boss66.com.entity.ActionEntity;
 public class PersonalInformationActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView tv_title, tv_back;
-    private RelativeLayout rl_head_icon, rl_name, rl_qr_code, rl_sex, rl_area, rl_signature;
+    private RelativeLayout rl_head_icon, rl_name, rl_qr_code, rl_sex, rl_area, rl_signature,
+            rl_fuwa;
     private ImageView iv_head;
     private TextView tv_name, tv_number, tv_sex, tv_area, tv_signature;
 
@@ -41,6 +44,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
     private String headUrl;
     private App mApplication;
     private boolean isChange = false;
+    private String userid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                 imageLoader.displayImage(headUrl, iv_head,
                         ImageLoaderUtils.getDisplayImageOptions());
             }
-            String userid = sAccount.getUser_id();
+            userid = sAccount.getUser_id();
             if (!TextUtils.isEmpty(userid)) {
                 tv_number.setText(userid);
             }
@@ -84,6 +88,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
     }
 
     private void initView() {
+        rl_fuwa = (RelativeLayout) findViewById(R.id.rl_fuwa);
         imageLoader = ImageLoaderUtils.createImageLoader(this);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_back = (TextView) findViewById(R.id.tv_back);
@@ -107,6 +112,7 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
         rl_sex.setOnClickListener(this);
         rl_area.setOnClickListener(this);
         rl_signature.setOnClickListener(this);
+        rl_fuwa.setOnClickListener(this);
         int sceenW = UIUtils.getScreenWidth(this);
         tv_name.getLayoutParams().width = sceenW / 3 * 2;
     }
@@ -152,6 +158,12 @@ public class PersonalInformationActivity extends BaseActivity implements View.On
                 bundle2.putString("changeValue", signature);
                 bundle2.putBoolean("isNull", isSignatureNull);
                 openActvityForResult(PersonalInfoChangeActivity.class, NAME_SEX_SIGNATURE_REQUEST, bundle2);
+                break;
+            case R.id.rl_fuwa:
+                Bundle bundle3 = new Bundle();
+                String url = "http://www.boss89.com/stat/"+userid;
+                bundle3.putString("url",url);
+                openActivity(WebViewActivity.class,bundle3);
                 break;
         }
     }
