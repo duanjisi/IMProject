@@ -74,7 +74,7 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
     private TextView mBtnConfirm2;
     private TextView btn_cancle2;
     private String year;
-    private String majorInfo; //学院
+    private String majorInfo=""; //学院
     private SaveSchoolEntity saveSchoolEntity;
 
     private Handler handler = new Handler(){
@@ -197,7 +197,7 @@ public class EditSchoolActivity extends BaseActivity implements View.OnClickList
             case R.id.tv_headright_view: //完成
 
                 if (!"请选择".equals(tv_year.getText().toString())
-                        && !TextUtils.isEmpty(tv_school_department.getText().toString())
+//                        && !TextUtils.isEmpty(tv_school_department.getText().toString())
                         && !"请填写".equals(tv_school_name.getText().toString())) {
                     if(flag){
                         editSchoolInfo();
