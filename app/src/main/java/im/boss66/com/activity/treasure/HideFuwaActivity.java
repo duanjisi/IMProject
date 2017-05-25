@@ -168,6 +168,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private int fuwaSocialNum, fuwaTreasureNum, fuwaSelectType;
     private TextView tv_fuwa_type;
     private boolean isSelectVideo;
+    private TextView tv_tx_num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -941,6 +942,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                     R.layout.dialog_hide_fuwa_recommend, null);
             int sceenH = UIUtils.getScreenHeight(this);
 
+            tv_tx_num = (TextView) view.findViewById(R.id.tv_tx_num);
             rl_time = (RelativeLayout) view.findViewById(R.id.rl_time);
             tv_time = (TextView) view.findViewById(R.id.tv_time);
             iv_video = (ImageView) view.findViewById(R.id.iv_video);
@@ -949,7 +951,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             fl_video_dialog_img.setOnClickListener(this);
             rl_time.setOnClickListener(this);
             iv_video.setOnClickListener(this);
-
+            tv_tx_num.setText("0/200");
             et_recommond = (EditText) view.findViewById(R.id.et_recommond);
             Button bt_sure = (Button) view.findViewById(R.id.bt_sure);
             TextView tv_jump_over = (TextView) view.findViewById(R.id.tv_jump_over);
@@ -958,7 +960,27 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             LinearLayout.LayoutParams etParam = (LinearLayout.LayoutParams) et_recommond.getLayoutParams();
             etParam.height = sceenH / 7;
             et_recommond.setLayoutParams(etParam);
+            et_recommond.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    int len = editable.length();
+                    if (len <= 200){
+                        tv_tx_num.setText(len+"/200");
+                    }else {
+                        showToast("已超过字数限制",false);
+                    }
+                }
+            });
             dialogRecommond = new Dialog(context, R.style.ActionSheetDialogStyle);
             dialogRecommond.setContentView(view);
             dialogRecommond.setCanceledOnTouchOutside(true);
