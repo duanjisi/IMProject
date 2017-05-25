@@ -187,6 +187,10 @@ public class BaseActivity extends FragmentActivity {
 
     @Override
     protected void onDestroy() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
         super.onDestroy();
 //        AppManager.getInstance().remove(this);
     }
