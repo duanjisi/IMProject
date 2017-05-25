@@ -15,6 +15,9 @@ import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.File;
 
 import im.boss66.com.Constants;
@@ -22,14 +25,18 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.services.VideoCacheService;
+import im.boss66.com.widget.ActionSheet;
 
 /**
  * Created by GMARUnity on 2017/3/27.
  */
-public class VideoPlayerNewActivity extends BaseActivity {
+public class VideoPlayerNewActivity extends BaseActivity implements ActionSheet.OnSheetItemClickListener {
+    private View view;
     private PLVideoTextureView mVideoView;
-    private String mVideoPath;
+    private String mVideoPath, videoPath;
+    private ActionSheet actionSheet;
     private int mIsLiveStreaming = 1;
     private MediaController mMediaController;
     private ImageView iv_coverView, iv_close;
@@ -39,10 +46,12 @@ public class VideoPlayerNewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_test);
+        EventBus.getDefault().register(this);
         initView();
     }
 
     private void initView() {
+        view = findViewById(R.id.parent);
         iv_close = (ImageView) findViewById(R.id.iv_close);
         iv_coverView = (ImageView) findViewById(R.id.iv_coverView);
         mVideoView = (PLVideoTextureView) findViewById(R.id.videoView);
@@ -51,8 +60,8 @@ public class VideoPlayerNewActivity extends BaseActivity {
         mVideoView.setScreenOnWhilePlaying(true);
         int codec = getIntent().getIntExtra("mediaCodec", AVOptions.MEDIA_CODEC_SW_DECODE);
 
-        String path = getIntent().getStringExtra("videoPath");
-        mVideoPath = getVideoPath(path);
+        videoPath = getIntent().getStringExtra("videoPath");
+        mVideoPath = getVideoPath(videoPath);
         Log.i("info", "=============mVideoPath:" + mVideoPath);
         mMediaController = new MediaController(this, false, mIsLiveStreaming == 1);
         mMediaController.setMediaPlayer(mVideoView);
@@ -62,6 +71,13 @@ public class VideoPlayerNewActivity extends BaseActivity {
         mVideoView.setOnCompletionListener(mOnCompletionListener);
         mVideoView.setOnErrorListener(mOnErrorListener);
         mVideoView.setOnInfoListener(mOnInfoListener);
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                showActionSheet();
+                return true;
+            }
+        });
         String imgurl = getIntent().getStringExtra("imgurl");
         if (!TextUtils.isEmpty(imgurl)) {
             iv_coverView.setVisibility(View.VISIBLE);
@@ -98,11 +114,21 @@ public class VideoPlayerNewActivity extends BaseActivity {
         if (file.exists()) {
             return localPath;
         } else {
-            Intent intent = new Intent(context, VideoCacheService.class);
-            intent.putExtra("video_path", path);
-            startService(intent);
+//            Intent intent = new Intent(context, VideoCacheService.class);
+//            intent.putExtra("video_path", path);
+//            startService(intent);
             return path;
         }
+    }
+
+    private void showActionSheet() {
+        actionSheet = new ActionSheet(VideoPlayerNewActivity.this)
+                .builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true);
+        actionSheet.addSheetItem("保存视频", ActionSheet.SheetItemColor.Black,
+                VideoPlayerNewActivity.this);
+        actionSheet.show();
     }
 
     private PLMediaPlayer.OnCompletionListener mOnCompletionListener = new PLMediaPlayer.OnCompletionListener() {
@@ -233,6 +259,18 @@ public class VideoPlayerNewActivity extends BaseActivity {
         }
     };
 
+    @Subscribe
+    public void onMessageEvent(ActionEntity event) {
+        if (event != null) {
+            String action = event.getAction();
+            if (action.equals(Constants.Action.VIDEO_CACHE_SUCCESSED)) {
+                showToast("视频缓存成功!", true);
+            } else if (action.equals(Constants.Action.VIDEO_CACHE_FAILE)) {
+                showToast("视频缓存失败!", true);
+            }
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -248,7 +286,22 @@ public class VideoPlayerNewActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         mVideoView.stopPlayback();
     }
 
+    @Override
+    public void onClick(int which) {
+        if (!TextUtils.isEmpty(videoPath)) {
+            String localPath = Constants.VIDEO_CACHE_PATH + FileUtils.getFileNameFromPath(videoPath);
+            File file = new File(localPath);
+            if (file.exists()) {
+                showToast("视频已缓存!", true);
+            } else {
+                Intent intent = new Intent(context, VideoCacheService.class);
+                intent.putExtra("video_path", videoPath);
+                startService(intent);
+            }
+        }
+    }
 }
