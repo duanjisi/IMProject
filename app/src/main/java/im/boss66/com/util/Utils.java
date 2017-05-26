@@ -6,7 +6,9 @@ import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -33,6 +35,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -587,5 +590,27 @@ public class Utils {
         motion.setAction(action);
         motion.setData(msg);
         EventBus.getDefault().post(motion);
+    }
+
+    public static void saveVideoFile(Context context, String path, long paramLong) {
+        File paramFile = new File(path);
+        if (!paramFile.exists()) {
+            return;
+        }
+        String fileName = paramFile.getName();
+        String fileType = fileName.substring(fileName.indexOf("."), fileName.length());
+        Log.i("info", "====================fileName:" + fileName + "\n" + "fileType:" + fileType);
+
+        ContentResolver localContentResolver = context.getContentResolver();
+        ContentValues localContentValues = new ContentValues();
+        localContentValues.put("title", paramFile.getName());
+        localContentValues.put("_display_name", paramFile.getName());
+        localContentValues.put("mime_type", "video/" + fileType);
+        localContentValues.put("datetaken", Long.valueOf(paramLong));
+        localContentValues.put("date_modified", Long.valueOf(paramLong));
+        localContentValues.put("date_added", Long.valueOf(paramLong));
+        localContentValues.put("_data", paramFile.getAbsolutePath());
+        localContentValues.put("_size", Long.valueOf(paramFile.length()));
+        Uri localUri = localContentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, localContentValues);
     }
 }

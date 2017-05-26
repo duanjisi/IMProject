@@ -553,9 +553,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             if (object != null) {
                 if (!TextUtils.isEmpty(object.toString())) {
                     marker.remove();
-                    if (slidingDrawer.getVisibility() != View.GONE) {
-                        UIUtils.hindView(slidingDrawer);
-                    }
                 }
             }
         }
@@ -681,6 +678,10 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             }
             btn_catch.setVisibility(View.GONE);
             tvTips.setVisibility(View.VISIBLE);
+            String pos = child.getPos();
+            if (!TextUtils.isEmpty(pos)) {
+                tv_location.setText(pos);
+            }
             if (!slidingDrawer.isOpened()) {
                 slidingDrawer.animateOpen();
             }
@@ -841,22 +842,36 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
     private void refreshView(AMapLocation aMapLocation) {
         if (slidingDrawer.isOpened()) {
-            tv_location.setText(aMapLocation.getPoiName());
+//            tv_location.setText(aMapLocation.getPoiName());
             if (currentChild != null) {
                 String num = currentChild.getNumber();
                 if (!TextUtils.isEmpty(num)) {
                     tv_num.setText(num + "个");
                 }
-//                tv_num.setText(currentChild.getId() + "号");
+
                 if (markerMap != null && markerMap.size() != 0) {
-                    Marker target = markerMap.get(currentChild.getGid());
+                    Marker target = null;
+                    String key = "";
+                    if (markerMap.containsKey(currentChild.getGeo())) {
+                        key = currentChild.getGeo();
+                    } else if (markerMap.containsKey(currentChild.getGid())) {
+                        key = currentChild.getGid();
+                    }
+                    target = markerMap.get(key);
                     int distance = (int) AMapUtils.calculateLineDistance(mLocMarker.getPosition(), target.getPosition());
                     tv_distanc_target.setText("还有" + distance + "米");
                     int minus = (int) (distance / 1.4);
                     String time = UIUtils.changTime(minus);
                     tv_time.setText("" + time);
                 }
-
+//                if (markerMap != null && markerMap.size() != 0) {
+//                    Marker target = markerMap.get(currentChild.getGid());
+//                    int distance = (int) AMapUtils.calculateLineDistance(mLocMarker.getPosition(), target.getPosition());
+//                    tv_distanc_target.setText("还有" + distance + "米");
+//                    int minus = (int) (distance / 1.4);
+//                    String time = UIUtils.changTime(minus);
+//                    tv_time.setText("" + time);
+//                }
                 if (mLatLng != null) {
                     int distance2 = (int) AMapUtils.calculateLineDistance(mLocMarker.getPosition(), mLatLng);
                     tv_distanc_start.setText("" + distance2);
@@ -931,7 +946,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
     private void addMarkerToMap(LatLng latLng, ChildEntity child) {
         String key = child.getGid();
-        if (!markerMap.containsKey(key)) {
+        if (markerMap != null && !markerMap.containsKey(key)) {
 //            if (getDistance(latLng) < 30) {
             MarkerOptions markerOption = new MarkerOptions();
             markerOption.position(latLng);
@@ -946,8 +961,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             markerMap.put(key, marker);
 //            }
         }
-
-        if (!latMap.containsKey(key)) {
+        if (latMap != null && !latMap.containsKey(key)) {
             latMap.put(key, latLng);
         }
     }
@@ -956,7 +970,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         String key = child.getGeo();
         if (markerMap != null && !markerMap.containsKey(key)) {
 //            if (getDistance(latLng) > 30) {
-            Log.i("info", "======================Marker");
             MarkerOptions markerOption = new MarkerOptions();
             markerOption.position(latLng);
             markerOption.draggable(true);
@@ -1044,7 +1057,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             } else {
                 request = new AroundFriendRequest(TAG, parms, "" + raduis, "0");
             }
-//            deleteMarkers();
             request.send(new BaseRequest.RequestCallback<BaseBaby>() {
                 @Override
                 public void onSuccess(final BaseBaby pojo) {
@@ -1060,6 +1072,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     }
 
     private void bindDatas(BaseBaby baseBaby) {
+        deleteMarkers();
         ArrayList<ChildEntity> list = baseBaby.getFar();
         if (list != null && list.size() != 0) {
             Log.i("info", "=============fars.size():" + list.size());

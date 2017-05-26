@@ -13,10 +13,14 @@ import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 
 import im.boss66.com.Constants;
 import im.boss66.com.Utils.FileUtils;
+import im.boss66.com.entity.ActionEntity;
+import im.boss66.com.util.Utils;
 
 /**
  * Created by Johnny on 2017/5/17.
@@ -52,14 +56,17 @@ public class VideoCacheService extends Service {
                         @Override
                         public void onSuccess(ResponseInfo<File> arg0) {
                             // TODO Auto-generated method stub
+                            Utils.saveVideoFile(VideoCacheService.this, target, System.currentTimeMillis());
                             cancelLoading();
+                            EventBus.getDefault().post(new ActionEntity(Constants.Action.VIDEO_CACHE_SUCCESSED));
                             stopCurrentService(getBaseContext());
                         }
 
                         @Override
                         public void onFailure(HttpException e, String s) {
                             cancelLoading();
-                            LoadFileTask();
+                            EventBus.getDefault().post(new ActionEntity(Constants.Action.VIDEO_CACHE_FAILE));
+//                            LoadFileTask();
                         }
                     });
         }

@@ -30,6 +30,8 @@ public class Constants {
         public static final String MENU_CAHNGE_CURRENT_TAB = "im.boss66.com.menu.change.current.tab.pager";
         public static final String UPDATE_ACCOUNT_INFORM = "im.boss66.com.update.account.inform";
         public static final String SWITCH_CHAT_MESSAGE = "im.boss66.com.switch.chat.message";
+        public static final String VIDEO_CACHE_SUCCESSED = "im.boss66.com.video.cache.successed";
+        public static final String VIDEO_CACHE_FAILE = "im.boss66.com.video.cache.fail";
         //显示主页
         public static final String SHOW_HOME_ACTION = "im.boss66.com.SHOW_HOME_ACTION";
         public static final String ACTION_START = "im.boss66.com.ACTION_START";

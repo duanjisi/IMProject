@@ -369,26 +369,28 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
     private void requestGroupCreate() {//建群请求
         String member_ids = null;
         String grpName = "";
-//        if (isCreateGroup) {
-//            member_ids = user_ids;
-//            for (String id : userIdList) {
-//                member_ids = member_ids + "," + id;
-//            }
-//            grpName = getGroupName();
-//        } else {
-//            member_ids = userid + "," + getMemberIds();
-//            grpName = getMemberNames();
-//        }
+        String avatar = "";
+        String ids = getMemberIds();
+        grpName = getMemberNames();
+        avatar = getMemberAvatars();
+        if (!TextUtils.isEmpty(ids) && !ids.contains(",")) {
+            Intent intent = new Intent(context, ChatActivity.class);
+            intent.putExtra("title", grpName);
+            intent.putExtra("toUid", ids);
+            intent.putExtra("toAvatar", avatar);
+            intent.putExtra("isgroup", false);
+            startActivity(intent);
+            return;
+        }
         if (!TextUtils.isEmpty(user_ids)) {
             if (userid.equals(user_ids)) {
-                member_ids = userid + "," + getMemberIds();
+                member_ids = userid + "," + ids;
             } else {
-                member_ids = userid + "," + user_ids + "," + getMemberIds();
+                member_ids = userid + "," + user_ids + "," + ids;
             }
         } else {
-            member_ids = userid + "," + getMemberIds();
+            member_ids = userid + "," + ids;
         }
-        grpName = getMemberNames();
         Log.i("info", "member_ids:" + member_ids);
         if (member_ids.equals("")) {
             showToast("请选择群成员!", true);
@@ -508,6 +510,28 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
             }
         }
         return names;
+    }
+
+    private String getMemberAvatars() {
+        String avatars = "";
+        int count = 0;
+        for (int i = 0; i < contactList.size(); i++) {
+            EaseUser user = contactList.get(i);
+            if (user.isChecked()) {
+                count++;
+                if (count < 4) {
+                    String avatar = user.getAvatar();
+                    if (!TextUtils.isEmpty(avatar)) {
+                        if (avatars.equals("")) {
+                            avatars = avatar;
+                        } else {
+                            avatars = avatars + "、" + avatar;
+                        }
+                    }
+                }
+            }
+        }
+        return avatars;
     }
 
     private class loadDrawableTask extends AsyncTask<Void, Integer, Drawable> {
