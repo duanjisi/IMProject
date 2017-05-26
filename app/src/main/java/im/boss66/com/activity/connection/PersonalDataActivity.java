@@ -187,6 +187,7 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
 
                     LoginStatus sLoginStatus = LoginStatus.getInstance();
                     sLoginStatus.setSex_str(tv_sex2.getText().toString());
+                    sLoginStatus.setDistrict_str(tv_location2.getText().toString());
                     finish();
                     break;
                 case 3: //更新失败
@@ -231,11 +232,11 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
                     if (map1.get(user_ht_province) != null) { //家乡不为空
 
                         tv_hometown3.setVisibility(View.GONE);
-                        tv_hometown2.setText(map1.get(user_ht_province) + map2.get(user_ht_city) + map3.get(user_ht_district));
+                        tv_hometown2.setText(map1.get(user_ht_province) +" "+ map2.get(user_ht_city) +" "+ map3.get(user_ht_district));
                     }
 
                     if(map1.get(user_province + "") != null){ //所在地
-                        tv_location2.setText(map1.get(user_province + "") + map2.get(user_city + "") + map3.get(user_district + ""));
+                        tv_location2.setText(map1.get(user_province + "") +" "+ map2.get(user_city + "") +" "+ map3.get(user_district + ""));
                     }
 
                     String user_industry = result.getIndustry();
@@ -870,10 +871,10 @@ public class PersonalDataActivity extends ABaseActivity implements View.OnClickL
     private void showSelectedResult() {
         dialog.dismiss();
         if (flag == 4) {
-            tv_location2.setText(mCurrentProviceName + mCurrentCityName + mCurrentDistrictName);
+            tv_location2.setText(mCurrentProviceName +" "+ mCurrentCityName +" "+ mCurrentDistrictName);
 
         } else if (flag == 5) {
-            tv_hometown2.setText(mCurrentProviceName + mCurrentCityName + mCurrentDistrictName);
+            tv_hometown2.setText(mCurrentProviceName +" "+ mCurrentCityName +" "+ mCurrentDistrictName);
 
         }
     }
