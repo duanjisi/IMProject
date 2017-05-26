@@ -64,8 +64,8 @@ public class UpdateService extends Service {
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 //        Intent jumpIntent = new Intent(this, MainActivity.class);
         Intent jumpIntent = new Intent(this, MainAct.class);
-        intent.setAction(Constants.Action.SHOW_HOME_ACTION);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        jumpIntent.setAction(Constants.Action.SHOW_HOME_ACTION);
+        jumpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, jumpIntent, 0);
 
         // 设置任务栏中下载进程显示的views
@@ -105,7 +105,11 @@ public class UpdateService extends Service {
         myHandler.sendMessage(message);
 
         // 启动线程开始执行下载任务
-        downFile(intent.getStringExtra("url"));
+        if (intent != null) {
+            downFile(intent.getStringExtra("url"));
+        } else {
+            return 0;
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
