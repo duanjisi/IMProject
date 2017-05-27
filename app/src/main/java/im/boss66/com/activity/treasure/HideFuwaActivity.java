@@ -60,11 +60,14 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.SoftReference;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,6 +84,7 @@ import im.boss66.com.activity.discover.VideoListActivity;
 import im.boss66.com.adapter.FuwaHideAddressAdapter;
 import im.boss66.com.entity.BaseResult;
 import im.boss66.com.entity.FuwaEntity;
+import im.boss66.com.entity.ImageTool;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.widget.ActionSheet;
@@ -171,6 +175,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private TextView tv_fuwa_type;
     private boolean isSelectVideo;
     private TextView tv_tx_num;
+    private int sceenH, sceenW;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,6 +186,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
+        sceenH = (int) (UIUtils.getScreenHeight(context) * 0.8);
+        sceenW = (int) (UIUtils.getScreenWidth(context) * 0.8);
         userId = App.getInstance().getUid();
         getMyApplyFuwa();
         autoFocusHandler = new Handler();
@@ -269,7 +276,14 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 if (Build.VERSION.SDK_INT >= 24) {
                     mCamera.stopPreview();
                 }
-                bitmapImg = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                BitmapFactory.Options opts = new BitmapFactory.Options();
+                opts.inJustDecodeBounds = true;
+                BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
+                opts.inSampleSize = ImageTool.computeSampleSize(opts, -1, sceenW * sceenH);
+                opts.inJustDecodeBounds = false;
+
+                //bitmapImg = BitmapFactory.decodeByteArray(bytes, 0, bytes.length,opts);
+                bitmapImg = byteToBitmap(opts, bytes);
                 if (bitmapImg != null) {
 //                    mPreview.setVisibility(View.GONE);
                     iv_bg.setVisibility(View.VISIBLE);
@@ -292,6 +306,26 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             }
         }
     };
+
+    private Bitmap byteToBitmap(BitmapFactory.Options options, byte[] imgByte) {
+        InputStream input = null;
+        Bitmap bitmap = null;
+        input = new ByteArrayInputStream(imgByte);
+        SoftReference softRef = new SoftReference(BitmapFactory.decodeStream(
+                input, null, options));
+        bitmap = (Bitmap) softRef.get();
+        if (imgByte != null) {
+            imgByte = null;
+        }
+        try {
+            if (input != null) {
+                input.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
 
     Camera.AutoFocusCallback autoFocusCB = new Camera.AutoFocusCallback() {
         public void onAutoFocus(boolean success, Camera camera) {
@@ -1105,7 +1139,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             recommond = "暂无活动介绍";
         }
         try {
-            recommond = URLEncoder.encode(recommond ,"utf-8").replaceAll("\\+","%20");
+            recommond = URLEncoder.encode(recommond, "utf-8").replaceAll("\\+", "%20");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
