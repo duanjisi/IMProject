@@ -30,9 +30,9 @@
             android:layout_height="wrap_content" />
 
         <TextView
+            android:scrollbars="vertical"
+            android:singleLine="false"
             android:padding="5dp"
-            android:maxLines="8"
-            android:ellipsize="end"
             android:id="@+id/tv_introduce_info"
             android:textColor="@color/white"
             android:textStyle="bold"
