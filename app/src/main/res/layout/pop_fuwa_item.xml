@@ -108,7 +108,7 @@
                 android:layout_marginBottom="10dp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:text="活动介绍"
+                android:text="查看详情"
                 android:textColor="@color/text_color_yellow"
                 android:layout_above="@id/ll_bottom"
                 android:layout_width="160dp"
