@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -556,7 +557,7 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
 
         tv_introduce_info = (TextView) introduceDialog.findViewById(R.id.tv_introduce_info);
 
-
+        tv_introduce_info.setMovementMethod(new ScrollingMovementMethod());
         //设置dialog大小
         Window dialogWindow = introduceDialog.getWindow();
         WindowManager manager = getActivity().getWindowManager();
