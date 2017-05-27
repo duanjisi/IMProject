@@ -64,6 +64,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -974,10 +976,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 @Override
                 public void afterTextChanged(Editable editable) {
                     int len = editable.length();
-                    if (len <= 200){
-                        tv_tx_num.setText(len+"/200");
-                    }else {
-                        showToast("已超过字数限制",false);
+                    if (len <= 200) {
+                        tv_tx_num.setText(len + "/200");
+                    } else {
+                        showToast("已超过字数限制", false);
                     }
                 }
             });
@@ -1102,6 +1104,11 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         if (TextUtils.isEmpty(recommond)) {
             recommond = "暂无活动介绍";
         }
+        try {
+            recommond = URLEncoder.encode(recommond ,"utf-8").replaceAll("\\+","%20");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String url = HttpUrl.HIDE_MY_FUWA + userId + "&pos=" + address + "&geohash=" + geohash
                 + "&detail=" + recommond + "&validtime=" + validtime + "&number=" + curSelectFuwaNum + "&type=" + fuwaSelectType;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
@@ -1113,7 +1120,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-
                 cancelLoadingDialog();
                 String res = responseInfo.result;
                 if (!TextUtils.isEmpty(res)) {
@@ -1132,7 +1138,11 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onFailure(HttpException e, String s) {
                 cancelLoadingDialog();
-                showToast(s, false);
+                if (!TextUtils.isEmpty(s) && s.contains("IOException")) {
+                    showToast("网络加载失败，请检查网络连接", false);
+                } else {
+                    showToast("服务器开小差啦，请稍后再试", false);
+                }
             }
         });
     }

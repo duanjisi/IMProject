@@ -57,6 +57,7 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
     private ImageView[] imgPhotos, imgVideos;
     private boolean isLoad = false;
     private String person_name, person_head, person_covpic, person_signature;
+    private String curUserid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,7 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
 
     private void initData() {
         AccountEntity sAccount = App.getInstance().getAccount();
-        String curUserid = sAccount.getUser_id();
+        curUserid = sAccount.getUser_id();
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
@@ -168,7 +169,7 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
 
     private void initDatas(FriendState state) {
         this.friendState = state;
-        if (state.getIs_friend().equals("1")) {
+        if (state.getIs_friend().equals("1") || (!TextUtils.isEmpty(userid)&&userid.equals(curUserid))) {
             iv_set.setImageResource(R.drawable.hp_chat_more);
             iv_set.setVisibility(View.VISIBLE);
             bt_greet.setText("发消息");
@@ -306,6 +307,9 @@ public class PersonalNearbyDetailActivity extends BaseActivity implements View.O
                     bundle.putString("person_covpic", person_covpic);
                     bundle.putString("person_signature", person_signature);
                     bundle.putString("user_id", userid);
+                    if (!TextUtils.isEmpty(userid)&&userid.equals(curUserid)){
+                        bundle.putBoolean("isSelt",true);
+                    }
                     openActivity(PersonalPhotoAlbumActivity.class, bundle);
                 }
                 break;

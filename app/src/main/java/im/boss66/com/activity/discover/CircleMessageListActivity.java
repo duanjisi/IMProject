@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.github.jdsjlzx.ItemDecoration.DividerDecoration;
 import com.github.jdsjlzx.interfaces.OnLoadMoreListener;
 import com.github.jdsjlzx.recyclerview.LRecyclerView;
 import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
@@ -82,6 +83,12 @@ public class CircleMessageListActivity extends BaseActivity implements View.OnCl
         adapter = new CircleMessageListAdapter(this);
         LRecyclerViewAdapter lRecyclerViewAdapter = new LRecyclerViewAdapter(adapter);
         rv_content.setAdapter(lRecyclerViewAdapter);
+        DividerDecoration divider = new DividerDecoration.Builder(this)
+                .setHeight(R.dimen.dp_066)
+                .setPadding(R.dimen.dp_4)
+                .setColorResource(R.color.dialog_view)
+                .build();
+        rv_content.addItemDecoration(divider);
         rv_content.addOnItemTouchListener(new CircleMessageListAdapter.RecyclerItemClickListener(this,
                 new CircleMessageListAdapter.RecyclerItemClickListener.OnItemClickListener() {
                     @Override
