@@ -61,7 +61,7 @@ public class ImageTool {
         return resizedBitmap;
     }
 
-    private static int computeSampleSize(BitmapFactory.Options options,
+    public static int computeSampleSize(BitmapFactory.Options options,
             int minSideLength, int maxNumOfPixels) {
         int initialSize = computeInitialSampleSize(options, minSideLength,
                 maxNumOfPixels);
@@ -154,7 +154,7 @@ public class ImageTool {
      * @param filePath
      * @return
      */
-    private static int readPictureDegree(String filePath) {
+    public static int readPictureDegree(String filePath) {
         // 获得图片的角度
         int degreen = 0;
         ExifInterface ef;
