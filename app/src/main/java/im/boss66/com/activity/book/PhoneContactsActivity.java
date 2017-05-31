@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -201,6 +203,7 @@ public class PhoneContactsActivity extends BaseActivity {
                         easeUser.setUserName(contact.getUser_name());
                         easeUser.setUserid(c_userId);
                         String name = map.get(contact.getMobile_phone());
+                        Log.i("name:",""+name + "     contact.getMobile_phone():"+contact.getMobile_phone());
                         if (name != null && !name.equals("")) {
                             easeUser.setContactName(name);
                             String word = name.substring(0, 1);
