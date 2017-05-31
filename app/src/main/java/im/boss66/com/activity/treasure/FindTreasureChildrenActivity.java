@@ -143,7 +143,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private AMapLocationClientOption mLocationOption;
     private ImageLoader imageLoader;
     private AccountEntity account;
-
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
     private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
     private boolean mFirstFix = false;
@@ -669,7 +668,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         mLatLng = new LatLng(latitude, longitude);
 //        mLatLng = mLocMarker.getPosition();
         Log.i("info", "===============distance:" + distance);
-        if (distance > 30 || distance == 0) {
+        if (distance > 100 || distance == 0) {
             if (slidingDrawer.getVisibility() != View.VISIBLE) {
                 UIUtils.showView(slidingDrawer);
             }
@@ -693,15 +692,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WALK_DEFAULT);
         } else {//扑捉范围内
             requestArround(titleBar);
-//            if (popup == null) {
-////                showChildrenPop(titleBar);
-//                requestArround(titleBar);
-//            } else {
-//                if (!popup.isShowing()) {
-////                    showChildrenPop(titleBar);
-//                    requestArround(titleBar);
-//                }
-//            }
         }
     }
 
@@ -827,7 +817,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 } else {
                     mCircle.setCenter(location);
 //                    mCircle.setRadius(amapLocation.getAccuracy());
-                    mCircle.setRadius(30);
+                    mCircle.setRadius(100);
                     mLocMarker.setPosition(location);
                     mPersonMarker.setPosition(location);
                 }
@@ -1004,7 +994,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         options.strokeColor(STROKE_COLOR);
         options.center(latlng);
 //        options.radius(radius);
-        options.radius(30);
+        options.radius(100);
         mCircle = aMap.addCircle(options);
     }
 

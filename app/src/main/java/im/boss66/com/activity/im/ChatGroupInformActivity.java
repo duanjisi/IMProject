@@ -3,6 +3,7 @@ package im.boss66.com.activity.im;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ import im.boss66.com.widget.MyGridView;
  */
 public class ChatGroupInformActivity extends BaseActivity implements View.OnClickListener {
     private final static String TAG = ChatGroupInformActivity.class.getSimpleName();
+    private Handler mHandler = new Handler();
     private TextView tvBack, tvTitle, tvGroupName, tvGroupNotice, tvMyNick;
     private RelativeLayout rlGroupName, rlCode, rlNotice, rlNick, rlBg, rlRecords, rlFile, rlClearRecords;
     private EaseSwitchButton switchTop;
@@ -149,7 +151,12 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
             } else {
                 switchTop.closeSwitch();
             }
-            tvMyNick.setText(account.getUser_name());
+            String nick = PreferenceUtils.getString(context, PrefKey.SHOW_GROUP_MEMBER_NICK + groupid, "");
+            if (!TextUtils.isEmpty(nick)) {
+                tvMyNick.setText(nick);
+            } else {
+                tvMyNick.setText(account.getUser_name());
+            }
             tvGroupName.setText(inform.getName());
             String info = inform.getNotice();
             if (!TextUtils.isEmpty(info) && !info.contains("null")) {
@@ -303,17 +310,30 @@ public class ChatGroupInformActivity extends BaseActivity implements View.OnClic
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(view);
         final AlertDialog dialog = builder.create();
-
-        EditText editText = (EditText) view.findViewById(R.id.et_input);
+        final EditText editText = (EditText) view.findViewById(R.id.et_input);
+        String str = getText(tvMyNick);
+        if (!TextUtils.isEmpty(str)) {
+            editText.setText(str);
+            editText.setSelection(str.length());
+        }
         ((TextView) view.findViewById(R.id.title)).setText("提示");
-        ((TextView) view.findViewById(R.id.message)).setText("确定清空此群的聊天记录吗?");
+//        ((TextView) view.findViewById(R.id.message)).setText("确定清空此群的聊天记录吗?");
         view.findViewById(R.id.option).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        String nick = getText(editText);
+                        if (!TextUtils.isEmpty(nick)) {
+                            tvMyNick.setText(nick);
+                            PreferenceUtils.putString(context, PrefKey.SHOW_GROUP_MEMBER_NICK + groupid, nick);
+                        }
+                    }
+                });
                 dialog.dismiss();
             }
         });
-
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

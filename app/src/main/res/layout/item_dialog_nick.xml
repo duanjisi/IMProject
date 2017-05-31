@@ -24,11 +24,13 @@
         <EditText
             android:id="@+id/et_input"
             android:layout_width="match_parent"
-            android:layout_height="31dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/title"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="22dp" />
+            android:layout_marginTop="22dp"
+            android:hint="请输入昵称"
+            android:textColorHint="@color/text_color_gray_a" />
 
         <TextView
             android:id="@+id/message"
