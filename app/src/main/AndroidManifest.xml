@@ -570,6 +570,10 @@
         <activity android:name=".activity.connection.ClanClubListActivity"></activity>
         <!--部落-->
         <activity android:name=".activity.connection.TribeActivity"></activity>
+        <!--商家视频列表-->
+        <activity android:name=".activity.treasure.CompanyVideoActivity"></activity>
+        <!--个人视频列表-->
+        <activity android:name=".activity.treasure.PersonalVideoActivity"></activity>
 
         <!--支付宝start-->
         <activity

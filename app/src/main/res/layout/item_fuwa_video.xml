@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roundiv="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_margin="5dp"
+    android:layout_height="wrap_content">
+
+    <im.boss66.com.widget.RoundImageView
+        android:scaleType="fitXY"
+        android:id="@+id/img_content"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        roundiv:round_borderRadius="4dp"
+        roundiv:round_type="1"
+        />
+
+    <RelativeLayout
+        android:layout_marginTop="5dp"
+        android:id="@+id/rl_bottom"
+        android:layout_below="@id/img_content"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/img_head"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+
+        <TextView
+            android:textSize="14sp"
+            android:textColor="@color/text_color_black"
+            android:layout_centerVertical="true"
+            android:text="xixixi"
+            android:id="@+id/tv_name"
+            android:layout_toRightOf="@id/img_head"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <ImageView
+            android:layout_toRightOf="@id/tv_name"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/img_sex"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+
+
+        <TextView
+            android:textSize="11sp"
+            android:textColor="@color/text_color_gray_9"
+            android:id="@+id/tv_distance"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:text="200米"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>

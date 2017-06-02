@@ -14,8 +14,8 @@ public class HttpUrl {
     public static final String UPLOAD_IMAGE_URL = BASE_URL + "upload/writev2?";
     public static final String UPLOAD_VIDEO_URL = BASE_URL + "upload/writev3?";
     //
-    public static final String[] BASE_FUWA = {"http://wsimali.66boss.com:9090/", "http://fuwa2.66boss.com:9090/"};
-    public static int FUWA_TAG = 1;
+    public static final String[] BASE_FUWA = {"http://wsimali.66boss.com:9090/", "http://fuwa2.66boss.com:9090/","http://fuwa.hmg66.com/"};
+    public static int FUWA_TAG = 2;
     /**
      * android版本更新
      */
@@ -357,5 +357,9 @@ public class HttpUrl {
     public static final String DELETE_TRIBE = MAIN_URL + "api/v1/storetribe/delete";
     //通过uid查询部落列表
     public static final String SEARCH_TRIBE_LIST = MAIN_URL + "api/v1/storetribe/createby";
+    //查询商家视频分类
+    public static final String SEARCH_COMPANY_VIDEO =BASE_FUWA[FUWA_TAG]+"api/queryclass";
+    //查询视频列表
+    public static final String SEARCH_VIDEO_LIST = BASE_FUWA[FUWA_TAG]+"api/queryvideo";
 
 }
