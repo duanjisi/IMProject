@@ -2,6 +2,7 @@ package im.boss66.com.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +25,10 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
 
     private Context context;
 
-    private List<Integer> mHeights;
+//    private List<Integer> mHeights;
     public FuwaVideoAdapter(Context context) {
         this.context = context;
-        mHeights = new ArrayList<>();
+//        mHeights = new ArrayList<>();
     }
 
 
@@ -39,17 +40,21 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
 
 
         // 随机高度, 模拟瀑布效果.
-        if (mHeights.size() <= position) {
-            double random = Math.random();
-            if(random>0.5){
-                mHeights.add(400);
-            }else {
-                mHeights.add(200);
-            }
-        }
+//        if (mHeights.size() <= position) {
+//            double random = Math.random();
+//            if(random>0.5){
+//                mHeights.add(400);
+//            }else {
+//                mHeights.add(200);
+//            }
+//        }
+
+        String height = item.getHeight();
+        Integer img_height = Integer.parseInt(height);
 
         ViewGroup.LayoutParams lp = holder1.img_content.getLayoutParams();
-        lp.height = mHeights.get(position);
+        lp.height = img_height/3;
+        Log.i("liwya",lp.height+"");
         holder1.img_content.setLayoutParams(lp);
 
         Glide.with(context).load(item.getAvatar()).into(holder1.img_content);

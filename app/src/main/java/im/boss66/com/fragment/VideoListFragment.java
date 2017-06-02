@@ -31,12 +31,9 @@ import java.util.List;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
-import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
-import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.adapter.FuwaVideoAdapter;
 import im.boss66.com.entity.FuwaVideoEntity;
 import im.boss66.com.http.HttpUrl;
-import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.listener.RecycleViewItemListener;
 
 /**
