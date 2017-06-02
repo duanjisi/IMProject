@@ -158,7 +158,8 @@ public class CaptureActivity extends BaseActivity {
         ImageView scanLine = (ImageView) findViewById(R.id.capture_scan_line);
         TranslateAnimation animation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0f, TranslateAnimation.ABSOLUTE, 0f,
                 TranslateAnimation.RELATIVE_TO_PARENT, 0f, TranslateAnimation.RELATIVE_TO_PARENT, 0.9f);
-        animation.setDuration(1500);
+//        animation.setDuration(1500);
+        animation.setDuration(800);
         animation.setRepeatCount(-1);
         animation.setRepeatMode(Animation.REVERSE);
         animation.setInterpolator(new LinearInterpolator());
@@ -389,7 +390,7 @@ public class CaptureActivity extends BaseActivity {
     // Mimic continuous auto-focusing
     AutoFocusCallback autoFocusCB = new AutoFocusCallback() {
         public void onAutoFocus(boolean success, Camera camera) {
-            autoFocusHandler.postDelayed(doAutoFocus, 1000);
+            autoFocusHandler.postDelayed(doAutoFocus, 800);
         }
     };
 

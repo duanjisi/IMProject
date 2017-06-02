@@ -404,7 +404,6 @@ public class SelectContactsActivity extends BaseActivity implements View.OnKeyLi
             showToast("群名称为空!", true);
             return;
         }
-
         showLoadingDialog();
         GroupCreateRequest request = new GroupCreateRequest(TAG, userid, member_ids, grpName);
         request.send(new BaseModelRequest.RequestCallback<GroupEntity>() {

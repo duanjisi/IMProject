@@ -85,6 +85,6 @@
         android:layout_below="@+id/iv_code"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:text="该二维码7天内(2月21日前)有效，重新进入将更新"
+        android:text="该二维码7天内有效，重新进入将更新"
         android:textSize="12sp" />
 </RelativeLayout>
