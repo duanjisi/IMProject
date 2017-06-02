@@ -103,7 +103,7 @@ public class App extends Application {
         initData();
         initUmengPush();
 //        Fresco.initialize(getApplicationContext());//注册，在setContentView之前。
-//        CrashReport.initCrashReport(getApplicationContext(), "3a7059fedc", false);
+        CrashReport.initCrashReport(getApplicationContext(), "3a7059fedc", false);
     }
 
     private void initData() {
