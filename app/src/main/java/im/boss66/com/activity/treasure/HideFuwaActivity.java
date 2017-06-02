@@ -57,7 +57,6 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
-import com.squareup.picasso.Picasso;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -75,7 +74,6 @@ import java.util.List;
 
 import im.boss66.com.App;
 import im.boss66.com.R;
-import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.Utils.UIUtils;
@@ -172,7 +170,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private String curCity;
     private boolean isDialogShow = false;
     private int fuwaSocialNum, fuwaTreasureNum, fuwaSelectType;
-    private TextView tv_fuwa_type;
+    private TextView tv_fuwa_type, tv_fuwa_class;
     private boolean isSelectVideo;
     private TextView tv_tx_num;
     private int sceenH, sceenW;
@@ -288,18 +286,19 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
 //                    mPreview.setVisibility(View.GONE);
                     iv_bg.setVisibility(View.VISIBLE);
                     Glide.with(context).load(bytes).into(iv_bg);
-                    String imageName = System.currentTimeMillis() + ".jpg";
-                    // 指定调用相机拍照后照片的储存路径
-                    File dir = new File(savePath);
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-                    imgFile = new File(dir, imageName);
-                    BufferedOutputStream bos
-                            = new BufferedOutputStream(new FileOutputStream(imgFile));
-                    bitmapImg.compress(Bitmap.CompressFormat.JPEG, 80, bos);
-                    bos.flush();
-                    bos.close();
+                    createFileWithByte(bytes);
+//                    String imageName = System.currentTimeMillis() + ".jpg";
+//                    // 指定调用相机拍照后照片的储存路径
+//                    File dir = new File(savePath);
+//                    if (!dir.exists()) {
+//                        dir.mkdirs();
+//                    }
+//                    imgFile = new File(dir, imageName);
+//                    BufferedOutputStream bos
+//                            = new BufferedOutputStream(new FileOutputStream(imgFile));
+//                    bitmapImg.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+//                    bos.flush();
+//                    bos.close();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -354,7 +353,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
-            mCameraManager.closeDriver();
+            if (mCameraManager != null)
+                mCameraManager.closeDriver();
         }
     }
 
@@ -364,7 +364,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         if (dialogRecommond != null) {
             dialogRecommond.dismiss();
         }
-
         releaseCamera();
         if (mlocationClient != null) {
             mlocationClient.stopLocation();
@@ -507,6 +506,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 recommond = et_recommond.getText().toString().trim();
                 et_recommond.setText("");
                 hideFuwaServer();
+                break;
+            case R.id.rl_fuwa_class:
+
                 break;
         }
     }
@@ -827,7 +829,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             });
         }
         if (imgFile != null) {
-            Picasso
+            Glide
                     .with(this)
                     .load(imgFile)
                     .into(iv_dialog_icon);
@@ -947,6 +949,11 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             LinearLayout ll_p = (LinearLayout) view.findViewById(R.id.ll_p);
             LinearLayout ll_fuwa_type = (LinearLayout) view.findViewById(R.id.ll_fuwa_type);
             RelativeLayout rl_fuwa_type = (RelativeLayout) view.findViewById(R.id.rl_fuwa_type);
+
+            LinearLayout ll_fuwa_class = (LinearLayout) view.findViewById(R.id.ll_fuwa_class);
+            RelativeLayout rl_fuwa_class = (RelativeLayout) view.findViewById(R.id.rl_fuwa_class);
+            tv_fuwa_class = (TextView) findViewById(R.id.tv_fuwa_class);
+
             LinearLayout ll_fuwa_num = (LinearLayout) view.findViewById(R.id.ll_fuwa_num);
             tv_fuwa_type = (TextView) view.findViewById(R.id.tv_fuwa_type);
             et_dialog_num = (EditText) view.findViewById(R.id.et_dialog_num);
@@ -955,6 +962,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             bt_dialog_catch.setOnClickListener(this);
             et_dialog_num.addTextChangedListener(this);
             rl_fuwa_type.setOnClickListener(this);
+            rl_fuwa_class.setOnClickListener(this);
             ImageView iv_close = (ImageView) view.findViewById(R.id.iv_close);
             iv_close.setOnClickListener(this);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll_p.getLayoutParams();
@@ -963,6 +971,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
 
             ll_fuwa_num.getLayoutParams().height = sceenW / 7;
             ll_fuwa_type.getLayoutParams().height = sceenW / 7;
+            ll_fuwa_class.getLayoutParams().height = sceenW / 7;
 
             dialogNum = new Dialog(context, R.style.ActionSheetDialogStyle);
             dialogNum.setContentView(view);
@@ -1216,6 +1225,60 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         if (dialogRecommond != null && dialogRecommond.isShowing()) {
             dialogRecommond.dismiss();
             isDialogShow = true;
+        }
+    }
+
+    /**
+     * 根据byte数组生成文件
+     *
+     * @param bytes 生成文件用到的byte数组
+     */
+    private void createFileWithByte(byte[] bytes) {
+        // TODO Auto-generated method stub
+        /**
+         * 创建File对象，其中包含文件所在的目录以及文件的命名
+         */
+        //String imageName = System.currentTimeMillis() + ".jpg";
+        imgFile = new File(savePath,
+                "hidefuwa");
+        // 创建FileOutputStream对象
+        FileOutputStream outputStream = null;
+        // 创建BufferedOutputStream对象
+        BufferedOutputStream bufferedOutputStream = null;
+        try {
+            // 如果文件存在则删除
+            if (imgFile.exists()) {
+                imgFile.delete();
+            }
+            // 在文件系统中根据路径创建一个新的空文件
+            imgFile.createNewFile();
+            // 获取FileOutputStream对象
+            outputStream = new FileOutputStream(imgFile);
+            // 获取BufferedOutputStream对象
+            bufferedOutputStream = new BufferedOutputStream(outputStream);
+            // 往文件所在的缓冲输出流中写byte数据
+            bufferedOutputStream.write(bytes);
+            // 刷出缓冲输出流，该步很关键，要是不执行flush()方法，那么文件的内容是空的。
+            bufferedOutputStream.flush();
+        } catch (Exception e) {
+            // 打印异常信息
+            e.printStackTrace();
+        } finally {
+            // 关闭创建的流对象
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (bufferedOutputStream != null) {
+                try {
+                    bufferedOutputStream.close();
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+            }
         }
     }
 }

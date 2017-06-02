@@ -156,6 +156,7 @@ public class MainTreasureFragment extends BaseFragment implements View.OnClickLi
                 break;
             case R.id.iv_game://福娃游戏规则
                 openActivity(GameRuleActivity.class);
+//                openActivity(ScanningActivity.class);
 //                openActivity(TextActivity.class);
                 break;
             case R.id.tv_apply://申请福娃

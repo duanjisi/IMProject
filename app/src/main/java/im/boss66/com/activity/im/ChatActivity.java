@@ -213,6 +213,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private SoundUtil mSoundUtil;
     private String userid, toUid, title, toAvatar;//toUid;单聊（个人用户id）,群聊(群id)
     private AccountEntity account;
+    private String sender = "";
     private boolean isGroupChat = false;
     private TextView tvBack, tvTitle;
     private Resources resources;
@@ -364,6 +365,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         ivAddPerson.setOnClickListener(this);
         ivEditPic.setOnClickListener(this);
         if (isGroupChat) {
+            sender = PreferenceUtils.getString(context, PrefKey.SHOW_GROUP_MEMBER_NICK + toUid, "");
             ivAddPerson.setImageResource(R.drawable.hp_white_persons);
         } else {
             ivAddPerson.setImageResource(R.drawable.hp_white_person);
@@ -1007,10 +1009,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private String getExtension() {
         JSONObject object = new JSONObject();
         try {
-            object.put("sender", account.getUser_name());
+            if (!TextUtils.isEmpty(sender)) {
+                object.put("sender", sender);
+            } else {
+                object.put("sender", account.getUser_name());
+            }
             object.put("senderID", userid);
             object.put("senderAvartar", account.getAvatar());
-
             if (isGroupChat) {
                 object.put("conversation", title);
                 object.put("conversationAvartar", toAvatar);
@@ -1267,6 +1272,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     protected void onResume() {
         super.onResume();
         Log.i("info", "=======onResume()");
+        if (isGroupChat) {
+            sender = PreferenceUtils.getString(context, PrefKey.SHOW_GROUP_MEMBER_NICK + toUid, "");
+        }
         initEmoMap();
         initEmotionData();
         ChatServices.callbacks.add(this);

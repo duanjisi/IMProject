@@ -326,7 +326,7 @@
                     android:layout_marginRight="11dp"
                     android:layout_toLeftOf="@+id/iv_go_5"
                     android:ellipsize="end"
-                    android:maxEms="9"
+                    android:maxEms="6"
                     android:singleLine="true"
                     android:textColor="@color/text_color_gray_b"
                     android:textSize="17.6sp" />

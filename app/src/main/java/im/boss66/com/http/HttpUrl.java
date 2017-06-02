@@ -5,16 +5,21 @@ package im.boss66.com.http;
  */
 public class HttpUrl {
     public static final String MAIN_URL = "https://api.66boss.com/";
-    public static final String BASE_URL = "http://live.66boss.com/";
-    public static final String BASE_IM_URL = "http://live.66boss.com:6060/";
-    public static final String BASE_FUWA_URL = "http://wsimali.66boss.com:9090/api/";
-    public static final String WS_URL = "ws://live.66boss.com:6060/entry";
+    //    public static final String BASE_URL = "http://live.66boss.com/";
+    //    public static final String BASE_IM_URL = "http://live.66boss.com:6060/";
+    public static final String BASE_URL = "http://wsim.hmg66.com/";
+    public static final String BASE_IM_URL = "http://wsim.hmg66.com:8080/";
+    //    public static final String WS_URL = "ws://live.66boss.com:6060/entry";
+    public static final String WS_URL = "ws://wsim.hmg66.com:8080/entry";
+
     public static final String NOTIFICATION_LINK = "http://live.66boss.com/umeng/send?";
     public static final String UPLOAD_AUDIO_URL = BASE_URL + "upload/writev1?";
     public static final String UPLOAD_IMAGE_URL = BASE_URL + "upload/writev2?";
     public static final String UPLOAD_VIDEO_URL = BASE_URL + "upload/writev3?";
-    //
-    public static final String[] BASE_FUWA = {"http://wsimali.66boss.com:9090/", "http://fuwa2.66boss.com:9090/","http://fuwa.hmg66.com/"};
+
+    public static final String[] BASE_FUWA = {"http://wsimali.66boss.com:9090/",
+            "http://fuwa2.66boss.com:9090/",
+            "http://fuwa.hmg66.com/"};
     public static int FUWA_TAG = 2;
     /**
      * android版本更新
@@ -246,7 +251,7 @@ public class HttpUrl {
     //藏福娃
     public static final String HIDE_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/hidev2?owner=";
     //捉福娃
-    public static final String CATCH_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/capture?user=";
+    public static final String CATCH_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/capturev2?user=";
     //福娃消息
     public static final String FUWA_MSG = BASE_FUWA[FUWA_TAG] + "msg/myinfo?userid=";
     //微信支付购买福娃

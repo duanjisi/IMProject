@@ -110,6 +110,9 @@
         <activity
             android:name=".activity.CaptureActivity"
             android:screenOrientation="portrait"></activity>
+        <!--<activity-->
+        <!--android:name=".activity.ScanningActivity"-->
+        <!--android:screenOrientation="portrait"></activity>-->
         <activity
             android:name=".activity.SettingPwsActivity"
             android:screenOrientation="portrait"></activity>

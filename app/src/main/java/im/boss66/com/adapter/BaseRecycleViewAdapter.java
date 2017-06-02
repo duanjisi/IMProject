@@ -59,5 +59,4 @@ public abstract class BaseRecycleViewAdapter<T,VH extends RecyclerView.ViewHolde
             notifyItemRangeChanged(position,this.datas.size()-position);
         }
     }
-
 }
