@@ -11,10 +11,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.hardware.Camera;
+import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -834,5 +836,186 @@ public final class UIUtils {
             e.printStackTrace();
         }
         return object.toString();
+    }
+
+    //将缩小后的图片，转为64级灰度
+    private static Bitmap convertGreyImg(Bitmap img) {
+        //Bitmap img = ThumbnailUtils.extractThumbnail(bitmap, 8, 8);
+        int width = img.getWidth();         //获取位图的宽
+        int height = img.getHeight();       //获取位图的高
+        Log.i("Bitmap:", "width:" + width + " height:" + height);
+        int[] pixels = new int[width * height]; //通过位图的大小创建像素点数组
+
+        img.getPixels(pixels, 0, width, 0, 0, width, height);
+        int alpha = 0xFF << 24;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                int original = pixels[width * i + j];
+                int red = ((original & 0x00FF0000) >> 16);
+                int green = ((original & 0x0000FF00) >> 8);
+                int blue = (original & 0x000000FF);
+
+                int grey = (int) ((float) red * 0.3 + (float) green * 0.59 + (float) blue * 0.11);
+                grey = alpha | (grey << 16) | (grey << 8) | grey;
+                pixels[width * i + j] = grey;
+            }
+        }
+        Bitmap result = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        result.setPixels(pixels, 0, width, 0, 0, width, height);
+        return result;
+    }
+
+    //计算所有64个像素的灰度平均值
+    private static int getAvg(Bitmap img) {
+        int width = img.getWidth();
+        int height = img.getHeight();
+        int[] pixels = new int[width * height];
+        img.getPixels(pixels, 0, width, 0, 0, width, height);
+
+        int avgPixel = 0;
+        for (int pixel : pixels) {
+            avgPixel += pixel;
+        }
+        return avgPixel / pixels.length;
+    }
+
+    //将每个像素的灰度，与平均值进行比较。大于或等于平均值，记为1；小于平均值，记为0
+    private static String getBinary(Bitmap img, int average) {
+        StringBuilder sb = new StringBuilder();
+
+        int width = img.getWidth();
+        int height = img.getHeight();
+        int[] pixels = new int[width * height];
+
+        img.getPixels(pixels, 0, width, 0, 0, width, height);
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                int original = pixels[width * i + j];
+                if (original >= average) {
+                    pixels[width * i + j] = 1;
+                } else {
+                    pixels[width * i + j] = 0;
+                }
+                sb.append(pixels[width * i + j]);
+            }
+        }
+        return sb.toString();
+    }
+
+    //得到16位16进制的字符串，作为该图片的消息指纹
+    public static String binaryString2hexString(Bitmap bitmap) {
+
+        Bitmap result = convertGreyImg(bitmap);
+        int average = getAvg(result);
+        String bString = getBinary(result, average);
+
+        if (bString == null || bString.equals("") || bString.length() % 8 != 0)
+            return null;
+        StringBuilder sb = new StringBuilder();
+        int iTmp;
+        for (int i = 0; i < bString.length(); i += 4) {
+            iTmp = 0;
+            for (int j = 0; j < 4; j++) {
+                iTmp += Integer.parseInt(bString.substring(i + j, i + j + 1)) << (4 - j - 1);
+            }
+            sb.append(Integer.toHexString(iTmp));
+        }
+        return sb.toString();
+    }
+
+    //两张图片的消息指纹比较的方法
+    public static int msgFingerprintDiff(String s1, String s2) {
+        char[] s1s = s1.toCharArray();
+        char[] s2s = s2.toCharArray();
+        int diffNum = 0;
+        for (int i = 0; i < s1s.length; i++) {
+            if (s1s[i] != s2s[i]) {
+                diffNum++;
+            }
+        }
+        Log.i("diffNum:", "" + diffNum + "  s1:" + s1 + "    s2:" + s2 + "  s1s.length:" + s1s.length);
+        return diffNum;
+    }
+
+
+    private static long getFingerPrint(Bitmap bitmap) {
+        double[][] grayPixels = getGrayPixels(bitmap);
+        double grayAvg = getGrayAvg(grayPixels);
+        return getFingerPrint(grayPixels, grayAvg);
+    }
+
+    private static long getFingerPrint(double[][] pixels, double avg) {
+        int width = pixels[0].length;
+        int height = pixels.length;
+
+        byte[] bytes = new byte[height * width];
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (pixels[i][j] >= avg) {
+                    bytes[i * height + j] = 1;
+                    stringBuilder.append("1");
+                } else {
+                    bytes[i * height + j] = 0;
+                    stringBuilder.append("0");
+                }
+            }
+        }
+
+        long fingerprint1 = 0;
+        long fingerprint2 = 0;
+        for (int i = 0; i < 64; i++) {
+            if (i < 32) {
+                fingerprint1 += (bytes[63 - i] << i);
+            } else {
+                fingerprint2 += (bytes[63 - i] << (i - 31));
+            }
+        }
+
+        return (fingerprint2 << 32) + fingerprint1;
+    }
+
+    private static double getGrayAvg(double[][] pixels) {
+        int width = pixels[0].length;
+        int height = pixels.length;
+        int count = 0;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                count += pixels[i][j];
+            }
+        }
+        return count / (width * height);
+    }
+
+
+    private static double[][] getGrayPixels(Bitmap bitmap) {
+        int width = 8;
+        int height = 8;
+        double[][] pixels = new double[height][width];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                pixels[i][j] = computeGrayValue(bitmap.getPixel(i, j));
+            }
+        }
+        return pixels;
+    }
+
+    private static double computeGrayValue(int pixel) {
+        int red = (pixel >> 16) & 0xFF;
+        int green = (pixel >> 8) & 0xFF;
+        int blue = (pixel) & 255;
+        return 0.3 * red + 0.59 * green + 0.11 * blue;
+    }
+
+    private static int hamDist(long finger1, long finger2) {
+        int dist = 0;
+        long result = finger1 ^ finger2;
+        while (result != 0) {
+            ++dist;
+            result &= result - 1;
+        }
+        return dist;
     }
 }

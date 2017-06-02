@@ -99,9 +99,12 @@ dependencies {
     compile 'net.jodah:typetools:0.4.0'
     compile 'com.facebook.fresco:fresco:0.9.0+'
     compile 'com.umeng.analytics:analytics:latest.integration'
-//    // ijkplayer相关
-//    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.5.1'
-//    compile 'tv.danmaku.ijk.media:ijkplayer-armv5:0.5.1'
+    //    // ijkplayer相关
+
+    //    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.5.1'
+
+    //    compile 'tv.danmaku.ijk.media:ijkplayer-armv5:0.5.1'
+
     //compile 'com.qiniu:happy-dns:0.2.5'
     compile files('libs/autobahn.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
@@ -131,5 +134,5 @@ dependencies {
     compile files('libs/pldroid-player-1.5.1.jar')
     compile 'com.qiniu:happy-dns:0.2.+'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
-
+    compile project(':openCVLibrary320')
 }

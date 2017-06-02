@@ -1,6 +1,5 @@
 package im.boss66.com.activity.treasure;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -55,7 +53,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 import com.umeng.socialize.bean.HandlerRequestCode;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
@@ -70,6 +67,10 @@ import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.opencv.android.Utils;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -78,10 +79,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import im.boss66.com.App;
 import im.boss66.com.Constants;
@@ -128,7 +128,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     boolean isFocusing = false;
     boolean canFocusIn = false;  //内部是否能够对焦控制机制
     boolean canFocus = false;
-    public static final int DELEY_DURATION = 3500;
+    public static final int DELEY_DURATION = 1500;
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private CameraPreview mPreview;
@@ -143,7 +143,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private Dialog dialog;
     private String userId, fuwaId;
     private File imgFile;
-    private ImageLoader imageLoader;
     private ImageView iv_success;
     private String fuwaNum;
     private int sceenH;
@@ -152,6 +151,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private ChildEntity currentChild;
     private String videoUrl, videoBgUrl = "";
     private boolean isFriend, isDialogShow = false;
+    private String localFingerprint;
+    private Bitmap localBitmap;
+    private Mat oneMat, twoMat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +164,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initView() {
-        imageLoader = ImageLoaderUtils.createImageLoader(this);
+        oneMat = new Mat();
         userId = App.getInstance().getUid();
         iv_success = (ImageView) findViewById(R.id.iv_success);
         sceenH = UIUtils.getScreenHeight(this);
@@ -221,11 +223,30 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 requestFriendShip(fuwaUserId);
                 fuwaId = currentChild.getGid();
                 fuwaNum = currentChild.getId();
-                String imgUrl = currentChild.getPic();
+                final String imgUrl = currentChild.getPic();
+                Log.i("imgUrl:", imgUrl);
                 if (!TextUtils.isEmpty(imgUrl)) {
-                    Picasso.with(context).load(imgUrl).error(R.drawable.zf_default_message_image).into(iv_thread);
-//                    imageLoader.displayImage(imgUrl, iv_thread,
-//                            ImageLoaderUtils.getDisplayImageOptions());
+
+                    //Glide.with(context).load(imgUrl).error(R.drawable.zf_default_message_image).into(iv_thread);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                localBitmap = Glide.with(context)
+                                        .load(imgUrl)
+                                        .asBitmap() //必须
+                                        .centerCrop()
+                                        .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                        .get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                            handler.sendEmptyMessage(0x01);
+                        }
+                    }).start();
+                    //Picasso.with(context).load(imgUrl).error(R.drawable.zf_default_message_image).into(iv_thread);
                 }
             }
         }
@@ -455,7 +476,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             mCalendar = Calendar.getInstance();
             long stamp = mCalendar.getTimeInMillis();// 1393844912
 
-            int second = mCalendar.get(Calendar.SECOND);// 53
+//            int second = mCalendar.get(Calendar.SECOND);// 53
 
             if (STATUE != STATUS_NONE) {
                 int px = Math.abs(mX - x);
@@ -517,22 +538,43 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             try {
                 Bitmap bm = byteToBitmap(bytes);
                 if (bm != null) {
-                    String imageName = "hai_meng_fuwa.jpg";
-                    // 指定调用相机拍照后照片的储存路径
-                    File dir = new File(savePath);
-                    if (!dir.exists()) {
-                        dir.mkdirs();
+                    twoMat = new Mat();
+                    Utils.bitmapToMat(bm, twoMat);
+                    twoMat = getMat(twoMat);
+                    double p = comPareHist(oneMat, twoMat);
+                    if (p >= 0.4) {
+                        getServerData();
+                    } else {
+                        showToast("图片匹配失败TAT，再试下吧", false);
                     }
-                    imgFile = new File(dir, imageName);
-                    BufferedOutputStream bos
-                            = new BufferedOutputStream(new FileOutputStream(imgFile));
-                    bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);
-                    bos.flush();
-                    bos.close();
-                    if (!bm.isRecycled()) {
-                        bm.recycle();
-                    }
-                    getServerData();
+//                    String newFingerprint = UIUtils.binaryString2hexString(bm);
+//                    int diffNum = UIUtils.msgFingerprintDiff(localFingerprint, newFingerprint);
+//                    if (diffNum > 10) {
+//                        previewing = true;
+//                        if (mCamera != null) {
+//                            mCamera.startPreview();
+//                        } else {
+//                            initViewParams();
+//                        }
+//                        autoFocusHandler.postDelayed(doAutoFocus, 1000);
+//                        showToast("图片匹配失败TAT，再试下吧", false);
+//                    }
+//                    String imageName = "hai_meng_fuwa.jpg";
+//                    // 指定调用相机拍照后照片的储存路径
+//                    File dir = new File(savePath);
+//                    if (!dir.exists()) {
+//                        dir.mkdirs();
+//                    }
+//                    imgFile = new File(dir, imageName);
+//                    BufferedOutputStream bos
+//                            = new BufferedOutputStream(new FileOutputStream(imgFile));
+//                    bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+//                    bos.flush();
+//                    bos.close();
+//                    if (!bm.isRecycled()) {
+//                        bm.recycle();
+//                    }
+//                    getServerData();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -565,6 +607,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
+            if (mCameraManager != null)
+                mCameraManager.closeDriver();
         }
     }
 
@@ -607,53 +651,53 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
     }
 
-    @SuppressLint("SimpleDateFormat")
-    private String getNowTime() {
-        Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddHHmmssSS");
-        return dateFormat.format(date);
-    }
+//    @SuppressLint("SimpleDateFormat")
+//    private String getNowTime() {
+//        Date date = new Date(System.currentTimeMillis());
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddHHmmssSS");
+//        return dateFormat.format(date);
+//    }
 
-    //根据拍照的图片来剪裁
-    private Bitmap cropPhotoImage(Bitmap bmp) {
-        int height;
-        int width;
-        width = getWindowManager().getDefaultDisplay().getWidth();
-        height = getWindowManager().getDefaultDisplay().getHeight();
-        int view_w = width * 448 / 720;
-        int left = (width - view_w) / 2;
-        int top = (height - view_w - height / 20) / 2;
-        Bitmap b3 = null;
-        try {
-            Bitmap bitmap = Bitmap.createBitmap(bmp, left, top, view_w, view_w);
-            if (bitmap != null) {
-                b3 = getCircleBitmap(bitmap);
-            }
-        } catch (OutOfMemoryError e) {
-            e.printStackTrace();
-        }
-        return b3;
-    }
+//    //根据拍照的图片来剪裁
+//    private Bitmap cropPhotoImage(Bitmap bmp) {
+//        int height;
+//        int width;
+//        width = getWindowManager().getDefaultDisplay().getWidth();
+//        height = getWindowManager().getDefaultDisplay().getHeight();
+//        int view_w = width * 448 / 720;
+//        int left = (width - view_w) / 2;
+//        int top = (height - view_w - height / 20) / 2;
+//        Bitmap b3 = null;
+//        try {
+//            Bitmap bitmap = Bitmap.createBitmap(bmp, left, top, view_w, view_w);
+//            if (bitmap != null) {
+//                b3 = getCircleBitmap(bitmap);
+//            }
+//        } catch (OutOfMemoryError e) {
+//            e.printStackTrace();
+//        }
+//        return b3;
+//    }
 
-    /**
-     * 选择变换
-     *
-     * @param origin 原图
-     * @param alpha  旋转角度，可正可负
-     * @return 旋转后的图片
-     */
-    private Bitmap rotateBitmap(Bitmap origin, float alpha) {
-        if (origin == null) {
-            return null;
-        }
-        int width = origin.getWidth();
-        int height = origin.getHeight();
-        Matrix matrix = new Matrix();
-        matrix.setRotate(alpha);
-        // 围绕原地进行旋转
-        origin = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);
-        return origin;
-    }
+//    /**
+//     * 选择变换
+//     *
+//     * @param origin 原图
+//     * @param alpha  旋转角度，可正可负
+//     * @return 旋转后的图片
+//     */
+//    private Bitmap rotateBitmap(Bitmap origin, float alpha) {
+//        if (origin == null) {
+//            return null;
+//        }
+//        int width = origin.getWidth();
+//        int height = origin.getHeight();
+//        Matrix matrix = new Matrix();
+//        matrix.setRotate(alpha);
+//        // 围绕原地进行旋转
+//        origin = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);
+//        return origin;
+//    }
 
     public static Bitmap getCircleBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
@@ -796,8 +840,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             AccountEntity sAccount = App.getInstance().getAccount();
             if (sAccount != null) {
                 String head = sAccount.getAvatar();
-                imageLoader.displayImage(head, roundImageView,
-                        ImageLoaderUtils.getDisplayImageOptions());
+                Glide.with(context).load(head).error(R.drawable.zf_default_message_image).into(roundImageView);
                 String userName = sAccount.getUser_name();
                 if (!TextUtils.isEmpty(userName)) {
                     tv_name.setText(userName);
@@ -811,14 +854,14 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void getServerData() {
-        String signUrl = "/capture?user=" + userId + "&gid=" + fuwaId + "&platform=boss66";
+        String signUrl = "/capturev2?user=" + userId + "&gid=" + fuwaId + "&platform=boss66";
         String sign = MD5Util.getStringMD5(signUrl);
         String url = HttpUrl.CATCH_MY_FUWA + userId + "&gid=" +
                 fuwaId + "&sign=" + sign;
         HttpUtils httpUtils = new HttpUtils(12 * 1000);
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("file", imgFile);
-        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+        //RequestParams params = new RequestParams();
+        //params.addBodyParameter("file", imgFile);
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String res = responseInfo.result;
@@ -921,6 +964,14 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 case 111:
                     showDialog();
                     break;
+                case 0x01:
+                    if (localBitmap != null) {
+                        iv_thread.setImageBitmap(localBitmap);
+                        Utils.bitmapToMat(localBitmap, oneMat);
+                        oneMat = getMat(oneMat);
+                        localFingerprint = UIUtils.binaryString2hexString(localBitmap);
+                    }
+                    break;
             }
         }
     };
@@ -998,5 +1049,45 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * 比较来个矩阵的相似度
+     *
+     * @param mBitmap1
+     * @param mBitmap2
+     * @return
+     */
+    public static double comPareHist(Bitmap mBitmap1, Bitmap mBitmap2) {
+        Mat mat1 = new Mat();
+        Mat mat2 = new Mat();
+        Utils.bitmapToMat(mBitmap1, mat1);
+        Utils.bitmapToMat(mBitmap2, mat2);
+        return comPareHist(mat1, mat2);
+    }
+
+    /**
+     * 比较来个矩阵的相似度
+     *
+     * @param mat1
+     * @param mat2
+     * @return
+     */
+    public static double comPareHist(Mat mat1, Mat mat2) {
+//        Mat srcMat = new Mat();
+//        Mat desMat = new Mat();
+//        Imgproc.cvtColor(mat1, srcMat, Imgproc.COLOR_BGR2GRAY);
+//        Imgproc.cvtColor(mat2, desMat, Imgproc.COLOR_BGR2GRAY);
+//        srcMat.convertTo(srcMat, CvType.CV_32F);
+//        desMat.convertTo(desMat, CvType.CV_32F);
+        double target = Imgproc.compareHist(mat1, mat2,
+                Imgproc.CV_COMP_CORREL);
+        return target;
+    }
+
+    private Mat getMat(Mat mat1) {
+        Mat srcMat = new Mat();
+        Imgproc.cvtColor(mat1, srcMat, Imgproc.COLOR_BGR2GRAY);
+        srcMat.convertTo(srcMat, CvType.CV_32F);
+        return srcMat;
+    }
 
 }

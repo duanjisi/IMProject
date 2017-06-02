@@ -246,7 +246,7 @@ public class HttpUrl {
     //藏福娃
     public static final String HIDE_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/hidev2?owner=";
     //捉福娃
-    public static final String CATCH_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/capture?user=";
+    public static final String CATCH_MY_FUWA = BASE_FUWA[FUWA_TAG] + "api/capturev2?user=";
     //福娃消息
     public static final String FUWA_MSG = BASE_FUWA[FUWA_TAG] + "msg/myinfo?userid=";
     //微信支付购买福娃
