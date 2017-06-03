@@ -12,9 +12,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import im.boss66.com.R;
 import im.boss66.com.entity.FuwaVideoEntity;
 
@@ -78,7 +75,6 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
             @Override
             public void onClick(View v) {
                 itemListener.onItemClick(position);
-
             }
         });
     }

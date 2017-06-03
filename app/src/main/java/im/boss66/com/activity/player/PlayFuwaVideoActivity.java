@@ -11,22 +11,35 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.util.List;
 
 import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtils;
+import im.boss66.com.Utils.MD5Util;
 import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.treasure.FindTreasureChildrenActivity;
 import im.boss66.com.entity.ActionEntity;
+import im.boss66.com.entity.FuwaVideoEntity;
+import im.boss66.com.http.HttpUrl;
 import im.boss66.com.services.VideoCacheService;
 import im.boss66.com.widget.ActionSheet;
 
@@ -38,12 +51,16 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
     private PLVideoTextureView mVideoView;
     private String mVideoPath, videoPath;
     private ActionSheet actionSheet;
+    private boolean isCacheVideo = false;
     private int mIsLiveStreaming = 1;
     private MediaController mMediaController;
     private ImageView iv_coverView, iv_close;
     private int mVideoRotation;
     private TextView tvNext, tvGo;
-
+    private int currentIndex;
+    private List<FuwaVideoEntity.DataBean> datas;
+    private FuwaVideoEntity.DataBean dataBean;
+    private String classid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +72,6 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
 
     private void initView() {
         view = findViewById(R.id.parent);
-
         tvNext = (TextView) findViewById(R.id.tv_next);
         tvGo = (TextView) findViewById(R.id.tv_go);
         iv_close = (ImageView) findViewById(R.id.iv_close);
@@ -69,8 +85,21 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
         tvNext.setOnClickListener(this);
         tvGo.setOnClickListener(this);
 
-        videoPath = getIntent().getStringExtra("videoPath");
-        mVideoPath = getVideoPath(videoPath);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            currentIndex = bundle.getInt("position", 0);
+            classid = bundle.getString("classid", "");
+            String result = bundle.getString("result", "");
+            if (!TextUtils.isEmpty(result)) {
+                FuwaVideoEntity videoEntity = JSON.parseObject(result, FuwaVideoEntity.class);
+                if (videoEntity.getCode() == 0) {
+                    datas = videoEntity.getData();
+                }
+            }
+        }
+
+//        videoPath = getIntent().getStringExtra("videoPath");
+//        mVideoPath = getVideoPath(videoPath);
         Log.i("info", "=============mVideoPath:" + mVideoPath);
         mMediaController = new MediaController(this, false, mIsLiveStreaming == 1);
         mMediaController.setMediaPlayer(mVideoView);
@@ -83,6 +112,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                isCacheVideo = true;
                 showActionSheet();
                 return true;
             }
@@ -93,7 +123,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
             Glide.with(this).load(imgurl).into(iv_coverView);
             mVideoView.setCoverView(iv_coverView);
         }
-        mVideoView.setVideoPath(mVideoPath);
+//        mVideoView.setVideoPath(mVideoPath);
         mVideoView.setOnVideoSizeChangedListener(new PLMediaPlayer.OnVideoSizeChangedListener() {
             @Override
             public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int width, int height, int videoSar, int videoDen) {
@@ -107,7 +137,8 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                 }
             }
         });
-        mVideoView.start();
+        initPlayer();
+//        mVideoView.start();
         iv_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,13 +152,52 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_next:
-
+                playNextVideo();
                 break;
             case R.id.tv_go:
-
+                Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
+                startActivity(intent);
                 break;
         }
     }
+
+    private void initPlayer() {
+        if (datas != null && datas.size() != 0) {
+            FuwaVideoEntity.DataBean bean = datas.get(currentIndex);
+            if (bean != null) {
+                dataBean = bean;
+                String imgurl = bean.getVideo().replace(".mp4", "jpg");
+                if (!TextUtils.isEmpty(imgurl)) {
+                    iv_coverView.setVisibility(View.VISIBLE);
+                    Glide.with(this).load(imgurl).into(iv_coverView);
+                    mVideoView.setCoverView(iv_coverView);
+                }
+                videoPath = bean.getVideo();
+                mVideoPath = getVideoPath(videoPath);
+                mVideoView.setVideoPath(mVideoPath);
+                mVideoView.start();
+            }
+        }
+    }
+
+    private void playNextVideo() {
+        if (datas != null && datas.size() != 0) {
+            if (currentIndex != datas.size() - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            FuwaVideoEntity.DataBean bean = datas.get(currentIndex);
+            if (bean != null) {
+                dataBean = bean;
+                videoPath = bean.getVideo();
+                mVideoPath = getVideoPath(videoPath);
+                mVideoView.setVideoPath(mVideoPath);
+                mVideoView.start();
+            }
+        }
+    }
+
 
     private String getVideoPath(String path) {
         String localPath = Constants.VIDEO_CACHE_PATH + FileUtils.getFileNameFromPath(path);
@@ -147,16 +217,24 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                 .builder()
                 .setCancelable(false)
                 .setCanceledOnTouchOutside(true);
-        actionSheet.addSheetItem("保存视频", ActionSheet.SheetItemColor.Black,
-                PlayFuwaVideoActivity.this);
+        if (isCacheVideo) {
+            actionSheet.addSheetItem("保存视频", ActionSheet.SheetItemColor.Black,
+                    PlayFuwaVideoActivity.this);
+        } else {
+            actionSheet.addSheetItem("播放下一个", ActionSheet.SheetItemColor.Black,
+                    PlayFuwaVideoActivity.this)
+                    .addSheetItem("带我去寻宝", ActionSheet.SheetItemColor.Black,
+                            PlayFuwaVideoActivity.this);
+        }
         actionSheet.show();
     }
 
     private PLMediaPlayer.OnCompletionListener mOnCompletionListener = new PLMediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(PLMediaPlayer plMediaPlayer) {
-//            showToastTips("Play Completed !");
-//            finish();
+            isCacheVideo = false;
+            statisticsVideoNum();
+            showActionSheet();
         }
     };
 
@@ -313,16 +391,66 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
 
     @Override
     public void onClick(int which) {
-        if (!TextUtils.isEmpty(videoPath)) {
-            String localPath = Constants.VIDEO_CACHE_PATH + FileUtils.getFileNameFromPath(videoPath);
-            File file = new File(localPath);
-            if (file.exists()) {
-                showToast("视频已缓存!", true);
-            } else {
-                Intent intent = new Intent(context, VideoCacheService.class);
-                intent.putExtra("video_path", videoPath);
-                startService(intent);
-            }
+        switch (which) {
+            case 1:
+                if (isCacheVideo) {
+                    if (!TextUtils.isEmpty(videoPath)) {
+                        String localPath = Constants.VIDEO_CACHE_PATH + FileUtils.getFileNameFromPath(videoPath);
+                        File file = new File(localPath);
+                        if (file.exists()) {
+                            showToast("视频已缓存!", true);
+                        } else {
+                            Intent intent = new Intent(context, VideoCacheService.class);
+                            intent.putExtra("video_path", videoPath);
+                            startService(intent);
+                        }
+                    }
+                } else {
+                    playNextVideo();
+                }
+                break;
+            case 2:
+                Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+
+    //播放完统计视频播放次数
+    private void statisticsVideoNum() {
+        if (dataBean != null && !TextUtils.isEmpty(classid)) {
+            String time = "" + System.currentTimeMillis();
+            String filemd5 = dataBean.getFilemd5();
+            String url = HttpUrl.PLAY_VIDEO_NUM + "?filemd5=" + filemd5 + "&class=" + classid + "&time=" + time;
+            String sigh = "/hit" + "?filemd5=" + filemd5 + "&class=" + classid + "&time=" + time + "&platform=boss66";
+            sigh = MD5Util.getStringMD5(sigh);
+            url = url + "&sign=" + sigh;
+            HttpUtils httpUtils = new HttpUtils(60 * 1000);
+            httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
+                @Override
+                public void onSuccess(ResponseInfo<String> responseInfo) {
+                    String res = responseInfo.result;
+                    if (!TextUtils.isEmpty(res)) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(res);
+                            if (jsonObject.getInt("code") == 0) {
+                                Log.i("info", "====================已经播放了一次视频!");
+                            } else {
+                                showToast(jsonObject.getString("message"), false);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(HttpException e, String s) {
+                    Log.i("onFailure", s);
+                    showToast(e.getMessage(), false);
+                }
+            });
         }
     }
 }

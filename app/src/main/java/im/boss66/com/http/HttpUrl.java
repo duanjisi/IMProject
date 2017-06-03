@@ -363,8 +363,9 @@ public class HttpUrl {
     //通过uid查询部落列表
     public static final String SEARCH_TRIBE_LIST = MAIN_URL + "api/v1/storetribe/createby";
     //查询商家视频分类
-    public static final String SEARCH_COMPANY_VIDEO =BASE_FUWA[FUWA_TAG]+"api/queryclass";
+    public static final String SEARCH_COMPANY_VIDEO = BASE_FUWA[FUWA_TAG] + "api/queryclass";
     //查询视频列表
-    public static final String SEARCH_VIDEO_LIST = BASE_FUWA[FUWA_TAG]+"api/queryvideo";
-
+    public static final String SEARCH_VIDEO_LIST = BASE_FUWA[FUWA_TAG] + "api/queryvideo";
+    //播放视频次数
+    public static final String PLAY_VIDEO_NUM = BASE_FUWA[FUWA_TAG] + "api/hit";
 }

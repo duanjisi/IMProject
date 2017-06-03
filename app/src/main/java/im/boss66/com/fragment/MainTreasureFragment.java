@@ -57,7 +57,6 @@ import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.MainAct;
 import im.boss66.com.activity.treasure.ApplyFuwaActivity;
 import im.boss66.com.activity.treasure.CompanyVideoActivity;
-import im.boss66.com.activity.treasure.FindTreasureChildrenActivity;
 import im.boss66.com.activity.treasure.FuwaDealActivity;
 import im.boss66.com.activity.treasure.FuwaMessageActivity;
 import im.boss66.com.activity.treasure.FuwaPackageActivity;
@@ -183,7 +182,6 @@ public class MainTreasureFragment extends BaseFragment implements View.OnClickLi
 //                Intent it = new Intent(context, FindTreasureChildrenActivity.class);
 //                it.putExtra("isFate", true);
 //                startActivity(it);
-
                 openActivity(PersonalVideoActivity.class);
                 break;
             case R.id.btn_store://藏福娃

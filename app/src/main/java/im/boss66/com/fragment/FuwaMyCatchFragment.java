@@ -32,7 +32,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.amap.api.maps2d.model.Text;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -1065,8 +1064,6 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
                 }
             }
 
@@ -1076,8 +1073,6 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
                 showToast(e.getMessage(), false);
             }
         });
-
-
     }
 
     @Override

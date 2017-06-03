@@ -54,8 +54,6 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
             setContentView(R.layout.activity_company_video);
             initUI();
             getPermission();
-
-
     }
 
     private void getPermission() {
