@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_people_data"
     android:layout_width="320dp"
-    android:background="@drawable/bg_fuwa_pop"
+    android:background="@drawable/choose_bg"
     android:layout_height="240dp">
 
     <TextView

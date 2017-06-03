@@ -76,7 +76,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="@dimen/dp_10"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -106,11 +107,11 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/iv_fuwa_type"
+                    android:layout_toLeftOf="@+id/iv_fuwa_class"
                     android:background="@color/bg_rectangle" />
 
                 <ImageView
-                    android:id="@+id/iv_fuwa_type"
+                    android:id="@+id/iv_fuwa_class"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

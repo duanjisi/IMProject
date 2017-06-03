@@ -49,8 +49,8 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
     private boolean isLoad = false;
     private String newCount, newIcon;
     private ImageView iv_avatar;
-    private ImageLoader imageLoader;
-    private AccountEntity account;
+//    private ImageLoader imageLoader;
+//    private AccountEntity account;
 
     @Nullable
     @Override
@@ -65,8 +65,8 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initViews(View view) {
-        account = App.getInstance().getAccount();
-        imageLoader = ImageLoaderUtils.createImageLoader(getActivity());
+        //account = App.getInstance().getAccount();
+        //imageLoader = ImageLoaderUtils.createImageLoader(getActivity());
         iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
 
         rl_friends = (RelativeLayout) view.findViewById(R.id.rl_friends);
@@ -118,9 +118,9 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.rl_shopping:
                 Bundle bundle2 = new Bundle();
-                bundle2.putString("url","http://m.66boss.com/");
-                bundle2.putBoolean("isHasTitle",false);
-                openActivity(WebViewActivity.class,bundle2);
+                bundle2.putString("url", "http://m.66boss.com/");
+                bundle2.putBoolean("isHasTitle", false);
+                openActivity(WebViewActivity.class, bundle2);
                 break;
             case R.id.rl_game:
                 openActivity(MainTreasureActivity.class, null);

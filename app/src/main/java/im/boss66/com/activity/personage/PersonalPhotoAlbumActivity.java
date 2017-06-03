@@ -60,6 +60,7 @@ import im.boss66.com.activity.discover.FriendSendNewMsgActivity;
 import im.boss66.com.activity.discover.PhotoAlbumDetailActivity;
 import im.boss66.com.activity.discover.PhotoAlbumLookPicActivity;
 import im.boss66.com.activity.discover.ReplaceAlbumCoverActivity;
+import im.boss66.com.activity.discover.VideoListActivity;
 import im.boss66.com.adapter.PersonalPhotoAlbumAdapter;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.FriendCircle;
@@ -104,6 +105,7 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
     private boolean isAddNew = false;
     private String requestUserId;
     private boolean isSelt = false;
+    private final int READ_VIDEO = 4;//本地视频
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -307,6 +309,10 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                     .addSheetItem(getString(R.string.take_photos), ActionSheet.SheetItemColor.Black,
                             PersonalPhotoAlbumActivity.this)
                     .addSheetItem(getString(R.string.from_the_mobile_phone_photo_album_choice), ActionSheet.SheetItemColor.Black,
+                            PersonalPhotoAlbumActivity.this)
+                    .addSheetItem(getString(R.string.local_small_video), ActionSheet.SheetItemColor.Black,
+                            PersonalPhotoAlbumActivity.this)
+                    .addSheetItem("纯文字", ActionSheet.SheetItemColor.Black,
                             PersonalPhotoAlbumActivity.this);
         }
         actionSheet.show();
@@ -327,6 +333,15 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                 case 3://从手机相册选择
                     cameraType = OPEN_ALBUM;
                     getPermission();
+                    break;
+                case 4:
+                    cameraType = READ_VIDEO;
+                    getPermission();
+                    break;
+                case 5:
+                    Bundle bundle = new Bundle();
+                    bundle.putString("sendType", "text");
+                    openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
                     break;
             }
         } else {
@@ -411,6 +426,13 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
             }
             isAddNew = true;
             getServerGallery();
+        } else if (requestCode == READ_VIDEO && resultCode == RESULT_OK && data != null) {
+            String url = data.getStringExtra("filePath");
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", RECORD_VIDEO);
+            bundle.putString("sendType", "video");
+            bundle.putString("videoPath", url);
+            openActvityForResult(FriendSendNewMsgActivity.class, SEND_TYPE_PHOTO_TX, bundle);
         }
     }
 
@@ -638,6 +660,8 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                             count(9)
                             .multi() // 多选模式, 默认模式;
                             .start(PersonalPhotoAlbumActivity.this, OPEN_ALBUM);
+                } else if (cameraType == READ_VIDEO) {
+                    openActvityForResult(VideoListActivity.class, READ_VIDEO);
                 }
             }
 

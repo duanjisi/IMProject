@@ -8,7 +8,9 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.util.DisplayMetrics;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -19,10 +21,9 @@ public class ImageTool {
     private final static int MIN_SIDE_LENGTH = 350;
 
     /**
-     * 
-     * @Description 生成图片的压缩图
      * @param filePath
      * @return
+     * @Description 生成图片的压缩图
      */
     public static Bitmap createImageThumbnail(String filePath) {
         if (null == filePath || !new File(filePath).exists())
@@ -62,7 +63,7 @@ public class ImageTool {
     }
 
     public static int computeSampleSize(BitmapFactory.Options options,
-            int minSideLength, int maxNumOfPixels) {
+                                        int minSideLength, int maxNumOfPixels) {
         int initialSize = computeInitialSampleSize(options, minSideLength,
                 maxNumOfPixels);
         int roundedSize;
@@ -78,7 +79,7 @@ public class ImageTool {
     }
 
     private static int computeInitialSampleSize(BitmapFactory.Options options,
-            int minSideLength, int maxNumOfPixels) {
+                                                int minSideLength, int maxNumOfPixels) {
         double w = options.outWidth;
         double h = options.outHeight;
         int lowerBound = (maxNumOfPixels == -1) ? 1 : (int) Math.ceil(Math
@@ -99,7 +100,7 @@ public class ImageTool {
     }
 
     public static Bitmap getBigBitmapForDisplay(String imagePath,
-            Context context) {
+                                                Context context) {
         if (null == imagePath || !new File(imagePath).exists())
             return null;
         try {
@@ -150,7 +151,7 @@ public class ImageTool {
 
     /**
      * 获得图片的旋转角度
-     * 
+     *
      * @param filePath
      * @return
      */

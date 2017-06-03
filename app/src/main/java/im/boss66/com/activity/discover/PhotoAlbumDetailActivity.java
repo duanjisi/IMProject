@@ -777,10 +777,11 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                             goLogin();
                         } else {
                             List<FriendCircleCommentEntity> list = entity.getResult();
-                            if (list != null && list.size() > 0) {
-                                friendCircle.setComment_list(list);
-                                showSigleTxData(friendCircle);
+                            if (list == null){
+                                list = new ArrayList<>();
                             }
+                            friendCircle.setComment_list(list);
+                            showSigleTxData(friendCircle);
                         }
                     }
                 }
@@ -1007,10 +1008,11 @@ public class PhotoAlbumDetailActivity extends BaseActivity implements View.OnCli
                             App.getInstance().sendBroadcast(intent);
                         } else {
                             List<FriendCircleCommentEntity> list = entity.getResult();
-                            if (list != null && list.size() > 0) {
-                                friendCircle.setComment_list(list);
-                                showSigleTxData(friendCircle);
+                            if (list == null){
+                                list = new ArrayList<>();
                             }
+                            friendCircle.setComment_list(list);
+                            showSigleTxData(friendCircle);
                         }
                     }
                 }

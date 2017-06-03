@@ -191,7 +191,12 @@ public class PersonalInfoChangeActivity extends BaseActivity implements View.OnC
                     }
                 });
             } else if ("signature".equals(changeType)) {
-                ChangeSignatureRequest signRequest = new ChangeSignatureRequest(TAG, value);
+                ChangeSignatureRequest signRequest = null;
+                if (TextUtils.isEmpty(value)) {
+                    signRequest = new ChangeSignatureRequest(TAG, " ");
+                } else {
+                    signRequest = new ChangeSignatureRequest(TAG, value);
+                }
                 signRequest.send(new BaseDataRequest.RequestCallback<String>() {
                     @Override
                     public void onSuccess(String pojo) {
@@ -201,7 +206,7 @@ public class PersonalInfoChangeActivity extends BaseActivity implements View.OnC
 
                     @Override
                     public void onFailure(String msg) {
-                        showToast(msg, false);
+                        showToast("修改个性签名失败", false);
                         cancelLoadingDialog();
                     }
                 });

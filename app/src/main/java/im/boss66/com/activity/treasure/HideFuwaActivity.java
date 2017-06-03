@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -31,6 +32,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -81,6 +84,7 @@ import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.discover.VideoListActivity;
 import im.boss66.com.adapter.FuwaHideAddressAdapter;
 import im.boss66.com.entity.BaseResult;
+import im.boss66.com.entity.FuwaClassEntity;
 import im.boss66.com.entity.FuwaEntity;
 import im.boss66.com.entity.ImageTool;
 import im.boss66.com.http.HttpUrl;
@@ -174,6 +178,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private boolean isSelectVideo;
     private TextView tv_tx_num;
     private int sceenH, sceenW;
+    private ListPopupWindow listPopupWindow;
+    private List<FuwaClassEntity.DataBean> classStrList;
+    private String classId;
+    private LinearLayout ll_fuwa_class;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,6 +192,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
+        classStrList = new ArrayList<>();
+        getFuwaClass();
         sceenH = (int) (UIUtils.getScreenHeight(context) * 0.8);
         sceenW = (int) (UIUtils.getScreenWidth(context) * 0.8);
         userId = App.getInstance().getUid();
@@ -263,7 +273,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
      */
     Camera.PreviewCallback mPreviewCallback = new Camera.PreviewCallback() {
         public void onPreviewFrame(byte[] data, Camera camera) {
-//            Log.i("mPreviewCallback", "jinlai");
         }
     };
 
@@ -280,10 +289,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 opts.inSampleSize = ImageTool.computeSampleSize(opts, -1, sceenW * sceenH);
                 opts.inJustDecodeBounds = false;
 
-                //bitmapImg = BitmapFactory.decodeByteArray(bytes, 0, bytes.length,opts);
                 bitmapImg = byteToBitmap(opts, bytes);
                 if (bitmapImg != null) {
-//                    mPreview.setVisibility(View.GONE);
                     iv_bg.setVisibility(View.VISIBLE);
                     Glide.with(context).load(bytes).into(iv_bg);
                     createFileWithByte(bytes);
@@ -454,6 +461,12 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                     showToast("输入的个数必须大于0", false);
                     return;
                 }
+                if (fuwaSelectType == 1) {
+                    if (TextUtils.isEmpty(classId) || "i".equals(classId)) {
+                        showToast("请选择福娃分类", false);
+                        return;
+                    }
+                }
                 if (dialogNum != null && dialogNum.isShowing()) {
                     dialogNum.dismiss();
                 }
@@ -508,7 +521,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 hideFuwaServer();
                 break;
             case R.id.rl_fuwa_class:
-
+                showClassPop(view);
                 break;
         }
     }
@@ -950,9 +963,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             LinearLayout ll_fuwa_type = (LinearLayout) view.findViewById(R.id.ll_fuwa_type);
             RelativeLayout rl_fuwa_type = (RelativeLayout) view.findViewById(R.id.rl_fuwa_type);
 
-            LinearLayout ll_fuwa_class = (LinearLayout) view.findViewById(R.id.ll_fuwa_class);
+            ll_fuwa_class = (LinearLayout) view.findViewById(R.id.ll_fuwa_class);
             RelativeLayout rl_fuwa_class = (RelativeLayout) view.findViewById(R.id.rl_fuwa_class);
-            tv_fuwa_class = (TextView) findViewById(R.id.tv_fuwa_class);
+            tv_fuwa_class = (TextView) view.findViewById(R.id.tv_fuwa_class);
 
             LinearLayout ll_fuwa_num = (LinearLayout) view.findViewById(R.id.ll_fuwa_num);
             tv_fuwa_type = (TextView) view.findViewById(R.id.tv_fuwa_type);
@@ -1098,6 +1111,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                     if (tv_fuwa_type != null)
                         tv_fuwa_type.setText("社交");
                     currentFuwaNum = fuwaSocialNum;
+                    classId = "i";
+                    ll_fuwa_class.setVisibility(View.GONE);
                     tv_dialog_num_tip.setTextColor(getResources().getColor(R.color.top_bar_color));
                     tv_dialog_num_tip.setText("可藏福娃（个）：" + currentFuwaNum);
                 }
@@ -1111,6 +1126,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                     if (tv_fuwa_type != null)
                         tv_fuwa_type.setText("寻宝");
                     currentFuwaNum = fuwaTreasureNum;
+                    ll_fuwa_class.setVisibility(View.VISIBLE);
                     tv_dialog_num_tip.setTextColor(getResources().getColor(R.color.top_bar_color));
                     tv_dialog_num_tip.setText("可藏福娃（个）：" + currentFuwaNum);
                 }
@@ -1153,7 +1169,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             e.printStackTrace();
         }
         String url = HttpUrl.HIDE_MY_FUWA + userId + "&pos=" + address + "&geohash=" + geohash
-                + "&detail=" + recommond + "&validtime=" + validtime + "&number=" + curSelectFuwaNum + "&type=" + fuwaSelectType;
+                + "&detail=" + recommond + "&validtime=" + validtime + "&number="
+                + curSelectFuwaNum + "&type=" + fuwaSelectType + "&class=" + classId;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         RequestParams params = new RequestParams();
         params.addBodyParameter("file", imgFile);
@@ -1280,5 +1297,67 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 }
             }
         }
+    }
+
+    private void showClassPop(View view) {
+        if (listPopupWindow == null) {
+            listPopupWindow = new ListPopupWindow(this);
+            List<String> list = new ArrayList<>();
+            if (classStrList != null && classStrList.size() > 0) {
+                for (FuwaClassEntity.DataBean item : classStrList) {
+                    list.add(item.name);
+                }
+            }
+            listPopupWindow.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list));
+            listPopupWindow.setAnchorView(view);
+            listPopupWindow.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
+            listPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+            listPopupWindow.setModal(true);
+            listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (classStrList != null && classStrList.size() > position) {
+                        FuwaClassEntity.DataBean item = classStrList.get(position);
+                        if (item != null) {
+                            classId = item.classid;
+                            tv_fuwa_class.setText(item.name);
+                        }
+                    }
+                    listPopupWindow.dismiss();
+                }
+            });
+        }
+        listPopupWindow.show();
+    }
+
+    private void getFuwaClass() {
+        HttpUtils httpUtils = new HttpUtils(45 * 1000);
+        //设置当前请求的缓存时间
+        httpUtils.configCurrentHttpCacheExpiry(0 * 1000);
+        //设置默认请求的缓存时间
+        httpUtils.configDefaultHttpCacheExpiry(0);
+        httpUtils.send(HttpRequest.HttpMethod.GET, HttpUrl.QUERY_FUWA_CLASS, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String res = responseInfo.result;
+                if (!TextUtils.isEmpty(res)) {
+                    BaseResult result = BaseResult.parse(res);
+                    if (result != null && result.getCode() == 0) {
+                        FuwaClassEntity entity = JSON.parseObject(res, FuwaClassEntity.class);
+                        if (entity != null) {
+                            List<FuwaClassEntity.DataBean> data = entity.getData();
+                            if (data != null) {
+                                classStrList.addAll(data);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                showToast(e.getMessage(), false);
+            }
+        });
     }
 }
