@@ -234,7 +234,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         CircleImageView header = (CircleImageView) view.findViewById(R.id.header);
         imageLoader.displayImage(account.getAvatar(), header, ImageLoaderUtils.getDisplayImageOptions());
     }
-
     private void initData(Bundle bundle) {
         mMapView.onCreate(bundle);
         mRouteSearch = new RouteSearch(this);

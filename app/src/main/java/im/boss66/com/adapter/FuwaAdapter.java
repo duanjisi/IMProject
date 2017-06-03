@@ -1,20 +1,28 @@
 package im.boss66.com.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import im.boss66.com.R;
 import im.boss66.com.Session;
+import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.entity.ChildEntity;
+import im.boss66.com.widget.CircleImageView;
 
 /**
  * Created by Johnny on 2017/4/13.
  */
 public class FuwaAdapter extends ABaseAdapter<ChildEntity> {
 
+    private ImageLoader imageLoader;
+
     public FuwaAdapter(Context context) {
         super(context);
+        imageLoader = ImageLoaderUtils.createImageLoader(context);
     }
 
     @Override
@@ -28,7 +36,8 @@ public class FuwaAdapter extends ABaseAdapter<ChildEntity> {
             holder = (ViewHolder) convertView.getTag();
         }
         if (entity != null) {
-            holder.tvName.setText(getName(entity.getId()));
+//            holder.tvName.setText(getName(entity.getId()));
+            holder.tvName.setText(entity.getName());
             holder.address.setText(entity.getPos());
             holder.details.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -36,6 +45,10 @@ public class FuwaAdapter extends ABaseAdapter<ChildEntity> {
                     Session.getInstance().selectedFuwa(entity);
                 }
             });
+            String avatar = entity.getAvatar();
+            if (!TextUtils.isEmpty(avatar)) {
+                imageLoader.displayImage(avatar, holder.ivAvatar, ImageLoaderUtils.getDisplayImageOptions());
+            }
         }
         return convertView;
     }
@@ -58,11 +71,13 @@ public class FuwaAdapter extends ABaseAdapter<ChildEntity> {
         TextView tvName;
         TextView address;
         TextView details;
+        CircleImageView ivAvatar;
 
         public ViewHolder(View view) {
             this.tvName = (TextView) view.findViewById(R.id.tv_name);
             this.address = (TextView) view.findViewById(R.id.tv_address);
             this.details = (TextView) view.findViewById(R.id.tv_details);
+            this.ivAvatar = (CircleImageView) view.findViewById(R.id.iv_avatar);
         }
     }
 }

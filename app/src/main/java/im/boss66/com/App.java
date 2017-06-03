@@ -200,16 +200,25 @@ public class App extends Application {
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
     }
 
+
     public WebSocket getWebSocket() {
-        if (webSocket != null) {
-//            if (webSocket.isConnected()){
-//                webSocket.disconnect();
-//            }
-            webSocket = null;
+        if (webSocket == null) {
+            webSocket = new WebSocketConnection();
         }
-        webSocket = new WebSocketConnection();
         return webSocket;
     }
+
+
+//    public WebSocket getWebSocket() {
+//        if (webSocket != null) {
+////            if (webSocket.isConnected()){
+////                webSocket.disconnect();
+////            }
+//            webSocket = null;
+//        }
+//        webSocket = new WebSocketConnection();
+//        return webSocket;
+//    }
 
     public synchronized UserDB getUserDB() {
         if (mUserDB == null)
