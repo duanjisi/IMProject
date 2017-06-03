@@ -383,6 +383,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         if (videoFile != null) {
             videoFile = null;
         }
+        imgFile = null;
     }
 
     @Override
@@ -1255,20 +1256,20 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         /**
          * 创建File对象，其中包含文件所在的目录以及文件的命名
          */
-        //String imageName = System.currentTimeMillis() + ".jpg";
+        String imageName = System.currentTimeMillis() + ".jpg";
         imgFile = new File(savePath,
-                "hidefuwa");
+                imageName);
         // 创建FileOutputStream对象
         FileOutputStream outputStream = null;
         // 创建BufferedOutputStream对象
         BufferedOutputStream bufferedOutputStream = null;
         try {
             // 如果文件存在则删除
-            if (imgFile.exists()) {
-                imgFile.delete();
-            }
+//            if (imgFile.exists()) {
+//                imgFile.delete();
+//            }
             // 在文件系统中根据路径创建一个新的空文件
-            imgFile.createNewFile();
+            //imgFile.createNewFile();
             // 获取FileOutputStream对象
             outputStream = new FileOutputStream(imgFile);
             // 获取BufferedOutputStream对象

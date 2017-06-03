@@ -132,7 +132,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     boolean isFocusing = false;
     boolean canFocusIn = false;  //内部是否能够对焦控制机制
     boolean canFocus = false;
-    public static final int DELEY_DURATION = 1500;
+    public static final int DELEY_DURATION = 3000;
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private CameraPreview mPreview;
@@ -929,7 +929,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                                 initViewParams();
                             }
                             autoFocusHandler.postDelayed(doAutoFocus, 1000);
-                            showToast(msg, false);
+                            showToast(msg, true);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
