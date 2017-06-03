@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -52,10 +53,10 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
         String height = item.getHeight();
         Integer img_height = Integer.parseInt(height);
 
-        ViewGroup.LayoutParams lp = holder1.img_content.getLayoutParams();
+        ViewGroup.LayoutParams lp = holder1.rl_top.getLayoutParams();
         lp.height = img_height/3;
         Log.i("liwya",lp.height+"");
-        holder1.img_content.setLayoutParams(lp);
+        holder1.rl_top.setLayoutParams(lp);
 
         Glide.with(context).load(item.getAvatar()).into(holder1.img_content);
         holder1.tv_name.setText(item.getName());
@@ -97,6 +98,7 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
 
         public TextView tv_name;
         public TextView tv_distance;
+        public RelativeLayout rl_top;
 
 
         public FuwaVideoHolder(View itemView) {
@@ -107,6 +109,7 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
 
             tv_name = (TextView) itemView.findViewById(R.id.tv_name);
             tv_distance = (TextView) itemView.findViewById(R.id.tv_distance);
+            rl_top = (RelativeLayout) itemView.findViewById(R.id.rl_top);
         }
     }
 }

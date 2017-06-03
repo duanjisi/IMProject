@@ -31,6 +31,7 @@ import java.util.List;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.activity.player.PlayFuwaVideoActivity;
 import im.boss66.com.adapter.FuwaVideoAdapter;
 import im.boss66.com.entity.FuwaVideoEntity;
 import im.boss66.com.http.HttpUrl;
@@ -52,6 +53,7 @@ public class VideoListFragment extends BaseFragment implements AMapLocationListe
     private RecyclerView rcv_video;
     private FuwaVideoAdapter adapter;
     private View view;
+    private String result;
 
 
     public static VideoListFragment newInstance(String classid) {
@@ -91,7 +93,10 @@ public class VideoListFragment extends BaseFragment implements AMapLocationListe
             public void onItemClick(int postion) {
                 //跳转到页面看视频
                 showToast("-----",false);
-
+                Intent intent = new Intent(getActivity(), PlayFuwaVideoActivity.class);
+                intent.putExtra("position",postion);
+                intent.putExtra("result",result);
+                startActivity(intent);
             }
 
             @Override
@@ -158,7 +163,7 @@ public class VideoListFragment extends BaseFragment implements AMapLocationListe
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                String result = responseInfo.result;
+                result = responseInfo.result;
 
                 Log.i("liwya", result);
                 if (result != null) {

@@ -6,19 +6,30 @@
     android:layout_margin="5dp"
     android:layout_height="wrap_content">
 
-    <im.boss66.com.widget.RoundImageView
-        android:scaleType="fitXY"
-        android:id="@+id/img_content"
+    <RelativeLayout
+        android:id="@+id/rl_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        roundiv:round_borderRadius="4dp"
-        roundiv:round_type="1"
-        />
+        android:layout_height="wrap_content">
+        <im.boss66.com.widget.RoundImageView
+            android:scaleType="fitXY"
+            android:id="@+id/img_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            roundiv:round_borderRadius="4dp"
+            roundiv:round_type="1"
+            />
+        <ImageView
+            android:src="@drawable/recommend_play"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_marginTop="5dp"
         android:id="@+id/rl_bottom"
-        android:layout_below="@id/img_content"
+        android:layout_below="@id/rl_top"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
