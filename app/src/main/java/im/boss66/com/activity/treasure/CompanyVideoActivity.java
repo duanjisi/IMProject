@@ -89,12 +89,14 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
     }
     private void initData() {
 
+        showLoadingDialog();
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         String url = HttpUrl.SEARCH_COMPANY_VIDEO;
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                cancelLoadingDialog();
                 String result = responseInfo.result;
                 Log.i("liwya",result);
                 if (result != null) {
@@ -122,6 +124,7 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
 
             @Override
             public void onFailure(HttpException e, String s) {
+                cancelLoadingDialog();
                 int code = e.getExceptionCode();
                 if (code == 401) {
                     Intent intent = new Intent();

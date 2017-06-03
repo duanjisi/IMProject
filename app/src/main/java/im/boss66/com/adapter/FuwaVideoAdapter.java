@@ -58,7 +58,12 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
         Log.i("liwya",lp.height+"");
         holder1.rl_top.setLayoutParams(lp);
 
-        Glide.with(context).load(item.getAvatar()).into(holder1.img_content);
+        String video = item.getVideo();
+        video = video.substring(0, video.lastIndexOf("."))+".jpg";
+        Log.i("liwya2",video);
+        Glide.with(context).load(video).into(holder1.img_content);
+
+        Glide.with(context).load(item.getAvatar()).into(holder1.img_head);
         holder1.tv_name.setText(item.getName());
         String distance = item.getDistance()+"";
         distance = distance.substring(0,distance.indexOf("."));
