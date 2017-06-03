@@ -96,6 +96,7 @@ public class VideoListFragment extends BaseFragment implements AMapLocationListe
                 Intent intent = new Intent(getActivity(), PlayFuwaVideoActivity.class);
                 intent.putExtra("position",postion);
                 intent.putExtra("result",result);
+                intent.putExtra("classid",classid);
                 startActivity(intent);
             }
 
