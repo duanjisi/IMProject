@@ -56,13 +56,14 @@ import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.MainAct;
 import im.boss66.com.activity.treasure.ApplyFuwaActivity;
-import im.boss66.com.activity.treasure.FindTreasureChildrenActivity;
+import im.boss66.com.activity.treasure.CompanyVideoActivity;
 import im.boss66.com.activity.treasure.FuwaDealActivity;
 import im.boss66.com.activity.treasure.FuwaMessageActivity;
 import im.boss66.com.activity.treasure.FuwaPackageActivity;
 import im.boss66.com.activity.treasure.FuwaTopList;
 import im.boss66.com.activity.treasure.GameRuleActivity;
 import im.boss66.com.activity.treasure.HideFuwaActivity;
+import im.boss66.com.activity.treasure.PersonalVideoActivity;
 import im.boss66.com.entity.AccountEntity;
 import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.widget.CircleImageView;
@@ -171,14 +172,17 @@ public class MainTreasureFragment extends BaseFragment implements View.OnClickLi
 
                 break;
             case R.id.btn_find://找福娃
-                Intent intent = new Intent(getActivity(), FindTreasureChildrenActivity.class);
-                intent.putExtra("isFate", false);
-                startActivity(intent);
+//                Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
+//                intent.putExtra("isFate", false);
+//                startActivity(intent);
+
+                openActivity(CompanyVideoActivity.class);
                 break;
-            case R.id.btn_find_fate://找福娃
-                Intent it = new Intent(getActivity(), FindTreasureChildrenActivity.class);
-                it.putExtra("isFate", true);
-                startActivity(it);
+            case R.id.btn_find_fate://找萌友
+//                Intent it = new Intent(context, FindTreasureChildrenActivity.class);
+//                it.putExtra("isFate", true);
+//                startActivity(it);
+                openActivity(PersonalVideoActivity.class);
                 break;
             case R.id.btn_store://藏福娃
                 openActivity(HideFuwaActivity.class);

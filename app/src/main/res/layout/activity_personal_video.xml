@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/background_color"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/rl_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        >
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/tv_headlift_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/fanhuijian_gry"
+            android:gravity="center"
+            android:paddingLeft="16dp"
+            android:paddingRight="11dp"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:text="推荐"
+            android:id="@+id/tv_headcenter_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/text_color_black"
+            android:textSize="17.5sp" />
+
+        <TextView
+            android:textColor="@color/text_color_black"
+            android:text="跳过"
+            android:id="@+id/iv_headright_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="16dp"
+            android:paddingRight="11dp"
+            android:textSize="17.5sp"
+            />
+    </RelativeLayout>
+    <FrameLayout
+        android:id="@+id/fl_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></FrameLayout>
+
+
+</LinearLayout>
