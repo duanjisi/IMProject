@@ -102,6 +102,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
     private boolean isSelectCanSee;
     private String classType, feedType, id_value;
     private int id_value_ext;
+    private boolean isLoad = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -301,7 +302,9 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                 showDialog();
                 break;
             case R.id.tv_right://发送
-                sendPhotoText();
+                if (!isLoad) {
+                    sendPhotoText();
+                }
                 break;
             case R.id.iv_video_add:
                 if (SEND_TYPE_PHOTO.equals(sendType)) {
@@ -342,15 +345,18 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
     }
 
     private void sendPhotoText() {
+        isLoad = true;
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         String content = et_tx.getText().toString().trim();
         if (!TextUtils.isEmpty(content)) {
             params.addBodyParameter("content", content);
         } else if (SEND_TYPE_TEXT.equals(sendType)) {
             showToast("内容不能为空", false);
+            isLoad = false;
             return;
-        }else if(SEND_TYPE_PHOTO.equals(sendType) && imgList != null && imgList.size() == 0){
+        } else if (SEND_TYPE_PHOTO.equals(sendType) && imgList != null && imgList.size() == 0) {
             showToast("内容不能为空", false);
+            isLoad = false;
             return;
         }
         showLoadingDialog();
@@ -416,6 +422,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                isLoad = false;
                 cancelLoadingDialog();
                 String result = responseInfo.result;
                 if (!TextUtils.isEmpty(result)) {
@@ -445,6 +452,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
 
             @Override
             public void onFailure(HttpException e, String s) {
+                isLoad = false;
                 int code = e.getExceptionCode();
                 if (code == 401) {
                     goLogin();

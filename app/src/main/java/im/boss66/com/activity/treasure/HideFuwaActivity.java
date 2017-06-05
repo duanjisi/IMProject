@@ -171,7 +171,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private String recommond;
     private ImageView iv_bg;
     private Camera.Parameters parameters;
-    private String curCity;
+    private String curCity, curArea;
     private boolean isDialogShow = false;
     private int fuwaSocialNum, fuwaTreasureNum, fuwaSelectType;
     private TextView tv_fuwa_type, tv_fuwa_class;
@@ -215,6 +215,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         tv_back.setOnClickListener(this);
         tv_change_place.setOnClickListener(this);
         iv_show_address.setOnClickListener(this);
+        rl_address.setOnClickListener(this);
         mSensorManager = (SensorManager) App.getInstance().getSystemService(Activity.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);// TYPE_GRAVITY
     }
@@ -437,8 +438,15 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 }
                 break;
             case R.id.rl_search:
-                isJump = false;
-                openActvityForResult(SearchAddressActivity.class, 102);
+//                isJump = false;
+////                openActvityForResult(SearchAddressActivity.class, 102);
+//
+//                Bundle bundle = new Bundle();
+//                bundle.putString("city", curCity);
+//                bundle.putString("area", curArea);
+//                bundle.putString("curGeohash", geohash);
+//                openActvityForResult(FuwaAddressSearchActivity.class, 102, bundle);
+
                 break;
             case R.id.bt_hide_ok:
                 if (dialog != null && dialog.isShowing()) {
@@ -523,6 +531,14 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.rl_fuwa_class:
                 showClassPop(view);
+                break;
+            case R.id.rl_address:
+                isJump = false;
+                Bundle bundle = new Bundle();
+                bundle.putString("city", curCity);
+                bundle.putString("area", curArea);
+                bundle.putString("curGeohash", geohash);
+                openActvityForResult(FuwaAddressSearchActivity.class, 102, bundle);
                 break;
         }
     }
@@ -783,8 +799,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             }
             address = aMapLocation.getPoiName();
             geohash = aMapLocation.getLongitude() + "-" + aMapLocation.getLatitude();
-            tv_address.setText("" + address);
+            //tv_address.setText("" + address);
             curCity = aMapLocation.getCity();
+            curArea = aMapLocation.getDistrict();
             doSearchQuery(address, curCity);
         }
     }
@@ -861,7 +878,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             //showSuccessHideDialog();
         } else if (requestCode == 102 && resultCode == RESULT_OK && data != null) {
             address = data.getStringExtra("address");
-            geohash = data.getStringExtra("geohash");
             tv_address.setText("" + address);
             if (mlocationClient != null) {
                 mlocationClient.stopLocation();

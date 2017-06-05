@@ -109,12 +109,13 @@
             android:id="@+id/tv_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_4"
-            android:layout_toRightOf="@+id/iv_left"
             android:ellipsize="end"
             android:maxEms="8"
             android:maxLines="1"
+            android:text="编辑地址"
             android:textColor="@color/white" />
 
         <ImageView
@@ -124,7 +125,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:padding="@dimen/dp_6"
-            android:src="@drawable/down_fw" />
+            android:src="@drawable/down_fw"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

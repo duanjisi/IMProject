@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -72,18 +71,9 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfDMatch;
-import org.opencv.core.MatOfKeyPoint;
-import org.opencv.features2d.DescriptorExtractor;
-import org.opencv.features2d.DescriptorMatcher;
-import org.opencv.features2d.FeatureDetector;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ref.SoftReference;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -156,8 +146,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private boolean isFriend, isDialogShow = false;
     private Bitmap localBitmap, newBitmap;
     private Mat oneMat, twoMat;
-    private int keypointsObject1, keypointsObject2, keypointMatches;
     private ProgressBar pb_load;
+    private int cameraNum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -892,7 +882,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         String sign = MD5Util.getStringMD5(signUrl);
         String url = HttpUrl.CATCH_MY_FUWA + userId + "&gid=" +
                 fuwaId + "&sign=" + sign;
-        Log.i("comPareHist:", " " + url);
         HttpUtils httpUtils = new HttpUtils(12 * 1000);
         //设置当前请求的缓存时间
         httpUtils.configCurrentHttpCacheExpiry(0 * 1000);
@@ -1022,9 +1011,11 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                         twoMat = getMat(twoMat);
                         double p = comPareHist(oneMat, twoMat);
                         Log.i("comPareHist:", " " + p);
-                        if (p >= 0.4) {
+                        if (p >= 0.4 || (cameraNum >= 5 && p > (0.4 - 0.02 * cameraNum))) {
+                            cameraNum = 0;
                             getServerData();
                         } else {
+                            cameraNum++;
                             pb_load.setVisibility(View.GONE);
                             showToast("图片匹配失败TAT，再试下吧", false);
                             previewing = true;
