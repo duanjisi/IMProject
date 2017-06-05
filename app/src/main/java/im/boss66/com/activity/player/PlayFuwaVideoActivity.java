@@ -81,7 +81,6 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
         mVideoView.setBufferingIndicator(loadingView);
         mVideoView.setScreenOnWhilePlaying(true);
         int codec = getIntent().getIntExtra("mediaCodec", AVOptions.MEDIA_CODEC_SW_DECODE);
-
         tvNext.setOnClickListener(this);
         tvGo.setOnClickListener(this);
 
@@ -127,12 +126,15 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
         mVideoView.setOnVideoSizeChangedListener(new PLMediaPlayer.OnVideoSizeChangedListener() {
             @Override
             public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int width, int height, int videoSar, int videoDen) {
+                Log.i("onVideoSizeChanged:", "width:" + width + "  " + "height:" + height + "  mVideoRotation:"+mVideoRotation);
                 if (mVideoRotation == 270) {
                     //旋转视频
                     mVideoView.setDisplayOrientation(90);
                 } else {
                     if (width > height) {
                         mVideoView.setDisplayOrientation(270);
+                    }else {
+                        mVideoView.setDisplayOrientation(mVideoRotation);
                     }
                 }
             }
