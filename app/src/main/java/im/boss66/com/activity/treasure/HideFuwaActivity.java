@@ -384,6 +384,12 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         if (videoFile != null) {
             videoFile = null;
         }
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+        if (dialogNum != null) {
+            dialogNum.dismiss();
+        }
         imgFile = null;
     }
 
