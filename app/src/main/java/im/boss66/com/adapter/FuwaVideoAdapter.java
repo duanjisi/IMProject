@@ -11,8 +11,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.ImageLoaderUtils;
 import im.boss66.com.entity.FuwaVideoEntity;
 
 /**
@@ -22,11 +24,13 @@ import im.boss66.com.entity.FuwaVideoEntity;
 public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
 
     private Context context;
-
+    private ImageLoader imageLoader;
 //    private List<Integer> mHeights;
     public FuwaVideoAdapter(Context context) {
         this.context = context;
 //        mHeights = new ArrayList<>();
+
+        imageLoader = ImageLoaderUtils.createImageLoader(context);
     }
 
 
@@ -58,9 +62,18 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
         String video = item.getVideo();
         video = video.substring(0, video.lastIndexOf("."))+".jpg";
         Log.i("liwya2",video);
-        Glide.with(context).load(video).into(holder1.img_content);
+//        Glide.with(context).load(video).into(holder1.img_content);
 
-        Glide.with(context).load(item.getAvatar()).into(holder1.img_head);
+        imageLoader.displayImage(video, holder1.img_content,
+                ImageLoaderUtils.getDisplayImageOptions());
+
+
+//        Glide.with(context).load(item.getAvatar()).into(holder1.img_head);
+
+
+        imageLoader.displayImage(item.getAvatar(), holder1.img_head,
+                ImageLoaderUtils.getDisplayImageOptions());
+
         holder1.tv_name.setText(item.getName());
         String distance = item.getDistance()+"";
         distance = distance.substring(0,distance.indexOf("."));

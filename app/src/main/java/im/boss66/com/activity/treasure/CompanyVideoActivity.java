@@ -10,6 +10,10 @@ import android.util.Log;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -36,7 +40,7 @@ import im.boss66.com.listener.PermissionListener;
  * Created by liw on 2017/5/31.
  */
 
-public class CompanyVideoActivity extends ABaseActivity implements View.OnClickListener {
+public class CompanyVideoActivity extends ABaseActivity implements View.OnClickListener, AMapLocationListener {
     private TabLayout tabLayout;
 
     private ViewPagerFragmentAdapter viewPagerFragmentAdapter;
@@ -48,12 +52,22 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
     private List<Fragment> listData;
     private ViewPager viewPager;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_company_video);
-            initUI();
-            getPermission();
+
+    private AMapLocationClient mlocationClient;
+    private AMapLocationClientOption mLocationOption;
+    private boolean first = true;
+
+    private String lat, lng;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_company_video);
+
+        findViewById(R.id.tv_headlift_view).setOnClickListener(this);
+        findViewById(R.id.iv_headright_view).setOnClickListener(this);
+
+        getPermission();
     }
 
     private void getPermission() {
@@ -66,7 +80,7 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
             @Override
             public void onRequestPermissionSuccess() {
 
-                initData();
+                setUp();
             }
 
             @Override
@@ -81,10 +95,39 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
                 ).request(permissionListener);
     }
 
+
+    private void setUp() {
+        if (mlocationClient == null) {
+            //初始化定位
+            mlocationClient = new AMapLocationClient(this);
+            //初始化定位参数
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位回调监听
+            mlocationClient.setLocationListener(this);
+            //设置为高精度定位模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //设置定位参数
+            mlocationClient.setLocationOption(mLocationOption);
+            //设置定位参数
+            mLocationOption.setInterval(30000);
+            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+            // 在定位结束后，在合适的生命周期调用onDestroy()方法
+            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+
+            //单次定位
+//            mLocationOption.setOnceLocation(true);
+//            mLocationOption.setOnceLocationLatest(true);
+
+            mlocationClient.startLocation();//启动定位
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
     }
+
     private void initData() {
 
         showLoadingDialog();
@@ -96,19 +139,19 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 cancelLoadingDialog();
                 String result = responseInfo.result;
-                Log.i("liwya",result);
+                Log.i("liwya", result);
                 if (result != null) {
                     VideoCategory videoCategory = JSON.parseObject(result, VideoCategory.class);
-                    if(videoCategory.getCode()==0){
+                    if (videoCategory.getCode() == 0) {
 
                         List<VideoCategory.DataBean> datas = videoCategory.getData();
-                        for(VideoCategory.DataBean data:datas){
+                        for (VideoCategory.DataBean data : datas) {
                             listTitle.add(data.getName());
-                            listData.add(VideoListFragment.newInstance(data.getClassid()));
+                            listData.add(VideoListFragment.newInstance(data.getClassid(), lat, lng));
                         }
 
                         //刷新页面
-                        if(viewPagerFragmentAdapter!=null){
+                        if (viewPagerFragmentAdapter != null) {
                             viewPagerFragmentAdapter.setListTitle(listTitle);
                             viewPagerFragmentAdapter.setListData(listData);
                             viewPagerFragmentAdapter.notifyDataSetChanged();
@@ -140,12 +183,10 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
         listTitle = new ArrayList<>();
         listData = new ArrayList<>();
 
-        findViewById(R.id.tv_headlift_view).setOnClickListener(this);
-        findViewById(R.id.iv_headright_view).setOnClickListener(this);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        viewPager  = (ViewPager) findViewById(R.id.viewPager);
-        viewPagerFragmentAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager(),listData,listTitle);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPagerFragmentAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager(), listData, listTitle);
 
         viewPager.setAdapter(viewPagerFragmentAdapter);
 
@@ -167,5 +208,26 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
                 break;
         }
 
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (first) {
+            first = false;
+            lng = String.valueOf(aMapLocation.getLongitude());
+            lat = String.valueOf(aMapLocation.getLatitude());
+
+            initUI();
+            initData();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mlocationClient != null) {
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+        }
     }
 }
