@@ -175,6 +175,7 @@
 
     <!--QQ,微信开放平台-->
     <string name="weixin_app_id2">wxac34006c18243289</string>
+
     <string name="weixin_app_id">wxcd7d86f3f2c04077</string>
     <string name="weixin_app_secret">dd51e4ff815cfe313551a86a6402e886</string>
 

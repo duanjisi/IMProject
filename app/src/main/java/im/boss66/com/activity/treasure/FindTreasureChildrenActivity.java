@@ -96,6 +96,8 @@ import im.boss66.com.entity.ChildEntity;
 import im.boss66.com.http.BaseRequest;
 import im.boss66.com.http.request.AroundBabyRequest;
 import im.boss66.com.http.request.AroundFriendRequest;
+import im.boss66.com.http.request.AroundMerhcantRequest;
+import im.boss66.com.http.request.AroundUserRequest;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.util.AMapUtil;
 import im.boss66.com.util.SensorEventHelper;
@@ -117,6 +119,11 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         AMap.OnMapClickListener,
         Observer {
     private static final String TAG = FindTreasureChildrenActivity.class.getSimpleName();
+    private static final int FIND_FUWA = 1;//找福娃
+    private static final int FIND_FATE = 2;//找萌友
+    private static final int FIND_MERCHANT_FUWA = 3;//商家的福娃
+    private static final int FIND_USER_FUWA = 4;//找用户的福娃
+
     private LocalBroadcastReceiver mLocalBroadcastReceiver;
     private PopupWindow popupWindow, popup;
     private MapView mMapView = null;
@@ -146,7 +153,9 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
     private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
     private boolean mFirstFix = false;
-    private boolean isFate = false;
+    private int mType = 0;
+    private String userid;
+    //    private boolean isFate = false;
     private Marker mLocMarker, mPersonMarker;
     private LatLng mLatLng;
     private SensorEventHelper mSensorHelper;
@@ -198,7 +207,9 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         initRootView();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            isFate = bundle.getBoolean("isFate", false);
+            mType = bundle.getInt("type", 0);
+            userid = bundle.getString("userid", "");
+//            isFate = bundle.getBoolean("isFate", false);
         }
 
         slidingDrawer.setOnDrawerOpenListener(new SlidingDrawer.OnDrawerOpenListener() {
@@ -226,14 +237,19 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         filter.addAction(Constants.Action.MAP_MARKER_REFRESH);
         LocalBroadcastManager.getInstance(context)
                 .registerReceiver(mLocalBroadcastReceiver, filter);
-
         view = getLayoutInflater().inflate(R.layout.item_map_position, null);
-        if (isFate) {
+//        if (isFate) {
+//            tv_title.setText("找萌友");
+//        }
+        if (mType == FIND_FATE) {
             tv_title.setText("找萌友");
+        } else {
+            tv_title.setText("找福娃");
         }
         CircleImageView header = (CircleImageView) view.findViewById(R.id.header);
         imageLoader.displayImage(account.getAvatar(), header, ImageLoaderUtils.getDisplayImageOptions());
     }
+
     private void initData(Bundle bundle) {
         mMapView.onCreate(bundle);
         mRouteSearch = new RouteSearch(this);
@@ -667,7 +683,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         mLatLng = new LatLng(latitude, longitude);
 //        mLatLng = mLocMarker.getPosition();
         Log.i("info", "===============distance:" + distance);
-        if (distance > 100 || distance == 0) {
+        if (distance > 300 || distance == 0) {
             if (slidingDrawer.getVisibility() != View.VISIBLE) {
                 UIUtils.showView(slidingDrawer);
             }
@@ -816,7 +832,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                 } else {
                     mCircle.setCenter(location);
 //                    mCircle.setRadius(amapLocation.getAccuracy());
-                    mCircle.setRadius(100);
+                    mCircle.setRadius(30);
                     mLocMarker.setPosition(location);
                     mPersonMarker.setPosition(location);
                 }
@@ -993,7 +1009,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         options.strokeColor(STROKE_COLOR);
         options.center(latlng);
 //        options.radius(radius);
-        options.radius(100);
+        options.radius(30);
         mCircle = aMap.addCircle(options);
     }
 
@@ -1041,22 +1057,42 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             parms = cameraPosition.target.longitude + "-" + cameraPosition.target.latitude;
             Log.i("info", "==============parms:" + parms);
             BaseRequest request = null;
-            if (!isFate) {
-                request = new AroundBabyRequest(TAG, parms, "" + raduis, "0");
-            } else {
-                request = new AroundFriendRequest(TAG, parms, "" + raduis, "0");
+//            if (!isFate) {
+//                request = new AroundBabyRequest(TAG, parms, "" + raduis, "0");
+//            } else {
+//                request = new AroundFriendRequest(TAG, parms, "" + raduis, "0");
+//            }
+            switch (mType) {
+                case FIND_FUWA:
+                    request = new AroundBabyRequest(TAG, parms, "" + raduis, biggest);
+                    break;
+                case FIND_FATE:
+                    request = new AroundFriendRequest(TAG, parms, "" + raduis, biggest);
+                    break;
+                case FIND_MERCHANT_FUWA:
+                    if (!TextUtils.isEmpty(userid)) {
+                        request = new AroundMerhcantRequest(TAG, parms, "" + raduis, biggest, userid);
+                    }
+                    break;
+                case FIND_USER_FUWA:
+                    if (!TextUtils.isEmpty(userid)) {
+                        request = new AroundUserRequest(TAG, parms, "" + raduis, biggest, userid);
+                    }
+                    break;
             }
-            request.send(new BaseRequest.RequestCallback<BaseBaby>() {
-                @Override
-                public void onSuccess(final BaseBaby pojo) {
-                    bindDatas(pojo);
-                }
+            if (request != null) {
+                request.send(new BaseRequest.RequestCallback<BaseBaby>() {
+                    @Override
+                    public void onSuccess(final BaseBaby pojo) {
+                        bindDatas(pojo);
+                    }
 
-                @Override
-                public void onFailure(String msg) {
-                    showToast(msg, true);
-                }
-            });
+                    @Override
+                    public void onFailure(String msg) {
+                        showToast(msg, true);
+                    }
+                });
+            }
         }
     }
 
@@ -1294,28 +1330,48 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         LatLng latLng = mLocMarker.getPosition();
         String parms = latLng.longitude + "-" + latLng.latitude;
         BaseRequest request = null;
-        if (!isFate) {
-            request = new AroundBabyRequest(TAG, parms, "" + raduis, "0");
-        } else {
-            request = new AroundFriendRequest(TAG, parms, "" + raduis, "0");
+//        if (!isFate) {
+//            request = new AroundBabyRequest(TAG, parms, "" + raduis, "0");
+//        } else {
+//            request = new AroundFriendRequest(TAG, parms, "" + raduis, "0");
+//        }
+        switch (mType) {
+            case FIND_FUWA:
+                request = new AroundBabyRequest(TAG, parms, "" + raduis, biggest);
+                break;
+            case FIND_FATE:
+                request = new AroundFriendRequest(TAG, parms, "" + raduis, biggest);
+                break;
+            case FIND_MERCHANT_FUWA:
+                if (!TextUtils.isEmpty(userid)) {
+                    request = new AroundMerhcantRequest(TAG, parms, "" + raduis, biggest, userid);
+                }
+                break;
+            case FIND_USER_FUWA:
+                if (!TextUtils.isEmpty(userid)) {
+                    request = new AroundUserRequest(TAG, parms, "" + raduis, biggest, userid);
+                }
+                break;
         }
-        request.send(new BaseRequest.RequestCallback<BaseBaby>() {
-            @Override
-            public void onSuccess(BaseBaby pojo) {
-                if (popup == null) {
-                    showChildrenPop(parent, pojo);
-                } else {
-                    if (!popup.isShowing()) {
+        if (request != null) {
+            request.send(new BaseRequest.RequestCallback<BaseBaby>() {
+                @Override
+                public void onSuccess(BaseBaby pojo) {
+                    if (popup == null) {
                         showChildrenPop(parent, pojo);
+                    } else {
+                        if (!popup.isShowing()) {
+                            showChildrenPop(parent, pojo);
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(String msg) {
-                showToast(msg, true);
-            }
-        });
+                @Override
+                public void onFailure(String msg) {
+                    showToast(msg, true);
+                }
+            });
+        }
     }
 
     private void initData(ListView listView, BaseBaby baseBaby) {
@@ -1337,26 +1393,46 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         }
     }
 
-    private String biggest = "";
+    private String biggest = "0";
 
     private void requestMore(final ListView listView) {
         BaseRequest request = null;
-        if (!isFate) {
-            request = new AroundBabyRequest(TAG, parms, "" + raduis, biggest);
-        } else {
-            request = new AroundFriendRequest(TAG, parms, "" + raduis, biggest);
+//        if (!isFate) {
+//            request = new AroundBabyRequest(TAG, parms, "" + raduis, biggest);
+//        } else {
+//            request = new AroundFriendRequest(TAG, parms, "" + raduis, biggest);
+//        }
+        switch (mType) {
+            case FIND_FUWA:
+                request = new AroundBabyRequest(TAG, parms, "" + raduis, biggest);
+                break;
+            case FIND_FATE:
+                request = new AroundFriendRequest(TAG, parms, "" + raduis, biggest);
+                break;
+            case FIND_MERCHANT_FUWA:
+                if (!TextUtils.isEmpty(userid)) {
+                    request = new AroundMerhcantRequest(TAG, parms, "" + raduis, biggest, userid);
+                }
+                break;
+            case FIND_USER_FUWA:
+                if (!TextUtils.isEmpty(userid)) {
+                    request = new AroundUserRequest(TAG, parms, "" + raduis, biggest, userid);
+                }
+                break;
         }
-        request.send(new BaseRequest.RequestCallback<BaseBaby>() {
-            @Override
-            public void onSuccess(BaseBaby pojo) {
-                addData(listView, pojo);
-            }
+        if (request != null) {
+            request.send(new BaseRequest.RequestCallback<BaseBaby>() {
+                @Override
+                public void onSuccess(BaseBaby pojo) {
+                    addData(listView, pojo);
+                }
 
-            @Override
-            public void onFailure(String msg) {
-                showToast(msg, true);
-            }
-        });
+                @Override
+                public void onFailure(String msg) {
+                    showToast(msg, true);
+                }
+            });
+        }
     }
 
     private void addData(ListView listView, BaseBaby baseBaby) {
