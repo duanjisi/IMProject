@@ -201,7 +201,7 @@ public class App extends Application {
     }
 
 
-    public WebSocket getWebSocket() {
+    public synchronized WebSocket getWebSocket() {
         if (webSocket == null) {
             webSocket = new WebSocketConnection();
         }

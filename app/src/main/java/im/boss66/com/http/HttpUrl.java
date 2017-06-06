@@ -223,6 +223,10 @@ public class HttpUrl {
     public static final String FIND_AROUND_CHILDREN = BASE_FUWA[FUWA_TAG] + "api/queryv2";
     //查询周围缘分
     public static final String FIND_AROUND_FATE = BASE_FUWA[FUWA_TAG] + "api/querystrangerv2";
+    //查询特定商家的福娃
+    public static final String FIND_MERCHANTS_BABY = BASE_FUWA[FUWA_TAG] + "api/queryv3";
+    //查询特定用户的福娃
+    public static final String FIND_USER_BABY = BASE_FUWA[FUWA_TAG] + "api/querystrangerv3";
 
     //同学推荐
     public static final String SCHOOLMATE_LIST = MAIN_URL + "api/v1/search/same-school";

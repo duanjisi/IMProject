@@ -127,7 +127,6 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionUtil.onRequestPermissionsResult(this, requestCode, permissions, permissionListener);
     }
-
     private void initData() {
 
         showLoadingDialog();
@@ -202,7 +201,8 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
             case R.id.iv_headright_view:
 
                 Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
-                intent.putExtra("isFate", false);
+//                intent.putExtra("isFate", false);
+                intent.putExtra("type", 1);
                 startActivity(intent);
 
                 break;

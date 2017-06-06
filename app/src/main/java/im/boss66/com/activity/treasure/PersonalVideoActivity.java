@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -17,7 +15,6 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.ABaseActivity;
-import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.fragment.VideoListFragment;
 import im.boss66.com.listener.PermissionListener;
 
@@ -38,6 +35,7 @@ public class PersonalVideoActivity extends ABaseActivity implements View.OnClick
     private String lat, lng;
 
     private PermissionListener permissionListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,7 +131,8 @@ public class PersonalVideoActivity extends ABaseActivity implements View.OnClick
             case R.id.iv_headright_view:
 
                 Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
-                intent.putExtra("isFate", true);
+//                intent.putExtra("isFate", true);
+                intent.putExtra("type", 2);
                 startActivity(intent);
 
                 break;
