@@ -400,6 +400,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.bt_catch:
+                if (TextUtils.isEmpty(address) || "编辑地址".equals(address)) {
+                    showToast("请先编辑地址", false);
+                    return;
+                }
 //                Bundle bundle = new Bundle();
 //                bundle.putString("address", address);
 //                bundle.putString("geohash", geohash);
@@ -803,7 +807,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             if (lp == null) {
                 lp = new LatLonPoint(aMapLocation.getLatitude(), aMapLocation.getLongitude());
             }
-            address = aMapLocation.getPoiName();
+            //address = aMapLocation.getPoiName();
             geohash = aMapLocation.getLongitude() + "-" + aMapLocation.getLatitude();
             //tv_address.setText("" + address);
             curCity = aMapLocation.getCity();
@@ -1186,12 +1190,14 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         if (TextUtils.isEmpty(recommond)) {
             recommond = "暂无活动介绍";
         }
+        String now_address = "";
         try {
             recommond = URLEncoder.encode(recommond, "utf-8").replaceAll("\\+", "%20");
+            now_address = URLEncoder.encode(address, "utf-8").replaceAll("\\+", "%20");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        String url = HttpUrl.HIDE_MY_FUWA + userId + "&pos=" + address + "&geohash=" + geohash
+        String url = HttpUrl.HIDE_MY_FUWA + userId + "&pos=" + now_address + "&geohash=" + geohash
                 + "&detail=" + recommond + "&validtime=" + validtime + "&number="
                 + curSelectFuwaNum + "&type=" + fuwaSelectType + "&class=" + classId;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);

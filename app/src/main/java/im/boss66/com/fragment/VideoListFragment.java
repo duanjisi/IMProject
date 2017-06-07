@@ -2,7 +2,6 @@ package im.boss66.com.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -16,10 +15,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.github.jdsjlzx.interfaces.OnRefreshListener;
-import com.github.jdsjlzx.recyclerview.LRecyclerView;
-import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
-import com.github.jdsjlzx.recyclerview.ProgressStyle;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -91,11 +86,11 @@ public class VideoListFragment extends BaseFragment {
             @Override
             public void onItemClick(int postion) {
                 //跳转到页面看视频
-                showToast("-----",false);
+//                showToast("-----",false);
                 Intent intent = new Intent(getActivity(), PlayFuwaVideoActivity.class);
-                intent.putExtra("position",postion);
-                intent.putExtra("result",result);
-                intent.putExtra("classid",classid);
+                intent.putExtra("position", postion);
+                intent.putExtra("result", result);
+                intent.putExtra("classid", classid);
                 startActivity(intent);
             }
 
@@ -105,7 +100,6 @@ public class VideoListFragment extends BaseFragment {
             }
         });
         rcv_video.setAdapter(adapter);
-
 
 
     }

@@ -27,6 +27,7 @@ import im.boss66.com.Constants;
 import im.boss66.com.Session;
 import im.boss66.com.Utils.Base64Utils;
 import im.boss66.com.Utils.MycsLog;
+import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.Utils.PrefKey;
 import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.db.MessageDB;
@@ -88,8 +89,8 @@ public class ChatServices extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-        userid = App.getInstance().getUid();
-        mConnection = App.getInstance().getWebSocket();
+//        userid = App.getInstance().getUid();
+//        mConnection = App.getInstance().getWebSocket();
         startConnection();
     }
 
@@ -131,11 +132,13 @@ public class ChatServices extends Service {
 //            if (mConnection.isConnected()) {
 //                mConnection.disconnect();
 //            }
+            userid = App.getInstance().getUid();
+            mConnection = App.getInstance().getWebSocket();
             mConnection.connect(HttpUrl.WS_URL, new WebSocketConnectionHandler() {
                 @Override
                 public void onOpen() {
                     MycsLog.i("info", "======建立连接!");
-//                    logout();
+                    logout();
                     login();
                 }
 
@@ -146,7 +149,11 @@ public class ChatServices extends Service {
 
                 @Override
                 public void onClose(int code, String reason) {
-                    startConnection();
+                    Log.d("info", "=====Exception:onClose");
+                    if (NetworkUtil.networkAvailable(ChatServices.this)) {
+                        Log.d("info", "=====Exception:onClose" + "---NetworkUtil");
+                        startConnection();
+                    }
                 }
             });
         } catch (Exception e) {

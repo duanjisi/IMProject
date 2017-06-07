@@ -99,7 +99,6 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
 
 //        videoPath = getIntent().getStringExtra("videoPath");
 //        mVideoPath = getVideoPath(videoPath);
-        Log.i("info", "=============mVideoPath:" + mVideoPath);
         mMediaController = new MediaController(this, false, mIsLiveStreaming == 1);
         mMediaController.setMediaPlayer(mVideoView);
         mVideoView.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_PAVED_PARENT);
@@ -157,8 +156,16 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                 playNextVideo();
                 break;
             case R.id.tv_go:
-                Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
-                startActivity(intent);
+                if (!TextUtils.isEmpty(classid) && dataBean != null) {
+                    Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
+                    if (classid.equals("i")) {
+                        intent.putExtra("type", 4);
+                    } else {
+                        intent.putExtra("type", 3);
+                    }
+                    intent.putExtra("userid", dataBean.getUserid());
+                    startActivity(intent);
+                }
                 break;
         }
     }
@@ -176,6 +183,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                 }
                 videoPath = bean.getVideo();
                 mVideoPath = getVideoPath(videoPath);
+                Log.i("info", "================mVideoPath:" + mVideoPath);
                 mVideoView.setVideoPath(mVideoPath);
                 mVideoView.start();
             }
@@ -194,6 +202,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                 dataBean = bean;
                 videoPath = bean.getVideo();
                 mVideoPath = getVideoPath(videoPath);
+                Log.i("info", "================mVideoPath:" + mVideoPath);
                 mVideoView.setVideoPath(mVideoPath);
                 mVideoView.start();
             }
@@ -412,8 +421,16 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                 }
                 break;
             case 2:
-                Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
-                startActivity(intent);
+                if (!TextUtils.isEmpty(classid) && dataBean != null) {
+                    Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
+                    if (classid.equals("i")) {
+                        intent.putExtra("type", 4);
+                    } else {
+                        intent.putExtra("type", 3);
+                    }
+                    intent.putExtra("userid", dataBean.getUserid());
+                    startActivity(intent);
+                }
                 break;
         }
     }
@@ -438,9 +455,10 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                             JSONObject jsonObject = new JSONObject(res);
                             if (jsonObject.getInt("code") == 0) {
                                 Log.i("info", "====================已经播放了一次视频!");
-                            } else {
-                                showToast(jsonObject.getString("message"), false);
                             }
+//                            else {
+//                                showToast(jsonObject.getString("message"), false);
+//                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

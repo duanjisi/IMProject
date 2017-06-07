@@ -148,9 +148,10 @@ public class EmojiWellAdapter extends BaseAdapter {
             holder.tvDownLoad.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (null != updateCallback) {
-//                        updateCallback.startProgress(entity, position);
-                        updateCallback.freshProgress(finalConvertView, entity, position);
+                    if (!isDownload(entity)) {
+                        if (null != updateCallback) {
+                            updateCallback.freshProgress(finalConvertView, entity, position);
+                        }
                     }
                 }
             });

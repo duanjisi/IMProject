@@ -815,6 +815,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                                 videoBgUrl = videoBgUrl + "." + arr[i];
                             }
                         }
+                        Log.i("comPareHist:", "videoBgUrl:" + videoBgUrl + " videoUrl:" + videoUrl);
                         Glide.with(this).load(videoBgUrl).error(R.drawable.zf_default_message_image).into(iv_video_photo);
                     }
                 } else {
