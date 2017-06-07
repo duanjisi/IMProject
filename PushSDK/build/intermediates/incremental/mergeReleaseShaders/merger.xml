@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="A:\project\IMDemo\PushSDK\src\main\shaders"/></dataSet><dataSet config="release"><source path="A:\project\IMDemo\PushSDK\build-types\release\shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="E:\liw_project\IMProject\PushSDK\src\main\shaders"/></dataSet><dataSet config="release"><source path="E:\liw_project\IMProject\PushSDK\build-types\release\shaders"/></dataSet></merger>
