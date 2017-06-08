@@ -260,10 +260,10 @@ public class MultiImageView extends LinearLayout {
         }
         if (photoInfo.type == 0) {
             String url;
-            if (!TextUtils.isEmpty(photoInfo.file_url)) {
-                url = photoInfo.file_url;
-            } else {
+            if (!TextUtils.isEmpty(photoInfo.file_thumb)) {
                 url = photoInfo.file_thumb;
+            } else {
+                url = photoInfo.file_url;
             }
             imageView.setId(url.hashCode());
             Glide.with(getContext()).load(url).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
