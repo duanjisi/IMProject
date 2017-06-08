@@ -16,6 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.entity.FuwaVideoEntity;
 
 /**
@@ -26,10 +27,8 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
 
     private Context context;
     private ImageLoader imageLoader;
-//    private List<Integer> mHeights;
     public FuwaVideoAdapter(Context context) {
         this.context = context;
-//        mHeights = new ArrayList<>();
 
         imageLoader = ImageLoaderUtils.createImageLoader(context);
     }
@@ -42,30 +41,30 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
         FuwaVideoEntity.DataBean item = (FuwaVideoEntity.DataBean) datas.get(position);
 
 
-        // 随机高度, 模拟瀑布效果.
-//        if (mHeights.size() <= position) {
-//            double random = Math.random();
-//            if(random>0.5){
-//                mHeights.add(400);
-//            }else {
-//                mHeights.add(200);
-//            }
-//        }
-
         String height = item.getHeight();
+        String width = item.getWidth();
+        Log.i("liwya",width+"实际宽度");
+        int screenWidth = UIUtils.getScreenWidth(context)/2;
+        Log.i("liwya",screenWidth+"屏幕宽度");
+
+        double v = Double.parseDouble(width)/screenWidth;
+        Log.i("liwya",v+"比例");
+
+
+
         if(!TextUtils.isEmpty(height)){
 
             Integer img_height = Integer.parseInt(height);
-            ViewGroup.LayoutParams lp = holder1.rl_top.getLayoutParams();
-            lp.height = img_height/3;
-            Log.i("liwya",lp.height+"");
-            holder1.rl_top.setLayoutParams(lp);
+            ViewGroup.LayoutParams lp = holder1.img_content.getLayoutParams();
+            lp.height = (int) (img_height/v);
+            Log.i("liwya",height+"实际高度");
+            Log.i("liwya",lp.height+"显示高度");
+            holder1.img_content.setLayoutParams(lp);
         }
 
 
         String video = item.getVideo();
         video = video.substring(0, video.lastIndexOf("."))+".jpg";
-        Log.i("liwya2",video);
 //        Glide.with(context).load(video).into(holder1.img_content);
 
         imageLoader.displayImage(video, holder1.img_content,
