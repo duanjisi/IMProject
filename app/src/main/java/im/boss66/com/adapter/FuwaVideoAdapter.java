@@ -2,6 +2,7 @@ package im.boss66.com.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,12 +53,15 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
 //        }
 
         String height = item.getHeight();
-        Integer img_height = Integer.parseInt(height);
+        if(!TextUtils.isEmpty(height)){
 
-        ViewGroup.LayoutParams lp = holder1.rl_top.getLayoutParams();
-        lp.height = img_height/3;
-        Log.i("liwya",lp.height+"");
-        holder1.rl_top.setLayoutParams(lp);
+            Integer img_height = Integer.parseInt(height);
+            ViewGroup.LayoutParams lp = holder1.rl_top.getLayoutParams();
+            lp.height = img_height/3;
+            Log.i("liwya",lp.height+"");
+            holder1.rl_top.setLayoutParams(lp);
+        }
+
 
         String video = item.getVideo();
         video = video.substring(0, video.lastIndexOf("."))+".jpg";
