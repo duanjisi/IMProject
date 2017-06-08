@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.tavendo.autobahn.WebSocket;
+import de.tavendo.autobahn.WebSocketConnection;
 import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.Utils.SharePreferenceUtil;
 import im.boss66.com.Utils.SharedPreferencesMgr;
@@ -208,16 +209,16 @@ public class App extends Application {
 //    }
 
 
-//    public WebSocket getWebSocket() {
-//        if (webSocket != null) {
-////            if (webSocket.isConnected()){
-////                webSocket.disconnect();
-////            }
-//            webSocket = null;
-//        }
-//        webSocket = new WebSocketConnection();
-//        return webSocket;
-//    }
+    public WebSocket getWebSocket() {
+        if (webSocket != null) {
+//            if (webSocket.isConnected()){
+//                webSocket.disconnect();
+//            }
+            webSocket = null;
+        }
+        webSocket = new WebSocketConnection();
+        return webSocket;
+    }
 
     public synchronized UserDB getUserDB() {
         if (mUserDB == null)
