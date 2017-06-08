@@ -161,6 +161,8 @@ public class ChatServices extends Service {
             if (App.getInstance().isLogin()) {
                 LocalBroadcastManager.getInstance(ChatServices.this).sendBroadcast(new Intent(Constants.Action.CHAT_SERVICE_CLOSE));
             }
+        } catch (OutOfMemoryError e) {
+            Log.d("info", "=====Exception:" + e.toString());
         }
     }
 
