@@ -58,14 +58,14 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
 
         String height = item.getHeight();
         String width = item.getWidth();
-        Log.i("liwya",width+"实际宽度");
+//        Log.i("liwya",width+"实际宽度");
         int screenWidth = UIUtils.getScreenWidth(context)/2;
         int padding = UIUtils.dip2px(context, 6);
         screenWidth = screenWidth-padding;
-        Log.i("liwya",screenWidth+"屏幕宽度");
+//        Log.i("liwya",screenWidth+"屏幕宽度");
 
         double v = Double.parseDouble(width)/screenWidth;
-        Log.i("liwya",v+"比例");
+//        Log.i("liwya",v+"比例");
 
 
 
@@ -74,8 +74,8 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
             Integer img_height = Integer.parseInt(height);
             ViewGroup.LayoutParams lp = holder1.img_content.getLayoutParams();
             lp.height = (int) (img_height/v);
-            Log.i("liwya",height+"实际高度");
-            Log.i("liwya",lp.height+"显示高度");
+//            Log.i("liwya",height+"实际高度");
+//            Log.i("liwya",lp.height+"显示高度");
             holder1.img_content.setLayoutParams(lp);
         }
 
