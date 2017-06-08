@@ -404,10 +404,12 @@
             android:name=".activity.personage.PersonalPhotoAlbumActivity"
             android:screenOrientation="portrait"></activity>
         <!-- 个人资料 -->
-        <activity android:name=".activity.connection.PersonalDataActivity"></activity>
+        <activity android:name=".activity.connection.PersonalDataActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 个人资料2 -->
         <!-- 添加人脉 -->
-        <activity android:name=".activity.connection.AddPeopleActivity"></activity>
+        <activity android:name=".activity.connection.AddPeopleActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 人脉中心 -->
         <activity
             android:name=".activity.connection.PeopleCenterActivity"
@@ -495,18 +497,22 @@
             android:screenOrientation="portrait"></activity>
 
         <!-- 我的关注 -->
-        <activity android:name=".activity.connection.MyFollowActivity"></activity>
+        <activity android:name=".activity.connection.MyFollowActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 我的消息 -->
-        <activity android:name=".activity.connection.MyMessageActivity"></activity>
+        <activity android:name=".activity.connection.MyMessageActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 学校 家乡 -->
         <activity
             android:name=".activity.connection.SchoolHometownActivity"
             android:screenOrientation="portrait"></activity>
         <!-- 发布消息-->
         <!-- 简介 -->
-        <activity android:name=".activity.connection.IntroduceActivity"></activity>
+        <activity android:name=".activity.connection.IntroduceActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 名人 -->
-        <activity android:name=".activity.connection.FamousPersonActivity"></activity>
+        <activity android:name=".activity.connection.FamousPersonActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 社团 -->
         <!-- 商会 -->
         <!-- 视频录制 -->
@@ -514,24 +520,31 @@
             android:name=".activity.discover.RecordVideoActivity"
             android:screenOrientation="portrait"></activity>
         <!-- 商会详情 -->
-        <activity android:name=".activity.connection.ClubDetailActivity"></activity>
+        <activity android:name=".activity.connection.ClubDetailActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 发动态 -->
         <!-- 学校列表 -->
-        <activity android:name=".activity.connection.SchoolListActivity"></activity>
+        <activity android:name=".activity.connection.SchoolListActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 添加学校-->
-        <activity android:name=".activity.connection.AddSchoolActivity"></activity>
+        <activity android:name=".activity.connection.AddSchoolActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 编辑学校-->
-        <activity android:name=".activity.connection.EditSchoolActivity"></activity>
+        <activity android:name=".activity.connection.EditSchoolActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 查找学校-->
-        <activity android:name=".activity.connection.SearchSchoolActivity"></activity>
+        <activity android:name=".activity.connection.SearchSchoolActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- 编辑姓名-->
         <activity
             android:name=".activity.connection.EditNameActivity"
             android:windowSoftInputMode="adjustResize"></activity>
         <!--社团和商会页-->
-        <activity android:name=".activity.connection.ClubActivity"></activity>
+        <activity android:name=".activity.connection.ClubActivity"
+            android:screenOrientation="portrait"></activity>
         <!--家乡和校园动态-->
-        <activity android:name=".activity.connection.NewsActivity"></activity>
+        <activity android:name=".activity.connection.NewsActivity"
+            android:screenOrientation="portrait"></activity>
         <!--福娃背包-->
         <activity
             android:name=".activity.treasure.FuwaPackageActivity"
@@ -541,11 +554,14 @@
             android:name=".activity.treasure.FuwaDealActivity"
             android:screenOrientation="portrait"></activity>
         <!--福娃排行榜-->
-        <activity android:name=".activity.treasure.FuwaTopList"></activity>
+        <activity android:name=".activity.treasure.FuwaTopList"
+            android:screenOrientation="portrait"></activity>
         <!--名人详情页-->
-        <activity android:name=".activity.connection.FamousPersonDetailActivity"></activity>
+        <activity android:name=".activity.connection.FamousPersonDetailActivity"
+            android:screenOrientation="portrait"></activity>
         <!--家乡和校园动态详情-->
-        <activity android:name=".activity.connection.DynamicActivity"></activity>
+        <activity android:name=".activity.connection.DynamicActivity"
+            android:screenOrientation="portrait"></activity>
         <!--申请福娃-->
         <activity
             android:name=".activity.treasure.ApplyFuwaActivity"
@@ -556,30 +572,42 @@
             android:name=".activity.connection.ApplyCreateActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"></activity>
         <!--宗亲商会页-->
-        <activity android:name=".activity.connection.ClanClubActivity"></activity>
+        <activity android:name=".activity.connection.ClanClubActivity"
+            android:screenOrientation="portrait"></activity>
         <!--宗亲和商会web详情页-->
-        <activity android:name=".activity.connection.ClanCofcDetailActivity"></activity>
+        <activity android:name=".activity.connection.ClanCofcDetailActivity"
+            android:screenOrientation="portrait"></activity>
         <!--编辑宗亲商会页-->
-        <activity android:name=".activity.connection.EditClanCofcActivity"></activity>
+        <activity android:name=".activity.connection.EditClanCofcActivity"
+            android:screenOrientation="portrait"></activity>
         <!--编辑宗亲商会文字-->
-        <activity android:name=".activity.connection.EditTextActivity"></activity>
+        <activity android:name=".activity.connection.EditTextActivity"
+            android:screenOrientation="portrait"></activity>
         <!--宗亲商会名人列表-->
-        <activity android:name=".activity.connection.ClanCofcPersonActivity"></activity>
+        <activity android:name=".activity.connection.ClanCofcPersonActivity"
+            android:screenOrientation="portrait"></activity>
         <!--宗亲商会编辑名人页-->
-        <activity android:name=".activity.connection.EditClanCofcPersonActivity"></activity>
+        <activity android:name=".activity.connection.EditClanCofcPersonActivity"
+            android:screenOrientation="portrait"></activity>
         <!--宗亲商会名人web页-->
-        <activity android:name=".activity.connection.ClanCofcPersonWebActivity"></activity>
+        <activity android:name=".activity.connection.ClanCofcPersonWebActivity"
+            android:screenOrientation="portrait"></activity>
 
         <!--视频列表-->
-        <activity android:name=".activity.discover.VideoListActivity"></activity>
+        <activity android:name=".activity.discover.VideoListActivity"
+            android:screenOrientation="portrait"></activity>
         <!--宗亲商会列表-->
-        <activity android:name=".activity.connection.ClanClubListActivity"></activity>
+        <activity android:name=".activity.connection.ClanClubListActivity"
+            android:screenOrientation="portrait"></activity>
         <!--部落-->
-        <activity android:name=".activity.connection.TribeActivity"></activity>
+        <activity android:name=".activity.connection.TribeActivity"
+            android:screenOrientation="portrait"></activity>
         <!--商家视频列表-->
-        <activity android:name=".activity.treasure.CompanyVideoActivity"></activity>
+        <activity android:name=".activity.treasure.CompanyVideoActivity"
+            android:screenOrientation="portrait">></activity>
         <!--个人视频列表-->
-        <activity android:name=".activity.treasure.PersonalVideoActivity"></activity>
+        <activity android:name=".activity.treasure.PersonalVideoActivity"
+            android:screenOrientation="portrait">></activity>
 
         <!--支付宝start-->
         <activity

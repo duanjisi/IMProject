@@ -32,6 +32,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,7 @@ import java.util.Map;
 import im.boss66.com.App;
 import im.boss66.com.R;
 import im.boss66.com.Utils.MD5Util;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.entity.LocalAddressEntity;
 import im.boss66.com.http.HttpUrl;
@@ -91,20 +94,20 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
 
     private boolean chooseLocation;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 1:
                     dialog2.dismiss();
-                    showToast("提交成功",false);
+                    showToast("提交成功", false);
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             finish();
                         }
-                    },1000);
+                    }, 1000);
 
                     break;
             }
@@ -146,11 +149,11 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.tv_headlift_view:
-                if(dialog2==null){
-                    flag=false;
+                if (dialog2 == null) {
+                    flag = false;
                     showDialog(ApplyFuwaActivity.this);
-                }else if(!dialog2.isShowing()){
-                    flag=false;
+                } else if (!dialog2.isShowing()) {
+                    flag = false;
                     setContent();
                     dialog2.show();
                 }
@@ -169,23 +172,27 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
 
                 break;
             case R.id.tv_comfire:
-                if(!TextUtils.isEmpty(et_name.getText())
-                        &&!TextUtils.isEmpty(et_phone.getText())
-                        &&!TextUtils.isEmpty(et_use.getText())
-                        &&!TextUtils.isEmpty(et_num.getText())
-                        &&chooseLocation){
+                if (!UIUtils.isMobile(et_phone.getText().toString())) {
+                    showToast("手机号格式不正确!", true);
+                    return;
+                }
+                if (!TextUtils.isEmpty(et_name.getText())
+                        && !TextUtils.isEmpty(et_phone.getText())
+                        && !TextUtils.isEmpty(et_use.getText())
+                        && !TextUtils.isEmpty(et_num.getText())
+                        && chooseLocation) {
 
-                    if(dialog2==null){
-                        flag=true;
+                    if (dialog2 == null) {
+                        flag = true;
                         showDialog(ApplyFuwaActivity.this);
-                    }else if(!dialog2.isShowing()){
-                        flag=true;
+                    } else if (!dialog2.isShowing()) {
+                        flag = true;
                         setContent();
                         dialog2.show();
                     }
-                }else{
+                } else {
 
-                    showToast("请完善资料",false);
+                    showToast("请完善资料", false);
                 }
 
 
@@ -226,7 +233,7 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
             public void onClick(View view) {
 
                 dialog2.dismiss();
-                if(!flag){
+                if (!flag) {
                     finish();
                 }
             }
@@ -235,16 +242,17 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
 
-                if(!TextUtils.isEmpty(et_name.getText())
-                        &&!TextUtils.isEmpty(et_phone.getText())
-                        &&!TextUtils.isEmpty(et_use.getText())
-                        &&!TextUtils.isEmpty(et_num.getText())
-                        &&chooseLocation){
 
-                    Log.i("liwya","-----");
+                if (!TextUtils.isEmpty(et_name.getText())
+                        && !TextUtils.isEmpty(et_phone.getText())
+                        && !TextUtils.isEmpty(et_use.getText())
+                        && !TextUtils.isEmpty(et_num.getText())
+                        && chooseLocation) {
+
+                    Log.i("liwya", "-----");
                     applyFuwa();
-                }else{
-                    showToast("请完善资料",false);
+                } else {
+                    showToast("请完善资料", false);
                 }
 
             }
@@ -264,10 +272,10 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void setContent() {
-        if(flag){
+        if (flag) {
             tv_submit.setText("确认");
             tv_cancel.setText("取消");
-        }else{
+        } else {
             tv_submit.setText("提交并返回");
             tv_cancel.setText("直接返回");
         }
@@ -275,38 +283,49 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void applyFuwa() {
-        showLoadingDialog();
-        String url = HttpUrl.APPLY_FUWA +"?userid="+ App.getInstance().getUid()
-                +"&name="+et_name.getText().toString()+"&phone="+et_phone.getText().toString()
-                +"&shop="+applyType+"&purpose="+et_use.getText().toString()+"&region="+mCurrentProviceName+""+mCurrentCityName
-                +"&number="+et_num.getText().toString()+"&time="+System.currentTimeMillis();
+        try {
+            showLoadingDialog();
+            String name = et_name.getText().toString();
 
-        HttpUtils httpUtils = new HttpUtils(60 * 1000);
-        httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                cancelLoadingDialog();
-                String res = responseInfo.result;
-                try {
-                    JSONObject jsonObject = new JSONObject(res);
-                    if(jsonObject.getInt("code")==0){
-                        handler.obtainMessage(1).sendToTarget();
-                    }else{
-                        showToast("申请失败",false);
+            name = URLEncoder.encode(name, "utf-8").replaceAll("\\+", "%20");
+            String use = et_use.getText().toString();
+            use = URLEncoder.encode(use, "utf-8").replaceAll("\\+", "%20");
+
+
+            String url = HttpUrl.APPLY_FUWA + "?userid=" + App.getInstance().getUid()
+                    + "&name=" + name + "&phone=" + et_phone.getText().toString()
+                    + "&shop=" + applyType + "&purpose=" + use+ "&region=" + mCurrentProviceName + "" + mCurrentCityName
+                    + "&number=" + et_num.getText().toString() + "&time=" + System.currentTimeMillis();
+
+            HttpUtils httpUtils = new HttpUtils(60 * 1000);
+            httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
+                @Override
+                public void onSuccess(ResponseInfo<String> responseInfo) {
+                    cancelLoadingDialog();
+                    String res = responseInfo.result;
+                    try {
+                        JSONObject jsonObject = new JSONObject(res);
+                        if (jsonObject.getInt("code") == 0) {
+                            handler.obtainMessage(1).sendToTarget();
+                        } else {
+                            showToast("申请失败", false);
+                        }
+                    } catch (JSONException e) {
+                        showToast("申请失败", false);
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    showToast("申请失败",false);
-                    e.printStackTrace();
                 }
-            }
 
-            @Override
-            public void onFailure(HttpException e, String s) {
-                cancelLoadingDialog();
-                Log.i("onFailure", s);
-                showToast(e.getMessage(),false);
-            }
-        });
+                @Override
+                public void onFailure(HttpException e, String s) {
+                    cancelLoadingDialog();
+                    Log.i("onFailure", s);
+                    showToast(e.getMessage(), false);
+                }
+            });
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -343,7 +362,7 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
                 public void onClick(View view) {
                     chooseLocation = true;
                     dialog.dismiss();
-                    tv_where.setText(mCurrentProviceName+"  "+mCurrentCityName);
+                    tv_where.setText(mCurrentProviceName + "  " + mCurrentCityName);
                     tv_where.setTextColor(Color.BLACK);
                 }
             });
@@ -389,6 +408,7 @@ public class ApplyFuwaActivity extends BaseActivity implements View.OnClickListe
         mViewCity.setCurrentItem(0);
         updateAreas();
     }
+
     private void updateAreas() {
         int pCurrent = mViewCity.getCurrentItem();
         mCurrentCityName = mCitisDatasMap.get(mCurrentProviceName)[pCurrent];
