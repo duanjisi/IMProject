@@ -1,5 +1,6 @@
 package im.boss66.com.activity.treasure;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Spannable;
@@ -1064,19 +1066,19 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 //            }
             switch (mType) {
                 case FIND_FUWA:
-                    request = new AroundBabyRequest(TAG, parms, "" + raduis, biggest);
+                    request = new AroundBabyRequest(TAG, parms, "" + raduis, "0");
                     break;
                 case FIND_FATE:
-                    request = new AroundFriendRequest(TAG, parms, "" + raduis, biggest);
+                    request = new AroundFriendRequest(TAG, parms, "" + raduis, "0");
                     break;
                 case FIND_MERCHANT_FUWA:
                     if (!TextUtils.isEmpty(userid)) {
-                        request = new AroundMerhcantRequest(TAG, parms, "" + raduis, biggest, userid);
+                        request = new AroundMerhcantRequest(TAG, parms, "" + raduis, "0", userid);
                     }
                     break;
                 case FIND_USER_FUWA:
                     if (!TextUtils.isEmpty(userid)) {
-                        request = new AroundUserRequest(TAG, parms, "" + raduis, biggest, userid);
+                        request = new AroundUserRequest(TAG, parms, "" + raduis, "0", userid);
                     }
                     break;
             }
@@ -1259,6 +1261,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 //        initList(listView);
 //    }
 
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     private void showChildrenPop(View parent, BaseBaby baseBaby) {
         ArrayList<ChildEntity> nears = baseBaby.getNear();
         if (slidingDrawer.getVisibility() != View.GONE) {
@@ -1337,19 +1340,19 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 //        }
         switch (mType) {
             case FIND_FUWA:
-                request = new AroundBabyRequest(TAG, parms, "" + raduis, biggest);
+                request = new AroundBabyRequest(TAG, parms, "" + raduis, "0");
                 break;
             case FIND_FATE:
-                request = new AroundFriendRequest(TAG, parms, "" + raduis, biggest);
+                request = new AroundFriendRequest(TAG, parms, "" + raduis, "0");
                 break;
             case FIND_MERCHANT_FUWA:
                 if (!TextUtils.isEmpty(userid)) {
-                    request = new AroundMerhcantRequest(TAG, parms, "" + raduis, biggest, userid);
+                    request = new AroundMerhcantRequest(TAG, parms, "" + raduis, "0", userid);
                 }
                 break;
             case FIND_USER_FUWA:
                 if (!TextUtils.isEmpty(userid)) {
-                    request = new AroundUserRequest(TAG, parms, "" + raduis, biggest, userid);
+                    request = new AroundUserRequest(TAG, parms, "" + raduis, "0", userid);
                 }
                 break;
         }
@@ -1393,7 +1396,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         }
     }
 
-    private String biggest = "0";
+    private String biggest = "";
 
     private void requestMore(final ListView listView) {
         BaseRequest request = null;

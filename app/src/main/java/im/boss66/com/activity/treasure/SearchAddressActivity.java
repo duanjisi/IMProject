@@ -58,7 +58,7 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
     private List<PoiItem> poiItems;// poi数据
     private AMapLocation location;
     private String keyWord;
-    private String city, area, curCity,curGeohash;
+    private String city, area, curCity, curGeohash;
     private FuwaHideAddressAdapter addressAdapter;
     private LRecyclerViewAdapter mLRecyclerViewAdapter = null;
     private LinearLayout ll_no_address;
@@ -100,7 +100,7 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
                 Bundle bundle = new Bundle();
                 bundle.putString("city", curCity);
                 bundle.putString("area", area);
-                bundle.putString("curGeohash",curGeohash);
+                bundle.putString("curGeohash", curGeohash);
                 openActvityForResult(FuwaAddressSearchActivity.class, 101, bundle);
             }
         });
@@ -117,7 +117,7 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
                 new FuwaHideAddressAdapter.RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        if (poiItems != null && position < poiItems.size()) {
+                        if (poiItems != null && position >= 0 && position < poiItems.size()) {
                             PoiItem item = poiItems.get(position);
                             if (item != null) {
                                 String address = item.getTitle();
@@ -167,7 +167,7 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
                 Bundle bundle = new Bundle();
                 bundle.putString("city", curCity);
                 bundle.putString("area", area);
-                bundle.putString("curGeohash",curGeohash);
+                bundle.putString("curGeohash", curGeohash);
                 openActvityForResult(FuwaAddressSearchActivity.class, 101, bundle);
                 break;
         }
@@ -202,7 +202,7 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
             area = aMapLocation.getDistrict();
             curCity = aMapLocation.getCity();
             curGeohash = aMapLocation.getLongitude() + "-" + aMapLocation.getLatitude();
-            if (isFirst){
+            if (isFirst) {
                 keyWord = aMapLocation.getPoiName();
                 city = curCity;
                 if (lp == null) {
@@ -263,7 +263,7 @@ public class SearchAddressActivity extends BaseActivity implements View.OnClickL
                     poiResult = result;
                     poiItems = poiResult.getPois();// 取得第一页的poiitem数据，页数从数字0开始
                     addressAdapter.onDataChange(poiItems);
-                    if (poiItems != null && poiItems.size() <= 0){
+                    if (poiItems != null && poiItems.size() <= 0) {
                         rv_content.setVisibility(View.GONE);
                         ll_no_address.setVisibility(View.VISIBLE);
                     }

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.ClipboardManager;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -105,9 +106,11 @@ public class CommentDialog extends Dialog implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.copyTv:
+                ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                 if (mCommentItem != null) {
-                    ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                     clipboard.setText(mCommentItem.getContent());
+                } else if (isText && !TextUtils.isEmpty(url)) {
+                    clipboard.setText(url);
                 }
                 dismiss();
                 break;

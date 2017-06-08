@@ -26,6 +26,7 @@ import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.Session;
 import im.boss66.com.Utils.Base64Utils;
+import im.boss66.com.Utils.JavaCache;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.Utils.PrefKey;
@@ -43,6 +44,7 @@ import im.boss66.com.util.Utils;
  */
 public class ChatServices extends Service {
     //    private static WebSocket mConnection = new WebSocketConnection();
+    private static final String socketKey = "im.boss66.com.websocket.key";
     public static ArrayList<receiveMessageCallback> callbacks = new ArrayList<>();
     private String userid;
     private MessageDB mMsgDB;// 保存消息的数据库
@@ -133,7 +135,8 @@ public class ChatServices extends Service {
 //                mConnection.disconnect();
 //            }
             userid = App.getInstance().getUid();
-            mConnection = App.getInstance().getWebSocket();
+//            mConnection = App.getInstance().getWebSocket();
+            mConnection = JavaCache.getWebSocket(socketKey);
             mConnection.connect(HttpUrl.WS_URL, new WebSocketConnectionHandler() {
                 @Override
                 public void onOpen() {
@@ -161,6 +164,8 @@ public class ChatServices extends Service {
             if (App.getInstance().isLogin()) {
                 LocalBroadcastManager.getInstance(ChatServices.this).sendBroadcast(new Intent(Constants.Action.CHAT_SERVICE_CLOSE));
             }
+        } catch (OutOfMemoryError e) {
+            Log.d("info", "=====Exception:" + e.toString());
         }
     }
 
@@ -383,26 +388,28 @@ public class ChatServices extends Service {
 
     @Subscribe
     public void onMessageEvent(Motion event) {
-        int action = event.getAction();
-        switch (action) {
-            case Session.ACTION_SEND_IM_MESSAGE:
-                String msg = (String) event.getData();
-                if (msg != null && !msg.equals("")) {
-                    sendMessage(msg);
-                }
-                break;
-            case Session.ACTION_STOP_CHAT_SERVICE:
-                stopChatService(this);
-                break;
-            case Session.ACTION_RE_CONNECT_WEBSOCKET:
-                if (mConnection != null) {
-                    if (!mConnection.isConnected()) {
+        if (event != null) {
+            int action = event.getAction();
+            switch (action) {
+                case Session.ACTION_SEND_IM_MESSAGE:
+                    String msg = (String) event.getData();
+                    if (msg != null && !msg.equals("")) {
+                        sendMessage(msg);
+                    }
+                    break;
+                case Session.ACTION_STOP_CHAT_SERVICE:
+                    stopChatService(this);
+                    break;
+                case Session.ACTION_RE_CONNECT_WEBSOCKET:
+                    if (mConnection != null) {
+                        if (!mConnection.isConnected()) {
+                            startConnection();
+                        }
+                    } else {
                         startConnection();
                     }
-                } else {
-                    startConnection();
-                }
-                break;
+                    break;
+            }
         }
     }
 
