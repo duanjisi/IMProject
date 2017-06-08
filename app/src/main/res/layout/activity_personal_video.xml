@@ -3,23 +3,24 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:background="@color/background_color"
     android:layout_height="match_parent">
+
     <RelativeLayout
+        android:background="@color/top_bar_color"
         android:id="@+id/rl_top_bar"
         android:layout_width="match_parent"
         android:layout_height="50dip"
         >
-
-        <ImageView
-            android:layout_centerVertical="true"
+        <TextView
             android:id="@+id/tv_headlift_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/fanhuijian_gry"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/selector_text_bg_white_gary"
             android:gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="11dp"
+            android:text="返回"
             android:textColor="@color/white"
-            />
+            android:textSize="17.5sp" />
 
         <TextView
             android:text="推荐"
@@ -27,11 +28,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="@color/text_color_black"
+            android:textColor="@color/white"
             android:textSize="17.5sp" />
 
         <TextView
-            android:textColor="@color/text_color_black"
+            android:textColor="@color/white"
             android:text="跳过"
             android:id="@+id/iv_headright_view"
             android:layout_width="wrap_content"

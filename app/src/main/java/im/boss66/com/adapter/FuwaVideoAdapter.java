@@ -1,6 +1,7 @@
 package im.boss66.com.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,12 +12,27 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.List;
+
+import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.ToastUtil;
+import im.boss66.com.Utils.UIUtils;
+import im.boss66.com.activity.connection.ClanClubActivity;
 import im.boss66.com.entity.FuwaVideoEntity;
+import im.boss66.com.entity.TribeEntity;
+import im.boss66.com.http.HttpUrl;
 
 /**
  * Created by liw on 2017/6/1.
@@ -26,10 +42,8 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
 
     private Context context;
     private ImageLoader imageLoader;
-//    private List<Integer> mHeights;
     public FuwaVideoAdapter(Context context) {
         this.context = context;
-//        mHeights = new ArrayList<>();
 
         imageLoader = ImageLoaderUtils.createImageLoader(context);
     }
@@ -39,33 +53,35 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
     public void onBindItemHolder(RecyclerView.ViewHolder holder, final int position) {
         FuwaVideoHolder holder1 = (FuwaVideoHolder) holder;
 
-        FuwaVideoEntity.DataBean item = (FuwaVideoEntity.DataBean) datas.get(position);
+        final FuwaVideoEntity.DataBean item = (FuwaVideoEntity.DataBean) datas.get(position);
 
-
-        // 随机高度, 模拟瀑布效果.
-//        if (mHeights.size() <= position) {
-//            double random = Math.random();
-//            if(random>0.5){
-//                mHeights.add(400);
-//            }else {
-//                mHeights.add(200);
-//            }
-//        }
 
         String height = item.getHeight();
+        String width = item.getWidth();
+//        Log.i("liwya",width+"实际宽度");
+        int screenWidth = UIUtils.getScreenWidth(context)/2;
+        int padding = UIUtils.dip2px(context, 6);
+        screenWidth = screenWidth-padding;
+//        Log.i("liwya",screenWidth+"屏幕宽度");
+
+        double v = Double.parseDouble(width)/screenWidth;
+//        Log.i("liwya",v+"比例");
+
+
+
         if(!TextUtils.isEmpty(height)){
 
             Integer img_height = Integer.parseInt(height);
-            ViewGroup.LayoutParams lp = holder1.rl_top.getLayoutParams();
-            lp.height = img_height/3;
-            Log.i("liwya",lp.height+"");
-            holder1.rl_top.setLayoutParams(lp);
+            ViewGroup.LayoutParams lp = holder1.img_content.getLayoutParams();
+            lp.height = (int) (img_height/v);
+//            Log.i("liwya",height+"实际高度");
+//            Log.i("liwya",lp.height+"显示高度");
+            holder1.img_content.setLayoutParams(lp);
         }
 
 
         String video = item.getVideo();
         video = video.substring(0, video.lastIndexOf("."))+".jpg";
-        Log.i("liwya2",video);
 //        Glide.with(context).load(video).into(holder1.img_content);
 
         imageLoader.displayImage(video, holder1.img_content,
@@ -94,6 +110,67 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
                 itemListener.onItemClick(position);
             }
         });
+        holder1.img_head.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initTribe(item.getUserid());
+            }
+        });
+    }
+
+
+    private void initTribe(String creatorid) {
+
+        String url = HttpUrl.SEARCH_TRIBE_LIST;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        url = url + "?user_id=" + creatorid;
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (result != null) {
+                    TribeEntity tribeEntity = JSON.parseObject(result, TribeEntity.class);
+                    int code = tribeEntity.getCode();
+                    if (code == 1) {
+                        List<TribeEntity.ResultBean> beans = tribeEntity.getResult();
+                        TribeEntity.ResultBean bean = beans.get(0);
+                        String name = bean.getName();
+                        int stribe_id = bean.getStribe_id();
+                        int user_id = bean.getUser_id();
+
+                        Intent intent = new Intent(context, ClanClubActivity.class);
+                        intent.putExtra("isClan", 3);
+                        intent.putExtra("name", name);
+                        intent.putExtra("id", stribe_id+"");
+                        intent.putExtra("user_id", user_id+"");
+                        context.startActivity(intent);
+
+                    } else {
+                        //code==0 没数据，没部落 不作处理
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    ToastUtil.showShort(context,e.getMessage());
+                }
+            }
+        });
+
+
     }
 
     @Override

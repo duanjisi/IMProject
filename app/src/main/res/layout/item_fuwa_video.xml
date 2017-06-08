@@ -42,7 +42,7 @@
             android:layout_height="30dp" />
 
         <TextView
-            android:maxEms="5"
+            android:maxEms="4"
             android:singleLine="true"
             android:ellipsize="end"
             android:textSize="14sp"
