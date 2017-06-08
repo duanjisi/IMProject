@@ -108,7 +108,7 @@ public class VideoListFragment extends BaseFragment {
 
 
         String url = HttpUrl.SEARCH_VIDEO_LIST + "?geohash=" + lng + "-" + lat + "&class=" + classid;
-
+//        Log.i("liwya",url);
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
 
@@ -116,6 +116,7 @@ public class VideoListFragment extends BaseFragment {
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 result = responseInfo.result;
 
+//                Log.i("liwya",result);
                 if (result != null) {
                     FuwaVideoEntity fuwaVideoEntity = JSON.parseObject(result, FuwaVideoEntity.class);
                     if (fuwaVideoEntity.getCode() == 0) {
