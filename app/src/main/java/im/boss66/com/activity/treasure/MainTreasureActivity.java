@@ -154,17 +154,18 @@ public class MainTreasureActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.iv_trade://交易
                 openActivity(FuwaDealActivity.class);
-
                 break;
             case R.id.btn_find://找福娃
-                Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
-                intent.putExtra("isFate", false);
-                startActivity(intent);
+//                Intent intent = new Intent(context, FindTreasureChildrenActivity.class);
+//                intent.putExtra("isFate", false);
+//                startActivity(intent);
+                openActivity(CompanyVideoActivity.class);
                 break;
             case R.id.btn_find_fate://找福娃
-                Intent it = new Intent(context, FindTreasureChildrenActivity.class);
-                it.putExtra("isFate", true);
-                startActivity(it);
+//                Intent it = new Intent(context, FindTreasureChildrenActivity.class);
+//                it.putExtra("isFate", true);
+//                startActivity(it);
+                openActivity(PersonalVideoActivity.class);
                 break;
             case R.id.btn_store://藏福娃
                 openActivity(HideFuwaActivity.class);

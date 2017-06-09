@@ -131,7 +131,8 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     private int curPostion;
     private String access_token;
     private String commentId;
-    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    // private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    private String savePath;
     private final int OPEN_CAMERA = 1;//相机
     private final int OPEN_ALBUM = 2;//相册
     private Uri imageUri;
@@ -155,6 +156,11 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void initView() {
+        if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
+            savePath = getFilesDir().getPath();
+        } else {
+            savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+        }
         mHits = new long[2];
         sceenW = UIUtils.getScreenWidth(context);
         rl_title = (RelativeLayout) findViewById(R.id.rl_title);
@@ -254,7 +260,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        showToast("刷新完成",false);
+                        showToast("刷新完成", false);
                         isOnRefresh = true;
                         isAddNew = false;
                         rv_friend.refreshComplete(20);
@@ -611,7 +617,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                         .openAssetFileDescriptor(data.getData(), "r");
                 FileInputStream fis = videoAsset.createInputStream();
                 File tmpFile = new File(
-                        Environment.getExternalStorageDirectory(),
+                        savePath,
                         "recordvideo.mp4");
                 FileOutputStream fos = new FileOutputStream(tmpFile);
 

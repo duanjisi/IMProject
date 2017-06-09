@@ -171,6 +171,8 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private PermissionListener permissionListener;
     private RelativeLayout titleBar;
     private Resources resources;
+    private double distance;
+    private boolean isFirstRequest = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +213,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         if (bundle != null) {
             mType = bundle.getInt("type", 0);
             userid = bundle.getString("userid", "");
+            distance = bundle.getDouble("distance", 0);
 //            isFate = bundle.getBoolean("isFate", false);
         }
 
@@ -1054,7 +1057,17 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private void childrenRequest(CameraPosition cameraPosition) {
         if (aMap != null) {
             float scale = aMap.getScalePerPixel();
-            raduis = (int) (scale * UIUtils.getScreenPx(context) / 2);//半径
+            if (mType == FIND_MERCHANT_FUWA ||
+                    mType == FIND_USER_FUWA) {
+                if (isFirstRequest) {
+                    raduis = (int) (distance * 2);
+                    isFirstRequest = false;
+                } else {
+                    raduis = (int) (scale * UIUtils.getScreenPx(context) / 2);//半径
+                }
+            } else {
+                raduis = (int) (scale * UIUtils.getScreenPx(context) / 2);//半径
+            }
             Log.i("info", "==============raduis:" + raduis);
             parms = cameraPosition.target.longitude + "-" + cameraPosition.target.latitude;
             Log.i("info", "==============parms:" + parms);

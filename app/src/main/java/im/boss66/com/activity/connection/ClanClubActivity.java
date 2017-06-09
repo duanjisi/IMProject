@@ -119,7 +119,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
     private final int RECORD_VIDEO = 3;//视频
     private PermissionListener permissionListener;
     private String commentId;
-    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    private String savePath;
     private String curUid;
     private CommunityMsgListener communityMsgListener;
     private PopupWindow popupWindow;
@@ -266,6 +266,11 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
     }
 
     private void initArgument() {
+        if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
+            savePath = getFilesDir().getPath();
+        } else {
+            savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+        }
         sceenW = UIUtils.getScreenWidth(context);
         Intent intent = getIntent();
         if (intent != null) {
@@ -772,7 +777,7 @@ public class ClanClubActivity extends ABaseActivity implements View.OnClickListe
                         .openAssetFileDescriptor(data.getData(), "r");
                 FileInputStream fis = videoAsset.createInputStream();
                 File tmpFile = new File(
-                        Environment.getExternalStorageDirectory(),
+                        savePath,
                         "recordvideo.mp4");
                 FileOutputStream fos = new FileOutputStream(tmpFile);
 

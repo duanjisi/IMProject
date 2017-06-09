@@ -206,7 +206,6 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
         mFragments.add(contactsFragment);
         mFragments.add(discoverFragment);
         mFragments.add(mineFragment);
-
     }
 
     private int index;
@@ -292,6 +291,7 @@ public class MainAct extends BaseActivity implements CompoundButton.OnCheckedCha
                 tv_name.setText(account.getUser_name());
                 imageLoader.displayImage(account.getAvatar(), iv_avatar, ImageLoaderUtils.getDisplayImageOptions());
             } else if (action.equals(Constants.Action.SWITCH_CHAT_MESSAGE)) {
+                Log.i("info", "=========================000000000");
                 List<Activity> tempActivityList = App.getInstance().getTempActivityList();
                 for (Activity activity : tempActivityList) {
                     if (activity != MainAct.this) {

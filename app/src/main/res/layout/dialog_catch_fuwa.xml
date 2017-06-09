@@ -12,14 +12,24 @@
         android:background="@drawable/choose_bg"
         android:orientation="vertical">
 
-        <im.boss66.com.widget.RoundImageView
+        <!--<im.boss66.com.widget.RoundImageView-->
+            <!--android:id="@+id/riv_head"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_marginTop="30dp"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:src="@drawable/person" />-->
+
+        <im.boss66.com.widget.CircleImageView
             android:id="@+id/riv_head"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="41.4dp"
+            android:layout_height="41.4dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/person" />
+            android:src="@drawable/person"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_name"
@@ -127,7 +137,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_14">
 
-                <im.boss66.com.widget.RoundImageView
+                <!--<im.boss66.com.widget.RoundImageView-->
+                <!--android:id="@+id/riv_user_head"-->
+                <!--android:layout_width="60dp"-->
+                <!--android:layout_height="60dp"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:scaleType="centerCrop" />-->
+
+                <im.boss66.com.widget.CircleImageView
                     android:id="@+id/riv_user_head"
                     android:layout_width="60dp"
                     android:layout_height="60dp"

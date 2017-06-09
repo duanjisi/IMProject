@@ -65,7 +65,7 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
     private Bitmap bitmap;
     private boolean isLongClick = false;
     private String mOutputPath;
-    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    private String savePath;
     private ImageLoader imageLoader;
     private Uri imageUri;
     private String imageName;
@@ -83,6 +83,11 @@ public class PersonalIconActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void initView() {
+        if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
+            savePath = getFilesDir().getPath()+"/";
+        } else {
+            savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+        }
         access_token = App.getInstance().getAccount().getAccess_token();
         mOutputPath = new File(getExternalCacheDir(), "chosen.jpg").getPath();
         int screenW = UIUtils.getScreenWidth(this);

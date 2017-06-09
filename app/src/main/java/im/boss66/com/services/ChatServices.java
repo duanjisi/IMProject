@@ -12,12 +12,10 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import de.tavendo.autobahn.WebSocket;
@@ -68,6 +66,9 @@ public class ChatServices extends Service {
                     break;
                 case 1:
                     handler.removeMessages(0);
+                    break;
+                case 3:
+                    startConnection();
                     break;
             }
         }
@@ -135,8 +136,9 @@ public class ChatServices extends Service {
 //                mConnection.disconnect();
 //            }
             userid = App.getInstance().getUid();
-//            mConnection = App.getInstance().getWebSocket();
-            mConnection = JavaCache.getWebSocket(socketKey);
+            mConnection = App.getInstance().getWebSocket();
+
+            //mConnection = JavaCache.getWebSocket(socketKey);
             mConnection.connect(HttpUrl.WS_URL, new WebSocketConnectionHandler() {
                 @Override
                 public void onOpen() {
@@ -165,7 +167,8 @@ public class ChatServices extends Service {
                 LocalBroadcastManager.getInstance(ChatServices.this).sendBroadcast(new Intent(Constants.Action.CHAT_SERVICE_CLOSE));
             }
         } catch (OutOfMemoryError e) {
-            Log.d("info", "=====Exception:" + e.toString());
+            mConnection = null;
+            handler.sendEmptyMessageDelayed(3, 1500);
         }
     }
 

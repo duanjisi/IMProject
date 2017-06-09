@@ -57,7 +57,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
     private TextView tv_back, tv_title, tv_photo_album, tv_take_photos;
     private Uri imageUri;
     private String imageName, mOutputPath, access_token;
-    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    private String savePath;
     private final int OPEN_CAMERA = 1;//相机
     private final int OPEN_ALBUM = 2;//相册
     private final int REQUEST_CLIP_IMAGE = 3;//裁剪
@@ -99,6 +99,11 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
     }
 
     private void initView() {
+        if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
+            savePath = getFilesDir().getPath()+"/";
+        } else {
+            savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+        }
         access_token = App.getInstance().getAccount().getAccess_token();
         String imgName = System.currentTimeMillis() + ".jpg";
         mOutputPath = new File(getExternalCacheDir(), imgName).getPath();
@@ -156,7 +161,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
         if (bitmap != null) {
-            File file = FileUtils.compressImage(bitmap);
+            File file = FileUtils.compressImage(bitmap,savePath);
             if (file != null) {
                 params.addBodyParameter("cover_pic", file);
             }
@@ -226,7 +231,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
         Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
         Log.i("uploadImageFile", path);
         if (bitmap != null) {
-            File file = FileUtils.compressImage(bitmap);
+            File file = FileUtils.compressImage(bitmap,savePath);
             if (file != null) {
                 if (fromClanClub) {
                     params.addBodyParameter("banner", file);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -18,11 +19,9 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -108,6 +107,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
     private int validtime = 1;
     private int cameraType;
     private final int READ_VIDEO = 4;//本地视频
+    private String savePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +117,11 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
     }
 
     private void initView() {
+        if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
+            savePath = getFilesDir().getPath();
+        } else {
+            savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+        }
         fuwaDetailEntitieList = new ArrayList<>();
         Intent intent = getIntent();
         if (intent != null) {
@@ -685,8 +690,7 @@ public class ChooseFuwaHideActivity extends BaseActivity implements View.OnClick
                 AssetFileDescriptor videoAsset = getContentResolver()
                         .openAssetFileDescriptor(data.getData(), "r");
                 FileInputStream fis = videoAsset.createInputStream();
-                videoFile = new File(
-                        Environment.getExternalStorageDirectory(),
+                videoFile = new File(savePath,
                         "fuwavideo.mp4");
                 FileOutputStream fos = new FileOutputStream(videoFile);
 
