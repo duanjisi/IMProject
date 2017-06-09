@@ -64,12 +64,12 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
         screenWidth = screenWidth-padding;
 //        Log.i("liwya",screenWidth+"屏幕宽度");
 
-        double v = Double.parseDouble(width)/screenWidth;
 //        Log.i("liwya",v+"比例");
 
 
 
         if(!TextUtils.isEmpty(height)){
+            double v = Double.parseDouble(width)/screenWidth;
 
             Integer img_height = Integer.parseInt(height);
             ViewGroup.LayoutParams lp = holder1.img_content.getLayoutParams();
