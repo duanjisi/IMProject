@@ -44,7 +44,6 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import im.boss66.com.App;
@@ -90,7 +89,8 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
     private final int EDIT_PHOTO = 4;//查看相片
     private final int SELECT_PERSON = 5;//选择联系人
     private List<String> imgList;
-    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    // private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    private String savePath;
     private Uri imageUri;
     private String sendType;
     private int cameraType;
@@ -112,6 +112,11 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
     }
 
     private void initView() {
+        if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
+            savePath = getFilesDir().getPath();
+        } else {
+            savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+        }
         imgList = new ArrayList<>();
         access_token = App.getInstance().getAccount().getAccess_token();
         sceenW = UIUtils.getScreenWidth(this);
@@ -403,7 +408,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                 int seenW = UIUtils.getScreenWidth(this);
                 Bitmap bitmap = FileUtils.compressImageFromFile(path, seenW);
                 if (bitmap != null) {
-                    File file = FileUtils.compressImage(bitmap);
+                    File file = FileUtils.compressImage(bitmap,savePath);
                     if (file != null) {
                         params.addBodyParameter("files" + "[" + i + "]", file);
                     }
@@ -524,7 +529,7 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
                             .openAssetFileDescriptor(data.getData(), "r");
                     FileInputStream fis = videoAsset.createInputStream();
                     File tmpFile = new File(
-                            Environment.getExternalStorageDirectory(),
+                            savePath,
                             "recordvideo.mp4");
                     FileOutputStream fos = new FileOutputStream(tmpFile);
 

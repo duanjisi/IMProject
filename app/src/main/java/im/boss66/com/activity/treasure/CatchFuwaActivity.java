@@ -96,6 +96,7 @@ import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.FriendShipRequest;
 import im.boss66.com.listener.PermissionListener;
+import im.boss66.com.widget.CircleImageView;
 import im.boss66.com.widget.RoundImageView;
 import im.boss66.com.widget.popupWindows.SharePopup;
 import im.boss66.com.widget.scan.CameraManager;
@@ -130,10 +131,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private im.boss66.com.widget.scan.CameraManager mCameraManager;
     private Handler autoFocusHandler;
     private boolean previewing = true, isTakePic = false;
-    ;
-    private PermissionListener permissionListener;
-    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
 
+    private PermissionListener permissionListener;
+    //private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
     private Dialog dialog;
     private String userId, fuwaId;
     private ImageView iv_success;
@@ -148,6 +148,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private Mat oneMat, twoMat;
     private ProgressBar pb_load;
     private int cameraNum = 0;
+    private boolean isFinish = false;
+    private double comPH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -309,6 +311,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_back:
+                isFinish = true;
                 finish();
                 break;
             case R.id.tv_continue:
@@ -325,7 +328,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     if (sharePopup.isShowing()) {
                         sharePopup.dismiss();
                     } else {
-                        sharePopup.show(dialog.getWindow().getDecorView());
+                        if (!isFinish)
+                            sharePopup.show(dialog.getWindow().getDecorView());
                     }
                 }
                 break;
@@ -544,12 +548,14 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                                     .centerCrop()
                                     .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                                     .get();
-                            handler.sendEmptyMessage(0x02);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         } catch (ExecutionException e) {
                             e.printStackTrace();
+                        } catch (OutOfMemoryError error) {
+                            newBitmap = null;
                         }
+                        handler.sendEmptyMessage(0x02);
                     }
                 }).start();
 //                BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -671,6 +677,12 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+        if (newBitmap != null) {
+            newBitmap = null;
+        }
+        if (localBitmap != null) {
+            localBitmap = null;
+        }
     }
 
     private void getPermission() {
@@ -723,25 +735,25 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 //        return b3;
 //    }
 
-    public static Bitmap getCircleBitmap(Bitmap bitmap) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-        paint.setAntiAlias(true);
-        paint.setFilterBitmap(true);
-        paint.setDither(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        //在画布上绘制一个圆
-        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-        return output;
-    }
+//    public static Bitmap getCircleBitmap(Bitmap bitmap) {
+//        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+//        Canvas canvas = new Canvas(output);
+//
+//        final int color = 0xff424242;
+//        final Paint paint = new Paint();
+//        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+//
+//        paint.setAntiAlias(true);
+//        paint.setFilterBitmap(true);
+//        paint.setDither(true);
+//        canvas.drawARGB(0, 0, 0, 0);
+//        paint.setColor(color);
+//        //在画布上绘制一个圆
+//        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
+//        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+//        canvas.drawBitmap(bitmap, rect, rect, paint);
+//        return output;
+//    }
 
     private void showDialog() {
         if (dialog == null) {
@@ -750,7 +762,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             int sceenW = UIUtils.getScreenWidth(this);
             int sceenH = UIUtils.getScreenHeight(this);
 
-            RoundImageView roundImageView = (RoundImageView) dialog_view.findViewById(R.id.riv_head);
+            CircleImageView roundImageView = (CircleImageView) dialog_view.findViewById(R.id.riv_head);
             TextView tv_name = (TextView) dialog_view.findViewById(R.id.tv_name);
             TextView tv_fuwa = (TextView) dialog_view.findViewById(R.id.tv_fuwa);
             Button bt_share = (Button) dialog_view.findViewById(R.id.bt_share);
@@ -772,7 +784,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             LinearLayout ll_user = (LinearLayout) dialog_view.findViewById(R.id.ll_user);
             ImageView iv_video_photo = (ImageView) dialog_view.findViewById(R.id.iv_video_photo);
             ImageView iv_video_play = (ImageView) dialog_view.findViewById(R.id.iv_video_play);
-            RoundImageView riv_user_head = (RoundImageView) dialog_view.findViewById(R.id.riv_user_head);
+            CircleImageView riv_user_head = (CircleImageView) dialog_view.findViewById(R.id.riv_user_head);
             TextView tv_user_name = (TextView) dialog_view.findViewById(R.id.tv_user_name);
             TextView tv_user_area = (TextView) dialog_view.findViewById(R.id.tv_user_area);
             TextView tv_add_friend = (TextView) dialog_view.findViewById(R.id.tv_add_friend);
@@ -815,7 +827,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                                 videoBgUrl = videoBgUrl + "." + arr[i];
                             }
                         }
-                        Log.i("comPareHist:", "videoBgUrl:" + videoBgUrl + " videoUrl:" + videoUrl);
                         Glide.with(this).load(videoBgUrl).error(R.drawable.zf_default_message_image).into(iv_video_photo);
                     }
                 } else {
@@ -875,7 +886,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             }
             tv_fuwa.setText(fuwaNum + "号福娃");
         }
-        dialog.show();
+        if (!isFinish)
+            dialog.show();
     }
 
     private void getServerData() {
@@ -900,17 +912,11 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                         JSONObject obj = new JSONObject(res);
                         int code = obj.getInt("code");
                         String msg = obj.getString("message");
-                        Log.i("comPareHist:", " onSuccess" + msg + " code:" + code);
                         if (code == 0) {
                             Intent intent = new Intent(Constants.Action.MAP_MARKER_REFRESH);
                             intent.putExtra("gid", fuwaId);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                            try {
-                                playSucessGif();
-                            } catch (Exception e) {
-                                handler.sendEmptyMessageDelayed(111,
-                                        1000);
-                            }
+                            playSucessGif();
                         } else {
                             previewing = true;
                             if (mCamera != null) {
@@ -938,7 +944,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onFailure(HttpException e, String s) {
-                Log.i("comPareHist:", " onFailure" + s);
                 pb_load.setVisibility(View.GONE);
                 previewing = true;
                 if (mCamera != null) {
@@ -954,38 +959,46 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 
     private void playSucessGif() {
         iv_success.setVisibility(View.VISIBLE);
-        Glide.with(this)
-                .load(R.drawable.fuwa_catch_succ)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .listener(new RequestListener<Integer, GlideDrawable>() {
+        try {
+            Glide.with(this)
+                    .load(R.drawable.fuwa_catch_succ)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .listener(new RequestListener<Integer, GlideDrawable>() {
 
-                    @Override
-                    public boolean onException(Exception arg0, Integer arg1,
-                                               Target<GlideDrawable> arg2, boolean arg3) {
-                        return false;
-                    }
+                        @Override
+                        public boolean onException(Exception arg0, Integer arg1,
+                                                   Target<GlideDrawable> arg2, boolean arg3) {
+                            return false;
+                        }
 
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource,
-                                                   Integer model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                        // 计算动画时长
-                        GifDrawable drawable = (GifDrawable) resource;
-                        GifDecoder decoder = drawable.getDecoder();
-                        int duration = 0;
-                        for (int i = 0; i < drawable.getFrameCount(); i++) {
-                            duration += decoder.getDelay(i);
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource,
+                                                       Integer model, Target<GlideDrawable> target,
+                                                       boolean isFromMemoryCache, boolean isFirstResource) {
+                            // 计算动画时长
+                            GifDrawable drawable = (GifDrawable) resource;
+                            GifDecoder decoder = drawable.getDecoder();
+                            int duration = 0;
+                            for (int i = 0; i < drawable.getFrameCount(); i++) {
+                                duration += decoder.getDelay(i);
+                            }
+                            if (duration > 3000) {
+                                duration = 3000;
+                            }
+                            //发送延时消息，通知动画结束
+                            handler.sendEmptyMessageDelayed(111,
+                                    duration);
+                            return false;
                         }
-                        if (duration > 3000) {
-                            duration = 3000;
-                        }
-                        //发送延时消息，通知动画结束
-                        handler.sendEmptyMessageDelayed(111,
-                                duration);
-                        return false;
-                    }
-                }) //仅仅加载一次gif动画
-                .into(new GlideDrawableImageViewTarget(iv_success, 1));
+                    }) //仅仅加载一次gif动画
+                    .into(new GlideDrawableImageViewTarget(iv_success, 1));
+        } catch (Exception e) {
+            handler.sendEmptyMessageDelayed(111,
+                    1000);
+        } catch (OutOfMemoryError error) {
+            handler.sendEmptyMessageDelayed(111,
+                    1000);
+        }
     }
 
     private Handler handler = new Handler() {
@@ -1006,13 +1019,14 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     break;
                 case 0x02:
                     if (newBitmap != null) {
-                        newBitmap = ThumbnailUtils.extractThumbnail(newBitmap, 450, 450);
+                        Bitmap bitmap = ThumbnailUtils.extractThumbnail(newBitmap, 450, 450);
+                        newBitmap = null;
                         twoMat = new Mat();
-                        Utils.bitmapToMat(newBitmap, twoMat);
+                        Utils.bitmapToMat(bitmap, twoMat);
                         twoMat = getMat(twoMat);
-                        double p = comPareHist(oneMat, twoMat);
-                        Log.i("comPareHist:", " " + p);
-                        if (p >= 0.4 || (cameraNum >= 5 && p > (0.4 - 0.02 * cameraNum))) {
+                        if (oneMat != null && twoMat != null)
+                            comPH = comPareHist(oneMat, twoMat);
+                        if (comPH >= 0.3 || (cameraNum >= 5 && comPH > (0.3 - 0.01 * cameraNum))) {
                             cameraNum = 0;
                             getServerData();
                         } else {
@@ -1027,6 +1041,16 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             }
                             autoFocusHandler.postDelayed(doAutoFocus, 1000);
                         }
+                    } else {
+                        pb_load.setVisibility(View.GONE);
+                        showToast("图片匹配失败TAT，再试下吧", false);
+                        previewing = true;
+                        if (mCamera != null) {
+                            mCamera.startPreview();
+                        } else {
+                            initViewParams();
+                        }
+                        autoFocusHandler.postDelayed(doAutoFocus, 1000);
                     }
                     break;
             }
@@ -1043,13 +1067,16 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         }
         if (isDialogShow && dialog != null) {
             isDialogShow = false;
-            dialog.show();
+            if (!isFinish)
+                dialog.show();
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            isFinish = true;
+            Log.i("onKeyDown:", "" + isFinish);
             finish();
         }
         return super.onKeyDown(keyCode, event);

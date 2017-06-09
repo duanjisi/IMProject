@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -119,10 +121,10 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private CameraPreview mPreview;
     private Camera mCamera;
     private im.boss66.com.widget.scan.CameraManager mCameraManager;
-    private Handler autoFocusHandler;
     private boolean previewing = true, isTakePic = false;
     private PermissionListener permissionListener;
-    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    // private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    private String savePath;
 
     private TextView tv_address;
     private ImageView iv_show_address;
@@ -182,6 +184,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private List<FuwaClassEntity.DataBean> classStrList;
     private String classId;
     private LinearLayout ll_fuwa_class;
+    private boolean isFinish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,14 +195,17 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
+        if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
+            savePath = getFilesDir().getPath();
+        } else {
+            savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+        }
         classStrList = new ArrayList<>();
         getFuwaClass();
         sceenH = (int) (UIUtils.getScreenHeight(context) * 0.8);
         sceenW = (int) (UIUtils.getScreenWidth(context) * 0.8);
         userId = App.getInstance().getUid();
         getMyApplyFuwa();
-        autoFocusHandler = new Handler();
-
         iv_bg = (ImageView) findViewById(R.id.iv_bg);
 
         rl_address = (RelativeLayout) findViewById(R.id.rl_address);
@@ -219,6 +225,18 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         mSensorManager = (SensorManager) App.getInstance().getSystemService(Activity.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);// TYPE_GRAVITY
     }
+
+    Handler autoFocusHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 5:
+                    finish();
+                    break;
+            }
+        }
+    };
 
     private void initCamera() {
         if (mCameraManager == null) {
@@ -295,21 +313,12 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                     iv_bg.setVisibility(View.VISIBLE);
                     Glide.with(context).load(bytes).into(iv_bg);
                     createFileWithByte(bytes);
-//                    String imageName = System.currentTimeMillis() + ".jpg";
-//                    // 指定调用相机拍照后照片的储存路径
-//                    File dir = new File(savePath);
-//                    if (!dir.exists()) {
-//                        dir.mkdirs();
-//                    }
-//                    imgFile = new File(dir, imageName);
-//                    BufferedOutputStream bos
-//                            = new BufferedOutputStream(new FileOutputStream(imgFile));
-//                    bitmapImg.compress(Bitmap.CompressFormat.JPEG, 80, bos);
-//                    bos.flush();
-//                    bos.close();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            } catch (OutOfMemoryError error) {
+                showToast("相机异常,本页面即将销毁，请重新进入", false);
+                autoFocusHandler.sendEmptyMessageDelayed(5, 1000);
             }
         }
     };
@@ -369,6 +378,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isFinish = true;
         if (dialogRecommond != null) {
             dialogRecommond.dismiss();
         }
@@ -378,8 +388,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             mlocationClient.onDestroy();
         }
         mlocationClient = null;
-        if (bitmapImg != null && !bitmapImg.isRecycled()) {
-            bitmapImg.recycle();
+        if (bitmapImg != null) {
+            bitmapImg = null;
         }
         if (videoFile != null) {
             videoFile = null;
@@ -397,6 +407,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_back:
+                isFinish = true;
                 finish();
                 break;
             case R.id.bt_catch:
@@ -877,7 +888,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             imgFile = null;
         }
         tv_dialog_address.setText("" + address);
-        dialog.show();
+        if (!isFinish)
+            dialog.show();
     }
 
     @Override
@@ -899,7 +911,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                         .openAssetFileDescriptor(data.getData(), "r");
                 FileInputStream fis = videoAsset.createInputStream();
                 videoFile = new File(
-                        Environment.getExternalStorageDirectory(),
+                        savePath,
                         "fuwavideo.mp4");
                 FileOutputStream fos = new FileOutputStream(videoFile);
 
@@ -925,7 +937,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     protected void onResume() {
         super.onResume();
         if (isDialogShow && dialogRecommond != null) {
-            dialogRecommond.show();
+            if (!isFinish)
+                dialogRecommond.show();
             isDialogShow = false;
         }
         if (isJump) {
@@ -1018,7 +1031,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             dialogNum.setCanceledOnTouchOutside(true);
             tv_dialog_num_tip.setText("可藏福娃（个）：" + currentFuwaNum);
         }
-        dialogNum.show();
+        if (!isFinish)
+            dialogNum.show();
     }
 
     private void showRecommondDialog() {
@@ -1070,7 +1084,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             dialogRecommond.setContentView(view);
             dialogRecommond.setCanceledOnTouchOutside(true);
         }
-        dialogRecommond.show();
+        if (!isFinish)
+            dialogRecommond.show();
     }
 
     private void showTimeChoosePop() {
@@ -1202,7 +1217,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 + curSelectFuwaNum + "&type=" + fuwaSelectType + "&class=" + classId;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         RequestParams params = new RequestParams();
-        params.addBodyParameter("file", imgFile);
+        if (imgFile.exists())
+            params.addBodyParameter("file", imgFile);
         if (videoFile != null) {
             params.addBodyParameter("video", videoFile);
         }
@@ -1274,13 +1290,25 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    public static void makeRootDirectory(String filePath) {
+        File file = null;
+        try {
+            file = new File(filePath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
     /**
      * 根据byte数组生成文件
      *
      * @param bytes 生成文件用到的byte数组
      */
     private void createFileWithByte(byte[] bytes) {
-        // TODO Auto-generated method stub
+        writeToSDFile();
         /**
          * 创建File对象，其中包含文件所在的目录以及文件的命名
          */
@@ -1292,6 +1320,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         // 创建BufferedOutputStream对象
         BufferedOutputStream bufferedOutputStream = null;
         try {
+//            if (!imgFile.exists()) {
+//                imgFile.mkdir();//如果路径不存在就先创建路径
+//            }
             // 如果文件存在则删除
 //            if (imgFile.exists()) {
 //                imgFile.delete();
@@ -1356,7 +1387,8 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 }
             });
         }
-        listPopupWindow.show();
+        if (!isFinish)
+            listPopupWindow.show();
     }
 
     private void getFuwaClass() {
@@ -1388,5 +1420,46 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 showToast(e.getMessage(), false);
             }
         });
+    }
+
+    public void makeRootDir(String filePath) {
+        File file = null;
+        String newPath = null;
+        String[] path = filePath.split("/");
+        for (int i = 0; i < path.length; i++) {
+            if (newPath == null) {
+                newPath = path[i];
+            } else {
+                newPath = newPath + "/" + path[i];
+            }
+            file = new File(newPath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+        }
+    }
+
+    //sdcard的写操作
+    public void writeToSDFile() {
+        try {
+            makeRootDir(savePath);//先创建文件夹
+// File file=new File(Environment.getExternalStorageDirectory()+"/temp_1","hahatext1.txt");
+// FileOutputStream fOutputStream=new FileOutputStream(file);
+// fOutputStream.write(fname.getBytes());
+// fOutputStream.close();
+        } catch (Exception e) {
+// TODO: handle exception
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            isFinish = true;
+            finish();
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
     }
 }

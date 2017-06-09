@@ -9,6 +9,7 @@ import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
@@ -57,6 +58,7 @@ public class ImageGridFragment extends Fragment implements OnItemClickListener {
     private ImageAdapter mAdapter;
     private ImageResizer mImageResizer;
     List<VideoEntity> mList;
+    private String savePath;
 
     /**
      * Empty constructor as per the Fragment documentation
@@ -67,10 +69,16 @@ public class ImageGridFragment extends Fragment implements OnItemClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mImageThumbSize = getResources().getDimensionPixelSize(
                 R.dimen.image_thumbnail_size);
         mImageThumbSpacing = getResources().getDimensionPixelSize(
                 R.dimen.image_thumbnail_spacing);
+        if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
+            savePath = getActivity().getFilesDir().getPath();
+        } else {
+            savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+        }
         mList = new ArrayList<VideoEntity>();
         getVideoFile();
         mAdapter = new ImageAdapter(getActivity());
@@ -395,8 +403,7 @@ public class ImageGridFragment extends Fragment implements OnItemClickListener {
                     AssetFileDescriptor videoAsset = getActivity().getContentResolver()
                             .openAssetFileDescriptor(intent.getData(), "r");
                     FileInputStream fis = videoAsset.createInputStream();
-                    File tmpFile = new File(
-                            Environment.getExternalStorageDirectory(),
+                    File tmpFile = new File(savePath,
                             "recordvideo.mp4");
                     FileOutputStream fos = new FileOutputStream(tmpFile);
 

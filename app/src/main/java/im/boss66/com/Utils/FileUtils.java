@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -156,7 +158,8 @@ public class FileUtils {
 
     public static void saveImageToGallery(Context context, Bitmap bmp) {
         // 首先保存图片
-        File appDir = new File(Environment.getExternalStorageDirectory(), "boss66Im");
+        // File appDir = new File(Environment.getExternalStorageDirectory(), "boss66Im");
+        File appDir = new File(context.getFilesDir().getPath(), "boss66Im");
         if (!appDir.exists()) {
             appDir.mkdir();
         }
@@ -248,9 +251,7 @@ public class FileUtils {
     public static Bitmap compressImageFromFile(String srcPath, float desWidth) {
         BitmapFactory.Options newOpts = new BitmapFactory.Options();
         newOpts.inJustDecodeBounds = true;//只读边,不读内容
-        Bitmap bitmap;
-        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
-        newOpts.inJustDecodeBounds = false;
+        Bitmap bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
         int w = newOpts.outWidth;
         int h = newOpts.outHeight;
         float desHeight = desWidth * h / w;
@@ -267,15 +268,19 @@ public class FileUtils {
 //        newOpts.inPreferredConfig = Config.ARGB_8888;//该模式是默认的,可不设
         newOpts.inPurgeable = true;// 同时设置才会有效
         newOpts.inInputShareable = true;//。当系统内存不够时候图片自动被回收
-
+        newOpts.inJustDecodeBounds = false;
         bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
-        return bitmap;
+        int degree = readPictureDegree(srcPath);
+        Bitmap bitmap1 = rotaingImageView(degree, bitmap);
+        if (bitmap != null)
+            bitmap = null;
+        return bitmap1;
     }
 
     /**
      * 按尺寸压缩图片
      *
-     * @param imageUri  图片路径
+     * @param imageUri 图片路径
      * @param desWidth 压缩的图片宽度
      * @return Bitmap 对象
      */
@@ -339,6 +344,9 @@ public class FileUtils {
         String imageName = getNowTime() + ".jpg";
         File file = new File(Environment.getExternalStorageDirectory() + "/" + imageName);
         try {
+            if (!file.exists()) {
+                file.mkdirs();//如果路径不存在就先创建路径
+            }
             FileOutputStream fos = new FileOutputStream(file);
             try {
                 fos.write(baos.toByteArray());
@@ -352,6 +360,50 @@ public class FileUtils {
         }
 
         return file;
+    }
+
+    /**
+     * 压缩图片（质量压缩）
+     *
+     * @param image
+     */
+
+    public static File compressImage(Bitmap image, String path) {
+        File bf = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        int options = 100;
+
+        while (baos.toByteArray().length / 1024 > 2048) {  //循环判断如果压缩后图片是否大于100kb,大于继续压缩
+            baos.reset();//重置baos即清空baos
+            options -= 10;//每次都减少10
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
+            //long length = baos.toByteArray().length;
+        }
+//        long length = baos.toByteArray().length;
+//        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
+//        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
+
+        String imageName = getNowTime() + ".jpg";
+        File file = new File(path);
+        try {
+            if (!file.exists()) {
+                file.mkdirs();//如果路径不存在就先创建路径
+            }
+            bf = new File(file, imageName);
+            FileOutputStream fos = new FileOutputStream(bf);
+            try {
+                fos.write(baos.toByteArray());
+                fos.flush();
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return bf;
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -450,5 +502,53 @@ public class FileUtils {
         void onSuccess();
 
         void onFailed(String error);
+    }
+
+    private static Bitmap rotaingImageView(int degree, Bitmap bitmap) {
+        if (null == bitmap) {
+            return null;
+        }
+        // 旋转图片 动作
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        // 创建新的图片
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
+                bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return resizedBitmap;
+    }
+
+    /**
+     * 获得图片的旋转角度
+     *
+     * @param filePath
+     * @return
+     */
+    public static int readPictureDegree(String filePath) {
+        // 获得图片的角度
+        int degreen = 0;
+        ExifInterface ef;
+        try {
+            ef = new ExifInterface(filePath);
+            int orientation = ef.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    degreen = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    degreen = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    degreen = 270;
+                    break;
+
+                default:
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return degreen;
     }
 }

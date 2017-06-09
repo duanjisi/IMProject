@@ -93,8 +93,8 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
     private boolean isJumpLookPic;
     private App mApplication;
     private boolean isSendNew = false;
-
-    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    // private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    private String savePath;
     private final int OPEN_CAMERA = 1;//相机
     private final int OPEN_ALBUM = 2;//相册
     private Uri imageUri;
@@ -115,6 +115,11 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
     }
 
     private void initView() {
+        if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
+            savePath = getFilesDir().getPath()+"/";
+        } else {
+            savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+        }
         mApplication = App.getInstance();
         allList = new ArrayList<>();
         if (mApplication != null) {
@@ -390,7 +395,7 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                         .openAssetFileDescriptor(data.getData(), "r");
                 FileInputStream fis = videoAsset.createInputStream();
                 File tmpFile = new File(
-                        Environment.getExternalStorageDirectory(),
+                        savePath,
                         "recordvideo.mp4");
                 FileOutputStream fos = new FileOutputStream(tmpFile);
 
