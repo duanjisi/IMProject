@@ -35,6 +35,7 @@ public class ChatReceiver extends BroadcastReceiver {
     }
 
     private void goForground(Context context) {
+        Log.i("info", "==================goForground()");
         //获取ActivityManager
         ActivityManager mAm = (ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
         //获得当前运行的task
@@ -48,6 +49,7 @@ public class ChatReceiver extends BroadcastReceiver {
                 return;
             }
         }
+        Log.i("info", "=======================11111111111111111");
         //若没有找到运行的task，用户结束了task或被系统释放，则重新启动mainactivity
         Intent resultIntent = null;
         if (App.getInstance().isLogin()) {

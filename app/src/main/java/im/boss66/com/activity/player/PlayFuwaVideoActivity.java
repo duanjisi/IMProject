@@ -125,14 +125,14 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
         mVideoView.setOnVideoSizeChangedListener(new PLMediaPlayer.OnVideoSizeChangedListener() {
             @Override
             public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int width, int height, int videoSar, int videoDen) {
-                Log.i("onVideoSizeChanged:", "width:" + width + "  " + "height:" + height + "  mVideoRotation:"+mVideoRotation);
+                Log.i("onVideoSizeChanged:", "width:" + width + "  " + "height:" + height + "  mVideoRotation:" + mVideoRotation);
                 if (mVideoRotation == 270) {
                     //旋转视频
                     mVideoView.setDisplayOrientation(90);
                 } else {
                     if (width > height) {
                         mVideoView.setDisplayOrientation(270);
-                    }else {
+                    } else {
                         mVideoView.setDisplayOrientation(mVideoRotation);
                     }
                 }
@@ -428,6 +428,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                     } else {
                         intent.putExtra("type", 3);
                     }
+                    intent.putExtra("distance", dataBean.getDistance());
                     intent.putExtra("userid", dataBean.getUserid());
                     startActivity(intent);
                 }
