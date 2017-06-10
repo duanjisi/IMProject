@@ -850,6 +850,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
 
 
     private void showSuccessHideDialog() {
+        if (isFinish) {
+            return;
+        }
         if (dialog == null) {
             View view = LayoutInflater.from(context).inflate(
                     R.layout.dialog_hide_ok, null);
