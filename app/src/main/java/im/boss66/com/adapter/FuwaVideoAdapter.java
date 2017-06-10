@@ -116,6 +116,13 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
                 initTribe(item.getUserid());
             }
         });
+
+        holder1.tv_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initTribe(item.getUserid());
+            }
+        });
     }
 
 
