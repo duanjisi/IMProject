@@ -1220,7 +1220,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 + curSelectFuwaNum + "&type=" + fuwaSelectType + "&class=" + classId;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         RequestParams params = new RequestParams();
-        if (imgFile.exists())
+        if (imgFile != null && imgFile.exists())
             params.addBodyParameter("file", imgFile);
         if (videoFile != null) {
             params.addBodyParameter("video", videoFile);
