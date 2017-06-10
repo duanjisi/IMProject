@@ -553,6 +553,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             e.printStackTrace();
                         } catch (OutOfMemoryError error) {
                             newBitmap = null;
+                            System.gc();
                         }
                         handler.sendEmptyMessage(0x02);
                     }
@@ -995,6 +996,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             handler.sendEmptyMessageDelayed(111,
                     1000);
         } catch (OutOfMemoryError error) {
+            System.gc();
             handler.sendEmptyMessageDelayed(111,
                     1000);
         }
