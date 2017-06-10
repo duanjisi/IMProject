@@ -123,7 +123,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     boolean isFocusing = false;
     boolean canFocusIn = false;  //内部是否能够对焦控制机制
     boolean canFocus = false;
-    public static final int DELEY_DURATION = 3000;
+    public static final int DELEY_DURATION = 3500;
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private CameraPreview mPreview;
@@ -484,19 +484,18 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 if (value > 1.4) {
                     //Log.i("onSensorChanged", "检测手机在移动");
                     STATUE = STATUS_MOVE;
+                    lastStaticStamp = stamp;
                 } else {
                     //Log.i("onSensorChanged", "检测手机静止");
                     //上一次状态是move，记录静态时间点
-                    if (STATUE == STATUS_MOVE) {
-                        lastStaticStamp = stamp;
-                        canFocusIn = true;
-                    }
+                    canFocusIn = true;
                     if (canFocusIn) {
                         if (stamp - lastStaticStamp > DELEY_DURATION) {
                             //移动后静止一段时间，可以发生对焦行为
                             if (!isFocusing) {
                                 canFocusIn = false;
                                 if (!previewing && isTakePic && mCamera != null) {
+                                    Log.i("onSensorChanged", "takePicture");
                                     mCamera.takePicture(null, null, mPictureCallback);
                                     isTakePic = false;
                                 }
@@ -554,6 +553,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             e.printStackTrace();
                         } catch (OutOfMemoryError error) {
                             newBitmap = null;
+                            System.gc();
                         }
                         handler.sendEmptyMessage(0x02);
                     }
@@ -996,6 +996,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             handler.sendEmptyMessageDelayed(111,
                     1000);
         } catch (OutOfMemoryError error) {
+            System.gc();
             handler.sendEmptyMessageDelayed(111,
                     1000);
         }
@@ -1018,6 +1019,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     }
                     break;
                 case 0x02:
+                    lastStaticStamp = System.currentTimeMillis();
                     if (newBitmap != null) {
                         Bitmap bitmap = ThumbnailUtils.extractThumbnail(newBitmap, 450, 450);
                         newBitmap = null;
@@ -1026,7 +1028,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                         twoMat = getMat(twoMat);
                         if (oneMat != null && twoMat != null)
                             comPH = comPareHist(oneMat, twoMat);
-                        if (comPH >= 0.3 || (cameraNum >= 5 && comPH > (0.3 - 0.01 * cameraNum))) {
+                        if (comPH >= 0.3 || (cameraNum >= 4 && comPH > (0.3 - 0.03 * cameraNum))) {
                             cameraNum = 0;
                             getServerData();
                         } else {
