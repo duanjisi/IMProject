@@ -307,7 +307,6 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
                 opts.inSampleSize = ImageTool.computeSampleSize(opts, -1, sceenW * sceenH);
                 opts.inJustDecodeBounds = false;
-
                 bitmapImg = byteToBitmap(opts, bytes);
                 if (bitmapImg != null) {
                     iv_bg.setVisibility(View.VISIBLE);
@@ -318,6 +317,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 e.printStackTrace();
             } catch (OutOfMemoryError error) {
                 showToast("相机异常,本页面即将销毁，请重新进入", false);
+                System.gc();
                 autoFocusHandler.sendEmptyMessageDelayed(5, 1000);
             }
         }
@@ -850,6 +850,9 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
 
 
     private void showSuccessHideDialog() {
+        if (isFinish) {
+            return;
+        }
         if (dialog == null) {
             View view = LayoutInflater.from(context).inflate(
                     R.layout.dialog_hide_ok, null);
@@ -1217,7 +1220,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 + curSelectFuwaNum + "&type=" + fuwaSelectType + "&class=" + classId;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);
         RequestParams params = new RequestParams();
-        if (imgFile.exists())
+        if (imgFile != null && imgFile.exists())
             params.addBodyParameter("file", imgFile);
         if (videoFile != null) {
             params.addBodyParameter("video", videoFile);

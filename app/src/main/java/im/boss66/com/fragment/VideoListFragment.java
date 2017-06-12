@@ -125,8 +125,12 @@ public class VideoListFragment extends BaseFragment {
                         adapter.setDatas(datas);
                         adapter.notifyDataSetChanged();
 
+                    }else{
+                        showToast("网络异常，请稍后重试", false);
                     }
 
+                }else{
+                    showToast("网络异常，请稍后重试", false);
                 }
             }
 
@@ -138,7 +142,7 @@ public class VideoListFragment extends BaseFragment {
                     intent.setAction(Constants.ACTION_LOGOUT_RESETING);
                     App.getInstance().sendBroadcast(intent);
                 } else {
-                    showToast(e.getMessage(), false);
+                    showToast("网络异常，请稍后重试", false);
                 }
             }
         });
