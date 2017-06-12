@@ -28,6 +28,7 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.adapter.ViewPagerFragmentAdapter;
 import im.boss66.com.entity.VideoCategory;
@@ -183,6 +184,10 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
         listData = new ArrayList<>();
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        int screenWidth = UIUtils.getScreenWidth(this);
+        int minimumWidth = tabLayout.getMinimumWidth();
+        Log.i("liwya",minimumWidth+"");
+//        tabLayout.setMinimumWidth();
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         viewPagerFragmentAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager(), listData, listTitle);
