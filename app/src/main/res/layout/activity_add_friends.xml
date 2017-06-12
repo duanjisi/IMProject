@@ -96,13 +96,15 @@
         <RelativeLayout
             android:id="@+id/rl_scanning"
             android:layout_width="match_parent"
-            android:layout_height="66dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_tag1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="18dp"
                 android:layout_marginLeft="16.5dp"
                 android:src="@drawable/hp_scan_qr_code" />
 
@@ -146,13 +148,15 @@
         <RelativeLayout
             android:id="@+id/rl_phone_contacts"
             android:layout_width="match_parent"
-            android:layout_height="66dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_tag5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+               android:layout_marginBottom="18dp"
+                android:layout_marginTop="18dp"
                 android:layout_marginLeft="16.5dp"
                 android:src="@drawable/hp_mobile_contacts" />
 

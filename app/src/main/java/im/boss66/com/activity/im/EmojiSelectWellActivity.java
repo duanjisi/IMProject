@@ -22,6 +22,9 @@ import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -32,6 +35,7 @@ import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.EmojiWellAdapter;
+import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.entity.BaseEmoWell;
 import im.boss66.com.entity.EmoAdEntity;
 import im.boss66.com.entity.EmoBagEntity;
@@ -98,6 +102,7 @@ public class EmojiSelectWellActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_emoji_select_well);
         initRootView();
         initViews();
@@ -374,6 +379,16 @@ public class EmojiSelectWellActivity extends BaseActivity implements
         }
     }
 
+    @Subscribe
+    public void onMessageEvent(ActionEntity event) {
+        if (event != null) {
+            if (event.getAction().equals(Constants.Action.REFRESH_EMOJI_LIST)) {
+                 adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+
     private void requestNextPager() {
         if (isload) {
             EmoWellChoseRequest request = new EmoWellChoseRequest(TAG, "" + pager, "" + pagerNum);
@@ -599,6 +614,7 @@ public class EmojiSelectWellActivity extends BaseActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (adapter != null) {
             adapter.stopLoading();
         }

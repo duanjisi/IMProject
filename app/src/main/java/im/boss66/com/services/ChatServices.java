@@ -12,10 +12,12 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import de.tavendo.autobahn.WebSocket;
@@ -24,7 +26,6 @@ import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.Session;
 import im.boss66.com.Utils.Base64Utils;
-import im.boss66.com.Utils.JavaCache;
 import im.boss66.com.Utils.MycsLog;
 import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.Utils.PrefKey;
