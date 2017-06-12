@@ -28,12 +28,14 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
+import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.adapter.ViewPagerFragmentAdapter;
 import im.boss66.com.entity.VideoCategory;
 import im.boss66.com.fragment.VideoListFragment;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.PermissionListener;
+import im.boss66.com.widget.MyTabLayout;
 
 /**
  * 找福娃视频推荐
@@ -41,7 +43,7 @@ import im.boss66.com.listener.PermissionListener;
  */
 
 public class CompanyVideoActivity extends ABaseActivity implements View.OnClickListener, AMapLocationListener {
-    private TabLayout tabLayout;
+    private MyTabLayout tabLayout;
 
     private ViewPagerFragmentAdapter viewPagerFragmentAdapter;
 
@@ -182,7 +184,7 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
         listTitle = new ArrayList<>();
         listData = new ArrayList<>();
 
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout = (MyTabLayout) findViewById(R.id.tabLayout);
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         viewPagerFragmentAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager(), listData, listTitle);

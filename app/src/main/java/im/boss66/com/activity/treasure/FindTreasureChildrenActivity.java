@@ -246,7 +246,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 //        if (isFate) {
 //            tv_title.setText("找萌友");
 //        }
-        if (mType == FIND_FATE) {
+        if (mType == FIND_FATE || mType == FIND_USER_FUWA) {
             tv_title.setText("找萌友");
         } else {
             tv_title.setText("找福娃");
@@ -1070,7 +1070,6 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
             }
             Log.i("info", "==============raduis:" + raduis);
             parms = cameraPosition.target.longitude + "-" + cameraPosition.target.latitude;
-            Log.i("info", "==============parms:" + parms);
             BaseRequest request = null;
 //            if (!isFate) {
 //                request = new AroundBabyRequest(TAG, parms, "" + raduis, "0");

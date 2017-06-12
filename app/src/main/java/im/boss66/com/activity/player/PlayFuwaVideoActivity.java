@@ -163,6 +163,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                     } else {
                         intent.putExtra("type", 3);
                     }
+                    intent.putExtra("distance", dataBean.getDistance());
                     intent.putExtra("userid", dataBean.getUserid());
                     startActivity(intent);
                 }

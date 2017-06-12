@@ -4,10 +4,16 @@ package im.boss66.com;
  * Created by Johnny on 2017/2/21.
  */
 public class Constants {
-    public static final String EMO_DIR_PATH =
-            android.os.Environment.getExternalStorageDirectory() + "/HaiMeng/" + ".nomedia/" + App.getInstance().getUid() + "/";
-    public static final String VIDEO_CACHE_PATH =
-            android.os.Environment.getExternalStorageDirectory() + "/HaiMeng/" + "video/";
+//    public static final String EMO_DIR_PATH =
+//            android.os.Environment.getExternalStorageDirectory() + "/HaiMeng/" + ".nomedia/" + App.getInstance().getUid() + "/";
+//    public static final String VIDEO_CACHE_PATH =
+//            android.os.Environment.getExternalStorageDirectory() + "/HaiMeng/" + "video/";
+
+    private static final String BASE_DIR = "/mnt/sdcard/HaiMeng/";
+
+    public static final String EMO_DIR_PATH = BASE_DIR + ".nomedia/" + App.getInstance().getUid() + "/";
+    public static final String VIDEO_CACHE_PATH = BASE_DIR + "video/";
+
     public static final String EMO_DIR_SYSTEM_PATH =
             android.os.Environment.getExternalStorageDirectory() + "/HaiMeng/";
 
@@ -36,5 +42,6 @@ public class Constants {
         public static final String SHOW_HOME_ACTION = "im.boss66.com.SHOW_HOME_ACTION";
         public static final String ACTION_START = "im.boss66.com.ACTION_START";
         public static final String ACTIVITY_CLOSE = "im.boss66.com.ACTIVITY_CLOSE";
+        public static final String REFRESH_EMOJI_LIST = "im.boss66.com.refresh.emoji.list";
     }
 }
