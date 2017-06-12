@@ -28,6 +28,8 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -43,6 +45,7 @@ import im.boss66.com.Utils.PreferenceUtils;
 import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.adapter.EmoPicAdapter;
+import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.entity.EmoEntity;
 import im.boss66.com.entity.EmojiInform;
 import im.boss66.com.http.BaseDataRequest;
@@ -189,9 +192,16 @@ public class EmojiGroupDetailsActivity extends BaseActivity implements View.OnCl
     }
 
     @Override
+    public void onBackPressed() {
+        EventBus.getDefault().post(new ActionEntity(Constants.Action.REFRESH_EMOJI_LIST));
+        super.onBackPressed();
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_back:
+                EventBus.getDefault().post(new ActionEntity(Constants.Action.REFRESH_EMOJI_LIST));
                 finish();
                 break;
             case R.id.tv_download:
