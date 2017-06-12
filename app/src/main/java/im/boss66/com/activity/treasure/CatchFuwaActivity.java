@@ -839,7 +839,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 }
                 String head = currentChild.getAvatar();
                 //Glide.with(this).load(head).error(R.drawable.zf_default_message_image).into(riv_user_head);
-                if (!isFinish){
+                if (!isFinish) {
                     Glide.with(this)
                             .load(head)
                             .error(R.drawable.zf_default_message_image)
@@ -889,7 +889,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             if (sAccount != null) {
                 String head = sAccount.getAvatar();
                 //Glide.with(context).load(head).error(R.drawable.zf_default_message_image).into(roundImageView);
-                if (!isFinish){
+                if (!isFinish) {
                     Glide.with(this)
                             .load(head)
                             .error(R.drawable.zf_default_message_image)
@@ -1001,8 +1001,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             for (int i = 0; i < drawable.getFrameCount(); i++) {
                                 duration += decoder.getDelay(i);
                             }
-                            if (duration > 3000) {
-                                duration = 3000;
+                            if (duration > 2000) {
+                                duration = 2000;
                             }
                             //发送延时消息，通知动画结束
                             handler.sendEmptyMessageDelayed(111,
@@ -1219,9 +1219,9 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             int y = (source.getHeight() - size) / 2;
             // TODO this could be acquired from the pool too
             Bitmap squared = Bitmap.createBitmap(source, x, y, size, size);
-            Bitmap result = pool.get(size, size, Bitmap.Config.ARGB_8888);
+            Bitmap result = pool.get(size, size, Bitmap.Config.ARGB_4444);
             if (result == null) {
-                result = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+                result = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_4444);
             }
             Canvas canvas = new Canvas(result);
             Paint paint = new Paint();
