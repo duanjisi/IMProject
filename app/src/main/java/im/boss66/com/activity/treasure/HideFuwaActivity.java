@@ -1273,7 +1273,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         }
         String num = et_dialog_num.getText().toString().trim();
         if (!TextUtils.isEmpty(num) && tv_dialog_num_tip != null) {
-            int num_i = Integer.parseInt(num);
+            long num_i = Long.parseLong(num);
             if (num_i > currentFuwaNum) {
                 tv_dialog_num_tip.setTextColor(getResources().getColor(R.color.tx_fuwa_tip));
                 tv_dialog_num_tip.setText("输入个数超过您申请的福娃");
