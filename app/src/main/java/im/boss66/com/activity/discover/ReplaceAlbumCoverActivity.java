@@ -318,6 +318,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                 if (Build.VERSION.SDK_INT < 24) {
                     path = Utils.getPath(this, imageUri);
                 } else {
+                    path = imageUri.toString();
                     if (path.contains("im.boss66.com.fileProvider") &&
                             path.contains("/IMProject/")) {
                         String[] arr = path.split("/IMProject/");
