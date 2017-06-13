@@ -27,6 +27,8 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import im.boss66.com.Constants;
+
 import static com.nostra13.universalimageloader.utils.StorageUtils.getCacheDirectory;
 
 /**
@@ -442,6 +444,23 @@ public class FileUtils {
             Log.i("liwya", e.getMessage());
             errorStr = e.getMessage();
             handler.obtainMessage(FAILED, errorStr).sendToTarget();
+        }
+    }
+
+    public void makeRootDir(String filePath) {
+        File file = null;
+        String newPath = null;
+        String[] path = filePath.split("/");
+        for (int i = 0; i < path.length; i++) {
+            if (newPath == null) {
+                newPath = path[i];
+            } else {
+                newPath = newPath + "/" + path[i];
+            }
+            file = new File(newPath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
         }
     }
 

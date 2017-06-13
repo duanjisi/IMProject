@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
@@ -37,7 +36,6 @@ import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
-import im.boss66.com.Utils.SharedPreferencesMgr;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
 import im.boss66.com.activity.personage.ClipImageActivity;
@@ -99,14 +97,20 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
     }
 
     private void initView() {
-        if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
-            savePath = getFilesDir().getPath()+"/";
+        if (Build.VERSION.SDK_INT == 19) {
+            savePath = getFilesDir().getPath() + "/";
         } else {
             savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
         }
         access_token = App.getInstance().getAccount().getAccess_token();
         String imgName = System.currentTimeMillis() + ".jpg";
-        mOutputPath = new File(getExternalCacheDir(), imgName).getPath();
+        File dir;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            dir = Environment.getExternalStorageDirectory();
+        } else {
+            dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        }
+        mOutputPath = new File(dir, imgName).getAbsolutePath();
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_photo_album = (TextView) findViewById(R.id.tv_photo_album);
@@ -137,7 +141,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
     private void uploadImageFile(String path) {
 
         //更换背景图片
-        if (fromClanClub ) {
+        if (fromClanClub) {
             upLoadClanCofcImage(path);
             return;
         }
@@ -161,7 +165,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
         if (bitmap != null) {
-            File file = FileUtils.compressImage(bitmap,savePath);
+            File file = FileUtils.compressImage(bitmap, savePath);
             if (file != null) {
                 params.addBodyParameter("cover_pic", file);
             }
@@ -231,7 +235,7 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
         Bitmap bitmap = FileUtils.compressImageFromFile(path, 1080);
         Log.i("uploadImageFile", path);
         if (bitmap != null) {
-            File file = FileUtils.compressImage(bitmap,savePath);
+            File file = FileUtils.compressImage(bitmap, savePath);
             if (file != null) {
                 if (fromClanClub) {
                     params.addBodyParameter("banner", file);
@@ -314,15 +318,17 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                 if (Build.VERSION.SDK_INT < 24) {
                     path = Utils.getPath(this, imageUri);
                 } else {
-                    path = imageUri.toString();
-                }
-                if (Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
-                        path.contains("/IMProject/")) {
-                    String[] arr = path.split("/IMProject/");
-                    if (arr != null && arr.length > 1) {
-                        path = savePath + arr[1];
+                    if (path.contains("im.boss66.com.fileProvider") &&
+                            path.contains("/IMProject/")) {
+                        String[] arr = path.split("/IMProject/");
+                        if (arr != null && arr.length > 1) {
+                            path = savePath + arr[1];
+                        }
+                    } else {
+                        path = imageUri.toString();
                     }
                 }
+
                 if (!TextUtils.isEmpty(path)) {
                     ClipImageActivity.prepare()
                             .aspectX(2).aspectY(2)//裁剪框横向及纵向上的比例
@@ -370,10 +376,16 @@ public class ReplaceAlbumCoverActivity extends BaseActivity implements View.OnCl
                     if (Build.VERSION.SDK_INT < 24) {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         String imageName = getNowTime() + ".jpg";
-                        // 指定调用相机拍照后照片的储存路径
-                        File dir = new File(savePath);
-                        if (!dir.exists()) {
-                            dir.mkdirs();
+//                        // 指定调用相机拍照后照片的储存路径
+//                        File dir = new File(savePath);
+//                        if (!dir.exists()) {
+//                            dir.mkdirs();
+//                        }
+                        File dir;
+                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                            dir = Environment.getExternalStorageDirectory();
+                        } else {
+                            dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                         }
                         File file = new File(dir, imageName);
                         imageUri = Uri.fromFile(file);

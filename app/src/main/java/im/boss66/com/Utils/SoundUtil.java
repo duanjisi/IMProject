@@ -3,6 +3,7 @@ package im.boss66.com.Utils;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -147,13 +148,17 @@ public class SoundUtil {
      */
     public String getDiskFielsDir(Context context) {
         String cachePath;
-        if (Environment.MEDIA_MOUNTED.equals(Environment
-                .getExternalStorageState())
-                || !Environment.isExternalStorageRemovable()) {
-            cachePath = context.getExternalFilesDir(
-                    Environment.DIRECTORY_MUSIC).getPath();
-        } else {
+        if (Build.VERSION.SDK_INT == 19){
             cachePath = context.getFilesDir().getPath();
+        }else {
+            if (Environment.MEDIA_MOUNTED.equals(Environment
+                    .getExternalStorageState())
+                    || !Environment.isExternalStorageRemovable()) {
+                cachePath = context.getExternalFilesDir(
+                        Environment.DIRECTORY_MUSIC).getPath();
+            } else {
+                cachePath = context.getFilesDir().getPath();
+            }
         }
         return cachePath;
     }

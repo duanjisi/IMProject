@@ -1,5 +1,11 @@
 package im.boss66.com;
 
+import android.os.Build;
+import android.os.Environment;
+import android.util.Log;
+
+import java.io.File;
+
 /**
  * Created by Johnny on 2017/2/21.
  */
@@ -9,13 +15,35 @@ public class Constants {
 //    public static final String VIDEO_CACHE_PATH =
 //            android.os.Environment.getExternalStorageDirectory() + "/HaiMeng/" + "video/";
 
+    //    private static final String BASE_DIR = "/mnt/sdcard/HaiMeng/";
+    private static final String BASE_DIR = App.getInstance().getFilesDir().getPath() + File.separator;
+    //    public static final String EMO_DIR_PATH = getBaseDir() + ".nomedia/" + App.getInstance().getUid() + "/";
+//    public static final String VIDEO_CACHE_PATH = getBaseDir() + "video/";
 
+    public static String EMO_DIR_PATH;
+    public static String VIDEO_CACHE_PATH;
 
+    static {
+        EMO_DIR_PATH = getBaseDir() + ".nomedia/" + App.getInstance().getUid() + "/";
+        VIDEO_CACHE_PATH = getBaseDir() + "video/";
+        Log.i("info", "==========EMO_DIR_PATH:" + EMO_DIR_PATH);
+    }
 
-    private static final String BASE_DIR = "/mnt/sdcard/HaiMeng/";
-
-    public static final String EMO_DIR_PATH = BASE_DIR + ".nomedia/" + App.getInstance().getUid() + "/";
-    public static final String VIDEO_CACHE_PATH = BASE_DIR + "video/";
+    private static String getBaseDir() {
+//        File dir;
+//        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//            dir = Environment.getExternalStorageDirectory();
+//        } else {
+//            dir = App.getInstance().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        }
+        String baseDir = "";
+        if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
+            baseDir = App.getInstance().getFilesDir().getPath() + "/HaiMeng/";
+        } else {
+            baseDir = Environment.getExternalStorageDirectory() + "/HaiMeng/";
+        }
+        return baseDir;
+    }
 
     public static final String EMO_DIR_SYSTEM_PATH =
             android.os.Environment.getExternalStorageDirectory() + "/HaiMeng/";

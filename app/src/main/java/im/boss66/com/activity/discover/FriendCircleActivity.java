@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -55,6 +56,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,7 +65,9 @@ import java.util.List;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
+import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.L;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
@@ -147,6 +151,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     private AccountEntity sAccount;
     private long[] mHits;
     private final int READ_VIDEO = 4;//本地视频
+    private String photoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,11 +161,12 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void initView() {
-        if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
+        if (Build.VERSION.SDK_INT == 19) {
             savePath = getFilesDir().getPath();
         } else {
             savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
         }
+        //savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
         mHits = new long[2];
         sceenW = UIUtils.getScreenWidth(context);
         rl_title = (RelativeLayout) findViewById(R.id.rl_title);
@@ -593,10 +599,16 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
             if (imageUri != null) {
                 String path = null;
                 if (Build.VERSION.SDK_INT < 24) {
-                    path = Utils.getPath(this, imageUri);
+//                    if (Build.VERSION.SDK_INT == 19 || Build.VERSION.SDK_INT == 20) {
+//                        path = imageUri.getPath();
+//                    }else {
+//                        path = Utils.getPath(this, imageUri);
+//                    }
+                    path = photoPath;
                 } else {
                     path = imageUri.toString();
                 }
+
                 Bundle bundle = new Bundle();
                 bundle.putString("sendType", "photo");
                 bundle.putInt("type", OPEN_CAMERA);
@@ -994,14 +1006,8 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 } else if (cameraType == OPEN_CAMERA) {
                     if (Build.VERSION.SDK_INT < 24) {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        String imageName = getNowTime() + ".jpg";
-                        // 指定调用相机拍照后照片的储存路径
-                        File dir = new File(savePath);
-                        if (!dir.exists()) {
-                            dir.mkdirs();
-                        }
-                        File file = new File(dir, imageName);
-                        imageUri = Uri.fromFile(file);
+                        File photoFile=createImgFile();
+                        imageUri=Uri.fromFile(photoFile);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                         if (intent.resolveActivity(getPackageManager()) != null) {
                             startActivityForResult(intent, OPEN_CAMERA);
@@ -1011,7 +1017,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                         String imageName = getNowTime() + ".jpg";
                         File file = new File(savePath, imageName);
                         imageUri = FileProvider.getUriForFile(FriendCircleActivity.this, "im.boss66.com.fileProvider", file);//这里进行替换uri的获得方式
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        //intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//这里加入flag
                         startActivityForResult(intent, OPEN_CAMERA);
                     }
@@ -1108,5 +1114,34 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 }
             }
         });
+    }
+
+    /**
+     * 自定义图片名，获取照片的file
+     */
+    private File createImgFile(){
+        //创建文件
+        String fileName="img_"+new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+".jpg";//确定文件名
+//        File dir=getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File dir=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//        File dir=Environment.getExternalStorageDirectory();
+        File dir;
+        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+            dir=Environment.getExternalStorageDirectory();
+        }else{
+            dir=getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        }
+        File tempFile=new File(dir,fileName);
+        try{
+            if(tempFile.exists()){
+                tempFile.delete();
+            }
+            tempFile.createNewFile();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        //获取文件路径
+        photoPath=tempFile.getAbsolutePath();
+        return tempFile;
     }
 }
