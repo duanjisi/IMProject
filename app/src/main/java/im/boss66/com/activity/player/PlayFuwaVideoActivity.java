@@ -60,7 +60,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
     private int currentIndex;
     private List<FuwaVideoEntity.DataBean> datas;
     private FuwaVideoEntity.DataBean dataBean;
-    private String classid;
+    private String classid, position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +88,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
         if (bundle != null) {
             currentIndex = bundle.getInt("position", 0);
             classid = bundle.getString("classid", "");
+            position = bundle.getString("pos", "");
             String result = bundle.getString("result", "");
             if (!TextUtils.isEmpty(result)) {
                 FuwaVideoEntity videoEntity = JSON.parseObject(result, FuwaVideoEntity.class);
@@ -163,6 +164,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                     } else {
                         intent.putExtra("type", 3);
                     }
+                    intent.putExtra("pos", position);
                     intent.putExtra("distance", dataBean.getDistance());
                     intent.putExtra("userid", dataBean.getUserid());
                     startActivity(intent);
@@ -429,6 +431,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                     } else {
                         intent.putExtra("type", 3);
                     }
+                    intent.putExtra("pos", position);
                     intent.putExtra("distance", dataBean.getDistance());
                     intent.putExtra("userid", dataBean.getUserid());
                     startActivity(intent);

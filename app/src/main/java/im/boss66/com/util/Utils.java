@@ -613,4 +613,47 @@ public class Utils {
         localContentValues.put("_size", Long.valueOf(paramFile.length()));
         Uri localUri = localContentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, localContentValues);
     }
+
+
+    public static int getZoomRank(double distance) {
+        int rank = 0;
+        if (distance < 20) {
+            rank = 19;
+        } else if (distance >= 20 && distance < 25) {
+            rank = 18;
+        } else if (distance >= 25 && distance < 50) {
+            rank = 17;
+        } else if (distance >= 50 && distance < 100) {
+            rank = 16;
+        } else if (distance >= 100 && distance < 200) {
+            rank = 15;
+        } else if (distance >= 200 && distance < 500) {
+            rank = 14;
+        } else if (distance >= 500 && distance < 1000) {
+            rank = 13;
+        } else if (distance >= 1000 && distance < 2000) {
+            rank = 12;
+        } else if (distance >= 2000 && distance < 5000) {
+            rank = 11;
+        } else if (distance >= 5000 && distance < 10000) {
+            rank = 10;
+        } else if (distance >= 10000 && distance < 20000) {
+            rank = 9;
+        } else if (distance >= 20000 && distance < 30000) {
+            rank = 8;
+        } else if (distance >= 30000 && distance < 50000) {
+            rank = 7;
+        } else if (distance >= 50000 && distance < 100000) {
+            rank = 6;
+        } else if (distance >= 100000 && distance < 200000) {
+            rank = 5;
+        } else if (distance >= 200000 && distance < 500000) {
+            rank = 4;
+        } else if (distance >= 500000 && distance < 1000000) {
+            rank = 3;
+        } else if (distance >= 1000000) {
+            rank = 3;
+        }
+        return rank;
+    }
 }

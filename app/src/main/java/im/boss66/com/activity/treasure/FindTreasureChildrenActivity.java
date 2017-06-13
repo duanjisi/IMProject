@@ -103,6 +103,7 @@ import im.boss66.com.http.request.AroundUserRequest;
 import im.boss66.com.listener.PermissionListener;
 import im.boss66.com.util.AMapUtil;
 import im.boss66.com.util.SensorEventHelper;
+import im.boss66.com.util.Utils;
 import im.boss66.com.widget.CircleImageView;
 import im.boss66.com.widget.WrappingSlidingDrawer;
 
@@ -156,7 +157,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
     private boolean mFirstFix = false;
     private int mType = 0;
-    private String userid;
+    private String userid, position;
     //    private boolean isFate = false;
     private Marker mLocMarker, mPersonMarker;
     private LatLng mLatLng;
@@ -213,10 +214,10 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         if (bundle != null) {
             mType = bundle.getInt("type", 0);
             userid = bundle.getString("userid", "");
+            position = bundle.getString("pos", "");
             distance = bundle.getDouble("distance", 0);
 //            isFate = bundle.getBoolean("isFate", false);
         }
-
         slidingDrawer.setOnDrawerOpenListener(new SlidingDrawer.OnDrawerOpenListener() {
             @Override
             public void onDrawerOpened() {
@@ -688,7 +689,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         mLatLng = new LatLng(latitude, longitude);
 //        mLatLng = mLocMarker.getPosition();
         Log.i("info", "===============distance:" + distance);
-        if (distance > 300 || distance == 0) {
+        if (distance > 500) {
             if (slidingDrawer.getVisibility() != View.VISIBLE) {
                 UIUtils.showView(slidingDrawer);
             }
@@ -910,8 +911,11 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private void scalePoint(AMapLocation aMapLocation) {
         LatLng latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
         aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(19));
-//        addMarkers(aMapLocation);
+        if (distance != 0) {
+            aMap.moveCamera(CameraUpdateFactory.zoomTo(Utils.getZoomRank(distance)));
+        } else {
+            aMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+        }
     }
 
     private void addMarkers(AMapLocation location) {
@@ -1061,15 +1065,17 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
                     mType == FIND_USER_FUWA) {
                 if (isFirstRequest) {
                     raduis = (int) (distance * 2);
+                    parms = position;
                     isFirstRequest = false;
                 } else {
                     raduis = (int) (scale * UIUtils.getScreenPx(context) / 2);//半径
+                    parms = cameraPosition.target.longitude + "-" + cameraPosition.target.latitude;
                 }
             } else {
-                raduis = (int) (scale * UIUtils.getScreenPx(context) / 2);//半径
+                raduis = (int) (scale * UIUtils.getScreenPx(context) / 2);//
+                parms = cameraPosition.target.longitude + "-" + cameraPosition.target.latitude;
             }
             Log.i("info", "==============raduis:" + raduis);
-            parms = cameraPosition.target.longitude + "-" + cameraPosition.target.latitude;
             BaseRequest request = null;
 //            if (!isFate) {
 //                request = new AroundBabyRequest(TAG, parms, "" + raduis, "0");

@@ -855,8 +855,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private String photoPath = "";
-    //private String savePath = Environment.getExternalStorageDirectory() + "/myimage/";
-    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    //    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    private String savePath = getFilesDir() + "/IMProject/";
 
     private void takePhoto() {
 //        String status = Environment.getExternalStorageState();

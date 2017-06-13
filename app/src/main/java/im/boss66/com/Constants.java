@@ -9,6 +9,9 @@ public class Constants {
 //    public static final String VIDEO_CACHE_PATH =
 //            android.os.Environment.getExternalStorageDirectory() + "/HaiMeng/" + "video/";
 
+
+
+
     private static final String BASE_DIR = "/mnt/sdcard/HaiMeng/";
 
     public static final String EMO_DIR_PATH = BASE_DIR + ".nomedia/" + App.getInstance().getUid() + "/";

@@ -5,16 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.alibaba.fastjson.JSON;
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -49,7 +44,7 @@ public class VideoListFragment extends BaseFragment {
     private String result;
 
 
-    public static VideoListFragment newInstance(String classid,String lat,String lng) {
+    public static VideoListFragment newInstance(String classid, String lat, String lng) {
         VideoListFragment fragment = new VideoListFragment();
         fragment.classid = classid;
 
@@ -89,6 +84,7 @@ public class VideoListFragment extends BaseFragment {
 //                showToast("-----",false);
                 Intent intent = new Intent(getActivity(), PlayFuwaVideoActivity.class);
                 intent.putExtra("position", postion);
+                intent.putExtra("pos", getPosition());
                 intent.putExtra("result", result);
                 intent.putExtra("classid", classid);
                 startActivity(intent);
@@ -100,9 +96,12 @@ public class VideoListFragment extends BaseFragment {
             }
         });
         rcv_video.setAdapter(adapter);
-
-
     }
+
+    private String getPosition() {
+        return lng + "-" + lat;
+    }
+
 
     private void initData() {
 
@@ -125,11 +124,11 @@ public class VideoListFragment extends BaseFragment {
                         adapter.setDatas(datas);
                         adapter.notifyDataSetChanged();
 
-                    }else{
+                    } else {
                         showToast("网络异常，请稍后重试", false);
                     }
 
-                }else{
+                } else {
                     showToast("网络异常，请稍后重试", false);
                 }
             }
@@ -147,6 +146,4 @@ public class VideoListFragment extends BaseFragment {
             }
         });
     }
-
-
 }
