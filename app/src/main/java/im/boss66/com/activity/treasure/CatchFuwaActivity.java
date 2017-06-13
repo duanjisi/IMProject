@@ -2,9 +2,11 @@ package im.boss66.com.activity.treasure;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -43,6 +45,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.gifdecoder.GifDecoder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -756,13 +760,13 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
 //    }
 
     private void showDialog() {
-        if (dialog == null) {
+        if (dialog == null && !isFinish) {
             View dialog_view = LayoutInflater.from(context).inflate(
                     R.layout.dialog_catch_fuwa, null);
             int sceenW = UIUtils.getScreenWidth(this);
             int sceenH = UIUtils.getScreenHeight(this);
 
-            CircleImageView roundImageView = (CircleImageView) dialog_view.findViewById(R.id.riv_head);
+            ImageView roundImageView = (ImageView) dialog_view.findViewById(R.id.riv_head);
             TextView tv_name = (TextView) dialog_view.findViewById(R.id.tv_name);
             TextView tv_fuwa = (TextView) dialog_view.findViewById(R.id.tv_fuwa);
             Button bt_share = (Button) dialog_view.findViewById(R.id.bt_share);
@@ -784,7 +788,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             LinearLayout ll_user = (LinearLayout) dialog_view.findViewById(R.id.ll_user);
             ImageView iv_video_photo = (ImageView) dialog_view.findViewById(R.id.iv_video_photo);
             ImageView iv_video_play = (ImageView) dialog_view.findViewById(R.id.iv_video_play);
-            CircleImageView riv_user_head = (CircleImageView) dialog_view.findViewById(R.id.riv_user_head);
+            ImageView riv_user_head = (ImageView) dialog_view.findViewById(R.id.riv_user_head);
             TextView tv_user_name = (TextView) dialog_view.findViewById(R.id.tv_user_name);
             TextView tv_user_area = (TextView) dialog_view.findViewById(R.id.tv_user_area);
             TextView tv_add_friend = (TextView) dialog_view.findViewById(R.id.tv_add_friend);
@@ -827,13 +831,21 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                                 videoBgUrl = videoBgUrl + "." + arr[i];
                             }
                         }
-                        Glide.with(this).load(videoBgUrl).error(R.drawable.zf_default_message_image).into(iv_video_photo);
+                        if (!isFinish)
+                            Glide.with(this).load(videoBgUrl).error(R.drawable.zf_default_message_image).into(iv_video_photo);
                     }
                 } else {
                     rl_video.setVisibility(View.GONE);
                 }
                 String head = currentChild.getAvatar();
-                Glide.with(this).load(head).error(R.drawable.zf_default_message_image).into(riv_user_head);
+                //Glide.with(this).load(head).error(R.drawable.zf_default_message_image).into(riv_user_head);
+                if (!isFinish) {
+                    Glide.with(this)
+                            .load(head)
+                            .error(R.drawable.zf_default_message_image)
+                            .transform(new GlideCircleTransform(this))
+                            .into(riv_user_head);
+                }
             }
             RelativeLayout.LayoutParams rlParams = (RelativeLayout.LayoutParams) rl_user.getLayoutParams();
             rlParams.width = sceenW;
@@ -876,7 +888,14 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
             AccountEntity sAccount = App.getInstance().getAccount();
             if (sAccount != null) {
                 String head = sAccount.getAvatar();
-                Glide.with(context).load(head).error(R.drawable.zf_default_message_image).into(roundImageView);
+                //Glide.with(context).load(head).error(R.drawable.zf_default_message_image).into(roundImageView);
+                if (!isFinish) {
+                    Glide.with(this)
+                            .load(head)
+                            .error(R.drawable.zf_default_message_image)
+                            .transform(new GlideCircleTransform(this))
+                            .into(roundImageView);
+                }
                 String userName = sAccount.getUser_name();
                 if (!TextUtils.isEmpty(userName)) {
                     tv_name.setText(userName);
@@ -982,8 +1001,8 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             for (int i = 0; i < drawable.getFrameCount(); i++) {
                                 duration += decoder.getDelay(i);
                             }
-                            if (duration > 3000) {
-                                duration = 3000;
+                            if (duration > 2000) {
+                                duration = 2000;
                             }
                             //发送延时消息，通知动画结束
                             handler.sendEmptyMessageDelayed(111,
@@ -1181,5 +1200,41 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         Imgproc.cvtColor(mat1, srcMat, Imgproc.COLOR_BGR2GRAY);
         srcMat.convertTo(srcMat, CvType.CV_32F);
         return srcMat;
+    }
+
+    public class GlideCircleTransform extends BitmapTransformation {
+        public GlideCircleTransform(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
+            return circleCrop(pool, toTransform);
+        }
+
+        private Bitmap circleCrop(BitmapPool pool, Bitmap source) {
+            if (source == null) return null;
+            int size = Math.min(source.getWidth(), source.getHeight());
+            int x = (source.getWidth() - size) / 2;
+            int y = (source.getHeight() - size) / 2;
+            // TODO this could be acquired from the pool too
+            Bitmap squared = Bitmap.createBitmap(source, x, y, size, size);
+            Bitmap result = pool.get(size, size, Bitmap.Config.ARGB_4444);
+            if (result == null) {
+                result = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_4444);
+            }
+            Canvas canvas = new Canvas(result);
+            Paint paint = new Paint();
+            paint.setShader(new BitmapShader(squared, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
+            paint.setAntiAlias(true);
+            float r = size / 2f;
+            canvas.drawCircle(r, r, r, paint);
+            return result;
+        }
+
+        @Override
+        public String getId() {
+            return getClass().getName();
+        }
     }
 }
