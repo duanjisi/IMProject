@@ -840,8 +840,10 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 String head = currentChild.getAvatar();
                 //Glide.with(this).load(head).error(R.drawable.zf_default_message_image).into(riv_user_head);
                 if (!isFinish) {
+                    int o_h = UIUtils.dip2px(context, 60);
                     Glide.with(this)
                             .load(head)
+                            .override(o_h, o_h)
                             .error(R.drawable.zf_default_message_image)
                             .transform(new GlideCircleTransform(this))
                             .into(riv_user_head);
@@ -977,40 +979,42 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void playSucessGif() {
-        iv_success.setVisibility(View.VISIBLE);
         try {
-            Glide.with(this)
-                    .load(R.drawable.fuwa_catch_succ)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .listener(new RequestListener<Integer, GlideDrawable>() {
+            if (iv_success != null) {
+                iv_success.setVisibility(View.VISIBLE);
+                Glide.with(this)
+                        .load(R.drawable.fuwa_catch_succ)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .listener(new RequestListener<Integer, GlideDrawable>() {
 
-                        @Override
-                        public boolean onException(Exception arg0, Integer arg1,
-                                                   Target<GlideDrawable> arg2, boolean arg3) {
-                            return false;
-                        }
+                            @Override
+                            public boolean onException(Exception arg0, Integer arg1,
+                                                       Target<GlideDrawable> arg2, boolean arg3) {
+                                return false;
+                            }
 
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource,
-                                                       Integer model, Target<GlideDrawable> target,
-                                                       boolean isFromMemoryCache, boolean isFirstResource) {
-                            // 计算动画时长
-                            GifDrawable drawable = (GifDrawable) resource;
-                            GifDecoder decoder = drawable.getDecoder();
-                            int duration = 0;
-                            for (int i = 0; i < drawable.getFrameCount(); i++) {
-                                duration += decoder.getDelay(i);
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource,
+                                                           Integer model, Target<GlideDrawable> target,
+                                                           boolean isFromMemoryCache, boolean isFirstResource) {
+                                // 计算动画时长
+                                GifDrawable drawable = (GifDrawable) resource;
+                                GifDecoder decoder = drawable.getDecoder();
+                                int duration = 0;
+                                for (int i = 0; i < drawable.getFrameCount(); i++) {
+                                    duration += decoder.getDelay(i);
+                                }
+                                if (duration > 2000) {
+                                    duration = 2000;
+                                }
+                                //发送延时消息，通知动画结束
+                                handler.sendEmptyMessageDelayed(111,
+                                        duration);
+                                return false;
                             }
-                            if (duration > 2000) {
-                                duration = 2000;
-                            }
-                            //发送延时消息，通知动画结束
-                            handler.sendEmptyMessageDelayed(111,
-                                    duration);
-                            return false;
-                        }
-                    }) //仅仅加载一次gif动画
-                    .into(new GlideDrawableImageViewTarget(iv_success, 1));
+                        }) //仅仅加载一次gif动画
+                        .into(new GlideDrawableImageViewTarget(iv_success, 1));
+            }
         } catch (Exception e) {
             handler.sendEmptyMessageDelayed(111,
                     1000);
@@ -1047,7 +1051,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                         twoMat = getMat(twoMat);
                         if (oneMat != null && twoMat != null)
                             comPH = comPareHist(oneMat, twoMat);
-                        if (comPH >= 0.3 || (cameraNum >= 4 && comPH > (0.3 - 0.03 * cameraNum))) {
+                        if (comPH >= 0.3 || (cameraNum >= 4 && comPH > (0.3 - 0.05 * cameraNum))) {
                             cameraNum = 0;
                             getServerData();
                         } else {

@@ -639,10 +639,16 @@ public class PersonalPhotoAlbumActivity extends BaseActivity implements View.OnC
                     if (Build.VERSION.SDK_INT < 24) {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         String imageName = getNowTime() + ".jpg";
-                        // 指定调用相机拍照后照片的储存路径
-                        File dir = new File(savePath);
-                        if (!dir.exists()) {
-                            dir.mkdirs();
+//                        // 指定调用相机拍照后照片的储存路径
+//                        File dir = new File(savePath);
+//                        if (!dir.exists()) {
+//                            dir.mkdirs();
+//                        }
+                        File dir;
+                        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                            dir=Environment.getExternalStorageDirectory();
+                        }else{
+                            dir=getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                         }
                         File file = new File(dir, imageName);
                         imageUri = Uri.fromFile(file);

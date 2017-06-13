@@ -310,6 +310,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initViews() {
+        savePath = getFilesDir().getPath() + "/IMProject/";
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         account = App.getInstance().getAccount();
         Bundle bundle = getIntent().getExtras();
@@ -856,7 +857,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     private String photoPath = "";
     //private String savePath = Environment.getExternalStorageDirectory() + "/myimage/";
-    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    //private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
+    private String savePath;
 
     private void takePhoto() {
 //        String status = Environment.getExternalStorageState();
@@ -884,9 +886,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             String imageName = System.currentTimeMillis() + ".jpg";
             // 指定调用相机拍照后照片的储存路径
-            File dir = new File(savePath);
-            if (!dir.exists()) {
-                dir.mkdirs();
+//            File dir = new File(savePath);
+//            if (!dir.exists()) {
+//                dir.mkdirs();
+//            }
+            File dir;
+            if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                dir=Environment.getExternalStorageDirectory();
+            }else{
+                dir=getExternalFilesDir(Environment.DIRECTORY_PICTURES);
             }
             File file = new File(dir, imageName);
             photoPath = file.getPath();
