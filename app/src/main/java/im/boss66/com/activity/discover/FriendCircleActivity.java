@@ -1017,7 +1017,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                         String imageName = getNowTime() + ".jpg";
                         File file = new File(savePath, imageName);
                         imageUri = FileProvider.getUriForFile(FriendCircleActivity.this, "im.boss66.com.fileProvider", file);//这里进行替换uri的获得方式
-                        //intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//这里加入flag
                         startActivityForResult(intent, OPEN_CAMERA);
                     }
