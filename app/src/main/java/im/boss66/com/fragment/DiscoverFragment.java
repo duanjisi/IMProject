@@ -25,6 +25,7 @@ import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.ImageLoaderUtils;
+import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.discover.FriendCircleActivity;
 import im.boss66.com.activity.discover.PeopleNearbyActivity;
@@ -49,6 +50,7 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
     private boolean isLoad = false;
     private String newCount, newIcon;
     private ImageView iv_avatar;
+    private long curTime;
 //    private ImageLoader imageLoader;
 //    private AccountEntity account;
 
@@ -146,7 +148,29 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden && !isLoad) {
+            getServerNew();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        long nowTime = System.currentTimeMillis();
+        if (curTime == 0 || (nowTime - curTime) > 10000 && !isLoad) {
+            curTime = nowTime;
+            getServerNew();
+        }
+    }
+
     private void getServerNew() {
+        if (!NetworkUtil.networkAvailable(getActivity())) {
+            showToast("断网啦，请检查网络", false);
+            return;
+        }
         isLoad = true;
         AccountEntity sAccount = App.getInstance().getAccount();
         access_token = sAccount.getAccess_token();
