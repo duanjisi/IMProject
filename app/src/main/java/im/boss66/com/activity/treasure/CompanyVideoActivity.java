@@ -157,8 +157,12 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
                             viewPagerFragmentAdapter.setListData(listData);
                             viewPagerFragmentAdapter.notifyDataSetChanged();
                         }
+                    }else{
+                        showToast("网络异常，请稍后再试",false);
                     }
 
+                }else{
+                    showToast("网络异常，请稍后再试",false);
                 }
 
 
@@ -173,7 +177,7 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
                     intent.setAction(Constants.ACTION_LOGOUT_RESETING);
                     App.getInstance().sendBroadcast(intent);
                 } else {
-                    showToast(e.getMessage(), false);
+                    showToast("网络异常，请稍后再试",false);
                 }
             }
         });
