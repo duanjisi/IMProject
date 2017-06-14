@@ -65,7 +65,7 @@ public class VideoPlayerNewActivity extends BaseActivity implements ActionSheet.
         Log.i("info", "=============mVideoPath:" + mVideoPath);
         mMediaController = new MediaController(this, false, mIsLiveStreaming == 1);
         mMediaController.setMediaPlayer(mVideoView);
-        mVideoView.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_PAVED_PARENT);
+        mVideoView.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_FIT_PARENT);
         mVideoView.setMediaController(mMediaController);
         setOptions(codec);
         mVideoView.setOnCompletionListener(mOnCompletionListener);
@@ -94,6 +94,8 @@ public class VideoPlayerNewActivity extends BaseActivity implements ActionSheet.
                 } else {
                     if (width > height) {
                         mVideoView.setDisplayOrientation(270);
+                    } else {
+                        mVideoView.setDisplayOrientation(mVideoRotation);
                     }
                 }
             }

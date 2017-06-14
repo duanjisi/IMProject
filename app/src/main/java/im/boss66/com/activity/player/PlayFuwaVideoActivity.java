@@ -102,7 +102,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
 //        mVideoPath = getVideoPath(videoPath);
         mMediaController = new MediaController(this, false, mIsLiveStreaming == 1);
         mMediaController.setMediaPlayer(mVideoView);
-        mVideoView.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_PAVED_PARENT);
+        mVideoView.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_FIT_PARENT);
         mVideoView.setMediaController(mMediaController);
         setOptions(codec);
         mVideoView.setOnCompletionListener(mOnCompletionListener);
