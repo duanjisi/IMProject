@@ -17,15 +17,12 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
 
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
-import im.boss66.com.Utils.ImageLoaderUtils;
-import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.activity.CaptureActivity;
 import im.boss66.com.activity.discover.FriendCircleActivity;
 import im.boss66.com.activity.discover.PeopleNearbyActivity;
@@ -167,10 +164,10 @@ public class DiscoverFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void getServerNew() {
-        if (!NetworkUtil.networkAvailable(getActivity())) {
-            showToast("断网啦，请检查网络", false);
-            return;
-        }
+//        if (!NetworkUtil.networkAvailable(getActivity())) {
+//            showToast("断网啦，请检查网络", false);
+//            return;
+//        }
         isLoad = true;
         AccountEntity sAccount = App.getInstance().getAccount();
         access_token = sAccount.getAccess_token();
