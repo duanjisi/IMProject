@@ -396,21 +396,24 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
             }
         }
         if (SEND_TYPE_PHOTO.equals(sendType) && imgList != null) {
-            for (int i = 0; i < imgList.size(); i++) {
-                String path = imgList.get(i);
-                if (Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
-                        path.contains("/IMProject/")) {
-                    String[] arr = path.split("/IMProject/");
-                    if (arr != null && arr.length > 1) {
-                        path = savePath + arr[1];
+            int size = imgList.size();
+            if (size > 0) {
+                for (int i = 0; i < size; i++) {
+                    String path = imgList.get(size - i - 1);
+                    if (Build.VERSION.SDK_INT >= 24 && path.contains("im.boss66.com.fileProvider") &&
+                            path.contains("/IMProject/")) {
+                        String[] arr = path.split("/IMProject/");
+                        if (arr != null && arr.length > 1) {
+                            path = savePath + arr[1];
+                        }
                     }
-                }
-                int seenW = UIUtils.getScreenWidth(this);
-                Bitmap bitmap = FileUtils.compressImageFromFile(path, seenW);
-                if (bitmap != null) {
-                    File file = FileUtils.compressImage(bitmap,savePath);
-                    if (file != null) {
-                        params.addBodyParameter("files" + "[" + i + "]", file);
+                    int seenW = UIUtils.getScreenWidth(this);
+                    Bitmap bitmap = FileUtils.compressImageFromFile(path, seenW);
+                    if (bitmap != null) {
+                        File file = FileUtils.compressImage(bitmap, savePath);
+                        if (file != null) {
+                            params.addBodyParameter("files" + "[" + i + "]", file);
+                        }
                     }
                 }
             }
@@ -627,10 +630,10 @@ public class FriendSendNewMsgActivity extends BaseActivity implements View.OnCli
 //                            dir.mkdirs();
 //                        }
                         File dir;
-                        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-                            dir=Environment.getExternalStorageDirectory();
-                        }else{
-                            dir=getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                            dir = Environment.getExternalStorageDirectory();
+                        } else {
+                            dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                         }
                         File file = new File(dir, imageName);
                         imageUri = Uri.fromFile(file);
