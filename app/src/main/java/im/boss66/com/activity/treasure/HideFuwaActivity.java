@@ -966,13 +966,16 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String res = responseInfo.result;
                 if (!TextUtils.isEmpty(res)) {
-                    FuwaEntity entity = JSON.parseObject(res, FuwaEntity.class);
-                    List<FuwaEntity.Data> data = entity.getData();
-                    if (data != null && data.size() > 0) {
-                        getNumFuwaType(data);
-                    } else {
-                        fuwaSocialNum = 0;
-                        fuwaTreasureNum = 0;
+                    BaseResult result = BaseResult.parse(res);
+                    if (result != null && result.getCode() == 0) {
+                        FuwaEntity entity = JSON.parseObject(res, FuwaEntity.class);
+                        List<FuwaEntity.Data> data = entity.getData();
+                        if (data != null && data.size() > 0) {
+                            getNumFuwaType(data);
+                        } else {
+                            fuwaSocialNum = 0;
+                            fuwaTreasureNum = 0;
+                        }
                     }
                 }
             }

@@ -653,7 +653,12 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         public void run() {
             if (previewing) {
                 if (mCamera != null) {
-                    mCamera.autoFocus(autoFocusCB);
+                    try {
+                        mCamera.autoFocus(autoFocusCB);
+                    } catch (Exception e) {
+                        isTakePic = true;
+                        previewing = false;
+                    }
                 }
                 isTakePic = true;
                 previewing = false;

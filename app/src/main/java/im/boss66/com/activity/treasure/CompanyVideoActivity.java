@@ -3,7 +3,6 @@ package im.boss66.com.activity.treasure;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -28,7 +27,6 @@ import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.ToastUtil;
-import im.boss66.com.Utils.UIUtils;
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.adapter.ViewPagerFragmentAdapter;
 import im.boss66.com.entity.VideoCategory;
@@ -50,11 +48,8 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
 
     private PermissionListener permissionListener;
     private List<CharSequence> listTitle;
-
     private List<Fragment> listData;
     private ViewPager viewPager;
-
-
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
     private boolean first = true;
@@ -135,7 +130,6 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         String url = HttpUrl.SEARCH_COMPANY_VIDEO;
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
-
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 cancelLoadingDialog();
@@ -150,7 +144,6 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
                             listTitle.add(data.getName());
                             listData.add(VideoListFragment.newInstance(data.getClassid(), lat, lng));
                         }
-
                         //刷新页面
                         if (viewPagerFragmentAdapter != null) {
                             viewPagerFragmentAdapter.setListTitle(listTitle);
@@ -194,7 +187,6 @@ public class CompanyVideoActivity extends ABaseActivity implements View.OnClickL
         viewPagerFragmentAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager(), listData, listTitle);
 
         viewPager.setAdapter(viewPagerFragmentAdapter);
-
         tabLayout.setupWithViewPager(viewPager);
     }
 

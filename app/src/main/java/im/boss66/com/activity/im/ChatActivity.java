@@ -310,7 +310,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initViews() {
-        savePath = getFilesDir().getPath() + "/IMProject/";
         imageLoader = ImageLoaderUtils.createImageLoader(context);
         account = App.getInstance().getAccount();
         Bundle bundle = getIntent().getExtras();
@@ -857,8 +856,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     private String photoPath = "";
     //private String savePath = Environment.getExternalStorageDirectory() + "/myimage/";
-    //private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
-    private String savePath;
+    private String savePath = Environment.getExternalStorageDirectory() + "/IMProject/";
 
     private void takePhoto() {
 //        String status = Environment.getExternalStorageState();

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -65,9 +64,8 @@ import java.util.List;
 import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
-import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.ImageLoaderUtils;
-import im.boss66.com.Utils.L;
+import im.boss66.com.Utils.NetworkUtil;
 import im.boss66.com.Utils.PermissonUtil.PermissionUtil;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelector;
 import im.boss66.com.Utils.PhotoAlbumUtil.MultiImageSelectorActivity;
@@ -94,7 +92,6 @@ import im.boss66.com.http.request.CircleCommentDeleteRequest;
 import im.boss66.com.http.request.DoPraiseRequest;
 import im.boss66.com.listener.CircleContractListener;
 import im.boss66.com.listener.PermissionListener;
-import im.boss66.com.util.Utils;
 import im.boss66.com.widget.ActionSheet;
 
 /**
@@ -355,7 +352,9 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 }
                 break;
             case R.id.iv_head:
-                openActivity(PersonalPhotoAlbumActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("isSelt", true);
+                openActivity(PersonalPhotoAlbumActivity.class, bundle);
                 break;
             case R.id.rl_title:
                 System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
@@ -514,6 +513,10 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void getFriendCircleList() {
+        if (!NetworkUtil.networkAvailable(this)) {
+            showToast("网络异常，请检查网络", false);
+            return;
+        }
         String url = HttpUrl.FRIEND_CIRCLE_LIST;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
@@ -709,6 +712,10 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
     //删除朋友圈item
     private void deleteFriendCircleItem(int id) {
+        if (!NetworkUtil.networkAvailable(this)) {
+            showToast("网络异常，请检查网络", false);
+            return;
+        }
         showLoadingDialog();
         String main = HttpUrl.FRIEND_CIRCLE_DELETE + "?feed_id=" + id;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
@@ -759,6 +766,10 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     //获取点赞列表
     private void getServerPraiseList(int feedId, final int isPraise) {
         //showLoadingDialog();
+        if (!NetworkUtil.networkAvailable(this)) {
+            showToast("网络异常，请检查网络", false);
+            return;
+        }
         String main = HttpUrl.FRIEND_CIRCLE_GET_PRAISE_LIST + "?feed_id=" + feedId;
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
@@ -870,6 +881,10 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
 
     //获取评论列表
     private void getServerCommentList(int feedId) {
+        if (!NetworkUtil.networkAvailable(this)) {
+            showToast("网络异常，请检查网络", false);
+            return;
+        }
         String main = HttpUrl.FRIEND_CIRCLE_GET_COMMENT_LIST + "?feed_id=" + feedId + "&page=0&size=1024";
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
@@ -1006,8 +1021,8 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 } else if (cameraType == OPEN_CAMERA) {
                     if (Build.VERSION.SDK_INT < 24) {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        File photoFile=createImgFile();
-                        imageUri=Uri.fromFile(photoFile);
+                        File photoFile = createImgFile();
+                        imageUri = Uri.fromFile(photoFile);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                         if (intent.resolveActivity(getPackageManager()) != null) {
                             startActivityForResult(intent, OPEN_CAMERA);
@@ -1064,6 +1079,10 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void addCollectToServer(String imgUrl, String thumUrl, int type, String fromid) {
+        if (!NetworkUtil.networkAvailable(this)) {
+            showToast("网络异常，请检查网络", false);
+            return;
+        }
         showLoadingDialog();
         String url = HttpUrl.ADD_PERSONAL_COLLECT;
         HttpUtils httpUtils = new HttpUtils(30 * 1000);
@@ -1119,29 +1138,29 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
     /**
      * 自定义图片名，获取照片的file
      */
-    private File createImgFile(){
+    private File createImgFile() {
         //创建文件
-        String fileName="img_"+new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+".jpg";//确定文件名
+        String fileName = "img_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg";//确定文件名
 //        File dir=getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 //        File dir=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 //        File dir=Environment.getExternalStorageDirectory();
         File dir;
-        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-            dir=Environment.getExternalStorageDirectory();
-        }else{
-            dir=getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            dir = Environment.getExternalStorageDirectory();
+        } else {
+            dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         }
-        File tempFile=new File(dir,fileName);
-        try{
-            if(tempFile.exists()){
+        File tempFile = new File(dir, fileName);
+        try {
+            if (tempFile.exists()) {
                 tempFile.delete();
             }
             tempFile.createNewFile();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         //获取文件路径
-        photoPath=tempFile.getAbsolutePath();
+        photoPath = tempFile.getAbsolutePath();
         return tempFile;
     }
 }
