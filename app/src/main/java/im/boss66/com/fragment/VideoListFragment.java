@@ -108,7 +108,7 @@ public class VideoListFragment extends BaseFragment {
 
 
         String url = HttpUrl.SEARCH_VIDEO_LIST + "?geohash=" + lng + "-" + lat + "&class=" + classid;
-//        Log.i("liwya",url);
+        Log.i("liwya",url);
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
 
