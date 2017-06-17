@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,7 +108,7 @@ public class VideoListFragment extends BaseFragment {
 
 
         String url = HttpUrl.SEARCH_VIDEO_LIST + "?geohash=" + lng + "-" + lat + "&class=" + classid;
-//        Log.i("liwya",url);
+        Log.i("liwya",url);
         HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
 

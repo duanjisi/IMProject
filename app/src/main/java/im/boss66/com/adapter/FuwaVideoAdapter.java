@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -69,6 +70,7 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
 
 
         if(!TextUtils.isEmpty(height)){
+            holder1.setVisibility(true);
             double v = Double.parseDouble(width)/screenWidth;
 
             Integer img_height = Integer.parseInt(height);
@@ -77,6 +79,8 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
 //            Log.i("liwya",height+"实际高度");
 //            Log.i("liwya",lp.height+"显示高度");
             holder1.img_content.setLayoutParams(lp);
+        }else{
+            holder1.setVisibility(false);
         }
 
 
@@ -213,5 +217,19 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
             tv_distance = (TextView) itemView.findViewById(R.id.tv_distance);
             rl_top = (RelativeLayout) itemView.findViewById(R.id.rl_top);
         }
+        public void setVisibility(boolean isVisible){
+            RecyclerView.LayoutParams param = (RecyclerView.LayoutParams)itemView.getLayoutParams();
+            if (isVisible){
+                param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                param.width = LinearLayout.LayoutParams.MATCH_PARENT;
+                itemView.setVisibility(View.VISIBLE);
+            }else{
+                itemView.setVisibility(View.GONE);
+                param.height = 0;
+                param.width = 0;
+            }
+            itemView.setLayoutParams(param);
+        }
     }
+
 }

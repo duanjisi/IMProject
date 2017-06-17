@@ -14,7 +14,7 @@
             android:scaleType="fitXY"
             android:id="@+id/img_content"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             roundiv:round_borderRadius="6dp"
             roundiv:round_type="1"
             />
