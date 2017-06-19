@@ -374,4 +374,6 @@ public class HttpUrl {
     public static final String SEARCH_VIDEO_LIST = BASE_FUWA[FUWA_TAG] + "api/queryvideo";
     //播放视频次数
     public static final String PLAY_VIDEO_NUM = BASE_FUWA[FUWA_TAG] + "api/hit";
+    //人脉全局搜索
+    public static final String SEARCH_CONNECTION_ALL = MAIN_URL+"api/v1/search/g";
 }

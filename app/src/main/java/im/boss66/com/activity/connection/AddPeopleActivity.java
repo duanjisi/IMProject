@@ -19,6 +19,7 @@ import java.util.List;
 
 import im.boss66.com.activity.base.ABaseActivity;
 import im.boss66.com.R;
+import im.boss66.com.entity.ConnectionAllSearch;
 import im.boss66.com.entity.SchoolmateListEntity;
 import im.boss66.com.fragment.CountrymanFragment;
 import im.boss66.com.fragment.CustomAddFragment;
@@ -72,7 +73,7 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
             public void setText(int position) {
                 searchPop.setFragment_position(position);
                 if (position == 2) {
-                    tv_search.setText("搜索兴趣或职业");
+                    tv_search.setText("搜索");
                 } else {
                     tv_search.setText("搜索人脉");
                 }
@@ -110,7 +111,7 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
 
 
 
-        searchPop = new SearchPop(getApplicationContext());      //切换后position不同。
+        searchPop = new SearchPop(this);      //切换后position不同。
         searchPop.setListener(new SearchPop.ICallBack() {
             @Override
             public void setVisible() {
@@ -131,12 +132,15 @@ public class AddPeopleActivity extends ABaseActivity implements View.OnClickList
                         countrymanFragment.refresh(schoolmateListEntity);
 
                         break;
-                    case 2:
-                        customAddFragment.refresh(schoolmateListEntity);
 
-                        break;
 
                 }
+            }
+
+            @Override
+            public void refreashAll(int position, ConnectionAllSearch connectionAllSearch) {
+                customAddFragment.refresh(connectionAllSearch);
+
             }
 
 
