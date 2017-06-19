@@ -1186,10 +1186,11 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
         if (videoFile != null) {
             String url = videoFile.getAbsolutePath();
             MediaMetadataRetriever mediaMetadataRetriever = null;
+            Bitmap videoBitmap = null;
             try {
                 mediaMetadataRetriever = new MediaMetadataRetriever();
                 mediaMetadataRetriever.setDataSource(url);
-                Bitmap videoBitmap = mediaMetadataRetriever.getFrameAtTime();
+                videoBitmap = mediaMetadataRetriever.getFrameAtTime();
                 if (videoBitmap != null && iv_video_img != null) {
                     fl_video_dialog_img.setVisibility(View.VISIBLE);
                     iv_video.setVisibility(View.GONE);
@@ -1198,6 +1199,11 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
             } catch (Exception e) {
                 iv_video_img.setImageResource(R.drawable.zf_default_album_grid_image);
                 e.printStackTrace();
+            } catch (OutOfMemoryError error) {
+                if (videoBitmap != null) {
+                    videoBitmap = null;
+                }
+                iv_video_img.setImageResource(R.drawable.zf_default_album_grid_image);
             } finally {
                 if (mediaMetadataRetriever != null) {
                     mediaMetadataRetriever.release();
