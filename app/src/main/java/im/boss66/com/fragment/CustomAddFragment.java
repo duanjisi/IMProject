@@ -30,6 +30,7 @@ import im.boss66.com.R;
 import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.connection.ClanClubActivity;
 import im.boss66.com.activity.connection.SchoolHometownActivity;
+import im.boss66.com.activity.discover.PersonalNearbyDetailActivity;
 import im.boss66.com.adapter.ConnectionSearchAdapter;
 import im.boss66.com.adapter.RecommendAdapter;
 import im.boss66.com.entity.ConnectionAllSearch;
@@ -133,26 +134,30 @@ public class CustomAddFragment extends BaseFragment {
                     case 1:   //宗亲
                         intent = new Intent(getActivity(), ClanClubActivity.class);
                         intent.putExtra("isClan", 1);
-                        intent.putExtra("name", datas.get(position ).getName());
-                        intent.putExtra("id", datas.get(position ).getId());
-                        intent.putExtra("user_id", datas.get(position ).getUser_id());
+                        intent.putExtra("name", datas.get(position).getName());
+                        intent.putExtra("id", datas.get(position).getId());
+                        intent.putExtra("user_id", datas.get(position).getUser_id());
                         startActivity(intent);
                         break;
                     case 2: //家乡
                         intent = new Intent(getActivity(), SchoolHometownActivity.class);
                         intent.putExtra("from", 2);
-                        intent.putExtra("name", datas.get(position ).getName());
-                        intent.putExtra("hometown_id", datas.get(position ).getId());
+                        intent.putExtra("name", datas.get(position).getName());
+                        intent.putExtra("hometown_id", datas.get(position).getId());
                         startActivity(intent);
                         break;
 
                     case 3: //好友
+                        intent = new Intent(getActivity(), PersonalNearbyDetailActivity.class);
+                        intent.putExtra("classType", "PhoneContactsActivity");
+                        intent.putExtra("userid", datas.get(position).getUser_id());
+                        getActivity().startActivity(intent);
                         break;
                     case 4: //学校
                         intent = new Intent(getActivity(), SchoolHometownActivity.class);
                         intent.putExtra("from", 1);
-                        intent.putExtra("name", datas.get(position ).getName());
-                        intent.putExtra("school_id", datas.get(position ).getId());
+                        intent.putExtra("name", datas.get(position).getName());
+                        intent.putExtra("school_id", datas.get(position).getId());
                         startActivity(intent);
                         break;
 

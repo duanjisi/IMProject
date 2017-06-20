@@ -1,25 +1,30 @@
 package im.boss66.com.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import im.boss66.com.R;
+import im.boss66.com.Utils.OnMultiClickListener;
 import im.boss66.com.entity.ConnectionAllSearch;
 import im.boss66.com.entity.MyInfo;
+import im.boss66.com.http.BaseDataRequest;
+import im.boss66.com.http.request.AddFriendRequest;
 
 /**
  * Created by liw on 2017/6/19.
  */
 
 public class ConnectionSearchAdapter extends BaseRecycleViewAdapter {
-
+    private static final String TAG = "ConnectionSearchAdapter";
     private Context context;
 
     public ConnectionSearchAdapter(Context context) {
@@ -46,7 +51,8 @@ public class ConnectionSearchAdapter extends BaseRecycleViewAdapter {
 
                         break;
                     case 3:
-                        //3的是加好友布局
+                        //3的是加好友布局 不在这里写
+
                         break;
                     case 4:
                         holder2.tv_school_name.setText(item1.getName());
@@ -94,7 +100,7 @@ public class ConnectionSearchAdapter extends BaseRecycleViewAdapter {
 
             case 3:
                 final MyRecommendHolder holder3 = (MyRecommendHolder) holder;
-                ConnectionAllSearch.ResultBean.Bean item3 = (ConnectionAllSearch.ResultBean.Bean) datas.get(position);
+                final ConnectionAllSearch.ResultBean.Bean item3 = (ConnectionAllSearch.ResultBean.Bean) datas.get(position);
                 Glide.with(context).load(item3.getAvatar()).into(holder3.img_follow);
                 holder3.tv_follow_name.setText(item3.getUser_name());
                 holder3.tv_same.setText("相似度" + item3.getSimilar() + "%"); //相似度
@@ -106,6 +112,37 @@ public class ConnectionSearchAdapter extends BaseRecycleViewAdapter {
                         itemListener.onItemClick(adapterPosition);
                     }
                 });
+                if(item3.getIsFriend()==0){
+
+                    holder3.tv_add_follow.setOnClickListener(new OnMultiClickListener() {
+                        @Override
+                        public void onMultiClick(View v) {
+                            AddFriendRequest request = new AddFriendRequest(TAG, item3.getUser_id(), "");
+                            request.send(new BaseDataRequest.RequestCallback<String>() {
+                                @Override
+                                public void onSuccess(String str) {
+                                    Toast.makeText(context, "已发送", Toast.LENGTH_SHORT).show();
+                                    holder3.tv_add_follow.setText("已发送");
+                                    holder3.tv_add_follow.setBackgroundResource(R.drawable.shape_isfollow);
+                                    holder3.tv_add_follow.setTextColor(Color.GRAY);
+                                }
+
+                                @Override
+                                public void onFailure(String msg) {
+                                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+
+                    });
+                }else{
+                    holder3.tv_add_follow.setClickable(false);
+                    holder3.tv_add_follow.setText("已添加");
+                    holder3.tv_add_follow.setBackgroundResource(R.drawable.shape_isfollow);
+                    holder3.tv_add_follow.setTextColor(Color.GRAY);
+
+                }
+
                 break;
 
         }
