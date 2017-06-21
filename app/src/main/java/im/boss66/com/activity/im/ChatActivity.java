@@ -889,10 +889,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //                dir.mkdirs();
 //            }
             File dir;
-            if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-                dir=Environment.getExternalStorageDirectory();
-            }else{
-                dir=getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                dir = Environment.getExternalStorageDirectory();
+            } else {
+                dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
             }
             File file = new File(dir, imageName);
             photoPath = file.getPath();
@@ -910,7 +910,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 //            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 //            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//这里加入flag
 //            startActivityForResult(intent, Code.Request.TAKE_PHOTO);
-
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             String imageName = System.currentTimeMillis() + ".jpg";
             File file = new File(savePath, imageName);
