@@ -740,7 +740,7 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
                 }
                 viewHolder.tv_fuwa_num.setText(datas.get(position).id + "号福娃");
 
-                viewHolder.tv_from.setText("来源于: " + datas.get(position).creator);
+                viewHolder.tv_from.setText("" + datas.get(position).creator);
                 final String creatorid = datas.get(position).creatorid;
 
                 viewHolder.tv_from.setOnClickListener(new OnMultiClickListener() {
@@ -820,6 +820,7 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
 
                     } else {
                         //code==0 没数据，没部落 不作处理
+                        showToast("该用户未创建部落",false);
                     }
 
                 }

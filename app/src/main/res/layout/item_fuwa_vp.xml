@@ -66,14 +66,23 @@
         android:layout_toRightOf="@id/tv_fuwa_num"
         android:layout_width="60dp"
         android:layout_height="60dp" />
+    <ImageView
+        android:layout_marginTop="5dp"
+        android:id="@+id/img_link"
+        android:layout_below="@id/tv_fuwa_num"
+        android:layout_alignLeft="@id/tv_fuwa_num"
+        android:src="@drawable/originate"
+        android:layout_width="20dp"
+        android:layout_height="20dp" />
 
     <TextView
+        android:layout_toRightOf="@id/img_link"
+        android:layout_marginLeft="2dp"
         android:maxLines="1"
         android:ellipsize="end"
         android:id="@+id/tv_from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_fuwa_num"
         android:layout_below="@id/tv_fuwa_num"
         android:layout_marginTop="5dp"
         android:text=""
@@ -86,7 +95,7 @@
         android:id="@+id/tv_catch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_from"
+        android:layout_alignLeft="@id/img_link"
         android:layout_below="@id/tv_from"
         android:layout_marginTop="5dp"
         android:text=""
@@ -97,7 +106,7 @@
         android:id="@+id/tv_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_from"
+        android:layout_alignLeft="@id/img_link"
         android:layout_below="@id/tv_catch"
         android:layout_marginTop="5dp"
         android:text=""
