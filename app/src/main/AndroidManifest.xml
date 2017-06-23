@@ -171,7 +171,8 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.player.PlayFuwaVideoActivity"
-            android:screenOrientation="portrait"></activity>
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            ></activity>
         <!--找福娃-->
         <activity
             android:name=".activity.treasure.AroundPosActivity"

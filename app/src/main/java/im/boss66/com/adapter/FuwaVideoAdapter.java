@@ -101,8 +101,17 @@ public class FuwaVideoAdapter extends BaseRecycleViewAdapter {
         holder1.tv_name.setText(item.getName());
         String distance = item.getDistance()+"";
         distance = distance.substring(0,distance.indexOf("."));
+        double distanceD= Double.parseDouble(distance);
 
-        holder1.tv_distance.setText(distance+"米");
+        if(distanceD>=1000){
+            distanceD = distanceD/1000;
+            String format = String.format("%.2f", distanceD-0.005);
+            holder1.tv_distance.setText(format+"千米");
+        }else {
+            holder1.tv_distance.setText(distance+"米");
+
+        }
+
         if("男".equals(item.getGender())){
             Glide.with(context).load(R.drawable.man_1).into(holder1.img_sex);
         }else{

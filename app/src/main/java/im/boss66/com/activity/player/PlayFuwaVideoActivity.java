@@ -1,6 +1,7 @@
 package im.boss66.com.activity.player;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
@@ -143,7 +145,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                     mVideoView.setDisplayOrientation(90);
                 } else {
                     if (width > height) {
-                        mVideoView.setDisplayOrientation(270);
+//                        mVideoView.setDisplayOrientation(270);
                     } else {
                         mVideoView.setDisplayOrientation(mVideoRotation);
                     }
@@ -547,6 +549,23 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                     showToast(e.getMessage(), false);
                 }
             });
+        }
+    }
+
+    /**
+     * 屏幕旋转时调用此方法
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //newConfig.orientation获得当前屏幕状态是横向或者竖向
+        //Configuration.ORIENTATION_PORTRAIT 表示竖向
+        //Configuration.ORIENTATION_LANDSCAPE 表示横屏
+        if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
+//            Toast.makeText(PlayFuwaVideoActivity.this, "现在是竖屏", Toast.LENGTH_SHORT).show();
+        }
+        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+//            Toast.makeText(PlayFuwaVideoActivity.this, "现在是横屏", Toast.LENGTH_SHORT).show();
         }
     }
 }
