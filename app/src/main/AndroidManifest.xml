@@ -159,8 +159,7 @@
         <!--播放视频-->
         <activity
             android:name=".activity.player.VideoPlayerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:configChanges="orientation|screenSize"></activity>
         <activity
             android:name=".activity.player.PlayerVideoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -168,7 +167,7 @@
         <!--播放视频-->
         <activity
             android:name=".activity.player.VideoPlayerNewActivity"
-            android:screenOrientation="portrait"></activity>
+            android:configChanges="orientation|screenSize"></activity>
         <activity
             android:name=".activity.player.PlayFuwaVideoActivity"
             android:configChanges="orientation|screenSize"></activity>
@@ -456,7 +455,7 @@
         <!-- 相册详情 -->
         <activity
             android:name=".activity.discover.PhotoAlbumLookPicActivity"
-            android:screenOrientation="portrait"></activity>
+            android:configChanges="orientation|screenSize"></activity>
         <!-- 相册评论 -->
         <activity
             android:name=".activity.discover.CommentActivity"
