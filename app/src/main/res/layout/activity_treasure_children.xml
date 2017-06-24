@@ -92,13 +92,23 @@
             android:layout_gravity="bottom"
             android:layout_marginBottom="60dp">
 
-            <ImageView
+            <!--<ImageView-->
+            <!--android:id="@+id/iv_reset_location"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_marginLeft="18dp"-->
+            <!--android:src="@drawable/treasure_location" />-->
+            <TextView
                 android:id="@+id/iv_reset_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_marginLeft="18dp"
-                android:src="@drawable/treasure_location" />
+                android:background="@drawable/bg_circle_notify"
+                android:gravity="center"
+                android:text="开始捕捉"
+                android:textColor="@color/golden_color"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tv_store"
