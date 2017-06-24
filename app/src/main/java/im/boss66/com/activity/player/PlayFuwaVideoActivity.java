@@ -143,12 +143,12 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                 if (mVideoRotation == 270) {
                     //旋转视频
                     mVideoView.setDisplayOrientation(90);
-                } else {
-                    if (width > height) {
-//                        mVideoView.setDisplayOrientation(270);
-                    } else {
-                        mVideoView.setDisplayOrientation(mVideoRotation);
-                    }
+                } else if(mVideoRotation==90){
+                    mVideoView.setDisplayOrientation(270);
+
+                }else{
+
+                    mVideoView.setDisplayOrientation(0);
                 }
             }
         });
