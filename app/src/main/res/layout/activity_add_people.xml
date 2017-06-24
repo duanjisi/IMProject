@@ -29,8 +29,7 @@
         android:layout_marginRight="13.2dp"
         android:layout_marginTop="13dp"
         android:background="@drawable/shape_edittext"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
+        >
 
         <ImageView
             android:id="@+id/img_search"

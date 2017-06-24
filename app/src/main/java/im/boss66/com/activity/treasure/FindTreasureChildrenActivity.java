@@ -145,8 +145,8 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
     private HashMap<String, LatLng> latMap = new HashMap<>();
     private View view;
     private UiSettings mUiSettings;
-    private TextView tvBack, tvStore;
-    private ImageView ivLocation;
+    private TextView tvBack, tvStore, ivLocation;
+    //    private ImageView ivLocation;
     private boolean isFirst = true;
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
@@ -195,7 +195,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         mMapView = (MapView) findViewById(R.id.map);
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvStore = (TextView) findViewById(R.id.tv_store);
-        ivLocation = (ImageView) findViewById(R.id.iv_reset_location);
+        ivLocation = (TextView) findViewById(R.id.iv_reset_location);
         slidingDrawer = (WrappingSlidingDrawer) findViewById(R.id.slidingDrawer);
         handler = (ImageView) findViewById(R.id.handle);
 
@@ -687,33 +687,60 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         double latitude = mLocMarker.getPosition().latitude;
         double longitude = mLocMarker.getPosition().longitude;
         mLatLng = new LatLng(latitude, longitude);
-//        mLatLng = mLocMarker.getPosition();
         Log.i("info", "===============distance:" + distance);
-        if (distance > 500) {
-            if (slidingDrawer.getVisibility() != View.VISIBLE) {
-                UIUtils.showView(slidingDrawer);
-            }
-            if (topBar.getVisibility() != View.VISIBLE) {
-                topBar.setVisibility(View.VISIBLE);
-            }
-            btn_catch.setVisibility(View.GONE);
-            tvTips.setVisibility(View.VISIBLE);
-            String pos = child.getPos();
-            if (!TextUtils.isEmpty(pos)) {
-                tv_location.setText(pos);
-            }
-            if (!slidingDrawer.isOpened()) {
-                slidingDrawer.animateOpen();
-            }
-            String[] strs = child.getGeo().split("-");
-            mEndPoint = new LatLonPoint(Double.parseDouble(strs[1]), Double.parseDouble(strs[0]));
-            if (location != null) {
-                mStartPoint = new LatLonPoint(location.getLatitude(), location.getLongitude());
-            }
-            searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WALK_DEFAULT);
-        } else {//扑捉范围内
-            requestArround(titleBar);
+
+        if (slidingDrawer.getVisibility() != View.VISIBLE) {
+            UIUtils.showView(slidingDrawer);
         }
+        if (topBar.getVisibility() != View.VISIBLE) {
+            topBar.setVisibility(View.VISIBLE);
+        }
+        btn_catch.setVisibility(View.GONE);
+        tvTips.setVisibility(View.VISIBLE);
+        if (distance > 500) {
+            tvTips.setText("位置远了，走近一点才可以捕捉哦~");
+        } else {
+            tvTips.setText("你已经离目标很近了~点击开始捕捉来抓福娃吧~");
+        }
+        String pos = child.getPos();
+        if (!TextUtils.isEmpty(pos)) {
+            tv_location.setText(pos);
+        }
+        if (!slidingDrawer.isOpened()) {
+            slidingDrawer.animateOpen();
+        }
+        String[] strs = child.getGeo().split("-");
+        mEndPoint = new LatLonPoint(Double.parseDouble(strs[1]), Double.parseDouble(strs[0]));
+        if (location != null) {
+            mStartPoint = new LatLonPoint(location.getLatitude(), location.getLongitude());
+        }
+        searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WALK_DEFAULT);
+
+//        if (distance > 500) {
+//            if (slidingDrawer.getVisibility() != View.VISIBLE) {
+//                UIUtils.showView(slidingDrawer);
+//            }
+//            if (topBar.getVisibility() != View.VISIBLE) {
+//                topBar.setVisibility(View.VISIBLE);
+//            }
+//            btn_catch.setVisibility(View.GONE);
+//            tvTips.setVisibility(View.VISIBLE);
+//            String pos = child.getPos();
+//            if (!TextUtils.isEmpty(pos)) {
+//                tv_location.setText(pos);
+//            }
+//            if (!slidingDrawer.isOpened()) {
+//                slidingDrawer.animateOpen();
+//            }
+//            String[] strs = child.getGeo().split("-");
+//            mEndPoint = new LatLonPoint(Double.parseDouble(strs[1]), Double.parseDouble(strs[0]));
+//            if (location != null) {
+//                mStartPoint = new LatLonPoint(location.getLatitude(), location.getLongitude());
+//            }
+//            searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WALK_DEFAULT);
+//        } else {//扑捉范围内
+//            requestArround(titleBar);
+//        }
     }
 
     private ArrayList<ChildEntity> getRoundChildren() {
@@ -933,6 +960,16 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         if (location != null) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
+            if (titleBar != null) {
+                if (slidingDrawer.getVisibility() != View.GONE) {
+                    UIUtils.hindView(slidingDrawer);
+                    if (walkRouteOverlay != null) {
+                        walkRouteOverlay.removeFromMap();
+                        walkRouteOverlay = null;
+                    }
+                }
+                requestArround(titleBar);
+            }
         }
     }
 
@@ -1358,26 +1395,28 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 //        }
         switch (mType) {
             case FIND_FUWA:
-                request = new AroundBabyRequest(TAG, parms, "" + raduis, "0");
+                request = new AroundBabyRequest(TAG, parms, "1000", "0");
                 break;
             case FIND_FATE:
-                request = new AroundFriendRequest(TAG, parms, "" + raduis, "0");
+                request = new AroundFriendRequest(TAG, parms, "1000", "0");
                 break;
             case FIND_MERCHANT_FUWA:
                 if (!TextUtils.isEmpty(userid)) {
-                    request = new AroundMerhcantRequest(TAG, parms, "" + raduis, "0", userid);
+                    request = new AroundMerhcantRequest(TAG, parms, "1000", "0", userid);
                 }
                 break;
             case FIND_USER_FUWA:
                 if (!TextUtils.isEmpty(userid)) {
-                    request = new AroundUserRequest(TAG, parms, "" + raduis, "0", userid);
+                    request = new AroundUserRequest(TAG, parms, "1000", "0", userid);
                 }
                 break;
         }
         if (request != null) {
+            showLoadingDialog();
             request.send(new BaseRequest.RequestCallback<BaseBaby>() {
                 @Override
                 public void onSuccess(BaseBaby pojo) {
+                    cancelLoadingDialog();
                     if (popup == null) {
                         showChildrenPop(parent, pojo);
                     } else {
@@ -1389,6 +1428,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
 
                 @Override
                 public void onFailure(String msg) {
+                    cancelLoadingDialog();
                     showToast(msg, true);
                 }
             });

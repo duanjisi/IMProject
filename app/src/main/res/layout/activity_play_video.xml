@@ -51,6 +51,21 @@
 
     <TextView
         android:id="@+id/tv_go"
+        android:layout_toLeftOf="@+id/tv_tribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="33dp"
+        android:layout_marginRight="11dp"
+        android:background="@drawable/bg_fuwa_gary_round"
+        android:padding="10dp"
+        android:text="带我去寻宝"
+        android:textColor="@color/white"
+        android:textSize="13.5sp" />
+
+
+    <TextView
+        android:id="@+id/tv_tribe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -59,7 +74,7 @@
         android:layout_marginRight="11dp"
         android:background="@drawable/bg_fuwa_gary_round"
         android:padding="10dp"
-        android:text="带我去寻宝"
+        android:text="进入部落"
         android:textColor="@color/white"
         android:textSize="13.5sp" />
 

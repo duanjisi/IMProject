@@ -455,10 +455,12 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     private void initData() {
 //        datas.clear();      //导致刷新崩溃
 
+        showLoadingDialog();
         MyInfoRequest request = new MyInfoRequest(TAG);
         request.send(new BaseDataRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String str) {
+                cancelLoadingDialog();
                 if (TextUtils.isEmpty(str)) {
                     return;
                 }
@@ -528,6 +530,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
 
             @Override
             public void onFailure(String msg) {
+                cancelLoadingDialog();
                 showToast(msg, false);
 
             }

@@ -2,7 +2,6 @@ package im.boss66.com;
 
 import android.os.Build;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 
@@ -26,7 +25,6 @@ public class Constants {
     static {
         EMO_DIR_PATH = getBaseDir() + ".nomedia/" + App.getInstance().getUid() + "/";
         VIDEO_CACHE_PATH = getBaseDir() + "video/";
-        Log.i("info", "==========EMO_DIR_PATH:" + EMO_DIR_PATH);
     }
 
     private static String getBaseDir() {

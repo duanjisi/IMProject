@@ -1,6 +1,7 @@
 package im.boss66.com.activity.player;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
@@ -30,15 +32,20 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.List;
 
+import im.boss66.com.App;
 import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.FileUtils;
 import im.boss66.com.Utils.MD5Util;
 import im.boss66.com.Utils.NetworkUtil;
+import im.boss66.com.Utils.OnMultiClickListener;
+import im.boss66.com.Utils.ToastUtil;
 import im.boss66.com.activity.base.BaseActivity;
+import im.boss66.com.activity.connection.ClanClubActivity;
 import im.boss66.com.activity.treasure.FindTreasureChildrenActivity;
 import im.boss66.com.entity.ActionEntity;
 import im.boss66.com.entity.FuwaVideoEntity;
+import im.boss66.com.entity.TribeEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.services.VideoCacheService;
 import im.boss66.com.widget.ActionSheet;
@@ -56,7 +63,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
     private MediaController mMediaController;
     private ImageView iv_coverView, iv_close;
     private int mVideoRotation;
-    private TextView tvNext, tvGo;
+    private TextView tvNext, tvGo,tv_tribe;
     private int currentIndex;
     private List<FuwaVideoEntity.DataBean> datas;
     private FuwaVideoEntity.DataBean dataBean;
@@ -74,6 +81,7 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
         view = findViewById(R.id.parent);
         tvNext = (TextView) findViewById(R.id.tv_next);
         tvGo = (TextView) findViewById(R.id.tv_go);
+        tv_tribe = (TextView) findViewById(R.id.tv_tribe);
         iv_close = (ImageView) findViewById(R.id.iv_close);
         iv_coverView = (ImageView) findViewById(R.id.iv_coverView);
         mVideoView = (PLVideoTextureView) findViewById(R.id.videoView);
@@ -83,7 +91,12 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
         int codec = getIntent().getIntExtra("mediaCodec", AVOptions.MEDIA_CODEC_SW_DECODE);
         tvNext.setOnClickListener(this);
         tvGo.setOnClickListener(this);
-
+        tv_tribe.setOnClickListener(new OnMultiClickListener() {
+            @Override
+            public void onMultiClick(View v) {
+                initTribe(datas.get(currentIndex).getUserid());
+            }
+        });
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             currentIndex = bundle.getInt("position", 0);
@@ -130,12 +143,12 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                 if (mVideoRotation == 270) {
                     //旋转视频
                     mVideoView.setDisplayOrientation(90);
-                } else {
-                    if (width > height) {
-                        mVideoView.setDisplayOrientation(270);
-                    } else {
-                        mVideoView.setDisplayOrientation(mVideoRotation);
-                    }
+                } else if(mVideoRotation==90){
+                    mVideoView.setDisplayOrientation(270);
+
+                }else{
+
+                    mVideoView.setDisplayOrientation(0);
                 }
             }
         });
@@ -170,8 +183,63 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                     startActivity(intent);
                 }
                 break;
+
         }
     }
+
+    private void initTribe(String creatorid) {
+        String url = HttpUrl.SEARCH_TRIBE_LIST;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        url = url + "?user_id=" + creatorid;
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (result != null) {
+                    TribeEntity tribeEntity = JSON.parseObject(result, TribeEntity.class);
+                    int code = tribeEntity.getCode();
+                    if (code == 1) {
+                        List<TribeEntity.ResultBean> beans = tribeEntity.getResult();
+                        TribeEntity.ResultBean bean = beans.get(0);
+                        String name = bean.getName();
+                        int stribe_id = bean.getStribe_id();
+                        int user_id = bean.getUser_id();
+
+                        Intent intent = new Intent(context, ClanClubActivity.class);
+                        intent.putExtra("isClan", 3);
+                        intent.putExtra("name", name);
+                        intent.putExtra("id", stribe_id+"");
+                        intent.putExtra("user_id", user_id+"");
+                        context.startActivity(intent);
+
+                    } else {
+                        //code==0 没数据，没部落 不作处理
+                        ToastUtil.showShort(PlayFuwaVideoActivity.this,"该用户未创建部落");
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    ToastUtil.showShort(context,e.getMessage());
+                }
+            }
+        });
+
+    }
+
 
     private void initPlayer() {
         if (datas != null && datas.size() != 0) {
@@ -238,7 +306,9 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
             actionSheet.addSheetItem("播放下一个", ActionSheet.SheetItemColor.Black,
                     PlayFuwaVideoActivity.this)
                     .addSheetItem("带我去寻宝", ActionSheet.SheetItemColor.Black,
-                            PlayFuwaVideoActivity.this);
+                            PlayFuwaVideoActivity.this)
+            .addSheetItem("带我去部落", ActionSheet.SheetItemColor.Black,
+                    PlayFuwaVideoActivity.this);
         }
         actionSheet.show();
     }
@@ -437,6 +507,9 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                     startActivity(intent);
                 }
                 break;
+            case 3:
+                initTribe(datas.get(currentIndex).getUserid());
+                break;
         }
     }
 
@@ -476,6 +549,23 @@ public class PlayFuwaVideoActivity extends BaseActivity implements ActionSheet.O
                     showToast(e.getMessage(), false);
                 }
             });
+        }
+    }
+
+    /**
+     * 屏幕旋转时调用此方法
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //newConfig.orientation获得当前屏幕状态是横向或者竖向
+        //Configuration.ORIENTATION_PORTRAIT 表示竖向
+        //Configuration.ORIENTATION_LANDSCAPE 表示横屏
+        if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
+//            Toast.makeText(PlayFuwaVideoActivity.this, "现在是竖屏", Toast.LENGTH_SHORT).show();
+        }
+        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+//            Toast.makeText(PlayFuwaVideoActivity.this, "现在是横屏", Toast.LENGTH_SHORT).show();
         }
     }
 }
