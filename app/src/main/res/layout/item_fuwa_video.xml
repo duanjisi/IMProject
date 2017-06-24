@@ -59,7 +59,7 @@
         <ImageView
             android:layout_toRightOf="@id/tv_name"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="1dp"
             android:id="@+id/img_sex"
             android:layout_width="15dp"
             android:layout_height="15dp" />
