@@ -48,6 +48,7 @@ public class ConnectionSearchAdapter extends BaseRecycleViewAdapter {
                     case 2:
                         holder2.tv_school_name.setText(item1.getName());
                         holder2.tv_school_info.setText(item1.getDesc());
+                        Glide.with(context).load(R.drawable.zf_default_message_image).into(holder2.img_school);
 
                         break;
                     case 3:
@@ -57,6 +58,7 @@ public class ConnectionSearchAdapter extends BaseRecycleViewAdapter {
                     case 4:
                         holder2.tv_school_name.setText(item1.getName());
                         holder2.tv_school_info.setText(item1.getDesc());
+                        Glide.with(context).load(R.drawable.zf_default_message_image).into(holder2.img_school);
                         break;
                 }
 
