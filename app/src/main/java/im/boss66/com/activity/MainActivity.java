@@ -112,7 +112,6 @@ public class MainActivity extends BaseActivity implements Observer {
     //    private SimpleDraweeView simpleDrawee00, simpleDrawee01;
     private PushAgent mPushAgent;
 
-
     private MyInfo myInfo;
     private List<MyInfo.ResultBean.SchoolListBean> school_list; //学校
     private List<MyInfo.ResultBean.SchoolListBean> hometown_list; //家乡
