@@ -101,6 +101,7 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
 //    private ProgressBar pb_video;
     //private MediaController mediaco;
     private String mVideoPath;
+    private int mVideoRotation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -263,12 +264,12 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
                     BaseResult baseResult = JSON.parseObject(result, BaseResult.class);
                     if (baseResult != null) {
                         String msg = baseResult.getMessage();
-                        if (baseResult.getStatus() == 401){
+                        if (baseResult.getStatus() == 401) {
                             Intent intent = new Intent();
                             intent.setAction(Constants.ACTION_LOGOUT_RESETING);
                             App.getInstance().sendBroadcast(intent);
-                        }else {
-                            if (baseResult.getCode() == 1){
+                        } else {
+                            if (baseResult.getCode() == 1) {
                                 PhotoAlbumDetailEntity data = JSON.parseObject(result, PhotoAlbumDetailEntity.class);
                                 if (data != null) {
                                     friendCircle = data.getResult();
@@ -276,10 +277,10 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
                                         int feedType = friendCircle.getFeed_type();
                                         showSigleTxData(friendCircle, feedType);
                                     }
-                                }else {
+                                } else {
                                     showToast(msg, false);
                                 }
-                            }else {
+                            } else {
                                 showToast(msg, false);
                             }
                         }
@@ -379,14 +380,28 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
 //                mediaco.setVisibility(View.INVISIBLE);
                 if (!TextUtils.isEmpty(mVideoPath)) {
                     mVideoView.setDisplayOrientation(270);
-                    mVideoView.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_PAVED_PARENT);
+                    mVideoView.setDisplayAspectRatio(PLVideoTextureView.ASPECT_RATIO_FIT_PARENT);
                     mVideoView.setOnCompletionListener(mOnCompletionListener);
                     mVideoView.setOnErrorListener(mOnErrorListener);
+                    mVideoView.setOnInfoListener(mOnInfoListener);
                     setOptions(0);
                     mVideoView.setVideoPath(mVideoPath);
                     View loadingView = findViewById(R.id.loading);
                     mVideoView.setBufferingIndicator(loadingView);
                     mVideoView.setScreenOnWhilePlaying(true);
+                    mVideoView.setOnVideoSizeChangedListener(new PLMediaPlayer.OnVideoSizeChangedListener() {
+                        @Override
+                        public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int width, int height, int videoSar, int videoDen) {
+                            if (mVideoRotation == 270) {
+                                //旋转视频
+                                mVideoView.setDisplayOrientation(90);
+                            } else if (mVideoRotation == 90) {
+                                mVideoView.setDisplayOrientation(270);
+                            } else {
+                                mVideoView.setDisplayOrientation(0);
+                            }
+                        }
+                    });
                     //让VideiView获取焦点
                     mVideoView.start();
                     mVideoView.requestFocus();
@@ -675,7 +690,7 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
         if (requestCode == 101 && resultCode == RESULT_OK) {
             getServerCommentList();
         } else if (requestCode == 401 && resultCode == RESULT_OK) {
-            setResult(RESULT_OK,data);
+            setResult(RESULT_OK, data);
             finish();
         }
     }
@@ -858,4 +873,17 @@ public class PhotoAlbumLookPicActivity extends BaseActivity implements View.OnCl
         super.onDestroy();
         mVideoView.stopPlayback();
     }
+
+    private PLMediaPlayer.OnInfoListener mOnInfoListener = new PLMediaPlayer.OnInfoListener() {
+        @Override
+        public boolean onInfo(PLMediaPlayer plMediaPlayer, int what, int extra) {
+            switch (what) {
+                case 10001:
+                    //保存视频角度
+                    mVideoRotation = extra;
+                    break;
+            }
+            return false;
+        }
+    };
 }
