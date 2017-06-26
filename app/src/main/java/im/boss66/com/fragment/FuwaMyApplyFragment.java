@@ -3,6 +3,7 @@ package im.boss66.com.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -38,12 +39,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import im.boss66.com.App;
+import im.boss66.com.Constants;
 import im.boss66.com.R;
 import im.boss66.com.Utils.MakeQRCodeUtil;
+import im.boss66.com.Utils.OnMultiClickListener;
 import im.boss66.com.Utils.ToastUtil;
+import im.boss66.com.activity.connection.ClanClubActivity;
 import im.boss66.com.activity.treasure.FuwaPackageActivity;
 import im.boss66.com.adapter.FuwaListAdaper;
 import im.boss66.com.entity.FuwaEntity;
+import im.boss66.com.entity.TribeEntity;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.listener.RecycleViewItemListener;
 
@@ -476,7 +481,19 @@ public class FuwaMyApplyFragment extends BaseFragment implements View.OnClickLis
 
                 viewHolder.tv_fuwa_num.setText(datas.get(position).id + "号福娃");
 
-                viewHolder.tv_from.setText("申请人: " + datas.get(position).creator);
+//                viewHolder.tv_from.setText("申请人: " + datas.get(position).creator);
+
+                viewHolder.tv_from.setText("" + datas.get(position).creator);
+                final String creatorid = datas.get(position).creatorid;
+
+                viewHolder.tv_from.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+
+                        initTribe(creatorid);
+                    }
+                });
+
                 viewHolder.img_fuwa.setImageResource(R.drawable.fuwabig);
                 viewHolder.rl_top.setVisibility(View.VISIBLE);
                 viewHolder.tv_number.setText(datas.get(position).id+"");
@@ -500,6 +517,61 @@ public class FuwaMyApplyFragment extends BaseFragment implements View.OnClickLis
             private RelativeLayout rl_top;
             private TextView tv_number;
         }
+    }
+
+    private void initTribe(String creatorid) {
+
+        String url = HttpUrl.SEARCH_TRIBE_LIST;
+        HttpUtils httpUtils = new HttpUtils(60 * 1000);//实例化RequestParams对象
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("access_token", App.getInstance().getAccount().getAccess_token());
+        url = url + "?user_id=" + creatorid;
+
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                if (result != null) {
+                    TribeEntity tribeEntity = JSON.parseObject(result, TribeEntity.class);
+                    int code = tribeEntity.getCode();
+                    if (code == 1) {
+                        List<TribeEntity.ResultBean> beans = tribeEntity.getResult();
+                        TribeEntity.ResultBean bean = beans.get(0);
+                        String name = bean.getName();
+                        int stribe_id = bean.getStribe_id();
+                        int user_id = bean.getUser_id();
+
+                        Intent intent = new Intent(getActivity(), ClanClubActivity.class);
+                        intent.putExtra("isClan", 3);
+                        intent.putExtra("name", name);
+                        intent.putExtra("id", stribe_id+"");
+                        intent.putExtra("user_id", user_id+"");
+                        startActivity(intent);
+
+                    } else {
+                        //code==0 没数据，没部落 不作处理
+                        showToast("该用户未创建部落",false);
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                int code = e.getExceptionCode();
+                if (code == 401) {
+                    Intent intent = new Intent();
+                    intent.setAction(Constants.ACTION_LOGOUT_RESETING);
+                    App.getInstance().sendBroadcast(intent);
+                } else {
+                    showToast(e.getMessage(), false);
+                }
+            }
+        });
+
+
     }
 
 }
