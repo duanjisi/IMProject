@@ -238,7 +238,6 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         }
         imageLoader.displayImage(cover, iv_bg,
                 ImageLoaderUtils.getDisplayImageOptions());
-
         String user_name = sAccount.getUser_name();
         if (TextUtils.isEmpty(user_name)) {
             tv_name.setText("" + CurUid);
@@ -247,7 +246,7 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
         }
         FrameLayout.LayoutParams linearParams = (FrameLayout.LayoutParams) iv_bg.getLayoutParams(); //取控件textView当前的布局参数
         linearParams.height = sceenW / 3 * 2;
-        ;
+
         iv_bg.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
         mLRecyclerViewAdapter.addHeaderView(header);
         //设置头部加载颜色
@@ -319,7 +318,8 @@ public class FriendCircleActivity extends BaseActivity implements View.OnClickLi
                 showActionSheet(2);
                 break;
             case R.id.ll_new:
-                showActionSheet(3);
+                openActivity(CircleMessageListActivity.class);
+                //showActionSheet(3);
                 break;
             case R.id.bt_close://删除朋友圈item
                 if (dialog != null && dialog.isShowing()) {
