@@ -960,6 +960,7 @@ public class FindTreasureChildrenActivity extends BaseActivity implements
         if (location != null) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
+            aMap.moveCamera(CameraUpdateFactory.zoomTo(19));
             if (titleBar != null) {
                 if (slidingDrawer.getVisibility() != View.GONE) {
                     UIUtils.hindView(slidingDrawer);
