@@ -484,13 +484,13 @@ public class FuwaMyApplyFragment extends BaseFragment implements View.OnClickLis
 //                viewHolder.tv_from.setText("申请人: " + datas.get(position).creator);
 
                 viewHolder.tv_from.setText("" + datas.get(position).creator);
-                final String creatorid = datas.get(position).creatorid;
+//                final String creatorid = datas.get(position).creatorid;
 
                 viewHolder.tv_from.setOnClickListener(new OnMultiClickListener() {
                     @Override
                     public void onMultiClick(View v) {
 
-                        initTribe(creatorid);
+                        initTribe(uid);
                     }
                 });
 
