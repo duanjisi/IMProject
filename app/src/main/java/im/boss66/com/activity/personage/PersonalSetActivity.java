@@ -41,7 +41,7 @@ public class PersonalSetActivity extends BaseActivity implements View.OnClickLis
 //
 //
     private String   shareContent = "我正在嗨萌寻宝,一起来寻宝吧!";
-    private String targetUrl="http://www.boss89.com";
+    private String targetUrl="http://www.boss89.com/product";
     private String  title = "嗨萌寻宝";
     private String imageUrl="http://wsimcdn.hmg66.com/hm_logo.png";
 
