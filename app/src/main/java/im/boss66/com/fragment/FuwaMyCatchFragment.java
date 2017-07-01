@@ -1108,7 +1108,9 @@ public class FuwaMyCatchFragment extends BaseFragment implements View.OnClickLis
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == -1) {
             String code = data.getStringExtra("code");
-            et_code.setText(code);
+            if(et_code!=null){
+                et_code.setText(code);
+            }
 
         }
 
