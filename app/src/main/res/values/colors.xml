@@ -151,4 +151,5 @@
     <color name="biz_audio_progress_first">#ffffff</color>
     <color name="biz_audio_progress_second">#6b6666</color>
     <color name="tx_fuwa_tip">#e7d09a</color>
+    <color name="fuwa_list">#D43B03</color>
 </resources>
