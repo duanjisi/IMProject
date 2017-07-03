@@ -189,7 +189,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people_center);
         initViews();
-        initData();
+//        initData();
         EventBus.getDefault().register(this);
     }
 
@@ -207,7 +207,7 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
     @Subscribe
     public void  onMessage(ActionEntity event){
 //
-        initData();
+//        initData();
         getCommunityList();     //刷新有时会失败
 
     }
@@ -353,11 +353,12 @@ public class PeopleCenterActivity extends ABaseActivity implements View.OnClickL
             address = sAccount.getDistrict_str() + sAccount.getSchool();
         }
         App.getInstance().addUidToList(CuiUid,true);
-//        tv_name.setVisibility(View.VISIBLE);
-//        tv_name.setText(name);
-//        if (!TextUtils.isEmpty(address)) {
-//            tv_address.setText(address);
-//        }
+        tv_name.setVisibility(View.VISIBLE);
+        tv_name.setText(name);
+        if (!TextUtils.isEmpty(address)) {
+            tv_address.setText(address);
+        }
+        img_hasschool.setVisibility(View.VISIBLE);
         showHead();
         // 回调接口和adapter设置
         presenter = new CirclePresenter(this);
