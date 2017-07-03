@@ -148,7 +148,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
     private Mat oneMat, twoMat;
     private ProgressBar pb_load;
     private int cameraNum = 0;
-    private boolean isFinish = false;
+    private boolean isFinish = false, isFirstImgBlack;
     private double comPH;
 
     @Override
@@ -210,10 +210,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         Intent intent = getIntent();
         if (intent != null) {
             currentChild = (ChildEntity) intent.getSerializableExtra("obj");
-//            fuwaId = intent.getStringExtra("gid");
-//            String imgUrl = intent.getStringExtra("pic");
-//            Log.i("imgUrl:", imgUrl);
-//            fuwaNum = intent.getStringExtra("id");
             if (currentChild != null) {
                 fuwaUserId = currentChild.getHider();
                 requestFriendShip(fuwaUserId);
@@ -241,7 +237,6 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                             handler.sendEmptyMessage(0x01);
                         }
                     }).start();
-                    //Picasso.with(context).load(imgUrl).error(R.drawable.zf_default_message_image).into(iv_thread);
                 }
             }
         }
@@ -1037,6 +1032,7 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                 case 0x01:
                     if (localBitmap != null) {
                         localBitmap = ThumbnailUtils.extractThumbnail(localBitmap, 450, 450);
+                        isFirstImgBlack = getBitmapColor(localBitmap);
                         oneMat = new Mat();
                         Utils.bitmapToMat(localBitmap, oneMat);
                         oneMat = getMat(oneMat);
@@ -1046,37 +1042,33 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
                     lastStaticStamp = System.currentTimeMillis();
                     if (newBitmap != null) {
                         Bitmap bitmap = ThumbnailUtils.extractThumbnail(newBitmap, 450, 450);
-                        newBitmap = null;
-                        twoMat = new Mat();
-                        Utils.bitmapToMat(bitmap, twoMat);
-                        twoMat = getMat(twoMat);
-                        if (oneMat != null && twoMat != null)
-                            comPH = comPareHist(oneMat, twoMat);
-                        if (comPH >= 0.3 || (cameraNum >= 4 && comPH > (0.3 - 0.05 * cameraNum))) {
-                            cameraNum = 0;
-                            getServerData();
-                        } else {
-                            cameraNum++;
-                            pb_load.setVisibility(View.GONE);
-                            showToast("图片匹配失败TAT，再试下吧", false);
-                            previewing = true;
-                            if (mCamera != null) {
-                                mCamera.startPreview();
+                        if (isFirstImgBlack) {
+                            if (getBitmapColor(bitmap)) {
+                                getServerData();
                             } else {
-                                initViewParams();
+                                noMatchDo();
                             }
-                            autoFocusHandler.postDelayed(doAutoFocus, 1000);
+                        } else {
+                            if (getBitmapColor(bitmap)) {
+                                noMatchDo();
+                                return;
+                            }
+                            newBitmap = null;
+                            twoMat = new Mat();
+                            Utils.bitmapToMat(bitmap, twoMat);
+                            twoMat = getMat(twoMat);
+                            if (oneMat != null && twoMat != null)
+                                comPH = comPareHist(oneMat, twoMat);
+                            if (comPH >= 0.3 || (cameraNum >= 4 && comPH > (0.3 - 0.05 * cameraNum))) {
+                                cameraNum = 0;
+                                getServerData();
+                            } else {
+                                cameraNum++;
+                                noMatchDo();
+                            }
                         }
                     } else {
-                        pb_load.setVisibility(View.GONE);
-                        showToast("图片匹配失败TAT，再试下吧", false);
-                        previewing = true;
-                        if (mCamera != null) {
-                            mCamera.startPreview();
-                        } else {
-                            initViewParams();
-                        }
-                        autoFocusHandler.postDelayed(doAutoFocus, 1000);
+                        noMatchDo();
                     }
                     break;
             }
@@ -1241,5 +1233,47 @@ public class CatchFuwaActivity extends BaseActivity implements View.OnClickListe
         public String getId() {
             return getClass().getName();
         }
+    }
+
+    private boolean getBitmapColor(Bitmap bitmap) {
+        boolean isBlack = false;
+        int mBitmapWidth = bitmap.getWidth();
+        int mBitmapHeight = bitmap.getHeight();
+        float mArrayColorLengh = mBitmapWidth * mBitmapHeight;
+        float count = 0;
+        for (int i = 0; i < mBitmapHeight; i++) {
+            for (int j = 0; j < mBitmapWidth; j++) {
+                int color = bitmap.getPixel(j, i);
+                if (color == 0xFF000000) {
+                    count++;
+                }
+            }
+        }
+        if (count == 0) {
+            isBlack = false;
+        } else {
+            float aa = mArrayColorLengh / count;
+            if (aa > 1.5) {
+                isBlack = false;
+            } else {
+                float percent = count / mArrayColorLengh;
+                if (percent > 0.9) {
+                    isBlack = true;
+                }
+            }
+        }
+        return isBlack;
+    }
+
+    private void noMatchDo() {
+        pb_load.setVisibility(View.GONE);
+        showToast("图片匹配失败TAT，再试下吧", false);
+        previewing = true;
+        if (mCamera != null) {
+            mCamera.startPreview();
+        } else {
+            initViewParams();
+        }
+        autoFocusHandler.postDelayed(doAutoFocus, 1000);
     }
 }
