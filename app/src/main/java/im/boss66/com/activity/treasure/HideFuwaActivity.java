@@ -185,6 +185,7 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
     private String classId;
     private LinearLayout ll_fuwa_class;
     private boolean isFinish = false;
+    private long lastShowTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -481,14 +482,30 @@ public class HideFuwaActivity extends BaseActivity implements View.OnClickListen
                 if (!TextUtils.isEmpty(num)) {
                     curSelectFuwaNum = Integer.parseInt(num);
                     if (curSelectFuwaNum > currentFuwaNum) {
-                        showToast("输入个数超过您申请的福娃", false);
+                        //showToast("输入个数超过您申请的福娃", false);
                         return;
                     } else if (curSelectFuwaNum <= 0) {
-                        showToast("输入的个数必须大于0", false);
+                        if (lastShowTime > 0) {
+                            long curShowTime = System.currentTimeMillis();
+                            if (curShowTime - lastShowTime > 2000) {
+                                lastShowTime = curShowTime;
+                                showToast("输入的个数必须大于0", false);
+                            }
+                        } else {
+                            showToast("输入的个数必须大于0", false);
+                        }
                         return;
                     }
                 } else {
-                    showToast("输入的个数必须大于0", false);
+                    if (lastShowTime > 0) {
+                        long curShowTime = System.currentTimeMillis();
+                        if (curShowTime - lastShowTime > 2000) {
+                            lastShowTime = curShowTime;
+                            showToast("输入的个数必须大于0", false);
+                        }
+                    } else {
+                        showToast("输入的个数必须大于0", false);
+                    }
                     return;
                 }
                 if (fuwaSelectType == 1) {

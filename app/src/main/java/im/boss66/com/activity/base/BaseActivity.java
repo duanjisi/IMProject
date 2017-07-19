@@ -64,11 +64,13 @@ public class BaseActivity extends FragmentActivity {
         // 添加微信平台
         UMWXHandler wxHandler = new UMWXHandler(this, appId,
                 appSecret);
+        wxHandler.setRefreshTokenAvailable(false);
         wxHandler.addToSocialSDK();
 
         // 支持微信朋友圈
         UMWXHandler wxCircleHandler = new UMWXHandler(this,
                 appId, appSecret);
+
         wxCircleHandler.setToCircle(true);
         wxCircleHandler.addToSocialSDK();
     }

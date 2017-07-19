@@ -96,8 +96,6 @@ import im.boss66.com.http.BaseDataRequest;
 import im.boss66.com.http.HttpUrl;
 import im.boss66.com.http.request.FriendShipRequest;
 import im.boss66.com.listener.PermissionListener;
-import im.boss66.com.widget.CircleImageView;
-import im.boss66.com.widget.RoundImageView;
 import im.boss66.com.widget.popupWindows.SharePopup;
 import im.boss66.com.widget.scan.CameraManager;
 import im.boss66.com.widget.scan.CameraPreview;
